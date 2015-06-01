@@ -1,0 +1,93 @@
+<div class="table-container">
+    <button class="btn btn-primary" ng-click="addPerson()">Добавить покупателя</button>
+    <h3 class="example_head">Покупатели:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover">
+            <thead style="background-color: darkseagreen;">
+            <tr>
+                <th style="width: 75%">ФИО</th>
+                <th>Phone</th>
+                <th>Mail</th>
+                <th style="width: 9.5%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="customer in customers" id="{{customer.id}}">
+                <td>{{customer.firstName}} {{customer.middleName}} {{customer.lastName}}</td>
+                <td>{{customer.phoneNumber}}</td>
+                <td>{{customer.email}}</td>
+                <td>
+                    <a class="btn btn-primary" ng-click="editPerson(customer.id)" title="Изменить">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a class="btn btn-primary" ng-click="deletePerson(customer.id)" title="Удалить">
+                        <i class="fa fa-times"></i>
+                    </a>
+                    <a class="btn btn-primary" ng-click="showOrders(customer.id)" title="Показать заказы">
+                        <i class="fa fa-shopping-cart"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ITEM MODAL CONTENT BELOW -->
+<modal title="Person modal" visible="showModal">
+    <form role="form">
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label class="control-label">First Name</label>
+                <input type="text" name="firstName" class="form-control" placeholder="Person first name" ng-model="currentPerson.firstName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input type="text" name="lastName" class="form-control" placeholder="Person last name" ng-model="currentPerson.lastName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Middle Name</label>
+                <input type="text" name="middleName" class="form-control" placeholder="Person middle name" ng-model="currentPerson.middleName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person phone number:</label>
+                <input type="text" name="phoneNumber" class="form-control" placeholder="Phone number" ng-model="currentPerson.phoneNumber">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person email:</label>
+                <input type="text" name="email" class="form-control" placeholder="email" ng-model="currentPerson.email">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person address:</label>
+                <input type="text" name="address" class="form-control" placeholder="address" ng-model="currentPerson.address">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Post address:</label>
+                <input type="text" name="postAddress" class="form-control" placeholder="post address" ng-model="currentPerson.postAddress">
+            </div>
+
+            <div class="form-group" ng-show="currentPerson.isEmployer">
+                <label class="control-label">Company</label>
+                <select name="companyId" class="form-control" ng-model="selectedCompany" ng-options="company.name for company in companyNames track by company.id">
+                    <option value="" selected="">Select a Company...</option>
+                </select>
+            </div>
+
+            <div class="form-group" ng-show="currentPerson.isEmployer">
+                <label class="control-label">Job position:</label>
+                <input type="text" name="job" class="form-control" placeholder="job position" ng-model="currentPerson.job">
+            </div>
+
+            <div class="form-group">
+                <label><input type="checkbox" ng-model="currentPerson.isEmployer"> Is company employer</label>
+            </div>
+        </div>
+    </form>
+</modal>

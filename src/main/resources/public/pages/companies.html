@@ -1,0 +1,68 @@
+<div class="table-container">
+    <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
+    <button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>
+    <h3 class="example_head">Компании:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover">
+            <thead style="background-color: darkseagreen;">
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="company in companies" id="{{company.id}}" ng-click="showDetails(company.id)">
+                <td>{{company.name}}</td>
+                <td>{{company.description}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- COMPANY MODAL CONTENT BELOW -->
+<modal title="Company" visible="showModal">
+    <form role="form">
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label">Название</label>
+                <input type="text" name="name" class="form-control" placeholder="Название" value="{{company.name}}">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Описание</label>
+                <input type="text" name="description" class="form-control" placeholder="Чем занимается" value="{{company.description}}">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Сайт</label>
+                <input type="text" name="url" class="form-control" placeholder="Сайт" value="{{company.url}}">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Адрес</label>
+                <input type="text" name="address" class="form-control" placeholder="Адрес" value="{{company.address}}">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Почта</label>
+                <input type="text" name="email" class="form-control" placeholder="Email" value="{{company.email}}">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Телефон</label>
+                <input type="text" name="phone" class="form-control" placeholder="Телефонный номер" value="{{company.phone}}">
+            </div>
+
+            <!--<div class="form-group">
+                <label class="control-label"></label>
+                <div class="col-xs-9">
+                    <input type="file" name="logo" id="logo" class="hide" placeholder="Logo">
+                    <button class="btn btn-default btn-block" type="button">
+                        <label for="logo"><i class="fa fa-plus"></i>Add Logo</label>
+                    </button>
+                </div>
+            </div>-->
+        </div>
+    </form>
+</modal>

@@ -1,0 +1,122 @@
+<div class="table-container">
+    <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
+    <button class="btn btn-primary" ng-click="addOrder()">Добавить заказ</button>
+    <h3 class="example_head">Заказы:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover">
+            <thead style="background-color: darkseagreen;">
+                <tr>
+                    <th style="width: 20%">Название</th>
+                    <th style="width: 40%">Получатель</th>
+                    <th>Дата заказа</th>
+                    <th>Дата закрытия заказа</th>
+                    <th>Статус заказа</th>
+                    <th>Сумма к оплате</th>
+                    <th style="width: 6.6%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="order in orders" id="{{order.id}}">
+                    <td>{{order.name}}</td>
+                    <td>{{order.personName}}</td>
+                    <td>{{order.createOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td>{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td>{{order.status}}</td>
+                    <td>{{order.payment}} руб</td>
+                    <td>
+                        <a class="btn btn-primary" ng-click="editOrder(order.id)">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-primary" ng-click="deleteOrder(order.id)">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ORDER MODAL CONTENT BELOW -->
+    <modal title="Order modal" visible="showModal">
+        <form role="form">
+            <tabset>
+                <tab heading="Информация о заказе">
+                    <div class="form-group">
+                        <label class="control-label">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="order name" ng-model="currentOrder.name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Person</label>
+                        <select name="personId" class="form-control" ng-model="selectedPerson" ng-options="person.name for person in personNames track by person.id">
+                            <option value="" selected="">Select a customer...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Comment</label>
+                        <input type="text" name="comment" class="form-control" placeholder="Comment" ng-model="currentOrder.comment">
+                    </div>
+                    <!-- must be available only in edit -->
+                    <div class="form-group">
+                        <label class="control-label">Status</label>
+                        <input type="text" name="status" class="form-control" placeholder="Order status" ng-model="currentOrder.status">
+                    </div>
+                    <!-- must be available only in edit -->
+                    <div class="form-group">
+                        <label class="control-label">Payment</label>
+                        <input type="text" name="payment" class="form-control" placeholder="Payment" ng-model="currentOrder.payment">
+                    </div>
+                </tab>
+                <tab heading="содержимое заказа">
+                    <a class="btn btn-primary" ng-click="toggleItems()" style="margin-top: 10px">
+                        <span>Добавить товар в заказ</span>
+                    </a>
+                    <div class="table-container">
+                        <div class="table-result">
+                            <table class="table-list table-hover">
+                                <tbody>
+                                    <tr ng-repeat="item in currentOrderItems" id="{{item.id}}" style="border-bottom: 1px solid #ddd;">
+                                        <td><i class="fa fa-lg fa-times" style="color: darkslategray;float: left;cursor: pointer" ng-click="remItemsFromOrder(item)"></i></td>
+                                        <td style="width: 600px;vertical-align: middle;">{{item.name}}</td>
+                                        <td>
+                                            <i class="fa fa-lg fa-chevron-left" style="color: darkslategrey;cursor: pointer" ng-click="decrementCou(item.id)"></i>
+                                            <input class="pr-input" type="text" value="{{item.cou}}" style="width: 35px;margin-left: 5px;margin-right: 5px;padding: 0px 5px 0px 5px;" maxlength="3">
+                                            <i class="fa fa-lg fa-chevron-right" style="color: darkslategrey;cursor: pointer" ng-click="incrementCou(item.id)"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </form>
+
+    </modal>
+
+    <!-- ITEMS LIST MODAL -->
+    <modal title="Item selection" visible="showAllItem" hideFooter="true">
+        <form role="form">
+            <div class="modal-body">
+                <div class="table-container">
+                    <div class="table-result">
+                        <table class="table-list table-hover" style="width: 100%">
+                            <tbody>
+                                <tr ng-repeat="name in itemNames" id="{{name.id}}" style="border-bottom: 1px solid #ddd;" ng-click="addItemsInOrder(name.id)">
+                                    <td style="width: 100%;vertical-align: middle;cursor: pointer">{{name.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </modal>
+
+</div>
+
+
+
+
+
+

@@ -1,0 +1,80 @@
+<!-- index.html -->
+<!doctype html>
+<!-- define angular app -->
+<html>
+<head>
+    <!-- SCROLLS -->
+    <!-- load bootstrap and font-awesome via CDN -->
+    <link rel="stylesheet" href="official/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="official/font-awesome/font-awesome.css" />
+    <link rel="stylesheet" href="official/bootcard/bootcards-desktop.min.css">
+    <link rel="stylesheet" href="official/angular/angular-ui-tree.min.css">
+    <link rel="stylesheet" href="custom/css/main.css">
+
+    <!-- SPELLS -->
+    <!-- load angular and angular route via CDN -->
+    <script src="official/jquery-2.1.3.min.js"></script>
+    <script src="official/angular/angular.min.js"></script>
+    <script src="official/angular/angular-ui-router.js"></script>
+    <script src="official/angular/ui-breadcrumbs.js"></script>
+    <script src="official/angular/angular-resource.js" ></script>
+    <script src="official/angular/angular-file-upload.js" ></script>
+    <script src="official/bootstrap/bootstrap.min.js"></script>
+    <script src="official/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="official/angular/angular-ui-tree.js"></script>
+    <!-- AUTH -->
+    <script src="official/auth0/auth0.js"></script>
+    <script src="official/auth0/angular-storage.js"></script>
+    <script src="official/auth0/angular-jwt.js"></script>
+    <script src="official/angular/angular-cookies.js"></script>
+    <script src="official/angular/auth0-angular.js"></script>
+
+    <script src="custom/js/helpers.js"></script>
+    <script src="custom/js/route.js"></script>
+    <script src="custom/js/module.js"></script>
+    <script src="custom/js/factories.js"></script>
+    <script src="custom/js/services.js"></script>
+    <script src="custom/js/controllers.js"></script>
+    <script src="custom/js/directive.js"></script>
+
+</head>
+
+<!-- define angular controller -->
+<body ng-app="purchase" ng-controller="mainController">
+
+    <!-- HEADER AND NAVBAR -->
+    <header>
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" ui-sref="home">Join Purchase</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a ui-sref="product" style="cursor: pointer">Каталог</a></li>
+                    <li><a ui-sref="about" style="cursor: pointer">О нас</a></li>
+                    <li><a ui-sref="contact" style="cursor: pointer">Контакты</a></li>
+                    <li><a ui-sref="login" style="cursor: pointer">Login</a></li>
+                    <li class="dropdown" ng-disabled="disabled">
+                        <a class="dropdown-toggle" data-toggle="dropdown">Администрирование<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a ui-sref="orders" style="cursor: pointer">Заказы</a></li>
+                            <li><a ui-sref="person" style="cursor: pointer">Клиенты</a></li>
+                            <li><a ui-sref="item" style="cursor: pointer">Товар</a></li>
+                            <li><a ui-sref="company" style="cursor: pointer">Поставщики</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT AND INJECTED VIEWS -->
+    <div class="main">
+
+        <ui-breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></ui-breadcrumbs>
+
+        <div ui-view style="padding: 0 15px;"></div>
+    </div>
+
+</body>
+</html>

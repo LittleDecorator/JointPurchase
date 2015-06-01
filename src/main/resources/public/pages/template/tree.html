@@ -1,0 +1,8 @@
+<a data-nodrag ng-click="toggle(this)" style="color: #080808">
+    <span class="fa fa-chevron-right" ng-class="{'fa fa-sm fa-chevron-right': collapsed, 'fa fa-chevron-down': !collapsed}" style="cursor: pointer;"></span>
+</a>
+{{node.title}}
+<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'pages/template/tree.html'" collapsed="true">
+    </li>
+</ol>
