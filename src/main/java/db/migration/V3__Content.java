@@ -14,7 +14,7 @@ public class V3__Content implements SpringJdbcMigration {
     public void migrate(JdbcTemplate jdbcTemplate) {
 
         try {
-            insert_content(jdbcTemplate,new ClassPathResource("public/custom/images/no_image.png"));
+            insert_def_content(jdbcTemplate, new ClassPathResource("public/custom/images/no_image_available.png"));
             insert_content(jdbcTemplate,new ClassPathResource("public/custom/images/petal-lollipop.jpg"));
             insert_content(jdbcTemplate,new ClassPathResource("public/custom/images/petal-lollipop-1.jpg"));
             insert_content(jdbcTemplate,new ClassPathResource("public/custom/images/petal-oceanblue.jpg"));
@@ -27,10 +27,23 @@ public class V3__Content implements SpringJdbcMigration {
 
     }
 
-    private String insert_content(JdbcTemplate jdbcTemplate, Resource resource) throws IOException {
+    private void insert_content(JdbcTemplate jdbcTemplate, Resource resource) throws IOException {
         String contentId = java.util.UUID.randomUUID().toString();
+        String fileName = resource.getFilename();
+        String path = "http://localhost:7979/custom/images/"+fileName;
+        String mime = "image/"+fileName.substring(fileName.indexOf(".")+1);
+        String fileContent = Base64BytesSerializer.serialize(resource.getInputStream());
 
-        jdbcTemplate.execute("insert into content (id,content,file_name) VALUES ('"+contentId+"','"+ Base64BytesSerializer.serialize(resource.getInputStream())+"','"+resource.getFilename()+"')");
-        return contentId;
+        jdbcTemplate.execute("insert into content (id,content,file_name,mime,path) VALUES ('"+contentId+"','"+ fileContent +"','"+fileName+"','"+mime+"','"+path+"')");
+    }
+
+    private void insert_def_content(JdbcTemplate jdbcTemplate, Resource resource) throws IOException {
+        String contentId = java.util.UUID.randomUUID().toString();
+        String fileName = resource.getFilename();
+        String path = "http://localhost:7979/custom/images/"+fileName;
+        String mime = "image/"+fileName.substring(fileName.indexOf(".")+1);
+        String fileContent = Base64BytesSerializer.serialize(resource.getInputStream());
+
+        jdbcTemplate.execute("insert into content (id,content,file_name,is_default,mime,path) VALUES ('"+contentId+"','"+ fileContent+"','"+fileName+"','Y','"+ mime+"','"+path+"')");
     }
 }

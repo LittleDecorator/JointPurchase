@@ -11,6 +11,10 @@ purchase.factory('factory',['$resource',function($resource){
         company: $resource("/company/:id"),
         item: $resource("/item/:id"),
 
+        itemDetail: $resource("/item/:id/detail",{},{
+            get:{method:'GET',isArray:false}
+        }),
+
         itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
 
         orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
@@ -25,6 +29,10 @@ purchase.factory('factory',['$resource',function($resource){
         orderedItem: $resource('/order/:orderId/item/:itemId',{},{
             delete: {method:'DELETE'},
             update: {method:'POST'}
+        }),
+
+        previewItems: $resource('/item/preview',{},{
+            get:{method:'GET',isArray:true}
         }),
 
         itemContent: $resource('/content/upload/item',{},{

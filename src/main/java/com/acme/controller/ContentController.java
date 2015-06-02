@@ -42,9 +42,13 @@ public class ContentController{
         for(MultipartFile file : fileMap.values()){
             if (!file.isEmpty()) {
 
+                String fileName = file.getOriginalFilename();
+                String type = fileName.substring(fileName.indexOf(".")+1);
+
                 content = new Content();
                 content.setFileName(file.getOriginalFilename());
                 content.setContent(file.getBytes());
+                content.setMime("image/"+type);
                 contentMapper.insertSelective(content);
 
                 itemContent = new ItemContent();
@@ -54,7 +58,7 @@ public class ContentController{
 
                 //for return
                 object = new JSONObject();
-                object.put("content", ImageCropper.cropForPreview(content.getContent()));
+                object.put("content", ImageCropper.cropForPreview(content.getContent(),type));
                 object.put("id",content.getId());
                 array.add(object);
             }
@@ -84,7 +88,8 @@ public class ContentController{
             contentExample.createCriteria().andIdIn(contentIdList);
             for(Content content : contentMapper.selectByExampleWithBLOBs(contentExample)){
                 object = new JSONObject();
-                object.put("content", ImageUtils.encodeToString(ImageUtils.getImage(content.getContent()), "jpeg"));
+                String type = content.getMime();
+                object.put("content", ImageUtils.encodeToString(ImageCropper.resizeImage(ImageUtils.getImage(content.getContent()), false), type.substring(type.indexOf("/")+1)));
                 object.put("id", content.getId());
                 array.add(object);
             }
@@ -97,8 +102,10 @@ public class ContentController{
     public JSONObject itemImageUpload(@PathVariable(value = "contentId") String contentId) throws Exception {
         Content content = contentMapper.selectByPrimaryKey(contentId);
         JSONObject object = new JSONObject();
+        String type = content.getMime();
         object.put("name",content.getFileName());
-        object.put("content", ImageUtils.encodeToString(ImageCropper.resizeImage(ImageUtils.getImage(content.getContent()), false), "jpeg"));
+        object.put("content", ImageUtils.encodeToString(ImageCropper.resizeImage(ImageUtils.getImage(content.getContent()), false), type.substring(type.indexOf("/")+1)));
+
         return object;
     }
 

@@ -2,8 +2,10 @@
 create table content (
 	id varchar(37) not null,
 	content text,
-	file_name varchar(1000),
+	file_name varchar(255),
+	path varchar(1000),
 	mime varchar(255),
+	is_default char(1) not null default 'N',
 	primary key (id)
 );
 
@@ -86,9 +88,10 @@ create table item (
   id varchar(37) not null,
   name varchar(255) not null,
   company_id varchar(37) not null,
-  category_id varchar(37),
+  category_id varchar(37) not null,
   article varchar(30),
-  price decimal(20,2), --цена еденицы товара
+  description varchar(255),
+  price decimal(20,2) not null, --цена еденицы товара
   in_stock int default 0, --количество товара, который уже есть у нас
   in_order int DEFAULT 0, --количество заказов данного товара
   primary key (id),

@@ -16,6 +16,7 @@ var purchase = angular.module('purchase', ['ui.router', 'ui-breadcrumbs', 'ui.bo
             .state(route.contact)
             .state(route.login)
             .state(route.item)
+            .state(route.detail)
             .state(route.product);
 
     }).run(function ($state, $rootScope, $location) {

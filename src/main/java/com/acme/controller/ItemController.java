@@ -1,12 +1,11 @@
 package com.acme.controller;
 
 import com.acme.gen.domain.*;
-import com.acme.gen.mapper.CompanyMapper;
-import com.acme.gen.mapper.ItemMapper;
-import com.acme.gen.mapper.OrderItemsMapper;
+import com.acme.gen.mapper.*;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -31,6 +30,12 @@ public class ItemController{
 
     @Autowired
     CompanyMapper companyMapper;
+
+    @Autowired
+    ContentMapper contentMapper;
+
+    @Autowired
+    ItemContentMapper itemContentMapper;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getGoods() {
@@ -127,6 +132,88 @@ public class ItemController{
         }
 
         return itemMapper.selectByExample(itemExample);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/preview")
+    public JSONArray getPreviewItems() throws Exception {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject;
+        ItemContentExample itemContentExample;
+
+        // get base64 default image if no orig image linked with item
+        ContentExample example = new ContentExample();
+        example.createCriteria().andIsDefaultEqualTo(true);
+        Content content = contentMapper.selectByExample(example).get(0);
+
+//        String type = content.getMime();
+//        String noImage = ImageCropper.cropForPreview(content.getContent(), type.substring(type.indexOf("/") + 1));
+        String noImage = content.getPath();
+
+        List<Item> items = itemMapper.selectByExample(new ItemExample());
+        for(Item item : items){
+            jsonObject = new JSONObject();
+
+            //check orig image
+            itemContentExample = new ItemContentExample();
+            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+            if(itemContents.size()>0){
+                //just take first image
+                Content itemContent = contentMapper.selectByPrimaryKey(itemContents.get(0).getId());
+
+                jsonObject.put("content",itemContent.getPath());
+                jsonObject.put("contentId",itemContent.getId());
+            } else {
+                //else default image
+                jsonObject.put("content",noImage);
+                jsonObject.put("contentId",content.getId());
+            }
+            jsonObject.put("description",item.getDescription());
+            jsonObject.put("price",item.getPrice());
+            jsonObject.put("name",item.getName());
+            jsonObject.put("id",item.getId());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
+    public JSONObject getItemDetail(@PathVariable("id") String id){
+        JSONObject jsonObject;
+        ItemContentExample itemContentExample;
+
+        // get base64 default image if no orig image linked with item
+        ContentExample example = new ContentExample();
+        example.createCriteria().andIsDefaultEqualTo(true);
+        Content content = contentMapper.selectByExample(example).get(0);
+
+        String noImage = content.getPath();
+
+        Item item = itemMapper.selectByPrimaryKey(id);
+
+            jsonObject = new JSONObject();
+
+            //check orig image
+            itemContentExample = new ItemContentExample();
+            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+            if(itemContents.size()>0){
+                //just take first image
+                Content itemContent = contentMapper.selectByPrimaryKey(itemContents.get(0).getId());
+//                String itemMime = itemContent.getMime();
+//                jsonObject.put("content",ImageCropper.cropForPreview(itemContent.getContent(), itemMime.substring(itemMime.indexOf("/")+1)));
+                jsonObject.put("content",itemContent.getPath());
+                jsonObject.put("contentId",itemContent.getId());
+            } else {
+                //else default image
+                jsonObject.put("content",noImage);
+                jsonObject.put("contentId",content.getId());
+            }
+            jsonObject.put("description",item.getDescription());
+            jsonObject.put("price",item.getPrice());
+            jsonObject.put("name",item.getName());
+            jsonObject.put("id",item.getId());
+        return jsonObject;
     }
 }
 

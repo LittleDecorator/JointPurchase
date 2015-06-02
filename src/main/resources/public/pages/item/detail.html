@@ -1,0 +1,17 @@
+<!--<ol class="breadcrumb" style="background-color: #f1f1f1; border: 1px solid #ebebeb;">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li class="active">Data</li>
+</ol>-->
+
+<div class="table-container">
+
+    <div class="container bootcards-container" id="main" style="width:auto">
+        <div style="float: left;">
+            <a back-img="{{item.content}}" id="{{item.contentId}}" style="background-image: url({{item.content}})" class="item_background" ng-click="itemView(item.id)"></a>
+            <a style="font-weight: 700;font-size: 12px; cursor: pointer" ng-click="itemView(item.id)">{{item.name}}</a>
+            <p>{{item.description}}</p>
+            <b>Цена: </b>{{item.price}}
+        </div>
+    </div>
+</div>

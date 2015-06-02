@@ -66,6 +66,12 @@ var route = {
         url:'/login',
         templateUrl : 'pages/login.html',
         controller: 'authController'
+    },
+    detail:{
+        name:'detail',
+        url:'/detail?:itemId',
+        templateUrl : 'pages/item/detail.html',
+        controller: 'detailController'
     }
 
 };

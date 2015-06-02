@@ -33,6 +33,7 @@
 		<table tableName="purchase_order" />
 		<table tableName="content" >
 			<columnOverride column="content" javaType="byte[]" typeHandler="base64" />
+			<columnOverride column="is_default" javaType="boolean" typeHandler="yn" />
 		</table>
 		<table tableName="person" />
 		<table tableName="company" />

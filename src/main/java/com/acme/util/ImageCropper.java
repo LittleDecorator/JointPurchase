@@ -8,24 +8,33 @@ import java.text.DecimalFormat;
 public class ImageCropper {
 
     static Rectangle clip;
-    private static final int PREVIEW_SIDE = 300;
-    private static final int VIEW_SIDE = 500;
-    private static final int CROP_H = 300;
-    private static final int CROP_W = 300;
+    private static final int PREVIEW_SIDE = 200;
+    private static final int VIEW_SIDE = 300;
+    private static final int THUMB_SIDE = 65;
+//    private static final int CROP_H = 300;
+//    private static final int CROP_W = 300;
     private static final int CROP_X = 0;
     private static final int CROP_Y = 0;
 
-    public static String cropImage(String encodedImage) throws Exception {
-        return ImageUtils.encodeToString(cropImage(ImageUtils.decodeToImage(encodedImage), PREVIEW_SIDE, PREVIEW_SIDE, 0, 0), "jpeg");
+    public static String cropImage(String encodedImage,String type) throws Exception {
+        return ImageUtils.encodeToString(cropImage(ImageUtils.decodeToImage(encodedImage), PREVIEW_SIDE, PREVIEW_SIDE, 0, 0), type);
     }
 
-    public static String cropForPreview(byte[] data) throws Exception {
-        return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data),true), PREVIEW_SIDE, PREVIEW_SIDE, CROP_X, CROP_Y), "jpeg");
+    public static String cropForView(byte[] data,String type) throws Exception {
+        return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data), true), VIEW_SIDE, VIEW_SIDE, CROP_X, CROP_Y), type);
     }
 
-    public static String cropImage(byte[] data) throws Exception {
-        return ImageUtils.encodeToString(cropImage(ImageUtils.getImage(data), CROP_W, CROP_H, CROP_X, CROP_Y), "jpeg");
+    public static String cropForPreview(byte[] data,String type) throws Exception {
+        return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data),true), PREVIEW_SIDE, PREVIEW_SIDE, CROP_X, CROP_Y), type);
     }
+
+    public static String cropForThumb(byte[] data,String type) throws Exception {
+        return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data),true), THUMB_SIDE, THUMB_SIDE, CROP_X, CROP_Y), type);
+    }
+
+    /*public static String cropImage(byte[] data,String type) throws Exception {
+        return ImageUtils.encodeToString(cropImage(ImageUtils.getImage(data), CROP_W, CROP_H, CROP_X, CROP_Y), type);
+    }*/
 
     public static BufferedImage cropImage(BufferedImage img, int cropWidth,int cropHeight, int cropStartX, int cropStartY) throws Exception {
         BufferedImage clipped = null;

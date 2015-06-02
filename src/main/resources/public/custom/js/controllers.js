@@ -350,7 +350,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ITEM CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('itemController', function ($scope, $state, factory) {
+    purchase.controller('itemController', function ($scope, $state, $stateParams, factory) {
         console.log("enter item controller");
 
 
@@ -771,12 +771,8 @@
         $scope.totalItems = null;
 
         //get all items
-        factory.item.query(function (data) {
+        factory.previewItems.get(function (data) {
             angular.forEach(data, function (item) {
-                var company = helpers.findInArrayById($scope.companyNames, item.companyId);
-                item.companyName = company.name;
-                var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
-                item.categoryType = category.name;
                 $scope.items.push(item);
             });
             //get total items cou, for pagination
@@ -790,11 +786,6 @@
 
         $scope.toggle = function(scope) {
             scope.toggle();
-        };
-
-        $scope.moveLastToTheBegginig = function () {
-            var a = $scope.data.pop();
-            $scope.data.splice(0,0, a);
         };
 
         var getRootNodesScope = function() {
@@ -813,4 +804,22 @@
 
         $scope.options = {};
 
+        //get sub list of items for single page display
+        $scope.subList = function () {
+            var begin = (($scope.currPage - 1) * $scope.itemsPerPage),
+                end = begin + $scope.itemsPerPage;
+
+            $scope.filteredItems = $scope.items.slice(begin, end);
+        };
+
+        $scope.itemView = function(id){
+            $state.go(route.detail, {itemId: id});
+        }
+
+    });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //ITEM DETAIL CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    purchase.controller('detailController', function ($scope, $state, $stateParams, factory) {
+        $scope.item = factory.itemDetail.get({id: $stateParams.itemId})
     });
