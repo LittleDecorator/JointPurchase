@@ -2,6 +2,7 @@ package com.acme.controller;
 
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.*;
+import com.acme.util.Constants;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -143,11 +144,9 @@ public class ItemController{
         // get base64 default image if no orig image linked with item
         ContentExample example = new ContentExample();
         example.createCriteria().andIsDefaultEqualTo(true);
-        Content content = contentMapper.selectByExample(example).get(0);
+        Content defContent = contentMapper.selectByExample(example).get(0);
 
-//        String type = content.getMime();
-//        String noImage = ImageCropper.cropForPreview(content.getContent(), type.substring(type.indexOf("/") + 1));
-        String noImage = content.getPath();
+        String noImage = Constants.PREVIEW_URL+defContent.getId();
 
         List<Item> items = itemMapper.selectByExample(new ItemExample());
         for(Item item : items){
@@ -159,14 +158,11 @@ public class ItemController{
             List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
             if(itemContents.size()>0){
                 //just take first image
-                Content itemContent = contentMapper.selectByPrimaryKey(itemContents.get(0).getId());
-
-                jsonObject.put("content",itemContent.getPath());
-                jsonObject.put("contentId",itemContent.getId());
+                String contentId = itemContents.get(0).getContentId();
+                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
             } else {
                 //else default image
-                jsonObject.put("content",noImage);
-                jsonObject.put("contentId",content.getId());
+                jsonObject.put("url",noImage);
             }
             jsonObject.put("description",item.getDescription());
             jsonObject.put("price",item.getPrice());
@@ -178,7 +174,7 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
-    public JSONObject getItemDetail(@PathVariable("id") String id){
+    public JSONObject getItemDetail(@PathVariable("id") String itemId) throws Exception {
         JSONObject jsonObject;
         ItemContentExample itemContentExample;
 
@@ -187,26 +183,24 @@ public class ItemController{
         example.createCriteria().andIsDefaultEqualTo(true);
         Content content = contentMapper.selectByExample(example).get(0);
 
-        String noImage = content.getPath();
+        String noImage = Constants.VIEW_URL+content.getId();
 
-        Item item = itemMapper.selectByPrimaryKey(id);
+        Item item = itemMapper.selectByPrimaryKey(itemId);
 
             jsonObject = new JSONObject();
 
             //check orig image
             itemContentExample = new ItemContentExample();
-            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            itemContentExample.createCriteria().andItemIdEqualTo(itemId);
             List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
             if(itemContents.size()>0){
                 //just take first image
-                Content itemContent = contentMapper.selectByPrimaryKey(itemContents.get(0).getId());
-//                String itemMime = itemContent.getMime();
-//                jsonObject.put("content",ImageCropper.cropForPreview(itemContent.getContent(), itemMime.substring(itemMime.indexOf("/")+1)));
-                jsonObject.put("content",itemContent.getPath());
-                jsonObject.put("contentId",itemContent.getId());
+                String contentId = itemContents.get(0).getContentId();
+                jsonObject.put("url",Constants.VIEW_URL+contentId);
+                jsonObject.put("contentId",contentId);
             } else {
                 //else default image
-                jsonObject.put("content",noImage);
+                jsonObject.put("url",noImage);
                 jsonObject.put("contentId",content.getId());
             }
             jsonObject.put("description",item.getDescription());

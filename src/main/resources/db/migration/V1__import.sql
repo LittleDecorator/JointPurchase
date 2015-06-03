@@ -3,8 +3,8 @@ create table content (
 	id varchar(37) not null,
 	content text,
 	file_name varchar(255),
-	path varchar(1000),
-	mime varchar(255),
+	mime varchar(25),
+	type varchar(25),
 	is_default char(1) not null default 'N',
 	primary key (id)
 );

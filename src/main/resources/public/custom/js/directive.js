@@ -94,10 +94,11 @@ purchase.directive('backImg', function () {
     return {
         restrict: 'A',
         link: function(scope, element, attrs){
-            var url = attrs.backImg;
-            element.css({
-                "background-image": "url(" + url +")"
-            });
+            //element имеет доступ к текущему объекту через scope
+            console.log(scope);
+            console.log(element);
+            console.log(attrs);
+            element.css({"background-image": "url(" + attrs.backImg +")"});
         }
     };
 });

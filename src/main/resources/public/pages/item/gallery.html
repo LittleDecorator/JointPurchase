@@ -21,9 +21,9 @@
 
                         <div class="panel-body">
                             <div class="row">
-                                <div ng-repeat="image in images">
+                                <div ng-repeat="image in images" style="width: 12.5%" class="col-xs-2">
                                     <!--<img ng-src="{{image.content}}" class="image" id="{{image.id}}" width="150" height="100"/>-->
-                                    <img ng-src="{{image.content}}" class="image" id="{{image.id}}" ng-click="imageView(image.id)"/>
+                                    <img ng-src="{{image.url}}" class="image" id="{{image.id}}" ng-click="imageView(image.id)" style="border: 1px solid #dddddd"/>
                                 </div>
                             </div>
                         </div>

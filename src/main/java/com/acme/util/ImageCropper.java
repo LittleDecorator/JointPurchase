@@ -11,8 +11,6 @@ public class ImageCropper {
     private static final int PREVIEW_SIDE = 200;
     private static final int VIEW_SIDE = 300;
     private static final int THUMB_SIDE = 65;
-//    private static final int CROP_H = 300;
-//    private static final int CROP_W = 300;
     private static final int CROP_X = 0;
     private static final int CROP_Y = 0;
 
@@ -24,12 +22,24 @@ public class ImageCropper {
         return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data), true), VIEW_SIDE, VIEW_SIDE, CROP_X, CROP_Y), type);
     }
 
+    public static BufferedImage cropForView(byte[] data) throws Exception {
+        return cropImage(resizeImage(ImageUtils.getImage(data), true), VIEW_SIDE, VIEW_SIDE, CROP_X, CROP_Y);
+    }
+
     public static String cropForPreview(byte[] data,String type) throws Exception {
         return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data),true), PREVIEW_SIDE, PREVIEW_SIDE, CROP_X, CROP_Y), type);
     }
 
+    public static BufferedImage cropForPreview(byte[] data) throws Exception {
+        return cropImage(resizeImage(ImageUtils.getImage(data), true), PREVIEW_SIDE, PREVIEW_SIDE, CROP_X, CROP_Y);
+    }
+
     public static String cropForThumb(byte[] data,String type) throws Exception {
         return ImageUtils.encodeToString(cropImage(resizeImage(ImageUtils.getImage(data),true), THUMB_SIDE, THUMB_SIDE, CROP_X, CROP_Y), type);
+    }
+
+    public static BufferedImage cropForThumb(byte[] data) throws Exception {
+        return cropImage(resizeImage(ImageUtils.getImage(data), true), THUMB_SIDE, THUMB_SIDE, CROP_X, CROP_Y);
     }
 
     /*public static String cropImage(byte[] data,String type) throws Exception {

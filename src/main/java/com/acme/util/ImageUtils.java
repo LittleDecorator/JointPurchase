@@ -7,6 +7,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ImageUtils {
 
@@ -23,6 +26,27 @@ public class ImageUtils {
         BufferedImage image = ImageIO.read(bis);
         bis.close();
         return image;
+    }
+
+    public static BufferedImage getImage(String path) throws IOException {
+        byte[] binary = Files.readAllBytes(Paths.get(path));
+        return getImage(binary);
+    }
+
+    public static BufferedImage writeToStream (byte[] binary, String type, OutputStream stream) throws IOException {
+        System.out.println(binary.length);
+        ByteArrayInputStream bis = new ByteArrayInputStream(binary);
+        BufferedImage image = ImageIO.read(bis);
+        bis.close();
+        ImageIO.write(image, type, stream);
+        stream.close();
+        return getImage(binary);
+    }
+
+    public static BufferedImage writeToStream (String path, OutputStream stream) throws IOException {
+        byte[] binary = Files.readAllBytes(Paths.get(path));
+        String type = path.substring(path.lastIndexOf(".")+1);
+        return writeToStream(binary,type,stream);
     }
 
     public static String encodeToString(BufferedImage image, String type) throws IOException {

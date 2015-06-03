@@ -211,6 +211,12 @@ canvas {
     margin-right: 10px;
 }
 
+.item_image{
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+
 div.col-sm-6:nth-child(2n){
     width: 48.5%;
     margin-left: 10px;

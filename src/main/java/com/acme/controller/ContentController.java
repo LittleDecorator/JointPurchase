@@ -1,23 +1,21 @@
 package com.acme.controller;
 
 import com.acme.gen.domain.Content;
-import com.acme.gen.domain.ContentExample;
 import com.acme.gen.domain.ItemContent;
 import com.acme.gen.domain.ItemContentExample;
 import com.acme.gen.mapper.ContentMapper;
 import com.acme.gen.mapper.ItemContentMapper;
-import com.acme.util.ImageCropper;
-import com.acme.util.ImageUtils;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import com.acme.util.Constants;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -48,6 +46,7 @@ public class ContentController{
                 content = new Content();
                 content.setFileName(file.getOriginalFilename());
                 content.setContent(file.getBytes());
+                content.setType(type);
                 content.setMime("image/"+type);
                 contentMapper.insertSelective(content);
 
@@ -58,7 +57,7 @@ public class ContentController{
 
                 //for return
                 object = new JSONObject();
-                object.put("content", ImageCropper.cropForPreview(content.getContent(),type));
+                object.put("url", Constants.PREVIEW_URL + content.getId());
                 object.put("id",content.getId());
                 array.add(object);
             }
@@ -68,37 +67,24 @@ public class ContentController{
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     public JSONArray getPreviewImages(@RequestParam(value = "itemId", required = true) String itemId) throws Exception {
-        JSONArray array = null;
+        JSONArray array = new JSONArray();
+        JSONObject jsonObject;
 
         ItemContentExample itemContentExample = new ItemContentExample();
         itemContentExample.createCriteria().andItemIdEqualTo(itemId);
 
-        List<String> contentIdList = Lists.transform(itemContentMapper.selectByExample(itemContentExample), new Function<ItemContent, String>() {
-            @Override
-            public String apply(ItemContent itemContent) {
-                return itemContent.getContentId();
-            }
-        });
-
-        if(contentIdList.size()>0){
-            array = new JSONArray();
-            JSONObject object;
-
-            ContentExample contentExample = new ContentExample();
-            contentExample.createCriteria().andIdIn(contentIdList);
-            for(Content content : contentMapper.selectByExampleWithBLOBs(contentExample)){
-                object = new JSONObject();
-                String type = content.getMime();
-                object.put("content", ImageUtils.encodeToString(ImageCropper.resizeImage(ImageUtils.getImage(content.getContent()), false), type.substring(type.indexOf("/")+1)));
-                object.put("id", content.getId());
-                array.add(object);
-            }
+        for(ItemContent item : itemContentMapper.selectByExample(itemContentExample)){
+            jsonObject = new JSONObject();
+            jsonObject.put("url", Constants.PREVIEW_URL+item.getContentId());
+            jsonObject.put("id", item.getContentId());
+            array.add(jsonObject);
         }
-
         return array;
     }
 
-    @RequestMapping(value = "/image/{contentId}", method = RequestMethod.GET)
+
+//TODO check then delete
+    /*@RequestMapping(value = "/image/{contentId}", method = RequestMethod.GET)
     public JSONObject itemImageUpload(@PathVariable(value = "contentId") String contentId) throws Exception {
         Content content = contentMapper.selectByPrimaryKey(contentId);
         JSONObject object = new JSONObject();
@@ -107,6 +93,14 @@ public class ContentController{
         object.put("content", ImageUtils.encodeToString(ImageCropper.resizeImage(ImageUtils.getImage(content.getContent()), false), type.substring(type.indexOf("/")+1)));
 
         return object;
-    }
-
+    }*/
+//TODO delete below
+/*    @RequestMapping(value = "/image/{contentId}", method = RequestMethod.GET)
+    public void getFile(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws IOException {
+        Content content = contentMapper.selectByPrimaryKey(contentId);
+        String type = content.getMime();
+        type = type.substring(type.indexOf("/")+1);
+        response.setContentType(content.getMime());
+        ImageUtils.writeToStream(content.getContent(),type,response.getOutputStream());
+    }*/
 }

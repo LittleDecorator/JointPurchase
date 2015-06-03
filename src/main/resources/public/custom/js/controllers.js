@@ -534,7 +534,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //GALLERY CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('galleryController', function ($scope, $state, $stateParams, factory, FileUploader) {
+    purchase.controller('galleryController', function ($scope, $location, $state, $stateParams, factory, FileUploader) {
         console.log("Enter gallery controller");
 
         var uploader = $scope.uploader = new FileUploader();
@@ -568,13 +568,16 @@
             angular.forEach(items, function (item, idx) {
                 formData.append("file" + idx, item._file);
             });
-            formData.append("itemId", $stateParams.itemId);
-            var upImageArray = factory.itemContent.upload(formData);
-            console.log(upImageArray);
 
-            angular.forEach(upImageArray, function (image) {
-                console.log(image);
-                $scope.images.push(image);
+            formData.append("itemId", $stateParams.itemId);
+
+            factory.itemContent.upload(formData, function(data){
+                angular.forEach(data, function (image) {
+                    //var path = $location.absUrl().substring(0,$location.absUrl().indexOf("#"));
+                    //image.url = path + image.url;
+                    $scope.images.push(image);
+                    uploader.clearQueue();
+                });
             });
             $scope.toggleGallery();
         };
@@ -821,5 +824,6 @@
     //ITEM DETAIL CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('detailController', function ($scope, $state, $stateParams, factory) {
-        $scope.item = factory.itemDetail.get({id: $stateParams.itemId})
+        $scope.item = factory.itemDetail.get({id: $stateParams.itemId});
+        console.log($scope.item);
     });
