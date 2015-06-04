@@ -4,14 +4,15 @@ import com.acme.gen.domain.Credentials;
 import com.acme.gen.domain.CredentialsExample;
 import com.acme.gen.mapper.CredentialsMapper;
 import com.google.common.base.Strings;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +48,6 @@ public class AuthController {
 
     private static class LoginResponse {
         public String token;
-
         public LoginResponse(final String token) {
             this.token = token;
         }

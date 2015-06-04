@@ -69,4 +69,4 @@ insert into order_items(id,order_id,item_id,cou)
 insert into credentials(id,user_id,login,password,role_id)
         values('05ca1e6a-e665-498f-ac79-2762517b05d5','d7651309-e8f4-47d5-a5a7-e4930456eae9','testUser','testuser','USER');
 insert into credentials(id,user_id,login,password,role_id)
-        values('2d724eaf-9c81-49b4-a0b2-f20f6b7cb52f','c0846837-6614-4171-aac4-52bda5d74cab','clogin','cpassword','ADMIN');
+        values('2d724eaf-9c81-49b4-a0b2-f20f6b7cb52f','c0846837-6614-4171-aac4-52bda5d74cab','clogin@test','cpassword','ADMIN');

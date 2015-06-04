@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean{
@@ -18,23 +19,26 @@ public class JwtFilter extends GenericFilterBean{
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        System.out.println("filter -> "+request);
+        final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new ServletException("Missing or invalid Authorization header.");
-        }
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+//            throw new ServletException("Missing or invalid Authorization header.");
+        } else {
+            final String token = authHeader.substring(7); // The part after "Bearer "
 
-        final String token = authHeader.substring(7); // The part after "Bearer "
-
-        try {
-            final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
-            request.setAttribute("claims", claims);
+            try {
+                final Claims claims = Jwts.parser().setSigningKey("secretkey").parseClaimsJws(token).getBody();
+                request.setAttribute("claims", claims);
+            }
+            catch (final SignatureException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+//                throw new ServletException("Invalid token.");
+            }
         }
-        catch (final SignatureException e) {
-            throw new ServletException("Invalid token.");
-        }
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

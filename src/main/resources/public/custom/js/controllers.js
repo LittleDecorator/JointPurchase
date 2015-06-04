@@ -644,17 +644,22 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //AUTH CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('authController', function ($scope, $http, factory, tokenHandler) {
+    purchase.controller('authController', function ($scope, $cookies, $rootScope, factory) {
         console.log("Enter auth controller");
 
-        $scope.greeting = 'Welcome to the JSON Web Token / AngularJR / Spring example!';
+        //$scope.email = null;
+        //$scope.password = null;
+
+        /*$scope.greeting = 'Welcome to the JSON Web Token / AngularJR / Spring example!';
         $scope.token = null;
         $scope.error = null;
         $scope.roleUser = false;
         $scope.roleAdmin = false;
         $scope.roleFoo = false;
 
-        $scope.login = function () {
+        //
+
+        *//*$scope.login = function () {
             $scope.error = null;
             factory.authLogin.post({name: $scope.userName},
                 function (token) {
@@ -668,18 +673,13 @@
                     $scope.error = error;
                     $scope.userName = '';
                 });
-        };
+
+        };*//*
 
         $scope.checkRoles = function () {
             console.log("checkRoles");
-            console.log(tokenHandler);
             console.log($scope.token);
-            //tokenHandler.token = 'Bearer ' + $scope.token;
-            //console.log(tokenHandler);
-            $http.defaults.headers.common['Authorization'] = 'Bearer ' + $scope.token.token;
             $scope.roleUse = factory.authRoleCheck.get({role: 'user'});
-            $scope.roleAdmin = factory.authRoleCheck.get({role: 'admin'});
-            $scope.roleFoo = factory.authRoleCheck.get({role: 'foo'});
         };
 
         $scope.logout = function () {
@@ -690,7 +690,27 @@
 
         $scope.loggedIn = function () {
             return $scope.token !== null;
-        }
+        };
+
+        $scope.checkRoles();*/
+
+        $scope.cancel = $scope.$dismiss;
+
+        $scope.submit = function (email, password) {
+            console.log($scope);
+            //UsersApi.login(email, password).then(function (user) {
+            factory.authLogin.post({name: email},
+                function (token) {
+                    $cookies.put('token',token.token);
+                    console.log(token);
+                    $rootScope.currentUser = email;
+                    $scope.$close();
+                }, function(){
+                    console.log("some error");
+                    $scope.$close();
+                });
+
+        };
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //PRODUCT CONTROLLER//

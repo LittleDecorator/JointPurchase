@@ -1,7 +1,9 @@
-var purchase = angular.module('purchase', ['ui.router', 'ui-breadcrumbs', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ui.tree']);
+var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcrumbs', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ui.tree']);
 
 // configure our routes
-    purchase.config(function ($stateProvider, $urlRouterProvider) {
+    purchase.config(function ($stateProvider, $urlRouterProvider,$httpProvider) {
+
+        $httpProvider.interceptors.push('authInterceptor');
 
         // For any unmatched url, redirect to /state1
         $urlRouterProvider.otherwise('/');
@@ -18,22 +20,48 @@ var purchase = angular.module('purchase', ['ui.router', 'ui-breadcrumbs', 'ui.bo
             .state(route.item)
             .state(route.detail)
             .state(route.product);
+    });
 
-    }).run(function ($state, $rootScope, $location) {
-        $state.transitionTo('home');
+    purchase.run(function ($state, $rootScope, $location,$cookies,loginModal) {
+
+        /*$cookies.remove('token');*/
 
         $rootScope.$on('$locationChangeSuccess', function () {
             $rootScope.actualLocation = $location.path();
         });
 
-        $rootScope.$watch(function () {
-            return $location.path()
-        }, function (newLocation, oldLocation) {
-            //console.log("new -> "+newLocation);
-            //console.log("old -> "+oldLocation);
-            //console.log("actual -> "+$rootScope.actualLocation);
-            if ($rootScope.actualLocation == newLocation) {
-                $rootScope.$broadcast('locBack', true);
+        //Capturing attempted state changes
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+            console.log(toState);
+            var requireLogin = toState.data.requireLogin;
+
+            console.log($cookies.get('token'));
+
+            if (requireLogin && typeof $cookies.get('token') == 'undefined' ) {
+                event.preventDefault();
+                // get me a login modal!
+                loginModal()
+                    .then(function () {
+                        console.log("module -> stateChangeStart -> login -> then");
+                        $state.transitionTo(toState.name, toParams);
+                    })
+                    .catch(function () {
+                        //return $state.go('welcome');
+                        console.log("module -> stateChangeStart -> login -> catch");
+                        $state.transitionTo('home');
+                    });
             }
         });
+
+        $rootScope.$watch(
+            function () {
+                return $location.path()
+            },
+            function (newLocation, oldLocation) {
+                //console.log("actual -> "+$rootScope.actualLocation);
+                if ($rootScope.actualLocation == newLocation) {
+                    $rootScope.$broadcast('locBack', true);
+                }
+            }
+        );
     });

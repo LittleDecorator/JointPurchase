@@ -1,0 +1,33 @@
+<!--
+<div>
+    <form ng-submit="submit(_email, _password)">
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label">Email/Login</label>
+                <input type="email" ng-model="_email" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Password</label>
+                <input type="password" ng-model="_password" />
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+
+        <div class="btn-group pull-right">
+            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+        </div>
+
+        <div class="btn-group pull-right">
+            <button class="btn btn-success" ng-click="submit()">Submit</button>
+        </div>
+    </div>
+</div>-->
+<div>
+    <form ng-submit="submit(_email, _password)">
+        <input type="email" ng-model="_email" />
+        <input type="password" ng-model="_password" />
+        <button>Submit</button>
+    </form>
+    <button ng-click="cancel()">Cancel</button>
+</div>

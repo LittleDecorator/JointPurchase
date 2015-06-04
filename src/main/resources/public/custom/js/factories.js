@@ -1,8 +1,34 @@
-purchase.factory('tokenHandler', function() {
+purchase.factory('authInterceptor',function ($rootScope, $q, $cookies ,$location) {
     return {
-        token: 'Bearer '
-    }
-});
+        // Add authorization token to headers
+        request: function (config) {
+            console.log("auth interceptor - request");
+            config.headers = config.headers || {};
+            var bla = $cookies.get('token');
+            if ($cookies.get('token')) {
+                console.log("token present");
+                console.log(bla);
+                config.headers.Authorization = 'Bearer ' + $cookies.get('token');
+            } else {
+                console.log("no token");
+            }
+            return config;
+        },
+
+        // Intercept 401s and redirect you to login
+        responseError: function(response) {
+            console.log("auth interceptor - responseError");
+            if(response.status === 401) {
+                // remove any stale tokens
+                $cookies.remove('token');
+                $location.path('/home');
+                return $q.reject(response);
+            } else {
+                return $q.reject(response);
+            }
+        }
+    };
+ });
 
 purchase.factory('factory',['$resource',function($resource){
     return {
