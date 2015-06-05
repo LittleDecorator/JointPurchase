@@ -5,7 +5,6 @@ var route = {
         name:'home',
         url: '/',
         templateUrl : 'pages/home.html',
-        controller: 'mainController',
         data: {
             requireLogin: false
         }
@@ -98,6 +97,15 @@ var route = {
         url:'/detail?:itemId',
         templateUrl : 'pages/item/detail.html',
         controller: 'detailController',
+        data: {
+            requireLogin: false
+        }
+    },
+    registration:{
+        name:'registration',
+        url:'/registration',
+        templateUrl : 'pages/registration.html',
+        controller: 'registrationController',
         data: {
             requireLogin: false
         }

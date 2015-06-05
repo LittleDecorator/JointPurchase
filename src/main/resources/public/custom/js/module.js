@@ -19,12 +19,14 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
             .state(route.login)
             .state(route.item)
             .state(route.detail)
-            .state(route.product);
+            .state(route.product)
+            .state(route.registration);
     });
 
     purchase.run(function ($state, $rootScope, $location,$cookies,loginModal) {
 
         /*$cookies.remove('token');*/
+        $rootScope.currentUser = {};
 
         $rootScope.$on('$locationChangeSuccess', function () {
             $rootScope.actualLocation = $location.path();
@@ -32,10 +34,9 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
 
         //Capturing attempted state changes
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+            console.log("change state");
             console.log(toState);
             var requireLogin = toState.data.requireLogin;
-
-            console.log($cookies.get('token'));
 
             if (requireLogin && typeof $cookies.get('token') == 'undefined' ) {
                 event.preventDefault();
@@ -43,12 +44,12 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
                 loginModal()
                     .then(function () {
                         console.log("module -> stateChangeStart -> login -> then");
-                        $state.transitionTo(toState.name, toParams);
+                        return $state.transitionTo(toState.name, toParams);
                     })
                     .catch(function () {
                         //return $state.go('welcome');
                         console.log("module -> stateChangeStart -> login -> catch");
-                        $state.transitionTo('home');
+                        return $state.transitionTo('home');
                     });
             }
         });

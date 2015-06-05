@@ -1,5 +1,22 @@
-    purchase.controller('mainController', function ($scope) {
+    purchase.controller('mainController', function ($scope,$rootScope,$cookies, loginModal,authService) {
         console.log("Enter main controller");
+        $scope.admin;
+        $scope.auth;
+
+        $scope.login = function(){
+            console.log("try login from menu");
+            loginModal();
+        };
+
+        /*$scope.$watch(authService.isAdmin, function(newVal, oldVal){
+            console.log("watch admin -> "+newVal);
+            $scope.admin = newVal;
+        });
+
+        $scope.$watch(authService.isAuth, function(newVal, oldVal){
+            console.log("watch auth -> "+newVal);
+            $scope.auth = newVal;
+        });*/
     });
 
     purchase.controller('aboutController', function ($scope) {
@@ -18,20 +35,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //MENU CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /*purchase.controller("menuController", function($scope){
-     $scope.status = {
-     isopen: false
-     };
+/*    purchase.controller("menuController", function($scope,$rootScope,$cookies, loginModal){
+        console.log("Enter menu controller");
+        console.log($scope);
 
-     $scope.toggled = function(open) {
-     $log.log('Dropdown is now: ', open);
-     };
 
-     $scope.toggleDropdown = function($event) {
-     $event.preventDefault();
-     $event.stopPropagation();
-     $scope.status.isopen = !$scope.status.isopen;
-     };
      });*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ORDER CONTROLLER//
@@ -647,67 +655,24 @@
     purchase.controller('authController', function ($scope, $cookies, $rootScope, factory) {
         console.log("Enter auth controller");
 
-        //$scope.email = null;
-        //$scope.password = null;
-
-        /*$scope.greeting = 'Welcome to the JSON Web Token / AngularJR / Spring example!';
-        $scope.token = null;
-        $scope.error = null;
-        $scope.roleUser = false;
-        $scope.roleAdmin = false;
-        $scope.roleFoo = false;
-
-        //
-
-        *//*$scope.login = function () {
-            $scope.error = null;
-            factory.authLogin.post({name: $scope.userName},
-                function (token) {
-                    $scope.token = token;
-                    console.log($scope.token);
-                    $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-                    console.log(1);
-                    $scope.checkRoles();
-                },
-                function (error) {
-                    $scope.error = error;
-                    $scope.userName = '';
-                });
-
-        };*//*
-
-        $scope.checkRoles = function () {
-            console.log("checkRoles");
-            console.log($scope.token);
-            $scope.roleUse = factory.authRoleCheck.get({role: 'user'});
-        };
-
-        $scope.logout = function () {
-            $scope.userName = '';
-            $scope.token = null;
-            $http.defaults.headers.common.Authorization = '';
-        };
-
-        $scope.loggedIn = function () {
-            return $scope.token !== null;
-        };
-
-        $scope.checkRoles();*/
-
         $scope.cancel = $scope.$dismiss;
 
         $scope.submit = function (email, password) {
+            console.log("submit user");
             console.log($scope);
-            //UsersApi.login(email, password).then(function (user) {
+
             factory.authLogin.post({name: email},
                 function (token) {
-                    $cookies.put('token',token.token);
                     console.log(token);
-                    $rootScope.currentUser = email;
-                    $scope.$close();
+                    //if(token!=null){
+                        $cookies.put('token',token.token);
+                        console.log(token);
+                        $rootScope.currentUser = email;
+                        $scope.$close("bla");
+                    //}
                 }, function(){
                     console.log("some error");
-                    $scope.$close();
+                    //$scope.$close("fla");
                 });
 
         };
@@ -846,4 +811,12 @@
     purchase.controller('detailController', function ($scope, $state, $stateParams, factory) {
         $scope.item = factory.itemDetail.get({id: $stateParams.itemId});
         console.log($scope.item);
+    });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //REGISTRATION CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    purchase.controller('registrationController',function($scope,$state,factory){
+        $scope.register = function(){
+            console.log($scope);
+        }
     });

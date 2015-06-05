@@ -1,13 +1,12 @@
-<!--
-<div>
+<!--<div>
     <form ng-submit="submit(_email, _password)">
         <div class="modal-body">
             <div class="form-group">
-                <label class="control-label">Email/Login</label>
+                <label class="control-label">Email/Логин</label>
                 <input type="email" ng-model="_email" />
             </div>
             <div class="form-group">
-                <label class="control-label">Password</label>
+                <label class="control-label">Пароль</label>
                 <input type="password" ng-model="_password" />
             </div>
         </div>
@@ -19,10 +18,17 @@
         </div>
 
         <div class="btn-group pull-right">
-            <button class="btn btn-success" ng-click="submit()">Submit</button>
+            <button class="btn btn-success" ng-click="submit()">OK</button>
+        </div>
+
+        <div class="btn-group pull-right">
+            <button class="btn btn-warning" ui-sref="product">Зарегистрироваться</button>
         </div>
     </div>
 </div>-->
+
+
+
 <div>
     <form ng-submit="submit(_email, _password)">
         <input type="email" ng-model="_email" />

@@ -36,7 +36,8 @@ public class AuthController {
                 return new LoginResponse(Jwts.builder().setSubject(login.name).claim("roles", credential.getRoleId()).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretkey").compact());
             }
         }
-        throw new ServletException("Invalid login");
+//        throw new ServletException("Invalid login");
+        return null;
     }
 
 
@@ -48,6 +49,7 @@ public class AuthController {
 
     private static class LoginResponse {
         public String token;
+
         public LoginResponse(final String token) {
             this.token = token;
         }

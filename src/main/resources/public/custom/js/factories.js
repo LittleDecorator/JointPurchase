@@ -1,13 +1,10 @@
-purchase.factory('authInterceptor',function ($rootScope, $q, $cookies ,$location) {
+purchase.factory('authInterceptor',function ($rootScope, $q, $cookies) {
     return {
         // Add authorization token to headers
         request: function (config) {
-            console.log("auth interceptor - request");
+            //console.log("auth interceptor - request");
             config.headers = config.headers || {};
-            var bla = $cookies.get('token');
             if ($cookies.get('token')) {
-                console.log("token present");
-                console.log(bla);
                 config.headers.Authorization = 'Bearer ' + $cookies.get('token');
             } else {
                 console.log("no token");
@@ -21,7 +18,8 @@ purchase.factory('authInterceptor',function ($rootScope, $q, $cookies ,$location
             if(response.status === 401) {
                 // remove any stale tokens
                 $cookies.remove('token');
-                $location.path('/home');
+                //$location.path('/home');
+                //$state.transitionTo("home");
                 return $q.reject(response);
             } else {
                 return $q.reject(response);
