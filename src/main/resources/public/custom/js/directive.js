@@ -102,3 +102,22 @@ purchase.directive('backImg', function () {
         }
     };
 });
+
+/* build main navigation menu. Take menu object from main controller */
+purchase.directive('ngMenu',function($compile,authService,$rootScope){
+    return {
+        restrict: 'E',
+        templateUrl:'pages/template/menu/ng-menu.html'
+    }
+});
+
+purchase.directive('ngDropMenu',function(){
+    return {
+        restrict: 'A',
+        transclude: true,
+        templateUrl:'pages/template/menu/drop-menu.html',
+        scope:{
+            data: '=content'
+        }
+    }
+});

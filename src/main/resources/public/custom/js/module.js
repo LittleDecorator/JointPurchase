@@ -27,6 +27,7 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
 
         /*$cookies.remove('token');*/
         $rootScope.currentUser = {};
+        $rootScope.menu = {};
 
         $rootScope.$on('$locationChangeSuccess', function () {
             $rootScope.actualLocation = $location.path();
@@ -35,7 +36,7 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
         //Capturing attempted state changes
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             console.log("change state");
-            console.log(toState);
+            //console.log(toState);
             var requireLogin = toState.data.requireLogin;
 
             if (requireLogin && typeof $cookies.get('token') == 'undefined' ) {

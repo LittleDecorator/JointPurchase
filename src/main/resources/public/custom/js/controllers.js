@@ -1,22 +1,36 @@
     purchase.controller('mainController', function ($scope,$rootScope,$cookies, loginModal,authService) {
         console.log("Enter main controller");
-        $scope.admin;
-        $scope.auth;
 
         $scope.login = function(){
-            console.log("try login from menu");
+            /*console.log("try login from menu");
             loginModal();
+            console.log("after call login in menu");*/
+            console.log($scope.menu);
+            $scope.menu = [
+                { title: 'Контакты', url: 'contact' },
+                //{ title: 'Login', action: 'login()' , toggleOnLogin: true}
+            ];
+            console.log($scope.menu);
         };
 
-        /*$scope.$watch(authService.isAdmin, function(newVal, oldVal){
-            console.log("watch admin -> "+newVal);
-            $scope.admin = newVal;
-        });
-
-        $scope.$watch(authService.isAuth, function(newVal, oldVal){
-            console.log("watch auth -> "+newVal);
-            $scope.auth = newVal;
-        });*/
+        //TODO: Change later to user route.js
+        console.log($scope.menu);
+        $scope.menu = [
+                { title: 'Каталог', url: 'product' },
+                { title: 'О нас', url: 'about' },
+                //{ title: 'Контакты', url: 'contact' },
+                { title: 'Login', action: 'login()' , toggleOnLogin: true},
+                { title:'Администрирование', requireLogin: true,
+                    menu:[
+                        { title:'Заказы', url:'orders' },
+                        { title:'Клиенты',url:'person' },
+                        { title:'Товар',url:'item' },
+                        { title:'Поставщики',url:'company' },
+                        { title:'TEST',action:'login()' }
+                    ]
+                }
+            ];
+        console.log($scope.menu);
     });
 
     purchase.controller('aboutController', function ($scope) {
@@ -669,6 +683,23 @@
                         console.log(token);
                         $rootScope.currentUser = email;
                         $scope.$close("bla");
+                    console.log($rootScope.currentUser);
+                    console.log($rootScope);
+                    $rootScope.menu = [
+                        { title: 'Каталог', url: 'product' },
+                        //{ title: 'О нас', url: 'about' },
+                        //{ title: 'Контакты', url: 'contact' },
+                        { title: 'LogOut', action: 'login()' , toggleOnLogin: false}
+                        //{ title:'Администрирование', requireLogin: true,
+                        //    menu:[
+                        //        { title:'Заказы', url:'orders' },
+                        //        { title:'Клиенты',url:'person' },
+                        //        { title:'Товар',url:'item' },
+                        //        { title:'Поставщики',url:'company' }
+                        //    ]
+                        //}
+                    ];
+                    console.log($rootScope);
                     //}
                 }, function(){
                     console.log("some error");
