@@ -1,59 +1,84 @@
-    purchase.controller('mainController', function ($scope,$rootScope,$cookies, loginModal,authService) {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //MAIN CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory) {
         console.log("Enter main controller");
 
         $scope.login = function(){
-            /*console.log("try login from menu");
-            loginModal();
-            console.log("after call login in menu");*/
-            //console.log($scope.menu);
-            $scope.menu = [
-                { title: 'Контакты', url: 'contact' },
-                //{ title: 'Login', action: 'login()' , toggleOnLogin: true}
-            ];
-            //console.log($scope.menu);
+            loginModal()
+                .then(function () {
+                    $scope.refreshMenu();
+                    //return $state.transitionTo(toState.name, toParams);
+                })
+                .catch(function () {
+                    //return $state.go('welcome');
+                    console.log("direct login failed");
+                    //return $state.transitionTo('home');
+                });
+
         };
 
-        //TODO: Change later to user route.js
-        //console.log($scope.menu);
-        $scope.menu = [
-                { title: 'Каталог', url: 'product' },
-                { title: 'О нас', url: 'about' },
-                //{ title: 'Контакты', url: 'contact' },
-                { title: 'Login', action: 'login()' , toggleOnLogin: true},
-                { title:'Администрирование', requireLogin: true, menu:[
-                        { title:'Заказы', url:'orders' },
-                        { title:'Клиенты',url:'person' },
-                        { title:'Товар',url:'item' },
-                        { title:'Поставщики',url:'company' },
-                        { title:'TEST',action:'login()' }
-                    ]
-                }
-            ];
-        //console.log($scope.menu);
-    });
+        $scope.logout = function(){
+            $cookies.remove('token');
+            $rootScope.currentUser = {};
+            $scope.refreshMenu();
+            $state.transitionTo("home");
+        };
 
+        $scope.refreshMenu = function(){
+            $scope.menu = [];
+            angular.forEach(menu.getMenu(),function(item){
+                if(item.displayCondition){
+                    if(item.displayCondition.admin && item.displayCondition.auth && authService.isAuth()){
+                        $scope.menu.push(item);
+                    } else if(item.displayCondition.auth && authService.isAuth()){
+                        $scope.menu.push(item);
+                    } else if(!item.displayCondition.auth && !authService.isAuth()){
+                        $scope.menu.push(item);
+                    }
+                } else {
+                    $scope.menu.push(item);
+                }
+            })
+        };
+
+        $scope.cancel = $scope.$dismiss;
+
+        $scope.submit = function (email, password) {
+            console.log("submit user");
+            console.log($scope);
+
+            factory.authLogin.post({name: email},
+                function (token) {
+                    //if(token!=null){
+                    $cookies.put('token',token.token);
+                    console.log(token);
+                    //set current user promises
+                    $scope.$close(email);
+                    console.log($rootScope.currentUser);
+                    $scope.refreshMenu();
+                    //}
+                }, function(){
+                    console.log("some error");
+                    //$scope.$close("fla");
+                });
+
+        };
+
+        $scope.mainMenu = $scope.refreshMenu();
+    });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //ABOUT CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('aboutController', function ($scope) {
         $scope.message = 'Look! I am an about page.';
     });
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //CONTACT CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('contactController', function ($scope) {
         $scope.message = 'Contact us! JK. This is just a demo.';
     });
-
-//просто заглушка
-    purchase.controller('stub', function ($scope) {
-        //empty
-    });
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //MENU CONTROLLER//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*    purchase.controller("menuController", function($scope,$rootScope,$cookies, loginModal){
-        console.log("Enter menu controller");
-        console.log($scope);
-
-
-     });*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ORDER CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -661,51 +686,6 @@
 
          }*/
 
-    });
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //AUTH CONTROLLER//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('authController', function ($scope, $cookies, $rootScope, factory) {
-        console.log("Enter auth controller");
-
-        $scope.cancel = $scope.$dismiss;
-
-        $scope.submit = function (email, password) {
-            console.log("submit user");
-            console.log($scope);
-
-            factory.authLogin.post({name: email},
-                function (token) {
-                    console.log(token);
-                    //if(token!=null){
-                        $cookies.put('token',token.token);
-                        console.log(token);
-                        $rootScope.currentUser = email;
-                        $scope.$close("bla");
-                    console.log($rootScope.currentUser);
-                    console.log($rootScope);
-                    $rootScope.menu = [
-                        { title: 'Каталог', url: 'product' },
-                        //{ title: 'О нас', url: 'about' },
-                        //{ title: 'Контакты', url: 'contact' },
-                        { title: 'LogOut', action: 'login()' , toggleOnLogin: false}
-                        //{ title:'Администрирование', requireLogin: true,
-                        //    menu:[
-                        //        { title:'Заказы', url:'orders' },
-                        //        { title:'Клиенты',url:'person' },
-                        //        { title:'Товар',url:'item' },
-                        //        { title:'Поставщики',url:'company' }
-                        //    ]
-                        //}
-                    ];
-                    console.log($rootScope);
-                    //}
-                }, function(){
-                    console.log("some error");
-                    //$scope.$close("fla");
-                });
-
-        };
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //PRODUCT CONTROLLER//

@@ -41,6 +41,19 @@ var helpers = {
         $(".filter-item :input:not(:button)").each(function() {
             $.trim($(this).val(""));
         });
+    },
+
+    findRouteByName: function(name){
+        var res = {};
+        route.getRoutes().forEach(function(elem){
+            if(elem.name === name){
+                angular.extend(res,elem);
+                return false;
+            } else {
+                return true;
+            }
+        });
+        return res;
     }
 
 };

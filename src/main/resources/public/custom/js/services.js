@@ -10,7 +10,7 @@ purchase.service('loginModal', function ($modal, $rootScope) {
     return function() {
         var instance = $modal.open({
             templateUrl: 'pages/template/loginModal.html',
-            controller: 'authController'
+            controller: 'mainController'
             //controllerAs: 'authController'
         });
         console.log(instance);

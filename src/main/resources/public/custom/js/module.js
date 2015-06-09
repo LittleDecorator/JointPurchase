@@ -9,18 +9,9 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
         $urlRouterProvider.otherwise('/');
 
         // Now set up the states
-        $stateProvider.state(route.home)
-            .state(route.about)
-            .state(route.orders)
-            .state(route.person)
-            .state(route.gallery)
-            .state(route.company)
-            .state(route.contact)
-            .state(route.login)
-            .state(route.item)
-            .state(route.detail)
-            .state(route.product)
-            .state(route.registration);
+        angular.forEach(route.getRoutes(),function(route){
+            $stateProvider.state(route);
+        });
     });
 
     purchase.run(function ($state, $rootScope, $location,$cookies,loginModal) {
