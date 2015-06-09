@@ -5,23 +5,22 @@
             /*console.log("try login from menu");
             loginModal();
             console.log("after call login in menu");*/
-            console.log($scope.menu);
+            //console.log($scope.menu);
             $scope.menu = [
                 { title: 'Контакты', url: 'contact' },
                 //{ title: 'Login', action: 'login()' , toggleOnLogin: true}
             ];
-            console.log($scope.menu);
+            //console.log($scope.menu);
         };
 
         //TODO: Change later to user route.js
-        console.log($scope.menu);
+        //console.log($scope.menu);
         $scope.menu = [
                 { title: 'Каталог', url: 'product' },
                 { title: 'О нас', url: 'about' },
                 //{ title: 'Контакты', url: 'contact' },
                 { title: 'Login', action: 'login()' , toggleOnLogin: true},
-                { title:'Администрирование', requireLogin: true,
-                    menu:[
+                { title:'Администрирование', requireLogin: true, menu:[
                         { title:'Заказы', url:'orders' },
                         { title:'Клиенты',url:'person' },
                         { title:'Товар',url:'item' },
@@ -30,7 +29,7 @@
                     ]
                 }
             ];
-        console.log($scope.menu);
+        //console.log($scope.menu);
     });
 
     purchase.controller('aboutController', function ($scope) {

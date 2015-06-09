@@ -1,8 +1,0 @@
-<a class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">{{data.title}}<b class="caret"></b></a>
-<ul class="dropdown-menu">
-    <li ng-repeat="item in data.menu">
-        <a ng-if="item.url" ui-sref="{{item.url}}" style="cursor: pointer">{{item.title}}</a>
-        <a ng-if="item.action" ng-click="login()" style="cursor: pointer">{{item.title}}</a>
-    </li>
-</ul>
-
