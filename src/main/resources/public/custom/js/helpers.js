@@ -46,7 +46,10 @@ var helpers = {
     findRouteByName: function(name){
         var res = {};
         route.getRoutes().forEach(function(elem){
+            console.log(elem);
+            console.log(name);
             if(elem.name === name){
+                console.log("match");
                 angular.extend(res,elem);
                 return false;
             } else {

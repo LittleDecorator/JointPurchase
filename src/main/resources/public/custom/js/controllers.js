@@ -83,7 +83,8 @@
     //ORDER CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('orderController', function ($scope, $state, $stateParams, factory) {
-
+        //TODO: Написать сервис подсчета товаров при заказах
+        //TODO: Определиться со статусами заказа (можно ли редактироватьб и когда, или же это будет работать автоматом)
         console.log("Enter order controller");
 
         /* array of orders*/
@@ -108,8 +109,20 @@
 
         $scope.selectedPerson = {};
 
-        /* init section */
-        if ($stateParams.customerId) {
+        if ($stateParams.id) {
+            factory.order.get({id:$stateParams.id},function (data) {
+                $scope.currentOrder = data;
+                $scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
+
+                factory.orderItems.get({id: $stateParams.id}, function (data) {
+                    angular.forEach(data, function (orderItem) {
+                        var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
+                        orderItem.name = item.name;
+                        $scope.currentOrderItems.push(orderItem);
+                    });
+                });
+            });
+        } else if ($stateParams.customerId) {
             $scope.orders = factory.orderByCustomerId.get({id: $stateParams.customerId}, function (data) {
                 angular.forEach(data, function (order) {
                     var person = helpers.findInArrayById($scope.personNames, order.personId);
@@ -125,32 +138,13 @@
             });
         }
 
-        $scope.toggleModal = function () {
-            $scope.showModal = !$scope.showModal;
-        };
-
         $scope.toggleItems = function () {
             $scope.showAllItem = !$scope.showAllItem;
             $scope.hideModalFooter = true;
         };
 
         $scope.editOrder = function (id) {
-            $scope.currentOrderItems = [];
-            $scope.currentOrder = helpers.findInArrayById($scope.orders, id);
-            $scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
-            //find current item index in array
-            $scope.index = $scope.orders.indexOf($scope.currentOrder);
-            //show modal
-            $scope.toggleModal();
-
-            /* get normalize order items */
-            factory.orderItems.get({id: $scope.currentOrder.id}, function (data) {
-                angular.forEach(data, function (orderItem) {
-                    var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
-                    orderItem.name = item.name;
-                    $scope.currentOrderItems.push(orderItem);
-                });
-            });
+            $state.transitionTo("orderDetail",{id:id});
         };
 
         $scope.deleteOrder = function (id) {
@@ -167,9 +161,7 @@
 
         //create order
         $scope.addOrder = function () {
-            $scope.currentOrder = {};
-            $scope.priv.idx = -1;
-            $scope.toggleModal();
+            $state.transitionTo("orderDetail");
         };
 
         $scope.save = function () {
@@ -185,33 +177,19 @@
             });
 
             //prepare response object
+            $scope.currentOrder.personId = $scope.selectedPerson.id;
             var respData = {
                 order: $scope.currentOrder,
                 items: cleanOrderItems
             };
 
-            //call save, hide modal and update current order in array
-            factory.order.save(respData, function (order) {
-                $scope.toggleModal();
-
-                var person = helpers.findInArrayById($scope.personNames, order.personId);
-                order.personName = person.name;
-
-                if ($scope.index > -1) {
-                    $scope.orders.splice($scope.index, 1, order);
-                } else {
-                    $scope.orders.push(order);
-                }
-            });
-
-        };
-
-        $scope.cancel = function () {
-            $scope.toggleModal();
+            factory.order.save(respData);
         };
 
         //add item to order
         $scope.addItemsInOrder = function (id) {
+            //TODO: Проверять что товар уже в заказе, и либо ничего не делать, либо увеличивать позицию на 1, либо убирать дублируемый товар из списка возможного
+            //TODO: Нужна множественная выборка?????
             var selectedItem = helpers.findInArrayById($scope.itemNames, id);
             $scope.currentOrderItems.push({
                 orderId: $scope.currentOrder.id,
@@ -262,29 +240,29 @@
     //PERSON CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('personController', function ($scope, $state, $stateParams, factory) {
-
         console.log("Enter person controller");
+        //TODO: делать неактивным кнопку показа заказов клиента, если их нет
+        //TODO: возможно стоит показывать в таблице кол-во заказов
 
-        $scope.currentPerson = {};
+        $scope.current = {};
         $scope.companyNames = factory.companyMap.get();
         $scope.selectedCompany = {};
-
-        $scope.customers = factory.customer.query();
-
-        $scope.toggleModal = function () {
-            $scope.showModal = !$scope.showModal;
-        };
+        if($stateParams.id){
+            factory.customer.get({id:$stateParams.id},function(data){
+                $scope.current = data;
+                if ($scope.current.companyId != null) {
+                    $scope.selectedCompany = helpers.findInArrayById($scope.companyNames, $scope.current.companyId);
+                    $scope.current.isEmployer = true;
+                } else {
+                    $scope.current.isEmployer = false;
+                }
+            });
+        } else {
+            $scope.customers = factory.customer.query();
+        }
 
         $scope.editPerson = function (id) {
-            $scope.currentPerson = helpers.findInArrayById($scope.customers, id);
-            if ($scope.currentPerson.companyId != null) {
-                $scope.selectedCompany = helpers.findInArrayById($scope.companyNames, $scope.currentPerson.companyId);
-                $scope.currentPerson.isEmployer = true;
-            } else {
-                $scope.currentPerson.isEmployer = false;
-                $scope.selectedCompany = {};
-            }
-            $scope.toggleModal();
+            $state.transitionTo("personDetail",{id:id});
         };
 
         $scope.deletePerson = function (id) {
@@ -295,33 +273,19 @@
         };
 
         $scope.addPerson = function () {
-            $scope.currentPerson = {};
-            $scope.index = -1;
-            $scope.toggleModal();
+            $state.transitionTo("personDetail");
         };
 
         //show customer orders, pass id via route
         $scope.showOrders = function (id) {
-            $state.go(route.orders, {customerId: id});
+            $state.go("orders", {customerId: id});
         };
 
         $scope.save = function () {
             if ($scope.selectedCompany != null) {
-                $scope.currentPerson.companyId = $scope.selectedCompany.id;
+                $scope.current.companyId = $scope.selectedCompany.id;
             }
-            factory.customer.save($scope.currentPerson, function (data) {
-                $scope.toggleModal();
-
-                if ($scope.index > -1) {
-                    $scope.customers.splice($scope.index, 1, data);
-                } else {
-                    $scope.customers.push(data);
-                }
-            });
-        };
-
-        $scope.cancel = function () {
-            $scope.toggleModal();
+            factory.customer.save($scope.current);
         };
 
     });
@@ -329,77 +293,43 @@
     //COMPANY CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('companyController', function ($scope, $state, $stateParams, factory) {
-
         console.log("Enter company controller");
 
-        console.log($stateParams);
+        $scope.company = {};
 
-        $scope.index = -1;
-
-        //toggle modal view
-        $scope.toggleModal = function () {
-            $scope.showModal = !$scope.showModal;
-        };
-
-        if ($stateParams.company) {
-            $scope.company = JSON.parse($stateParams.company);
+        if ($stateParams.id) {
+            $scope.company = factory.company.get({id:$stateParams.id});
         } else {
-            //get all companies
             $scope.companies = factory.company.query();
         }
 
         //create new company
         $scope.addCompany = function () {
-            $scope.company = {};
-            $scope.index = -1;
-            $scope.toggleModal();
+            $state.transitionTo("companyDetail");
         };
 
         //show company details
-        $scope.showDetails = function (id) {
-            $scope.companies.every(function (company) {
-                if (company.id == id) {
-                    $scope.company = company;
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-            $scope.toggleModal();
+        $scope.edit = function (id) {
+            $state.transitionTo("companyDetail",{id:id});
         };
-
-        /*    $scope.showEmployers = function(){
-         $state.go(route.person,{companyId:$scope.company.id});
-         };
-
-         $scope.showGoods = function(){
-         $state.go(route.item,{companyId:$scope.company.id});
-         }*/
 
         $scope.save = function () {
-            factory.company.save($scope.company, function (data) {
-                $scope.toggleModal();
-
-                if ($scope.index > -1) {
-                    $scope.companies.splice($scope.index, 1, data);
-                } else {
-                    $scope.companies.push(data);
-                }
-                $scope.company = data;
-            });
+            factory.company.save($scope.company);
         };
 
-        $scope.cancel = function () {
-            $scope.toggleModal();
+        $scope.delete = function (id) {
+            factory.company.delete({id: id});
+            var company = helpers.findInArrayById($scope.companies, id);
+            var idx = $scope.companies.indexOf(company);
+            $scope.companies.splice(idx, 1);
         };
+
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ITEM CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('itemController', function ($scope, $state, $stateParams, factory) {
         console.log("enter item controller");
-
-
         //for filter you may use % for replace other symbols
 
         //maps
@@ -411,9 +341,6 @@
         $scope.filter.selectedCompany = "";
         $scope.filter.selectedCategory = "";
 
-        //modal
-        $scope.modal = {};
-
         //selected
         $scope.selected = {};
         $scope.selected.company = {};
@@ -423,7 +350,6 @@
         $scope.index = null;
         $scope.items = [];
         $scope.filteredItems = [];
-        $scope.currentItem = {};
 
         //pagination
         $scope.currPage = 1;
@@ -431,24 +357,34 @@
         $scope.itemsPerPage = 10;
         $scope.totalItems = null;
 
+        if($stateParams.id){
+            factory.item.get({id:$stateParams.id},function(data){
+                $scope.selected = data;
+                //find company in company list for select
+                $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
+                //find category in category list for select
+                $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
+            })
+        } else {
+            console.log("get all");
+            //get all items
+            factory.item.query(function (data) {
+                angular.forEach(data, function (item) {
+                    var company = helpers.findInArrayById($scope.companyNames, item.companyId);
+                    item.companyName = company.name;
+                    var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
+                    item.categoryType = category.name;
+                    $scope.items.push(item);
+                });
+                //get total items cou, for pagination
+                $scope.totalItems = $scope.items.length;
 
-        //get all items
-        factory.item.query(function (data) {
-            angular.forEach(data, function (item) {
-                var company = helpers.findInArrayById($scope.companyNames, item.companyId);
-                item.companyName = company.name;
-                var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
-                item.categoryType = category.name;
-                $scope.items.push(item);
+                //listener for some scope variables
+                $scope.$watch('currPage + itemsPerPage', function () {
+                    $scope.subList();
+                });
             });
-            //get total items cou, for pagination
-            $scope.totalItems = $scope.items.length;
-
-            //listener for some scope variables
-            $scope.$watch('currPage + itemsPerPage', function () {
-                $scope.subList();
-            });
-        });
+        }
 
         //get sub list of items for single page display
         $scope.subList = function () {
@@ -458,45 +394,30 @@
             $scope.filteredItems = $scope.items.slice(begin, end);
         };
 
-        //toggle modal view
-        $scope.toggleModal = function () {
-            $scope.showModal = !$scope.showModal;
-        };
-
-
         //open modal for new item creation
         $scope.addItem = function () {
-            $scope.modal = {};
-            $scope.index = -1;
+            this.clearSelected();
+            $state.transitionTo("itemDetail");
+        };
+
+        $scope.clearSelected = function(){
+            $scope.selected = {};
             $scope.selected.company = {};
             $scope.selected.category = {};
-            $scope.toggleModal();
         };
 
         //edit item
         $scope.editItem = function (id) {
-            //find our item in items array by id
-            $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-            //make item copy for modal
-            $scope.modal = $.extend({}, $scope.currentItem);
-
-            //find current item index in array
-            $scope.index = $scope.filteredItems.indexOf($scope.currentItem);
-
-            //find company in company list for select
-            $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.currentItem.companyId);
-            //find category in category list for select
-            $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.currentItem.categoryId);
-
-            //show modal
-            $scope.toggleModal();
+            $state.transitionTo("itemDetail", {id: id});
 
         };
 
         //delete current item
         $scope.deleteItem = function (id) {
+            //TODO: обрабатывать ситуацию, когда на странице был удален последняя запись
+            //TODO: обрабатывать ситуацию, когда страница одна
             //delete item from db
-            factory.items.delete({id: id});
+            factory.item.delete({id: id});
             //find item in array
             var currItem = helpers.findInArrayById($scope.items, id);
             //find item index in array
@@ -508,33 +429,9 @@
 
         //modal button save listener
         $scope.save = function () {
-            //need until edit select elements
-            //fill edited item properly
-            $scope.modal.companyId = $scope.selected.company.id;
-            $scope.modal.companyName = $scope.selected.company.name;
-            $scope.modal.categoryId = $scope.selected.category.id;
-            $scope.modal.categoryType = $scope.selected.category.name;
-
-            factory.items.save($scope.modal, function (data) {
-                var company = helpers.findInArrayById($scope.companyNames, data.companyId);
-                data.companyName = company.name;
-                var category = helpers.findInArrayById($scope.categoryTypes, data.categoryId);
-                data.categoryType = category.name;
-                $scope.toggleModal();
-
-                if ($scope.index > -1) {
-                    //merge old object with new one
-                    $.extend($scope.currentItem, $scope.modal);
-                } else {
-                    $scope.items.push(data);
-                }
-                $scope.subList();
-            });
-        };
-
-        //modal button cancel listener
-        $scope.cancel = function () {
-            $scope.toggleModal();
+            $scope.selected.companyId = $scope.selected.company.id;
+            $scope.selected.categoryId = $scope.selected.category.id;
+            factory.item.save($scope.selected);
         };
 
         //filter table
@@ -572,7 +469,7 @@
 
         $scope.showGallery = function (id) {
             $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-            $state.go(route.gallery, {itemId: id});
+            $state.go("gallery", {itemId: id});
         }
 
 

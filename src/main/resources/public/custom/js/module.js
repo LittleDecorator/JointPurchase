@@ -1,6 +1,8 @@
-var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcrumbs', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ui.tree']);
+var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ui.tree']);
 
-// configure our routes
+    //TODO: Нужен нормальны BreadCrumbs
+
+    // configure our routes
     purchase.config(function ($stateProvider, $urlRouterProvider,$httpProvider) {
 
         $httpProvider.interceptors.push('authInterceptor');
@@ -20,11 +22,12 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui-breadcru
         $rootScope.currentUser = {};
         $rootScope.menu = {};
 
-        $rootScope.$on('$locationChangeSuccess', function () {
-            $rootScope.actualLocation = $location.path();
+        $rootScope.$on('$locationChangeSuccess', function (event, toState, toParams) {
+            //$rootScope.actualLocation = $location.path();
+            $rootScope.actualLocation = $location.$$url;
         });
 
-        //Capturing attempted state changes
+        //Capturing attempted go to locked pages
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             console.log("change state");
             //console.log(toState);

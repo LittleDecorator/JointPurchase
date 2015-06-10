@@ -23,6 +23,15 @@ public class CompanyController {
         return companyMapper.selectByExample(new CompanyExample());
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
+    public Company getCompany(@PathVariable(value = "id") String id) {
+        return companyMapper.selectByPrimaryKey(id);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
+    public void deleteCompany(@PathVariable(value = "id") String id) {
+        companyMapper.deleteByPrimaryKey(id);
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public Company createCompany(@RequestBody Company company) {

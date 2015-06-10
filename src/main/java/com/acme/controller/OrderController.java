@@ -55,12 +55,11 @@ public class OrderController{
             orderMapper.insertSelective(order);
         }
 
-        OrderItemsExample example = new OrderItemsExample();
-
         JSONArray itemsArray = (JSONArray) main.get("items");
         for(int i = 0;i<itemsArray.size();i++){
             String item = ((JSONObject) itemsArray.get(i)).toJSONString();
             OrderItems orderItem = mapper.readValue(item, OrderItems.class);
+            orderItem.setOrderId(order.getId());
             if(orderItem.getId()!=null){
                 orderItemsMapper.updateByPrimaryKeySelective(orderItem);
             } else {
@@ -78,6 +77,11 @@ public class OrderController{
         orderItemsMapper.deleteByExample(orderItemsExample);
         //delete order itself
         orderMapper.deleteByPrimaryKey(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
+    public PurchaseOrder getOrder(@PathVariable("id") String id){
+        return orderMapper.selectByPrimaryKey(id);
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")

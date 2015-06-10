@@ -32,12 +32,30 @@ var route = {
                 }
             },
             {
-                name: 'orders',
-                url: '/orders?customerId',
+                name: 'orderDetail',
+                url: '/orderDetail?:id',
+                templateUrl : 'pages/order-detail.html',
+                controller: 'orderController',
+                data: {
+                    requireLogin: true
+                }
+            },
+            {
+                name: 'order',
+                url: '/order?customerId',
                 templateUrl : 'pages/orders.html',
                 controller: 'orderController',
                 data: {
                     displayName: 'Заказы',
+                    requireLogin: true
+                }
+            },
+            {
+                name: 'personDetail',
+                url:'/personDetail?:id',
+                templateUrl : 'pages/person-detail.html',
+                controller: 'personController',
+                data: {
                     requireLogin: true
                 }
             },
@@ -48,6 +66,15 @@ var route = {
                 controller: 'personController',
                 data: {
                     displayName: 'Клиенты',
+                    requireLogin: true
+                }
+            },
+            {
+                name: 'companyDetail',
+                url:'/companyDetail?:id',
+                templateUrl : 'pages/company-detail.html',
+                controller: 'companyController',
+                data: {
                     requireLogin: true
                 }
             },
@@ -69,6 +96,15 @@ var route = {
                 data: {
                     displayName: 'Контакты',
                     requireLogin: false
+                }
+            },
+            {
+                name:'itemDetail',
+                url:'/itemDetail?:id',
+                templateUrl : 'pages/item-detail.html',
+                controller: 'itemController',
+                data: {
+                    requireLogin: true
                 }
             },
             {
