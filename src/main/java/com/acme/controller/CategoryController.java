@@ -3,6 +3,8 @@ package com.acme.controller;
 import com.acme.gen.domain.Category;
 import com.acme.gen.domain.CategoryExample;
 import com.acme.gen.mapper.CategoryMapper;
+import com.acme.model.domain.Node;
+import com.acme.service.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +22,9 @@ public class CategoryController {
     @Autowired
     CategoryMapper categoryMapper;
 
+    @Autowired
+    TreeService treeService;
+
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String, String>> getCategoryMap() {
         List<Map<String,String>> list = new ArrayList<>();
@@ -32,5 +37,10 @@ public class CategoryController {
             list.add(map);
         }
         return list;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/tree")
+    public Node getCategoryTree(){
+        return treeService.generateCategoryTree(categoryMapper.selectByExample(new CategoryExample()));
     }
 }

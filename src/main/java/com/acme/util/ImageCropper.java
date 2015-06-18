@@ -21,7 +21,7 @@ public class ImageCropper {
     }
 
     public static BufferedImage cropForView(byte[] data) throws Exception {
-        return resizeImage(ImageUtils.getImage(data), true);
+        return resizeImage(ImageUtils.getImage(data), false);
     }
 
     public static String cropForPreview(byte[] data,String type) throws Exception {

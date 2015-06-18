@@ -35,6 +35,10 @@ purchase.factory('factory',['$resource',function($resource){
         company: $resource("/company/:id"),
         item: $resource("/item/:id"),
 
+        categoryTree: $resource("/category/tree",{},{
+            get:{method:'GET',isArray:false}
+        }),
+
         itemDetail: $resource("/item/:id/detail",{},{
             get:{method:'GET',isArray:false}
         }),

@@ -590,7 +590,13 @@
     purchase.controller('productController', function ($scope, $state, factory) {
         console.log("Enter Product controller");
 
-        $scope.data = [
+        $scope.data = [];
+
+        factory.categoryTree.get(function(content){
+            $scope.data.push(content);
+        });
+
+        /*$scope.data2 = [
             {
                 "id": 1,
                 "title": "node1",
@@ -651,7 +657,9 @@
                     }
                 ]
             }
-        ];
+        ];*/
+
+        //console.log($scope);
 
         //maps
         $scope.companyNames = factory.companyMap.get();
@@ -708,7 +716,7 @@
         };
 
         $scope.itemView = function(id){
-            $state.go(route.detail, {itemId: id});
+            $state.transitionTo("detail", {itemId: id});
         }
 
     });
