@@ -1,8 +1,9 @@
-/**
+/*
+/!**
  * @license Angular UI Tree v2.0.13
  * (c) 2010-2014. https://github.com/JimLiu/angular-ui-tree
  * License: MIT
- */
+ *!/
 (function () {
     'use strict';
 
@@ -27,7 +28,7 @@
 
     angular.module('ui.tree')
 
-    /**
+    /!**
      * @ngdoc service
      * @name ui.tree.service:$helper
      * @requires ng.$document
@@ -35,15 +36,15 @@
      *
      * @description
      * angular-ui-tree.
-     */
+     *!/
         .factory('$uiTreeHelper', ['$document', '$window',
             function ($document, $window) {
                 return {
 
-                    /**
+                    /!**
                      * A hashtable used to storage data of nodes
                      * @type {Object}
-                     */
+                     *!/
                     nodesData: {
                     },
 
@@ -64,21 +65,21 @@
                         return null;
                     },
 
-                    /**
+                    /!**
                      * @ngdoc method
                      * @methodOf ui.tree.service:$nodrag
                      * @param  {Object} targetElm angular element
                      * @return {Bool} check if the node can be dragged.
-                     */
+                     *!/
                     nodrag: function (targetElm) {
                         return (typeof targetElm.attr('data-nodrag')) != "undefined";
                     },
 
-                    /**
+                    /!**
                      * get the event object for touchs
                      * @param  {[type]} e [description]
                      * @return {[type]}   [description]
-                     */
+                     *!/
                     eventObj: function(e) {
                         var obj = e;
                         if (e.targetTouches !== undefined) {
@@ -158,7 +159,7 @@
                         };
                     },
 
-                    /**
+                    /!**
                      * @ngdoc method
                      * @name hippo.theme#height
                      * @methodOf ui.tree.service:$helper
@@ -168,12 +169,12 @@
                      *
                      * @param {Object} element Angular element.
                      * @returns {String} Height
-                     */
+                     *!/
                     height: function (element) {
                         return element.prop('scrollHeight');
                     },
 
-                    /**
+                    /!**
                      * @ngdoc method
                      * @name hippo.theme#width
                      * @methodOf ui.tree.service:$helper
@@ -183,12 +184,12 @@
                      *
                      * @param {Object} element Angular element.
                      * @returns {String} Width
-                     */
+                     *!/
                     width: function (element) {
                         return element.prop('scrollWidth');
                     },
 
-                    /**
+                    /!**
                      * @ngdoc method
                      * @name hippo.theme#offset
                      * @methodOf ui.nestedSortable.service:$helper
@@ -198,7 +199,7 @@
                      *
                      * @param {Object} element Angular element.
                      * @returns {Object} Object with properties width, height, top and left
-                     */
+                     *!/
                     offset: function (element) {
                         var boundingClientRect = element[0].getBoundingClientRect();
 
@@ -210,7 +211,7 @@
                         };
                     },
 
-                    /**
+                    /!**
                      * @ngdoc method
                      * @name hippo.theme#positionStarted
                      * @methodOf ui.tree.service:$helper
@@ -221,7 +222,7 @@
                      * @param {Object} e Event
                      * @param {Object} target Target element
                      * @returns {Object} Object with properties offsetX, offsetY, startX, startY, nowX and dirX.
-                     */
+                     *!/
                     positionStarted: function (e, target) {
                         var pos = {};
                         pos.offsetX = e.pageX - this.offset(target).left;
@@ -1163,3 +1164,4 @@
             }
         ]);
 })();
+*/

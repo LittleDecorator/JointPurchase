@@ -1,0 +1,6 @@
+<a ng-click="toggle(this)" style="color: #080808">
+    <span class="fa fa-chevron-right" ng-class="{'fa fa-sm fa-chevron-right': collapsed, 'fa fa-chevron-down': !collapsed}" style="cursor: pointer;">{{node.title}}</span>
+</a>
+<ol ng-model="node.nodes" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.nodes" ng-include="'pages/template/node.html'" collapsed="true"></li>
+</ol>
