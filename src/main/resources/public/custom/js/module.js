@@ -28,7 +28,7 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstra
         });
 
         //Capturing attempted go to locked pages
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+        /*$rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             console.log("change state");
             //console.log(toState);
             var requireLogin = toState.data.requireLogin;
@@ -47,7 +47,7 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstra
                         return $state.transitionTo('home');
                     });
             }
-        });
+        });*/
 
         $rootScope.$watch(
             function () {

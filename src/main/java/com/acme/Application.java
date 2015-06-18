@@ -7,6 +7,8 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.Locale;
+
 @ComponentScan
 @Configurable
 @SpringBootApplication
@@ -21,6 +23,8 @@ public class Application {
     }
 
     public static void main(String[] args) {
+        Locale american = new Locale("en", "US");
+        Locale.setDefault(american);
         SpringApplication.run(Application.class, args);
     }
 
