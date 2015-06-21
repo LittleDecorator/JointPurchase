@@ -103,50 +103,6 @@ purchase.directive('backImg', function () {
     };
 });
 
-/* build main navigation menu */
-/*purchase.directive('ngMenu',function(){
-    return {
-        restrict: 'E',
-        templateUrl:'pages/template/ng-menu.html',
-        compile: function(templateElement, templateAttrs) {
-            return{
-                post:function ($scope, element, attrs, controller){
-                    console.log($scope);
-                    console.log(attrs);
-                }
-            }
-        }
-
-    }
-});*/
-
-/*purchase.directive('ngDropMenu',function($compile){
-    return {
-        restrict: 'A',
-        compile: function(templateElement, templateAttrs) {
-            return{
-                post:function ($scope, element, attrs, controller){
-                    console.log($scope);
-                    *//*var item = $scope.$parent.item;
-                    console.log(item)
-                    var tpl = '<a class="dropdown-toggle" data-toggle="dropdown" style="cursor: pointer">'+item.title+'<b class="caret"></b></a>' +
-                              '<ul class="dropdown-menu">';
-
-                    angular.forEach(item.menu,function(elem){
-                        if(elem.action){
-                            tpl = tpl + '<li><a ng-click="'+elem.action+'" style="cursor: pointer">'+elem.title+'</a></li>';
-                        } else if(elem.url){
-                            tpl = tpl + '<li><a ui-sref="'+elem.url+'" style="cursor: pointer">'+elem.title+'</a></li>';
-                        }
-                    });
-                    element.append(tpl);
-                    $compile(element.contents())($scope);*//*
-                }
-            }
-        }
-    }
-});*/
-
 purchase.directive('ngMenu',function($compile){
     function fillMenu (data){
         var tpl="";
@@ -166,7 +122,6 @@ purchase.directive('ngMenu',function($compile){
     }
 
     return function($scope, element, attrs) {
-        console.log($scope);
         /*Задаем функцию, которая будет вызываться при изменении переменной menu*/
         $scope.$watch(attrs.ngMenu,function(value){
             var tpl = fillMenu(value);

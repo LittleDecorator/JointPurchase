@@ -596,7 +596,7 @@
             $scope.data.push(content);
         });
 
-        /*$scope.data2 = [
+        /*$scope.data = [
             {
                 "id": 1,
                 "title": "node1",
@@ -611,55 +611,10 @@
                                 "nodes": []
                             }
                         ]
-                    },
-                    {
-                        "id": 12,
-                        "title": "node1.2",
-                        "nodes": []
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "title": "node2",
-                "nodes": [
-                    {
-                        "id": 21,
-                        "title": "node2.1",
-                        "nodes": []
-                    },
-                    {
-                        "id": 22,
-                        "title": "node2.2",
-                        "nodes": []
-                    }
-                ]
-            },
-            {
-                "id": 3,
-                "title": "node3",
-                "nodes": [
-                    {
-                        "id": 31,
-                        "title": "node3.1",
-                        "nodes": []
-                    }
-                ]
-            },
-            {
-                "id": 4,
-                "title": "node4",
-                "nodes": [
-                    {
-                        "id": 41,
-                        "title": "node4.1",
-                        "nodes": []
                     }
                 ]
             }
         ];*/
-
-        //console.log($scope);
 
         //maps
         $scope.companyNames = factory.companyMap.get();
@@ -717,6 +672,23 @@
 
         $scope.itemView = function(id){
             $state.transitionTo("detail", {itemId: id});
+        };
+
+        $scope.filterByCategory = function(categoryId){
+            console.log(categoryId);
+            factory.previewItems.filter({categoryId:categoryId},function(data){
+                $scope.items = [];
+                angular.forEach(data, function (item) {
+                    $scope.items.push(item);
+                });
+                //get total items cou, for pagination
+                $scope.totalItems = $scope.items.length;
+
+                //listener for some scope variables
+                $scope.$watch('currPage + itemsPerPage', function () {
+                    $scope.subList();
+                });
+            })
         }
 
     });

@@ -60,7 +60,8 @@ purchase.factory('factory',['$resource',function($resource){
         }),
 
         previewItems: $resource('/item/preview',{},{
-            get:{method:'GET',isArray:true}
+            get:{method:'GET',isArray:true},
+            filter:{method:'POST',isArray:true}
         }),
 
         itemContent: $resource('/content/upload/item',{},{

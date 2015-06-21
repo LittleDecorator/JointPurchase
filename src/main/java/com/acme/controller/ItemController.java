@@ -209,5 +209,51 @@ public class ItemController{
             jsonObject.put("id",item.getId());
         return jsonObject;
     }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/preview")
+    public JSONArray getCategoriesPreviewItems(@RequestBody String input) throws Exception {
+        JSONParser parser=new JSONParser();
+        String categoryId = ((JSONObject) parser.parse(input)).get("categoryId").toString();
+        //TODO: find all categories in tree from spesific node
+
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject;
+        ItemContentExample itemContentExample;
+
+        // get base64 default image if no orig image linked with item
+        ContentExample example = new ContentExample();
+        example.createCriteria().andIsDefaultEqualTo(true);
+        Content defContent = contentMapper.selectByExample(example).get(0);
+
+        String noImage = Constants.PREVIEW_URL+defContent.getId();
+
+//        ItemExample itemExample = new ItemExample();
+        //TODO: use this category list down here
+//        itemExample.createCriteria().andCategoryIdIn(categoryId)
+
+        List<Item> items = itemMapper.selectByExample(new ItemExample());
+        for(Item item : items){
+            jsonObject = new JSONObject();
+
+            //check orig image
+            itemContentExample = new ItemContentExample();
+            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+            if(itemContents.size()>0){
+                //just take first image
+                String contentId = itemContents.get(0).getContentId();
+                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
+            } else {
+                //else default image
+                jsonObject.put("url",noImage);
+            }
+            jsonObject.put("description",item.getDescription());
+            jsonObject.put("price",item.getPrice());
+            jsonObject.put("name",item.getName());
+            jsonObject.put("id",item.getId());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
 }
 
