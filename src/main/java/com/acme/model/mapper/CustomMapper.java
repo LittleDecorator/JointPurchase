@@ -10,4 +10,6 @@ public interface CustomMapper {
 
     boolean isHashExists(@Param("hash") String hash);
 
+    List<String> getSubCategoryLeafs(@Param("baseId") String id);
+
 }

@@ -19,4 +19,19 @@
         ]]>
     </select>
 
+    <!--h2 only-->
+    <select id="getSubCategoryLeafs" resultType="string">
+        <![CDATA[
+            WITH LINK(id, name, parent_id) AS (
+                SELECT id, name, parent_id FROM category WHERE id='${baseId}'
+                UNION ALL
+                SELECT category.id, category.name, category.parent_id FROM LINK INNER JOIN category ON LINK.ID = category.PARENT_ID
+            )
+            SELECT id FROM LINK WHERE NAME IS NOT NULL and id in (
+                  select id from category where
+                      id not in (select distinct parent_id from category where parent_id is not null)
+                  and id !='${baseId}');
+        ]]>
+    </select>
+
 </mapper>

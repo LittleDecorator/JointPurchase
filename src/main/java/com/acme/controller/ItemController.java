@@ -2,6 +2,8 @@ package com.acme.controller;
 
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.*;
+//import com.acme.model.mapper.CustomMapper;
+import com.acme.model.mapper.CustomMapper;
 import com.acme.util.Constants;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
@@ -37,6 +39,9 @@ public class ItemController{
 
     @Autowired
     ItemContentMapper itemContentMapper;
+
+    @Autowired
+    CustomMapper customMapper;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getGoods() {
@@ -105,7 +110,7 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/filter")
-    public List<Item> createOrder(@RequestBody String input) throws ParseException, IOException {
+    public List<Item> filter(@RequestBody String input) throws ParseException, IOException {
         System.out.println(input);
         JSONParser parser=new JSONParser();
         JSONObject main = (JSONObject) parser.parse(input);
@@ -214,7 +219,7 @@ public class ItemController{
     public JSONArray getCategoriesPreviewItems(@RequestBody String input) throws Exception {
         JSONParser parser=new JSONParser();
         String categoryId = ((JSONObject) parser.parse(input)).get("categoryId").toString();
-        //TODO: find all categories in tree from spesific node
+        //TODO: find all categories in tree from specific node
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject;
@@ -227,11 +232,12 @@ public class ItemController{
 
         String noImage = Constants.PREVIEW_URL+defContent.getId();
 
-//        ItemExample itemExample = new ItemExample();
+        ItemExample itemExample = new ItemExample();
         //TODO: use this category list down here
-//        itemExample.createCriteria().andCategoryIdIn(categoryId)
+//        List<String> list = customMapper.getSubCategoryLeafs(categoryId);
+        itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
 
-        List<Item> items = itemMapper.selectByExample(new ItemExample());
+        List<Item> items = itemMapper.selectByExample(itemExample);
         for(Item item : items){
             jsonObject = new JSONObject();
 

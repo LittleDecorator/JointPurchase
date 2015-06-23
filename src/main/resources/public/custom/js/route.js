@@ -86,8 +86,14 @@ var route = {
                     }
                 },
                 data: {
+                    displayName: '{{product.name}}',
                     requireLogin: false,
                     base:false
+                },
+                resolve: {
+                    product: function($stateParams, resolveService) {
+                        return resolveService.getProduct($stateParams.itemId);
+                    }
                 }
             },
             {

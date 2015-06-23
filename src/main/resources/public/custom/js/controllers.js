@@ -462,7 +462,7 @@
         $scope.filter.clear = function () {
             helpers.clearFilterItem();
             $scope.items = [];
-            factory.items.query(function (data) {
+            factory.item.query(function (data) {
                 angular.forEach(data, function (item) {
                     var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                     item.companyName = company.name;
@@ -685,6 +685,7 @@
         $scope.filterByCategory = function(categoryId){
             console.log(categoryId);
             factory.previewItems.filter({categoryId:categoryId},function(data){
+                console.log(data);
                 $scope.items = [];
                 angular.forEach(data, function (item) {
                     $scope.items.push(item);
@@ -703,8 +704,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ITEM DETAIL CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('detailController', function ($scope, $state, $stateParams, factory) {
-        $scope.item = factory.itemDetail.get({id: $stateParams.itemId});
+    purchase.controller('detailController', function ($scope, $state, product) {
+        $scope.item = product;
         //console.log($scope.item);
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

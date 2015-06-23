@@ -8,7 +8,7 @@ var menu = {
             { title: 'LogOut', action: 'logout()',displayCondition:{auth:true}},
             //{ title:'Администрирование', displayCondition: {auth:true,admin:true} , menu:[
             { title:'Администрирование', menu:[
-                { title:'Заказы', url:'orders' },
+                { title:'Заказы', url:'order' },
                 { title:'Клиенты', url:'person' },
                 { title:'Товар', url:'item' },
                 { title:'Поставщики', url:'company' }

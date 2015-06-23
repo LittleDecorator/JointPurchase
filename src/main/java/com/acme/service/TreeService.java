@@ -14,7 +14,6 @@ public class TreeService {
 
     Node tree;
     List<Node> roots;
-    int i = 0;
 
     public Node generateCategoryTree(List<Category> list){
         roots = new ArrayList<>();
@@ -30,34 +29,24 @@ public class TreeService {
 
     private void lookUp(List<Category> list){
         List<Category> nodes = new ArrayList<>(list);
-//        System.out.println("Cou left categories -> "+ nodes.size());
         for (Iterator<Category> iterator = nodes.iterator(); iterator.hasNext();) {
             Category category = iterator.next();
-//            System.out.println("Check parentId -> "+category.getParentId());
             //если попался корень
             if(Strings.isNullOrEmpty(category.getParentId())){
-//                System.out.println("Find root! -> "+category.getName() + " | "+category.getId());
                 roots.add(category2Node(category));
                 iterator.remove();
-//                System.out.println("Cou left categories -> "+ nodes.size());
             } else {
                 //ищем родителя в корнях
                 for(Node node: roots){
                     Node res = findNode(node,category.getParentId());
                     if(res!=null){
-//                        System.out.println("Find child! -> "+category.getName() + " | "+category.getId());
                         res.getNodes().add(category2Node(category));
-//                        nodes.remove(res);
                         iterator.remove();
                     }
                 }
             }
         }
-        /*if(nodes.size()>0){
-            lookUp(nodes);
-        }*/
-        if(i<5){
-            i++;
+        if(nodes.size()>0){
             lookUp(nodes);
         }
     }

@@ -1,9 +1,11 @@
 package com.acme;
 
 import com.acme.db.interceptors.UUIDGeneratorInterceptor;
+import com.acme.model.mapper.CustomMapper;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -51,15 +53,10 @@ public class DatabaseConfig {
         return interceptors.toArray(new Interceptor[]{});
     }
 
-    /*@Bean
-    public EntityManagerFactoryBean entityManagerFactoryBean() {
-        final LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        localContainerEntityManagerFactoryBean.setDataSource(this.dataSource());
-        localContainerEntityManagerFactoryBean.setPackagesToScan("info.novatec.eap.persistence");
-        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(this.jpaVendorAdapter());
-        localContainerEntityManagerFactoryBean.setJpaPropertyMap(this.jpaProperties());
-
-        return localContainerEntityManagerFactoryBean;
-    }*/
+    @Bean
+    public CustomMapper customMapper() throws Exception {
+        SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(sqlSessionFactory(dataSource()));
+        return sessionTemplate.getMapper(CustomMapper.class);
+    }
 
 }

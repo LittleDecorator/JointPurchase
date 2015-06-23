@@ -75,5 +75,13 @@ purchase.service('resolveService',function($q,factory){
             deferred.resolve(data);
         });
         return deferred.promise;
+    };
+
+    this.getProduct = function(itemId){
+        var deferred = $q.defer();
+        factory.itemDetail.get({id: itemId},function(data){
+            deferred.resolve(data);
+        });
+        return deferred.promise;
     }
 });
