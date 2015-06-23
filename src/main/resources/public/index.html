@@ -20,9 +20,11 @@
     <script src="official/angular/angular-ui-router.js"></script>
     <script src="official/angular/angular-resource.js" ></script>
     <script src="official/angular/angular-file-upload.js" ></script>
-    <script src="custom/js/helpers/ngTree.js"></script>
     <script src="official/angular/angular-animate.js"></script>
     <script src="official/angular/auth0-angular.js"></script>
+
+    <script src="custom/js/helpers/ngTree.js"></script>
+    <script src="custom/js/helpers/ngBreadcrumbs.js"></script>
 
     <script src="official/bootstrap/bootstrap.min.js"></script>
     <script src="official/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
@@ -59,9 +61,11 @@
         </nav>
     </header>
 
+    <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
+
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
     <div class="main">
-        <div ui-view style="padding: 0 15px;"></div>
+        <div ui-view="main" style="padding: 0 15px;"></div>
     </div>
 
 </body>

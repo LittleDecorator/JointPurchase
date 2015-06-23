@@ -6,154 +6,282 @@ var route = {
             {
                 name: 'home',
                 url: '/',
-                templateUrl: 'pages/home.html',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/home.html',
+                    }
+                },
                 data: {
-                    requireLogin: false
-                }
-            },
-            {
-                name: 'product',
-                url:'/product',
-                templateUrl : 'pages/product.html',
-                controller: 'productController',
-                data:{
-                    displayName: 'Продукция',
-                    requireLogin: false
+                    requireLogin: false,
+                    base:true
                 }
             },
             {
                 name: 'about',
                 url:'/about',
-                templateUrl : 'pages/about.html',
-                controller: 'aboutController',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/about.html',
+                        controller: 'aboutController'
+                    }
+                },
                 data:{
-                    displayName: 'О нас',
-                    requireLogin: false
-                }
-            },
-            {
-                name: 'orderDetail',
-                url: '/orderDetail?:id',
-                templateUrl : 'pages/order-detail.html',
-                controller: 'orderController',
-                data: {
-                    requireLogin: true
-                }
-            },
-            {
-                name: 'order',
-                url: '/order?customerId',
-                templateUrl : 'pages/orders.html',
-                controller: 'orderController',
-                data: {
-                    displayName: 'Заказы',
-                    requireLogin: true
-                }
-            },
-            {
-                name: 'personDetail',
-                url:'/personDetail?:id',
-                templateUrl : 'pages/person-detail.html',
-                controller: 'personController',
-                data: {
-                    requireLogin: true
-                }
-            },
-            {
-                name: 'person',
-                url:'/person?companyId',
-                templateUrl : 'pages/persons.html',
-                controller: 'personController',
-                data: {
-                    displayName: 'Клиенты',
-                    requireLogin: true
-                }
-            },
-            {
-                name: 'companyDetail',
-                url:'/companyDetail?:id',
-                templateUrl : 'pages/company-detail.html',
-                controller: 'companyController',
-                data: {
-                    requireLogin: true
-                }
-            },
-            {
-                name: 'company',
-                url:'/company',
-                templateUrl : 'pages/companies.html',
-                controller: 'companyController',
-                data: {
-                    displayName: 'Поставщики',
-                    requireLogin: true
+                    //displayName: 'О нас',
+                    requireLogin: false,
+                    base:true
                 }
             },
             {
                 name: 'contact',
                 url:'/contact',
-                templateUrl : 'pages/contact.html',
-                controller: 'contactController',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/contact.html',
+                        controller: 'contactController'
+                    }
+                },
                 data: {
-                    displayName: 'Контакты',
-                    requireLogin: false
-                }
-            },
-            {
-                name:'itemDetail',
-                url:'/itemDetail?:id',
-                templateUrl : 'pages/item-detail.html',
-                controller: 'itemController',
-                data: {
-                    requireLogin: true
-                }
-            },
-            {
-                name:'item',
-                url:'/item?:companyId:orderId',
-                templateUrl : 'pages/item/items.html',
-                controller: 'itemController',
-                data: {
-                    displayName: 'Товар',
-                    requireLogin: true
-                }
-            },
-            {
-                name:'gallery',
-                url:'/gallery?:itemId',
-                templateUrl : 'pages/item/gallery.html',
-                controller: 'galleryController',
-                data: {
-                    requireLogin: true
+                    //displayName: 'Контакты',
+                    requireLogin: false,
+                    base:true
                 }
             },
             {
                 name:'login',
                 url:'/login',
-                templateUrl : 'pages/login.html',
-                controller: 'authController',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/login.html',
+                        controller: 'authController'
+                    }
+                },
                 data: {
-                    displayName: 'Войти',
-                    requireLogin: true
+                    //displayName: 'Войти',
+                    requireLogin: true,
+                    base:true
                 }
             },
-            {
-                name:'detail',
-                url:'/detail?:itemId',
-                templateUrl : 'pages/item/detail.html',
-                controller: 'detailController',
-                data: {
-                    requireLogin: false
-                }
-            },
+
             {
                 name:'registration',
                 url:'/registration',
-                templateUrl : 'pages/registration.html',
-                controller: 'registrationController',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/registration.html',
+                        controller: 'registrationController'
+                    }
+                },
                 data: {
-                    requireLogin: false
+                    requireLogin: false,
+                    base:true
+                }
+            },
+            {
+                name:'product.detail',
+                url:'/:itemId',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/item/detail.html',
+                        controller: 'detailController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                    base:false
+                }
+            },
+            {
+                name: 'product',
+                url:'/product',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/product.html',
+                        controller: 'productController'
+                    }
+                },
+                data:{
+                    displayName: 'Продукция',
+                    requireLogin: false,
+                    base:true
+                }
+            },
+
+            {
+                name: 'order.detail',
+                url: '/:id',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/order-detail.html',
+                        controller: 'orderController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: '{{order.name}}',
+                    base:false
+                },
+                resolve: {
+                    order: function($stateParams, resolveService) {
+                        return resolveService.getOrder($stateParams.id);
+                    }
+                }
+            },
+            {
+                name: 'order',
+                url: '/order?customerId',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/orders.html',
+                        controller: 'orderController'
+                    }
+                },
+                data: {
+                    displayName: 'Заказы',
+                    requireLogin: true,
+                    base:true
+                },
+                resolve: {
+                    order: function() {
+                        return null;
+                    }
+                }
+            },
+            {
+                name: 'person.detail',
+                url:'/:id',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/person-detail.html',
+                        controller: 'personController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
+                    base:false
+                },
+                resolve: {
+                    person: function($stateParams, resolveService) {
+                        return resolveService.getPerson($stateParams.id);
+                    }
+                }
+            },
+            {
+                name: 'person',
+                url:'/person?companyId',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/persons.html',
+                        controller: 'personController'
+                    }
+                },
+                data: {
+                    displayName: 'Клиенты',
+                    requireLogin: true,
+                    base:true
+                },
+                resolve: {
+                    person: function() {
+                        return null;
+                    }
+                }
+            },
+            {
+                name: 'company.detail',
+                url:'/:id',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/company-detail.html',
+                        controller: 'companyController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName:'{{ company.name }}',
+                    base:false
+                },
+                resolve: {
+                    company: function($stateParams, resolveService) {
+                        return resolveService.getCompany($stateParams.id);
+                    }
+                }
+            },
+            {
+                name: 'company',
+                url:'/company',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/companies.html',
+                        controller: 'companyController'
+                    }
+                },
+                data: {
+                    displayName: 'Поставщики',
+                    requireLogin: true,
+                    base:true
+                },
+                resolve: {
+                    company: function() {
+                        return null;
+                    }
+                }
+            },
+
+            {
+                name:'item.detail',
+                url:'/:id',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/item-detail.html',
+                        controller: 'itemController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName:'{{ item.name }}',
+                    base:false
+                },
+                resolve: {
+                    item: function($stateParams, resolveService) {
+                        return resolveService.getItem($stateParams.id);
+                    }
+                }
+            },
+            {
+                name:'item',
+                url:'/item?:companyId:orderId',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/item/items.html',
+                        controller: 'itemController'
+                    }
+                },
+                data: {
+                    displayName: 'Товар',
+                    requireLogin: true,
+                    base:true
+                },
+                resolve: {
+                    item: function() {
+                        return null;
+                    }
+                }
+            },
+            {
+                name:'item.gallery',
+                url:'/:itemId/gallery',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/item/gallery.html',
+                        controller: 'galleryController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    base:false
                 }
             }
+
         ]
     }
 };

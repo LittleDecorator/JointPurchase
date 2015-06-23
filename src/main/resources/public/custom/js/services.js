@@ -43,3 +43,37 @@ purchase.service('authService',function($rootScope,$cookies){
     }
 
 });
+
+purchase.service('resolveService',function($q,factory){
+    this.getItem = function(id){
+        var deferred = $q.defer();
+        factory.item.get({id:id},function(data){
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    };
+
+    this.getPerson = function(id){
+        var deferred = $q.defer();
+        factory.customer.get({id:id},function(data){
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    };
+
+    this.getOrder = function(id){
+        var deferred = $q.defer();
+        factory.order.get({id:id},function (data) {
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    };
+
+    this.getCompany = function(id){
+        var deferred = $q.defer();
+        factory.company.get({id:id},function(data){
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    }
+});

@@ -65,6 +65,18 @@
 
         };
 
+        /*$scope.myResolver = function (defaultResolver, state, isCurrent) {
+            console.log("custom resolver");
+            //console.log($state);
+            //console.log(state);
+
+            /!*if (isCurrent) {
+                return '"' + item.name + '"';
+            }*!/
+
+            return defaultResolver(state);
+        };*/
+
         $scope.mainMenu = $scope.refreshMenu();
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +94,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ORDER CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('orderController', function ($scope, $state, $stateParams, factory) {
+    purchase.controller('orderController', function ($scope, $state, order,$stateParams, factory) {
         //TODO: Написать сервис подсчета товаров при заказах
         //TODO: Определиться со статусами заказа (можно ли редактироватьб и когда, или же это будет работать автоматом)
         console.log("Enter order controller");
@@ -109,17 +121,15 @@
 
         $scope.selectedPerson = {};
 
-        if ($stateParams.id) {
-            factory.order.get({id:$stateParams.id},function (data) {
-                $scope.currentOrder = data;
-                $scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
+        if (order) {
+            $scope.currentOrder = order;
+            $scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
 
-                factory.orderItems.get({id: $stateParams.id}, function (data) {
-                    angular.forEach(data, function (orderItem) {
-                        var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
-                        orderItem.name = item.name;
-                        $scope.currentOrderItems.push(orderItem);
-                    });
+            factory.orderItems.get({id: order.id}, function (data) {
+                angular.forEach(data, function (orderItem) {
+                    var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
+                    orderItem.name = item.name;
+                    $scope.currentOrderItems.push(orderItem);
                 });
             });
         } else if ($stateParams.customerId) {
@@ -144,7 +154,7 @@
         };
 
         $scope.editOrder = function (id) {
-            $state.transitionTo("orderDetail",{id:id});
+            $state.transitionTo("order.detail",{id:id});
         };
 
         $scope.deleteOrder = function (id) {
@@ -161,7 +171,7 @@
 
         //create order
         $scope.addOrder = function () {
-            $state.transitionTo("orderDetail");
+            $state.transitionTo("order.detail");
         };
 
         $scope.save = function () {
@@ -239,7 +249,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //PERSON CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('personController', function ($scope, $state, $stateParams, factory) {
+    purchase.controller('personController', function ($scope, $state, person, factory) {
         console.log("Enter person controller");
         //TODO: делать неактивным кнопку показа заказов клиента, если их нет
         //TODO: возможно стоит показывать в таблице кол-во заказов
@@ -247,22 +257,20 @@
         $scope.current = {};
         $scope.companyNames = factory.companyMap.get();
         $scope.selectedCompany = {};
-        if($stateParams.id){
-            factory.customer.get({id:$stateParams.id},function(data){
-                $scope.current = data;
-                if ($scope.current.companyId != null) {
-                    $scope.selectedCompany = helpers.findInArrayById($scope.companyNames, $scope.current.companyId);
-                    $scope.current.isEmployer = true;
-                } else {
-                    $scope.current.isEmployer = false;
-                }
-            });
+        if(person){
+            $scope.current = person;
+            if ($scope.current.companyId != null) {
+                $scope.selectedCompany = helpers.findInArrayById($scope.companyNames, $scope.current.companyId);
+                $scope.current.isEmployer = true;
+            } else {
+                $scope.current.isEmployer = false;
+            }
         } else {
             $scope.customers = factory.customer.query();
         }
 
         $scope.editPerson = function (id) {
-            $state.transitionTo("personDetail",{id:id});
+            $state.transitionTo("person.detail",{id:id});
         };
 
         $scope.deletePerson = function (id) {
@@ -273,12 +281,12 @@
         };
 
         $scope.addPerson = function () {
-            $state.transitionTo("personDetail");
+            $state.transitionTo("person.detail");
         };
 
         //show customer orders, pass id via route
         $scope.showOrders = function (id) {
-            $state.go("orders", {customerId: id});
+            $state.transitionTo("order", {customerId: id});
         };
 
         $scope.save = function () {
@@ -292,25 +300,25 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //COMPANY CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('companyController', function ($scope, $state, $stateParams, factory) {
+    purchase.controller('companyController', function ($scope, $state, company, factory) {
         console.log("Enter company controller");
 
         $scope.company = {};
 
-        if ($stateParams.id) {
-            $scope.company = factory.company.get({id:$stateParams.id});
+        if (company) {
+            $scope.company = company;
         } else {
             $scope.companies = factory.company.query();
         }
 
         //create new company
         $scope.addCompany = function () {
-            $state.transitionTo("companyDetail");
+            $state.transitionTo("company.detail");
         };
 
         //show company details
         $scope.edit = function (id) {
-            $state.transitionTo("companyDetail",{id:id});
+            $state.transitionTo("company.detail",{id:id});
         };
 
         $scope.save = function () {
@@ -328,7 +336,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ITEM CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('itemController', function ($scope, $state, $stateParams, factory) {
+    purchase.controller('itemController', function ($scope, $state, item, factory) {
         console.log("enter item controller");
         //for filter you may use % for replace other symbols
 
@@ -357,14 +365,14 @@
         $scope.itemsPerPage = 10;
         $scope.totalItems = null;
 
-        if($stateParams.id){
-            factory.item.get({id:$stateParams.id},function(data){
-                $scope.selected = data;
-                //find company in company list for select
-                $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
-                //find category in category list for select
-                $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
-            })
+        console.log(item);
+
+        if(item){
+            $scope.selected = item;
+            //find company in company list for select
+            $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
+            //find category in category list for select
+            $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
         } else {
             console.log("get all");
             //get all items
@@ -397,7 +405,7 @@
         //open modal for new item creation
         $scope.addItem = function () {
             this.clearSelected();
-            $state.transitionTo("itemDetail");
+            $state.transitionTo("item.detail");
         };
 
         $scope.clearSelected = function(){
@@ -408,7 +416,7 @@
 
         //edit item
         $scope.editItem = function (id) {
-            $state.transitionTo("itemDetail", {id: id});
+            $state.transitionTo("item.detail", {id: id});
 
         };
 
@@ -469,7 +477,7 @@
 
         $scope.showGallery = function (id) {
             $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-            $state.go("gallery", {itemId: id});
+            $state.go("item.gallery", {itemId: id});
         }
 
 
@@ -671,7 +679,7 @@
         };
 
         $scope.itemView = function(id){
-            $state.transitionTo("detail", {itemId: id});
+            $state.transitionTo("product.detail", {itemId: id});
         };
 
         $scope.filterByCategory = function(categoryId){
@@ -697,7 +705,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('detailController', function ($scope, $state, $stateParams, factory) {
         $scope.item = factory.itemDetail.get({id: $stateParams.itemId});
-        console.log($scope.item);
+        //console.log($scope.item);
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //REGISTRATION CONTROLLER//
