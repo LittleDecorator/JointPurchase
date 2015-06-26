@@ -1,9 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //MAIN CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory) {
+    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory,jwtHelper) {
         console.log("Enter main controller");
 
+        //нажата кнопка меню login
         $scope.login = function(){
             loginModal()
                 .then(function () {
@@ -18,6 +19,7 @@
 
         };
 
+        //явный logout через меню
         $scope.logout = function(){
             $cookies.remove('token');
             $rootScope.currentUser = {};
@@ -25,6 +27,7 @@
             $state.transitionTo("home");
         };
 
+        //обновление меню после login/logout
         $scope.refreshMenu = function(){
             $scope.menu = [];
             angular.forEach(menu.getMenu(),function(item){
@@ -39,45 +42,43 @@
                 } else {
                     $scope.menu.push(item);
                 }
+                if($rootScope.currentUser){
+
+                }
             })
         };
 
+        //удаление всех promises для login из сервиса, отмена login'а
         $scope.cancel = $scope.$dismiss;
 
+        //подтверждение аутентификации, получение token'а
         $scope.submit = function (email, password) {
             console.log("submit user");
-            console.log($scope);
 
-            factory.authLogin.post({name: email},
-                function (token) {
-                    //if(token!=null){
-                    $cookies.put('token',token.token);
-                    console.log(token);
-                    //set current user promises
-                    $scope.$close(email);
-                    console.log($rootScope.currentUser);
-                    $scope.refreshMenu();
-                    //}
+            factory.authLogin.post({name: email,password:password},
+                function (response) {
+                    if(response && response.token){
+                        var token = response.token;
+                        $cookies.put('token',token);
+                        console.log(token);
+                        var decodedToken = jwtHelper.decodeToken(token);
+                        $rootScope.currentUser.name = decodedToken.user;
+                        $rootScope.currentUser.roles = decodedToken.roles;
+                        //set current user promises
+                        //$scope.$close(email);
+                        $scope.$close(email);
+                        $scope.refreshMenu();
+                    }
                 }, function(){
                     console.log("some error");
+                    $scope.$dismiss;
                     //$scope.$close("fla");
                 });
 
         };
 
-        /*$scope.myResolver = function (defaultResolver, state, isCurrent) {
-            console.log("custom resolver");
-            //console.log($state);
-            //console.log(state);
-
-            /!*if (isCurrent) {
-                return '"' + item.name + '"';
-            }*!/
-
-            return defaultResolver(state);
-        };*/
-
         $scope.mainMenu = $scope.refreshMenu();
+        $scope.auth = authService;
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ABOUT CONTROLLER//

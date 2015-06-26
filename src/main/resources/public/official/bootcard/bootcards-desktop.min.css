@@ -3858,9 +3858,20 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     list-style: none
 }
 
+.nav .ng-scope > li {
+    position: relative;
+    display: block
+}
+
 .nav > li {
     position: relative;
     display: block
+}
+
+.nav .ng-scope > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px
 }
 
 .nav > li > a {
@@ -3869,13 +3880,29 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     padding: 10px 15px
 }
 
+.nav .ng-scope > li > a:hover, .nav .ng-scope > li > a:focus {
+    text-decoration: none;
+    background-color: #eee
+}
+
 .nav > li > a:hover, .nav > li > a:focus {
     text-decoration: none;
     background-color: #eee
 }
 
+.nav .ng-scope > li.disabled > a {
+    color: #777
+}
+
 .nav > li.disabled > a {
     color: #777
+}
+
+.nav .ng-scope > li.disabled > a:hover, .nav .ng-scope > li.disabled > a:focus {
+    color: #777;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent
 }
 
 .nav > li.disabled > a:hover, .nav > li.disabled > a:focus {
@@ -3895,6 +3922,10 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     margin: 9px 0;
     overflow: hidden;
     background-color: #e5e5e5
+}
+
+.nav .ng-scope > li > a > img {
+    max-width: none
 }
 
 .nav > li > a > img {
@@ -4250,6 +4281,12 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     margin: 7.5px -15px
 }
 
+.navbar-nav .ng-scope > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 20px
+}
+
 .navbar-nav > li > a {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -4287,8 +4324,17 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
         margin: 0
     }
 
+    .navbar-nav .ng-scope > li {
+        float: left
+    }
+
     .navbar-nav > li {
         float: left
+    }
+
+    .navbar-nav .ng-scope > li > a {
+        padding-top: 15px;
+        padding-bottom: 15px
     }
 
     .navbar-nav > li > a {
@@ -4388,10 +4434,23 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     }
 }
 
+.navbar-nav .ng-scope > li > .dropdown-menu {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0
+}
+
 .navbar-nav > li > .dropdown-menu {
     margin-top: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0
+}
+
+.navbar-fixed-bottom .navbar-nav .ng-scope > li > .dropdown-menu {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0
 }
 
 .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
@@ -4462,8 +4521,17 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     color: #777
 }
 
+.navbar-default .navbar-nav .ng-scope > li > a {
+    color: #777
+}
+
 .navbar-default .navbar-nav > li > a {
     color: #777
+}
+
+.navbar-default .navbar-nav .ng-scope > li > a:hover, .navbar-default .navbar-nav .ng-scope > li > a:focus {
+    color: #333;
+    /*background-color: transparent*/
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
@@ -4561,8 +4629,17 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     color: #9d9d9d
 }
 
+.navbar-inverse .navbar-nav .ng-scope > li > a {
+    color: #9d9d9d
+}
+
 .navbar-inverse .navbar-nav > li > a {
     color: #9d9d9d
+}
+
+.navbar-inverse .navbar-nav .ng-scope > li > a:hover, .navbar-inverse .navbar-nav .ng-scope > li > a:focus {
+    color: #fff;
+    background-color: transparent
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
@@ -7384,6 +7461,11 @@ body {
 
     .bootcards-navbar-double .navbar-brand {
         line-height: 50px
+    }
+
+    .bootcards-nav-secondary.navbar-nav .ng-scope > li > a {
+        padding-top: 5px;
+        padding-bottom: 5px
     }
 
     .bootcards-nav-secondary.navbar-nav > li > a {

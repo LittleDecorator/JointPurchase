@@ -105,6 +105,7 @@ purchase.directive('backImg', function () {
 
 purchase.directive('ngMenu',function($compile){
     function fillMenu (data){
+        console.log(data);
         var tpl="";
         angular.forEach(data,function(item){
             if(item.action){
@@ -121,14 +122,38 @@ purchase.directive('ngMenu',function($compile){
         return tpl;
     }
 
-    return function($scope, element, attrs) {
-        /*Задаем функцию, которая будет вызываться при изменении переменной menu*/
+    return {
+        restrict: 'E',
+        require: ['ngModel'],
+        scope: true,
+        link: function(scope, element, attrs, controllersArr) {
+            console.log(scope);
+            console.log(controllersArr);
+            var ngModel = controllersArr[0];
+
+            if(ngModel) {
+                //вызовится при изменении $modelValue
+                ngModel.$render = function() {
+                    if (!ngModel.$modelValue || !angular.isArray(ngModel.$modelValue)) {
+                        scope.$modelValue = [];
+                    }
+                    scope.$modelValue = ngModel.$modelValue;
+                    var tpl = fillMenu(scope.$modelValue);
+                    element.empty();
+                    element.append(tpl);
+                    $compile(element.contents())(scope);
+                };
+            }
+        }
+    }
+    /*return function($scope, element, attrs) {
+        /!*Задаем функцию, которая будет вызываться при изменении переменной menu*!/
         $scope.$watch(attrs.ngMenu,function(value){
             var tpl = fillMenu(value);
             element.empty();
             element.append(tpl);
             $compile(element.contents())($scope);
         });
-    };
+    };*/
 
 });

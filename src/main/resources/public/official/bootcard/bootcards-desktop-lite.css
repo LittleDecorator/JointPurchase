@@ -762,10 +762,15 @@ body {
 		line-height: 50px;
 	}
 	
-	.bootcards-nav-secondary.navbar-nav>li>a {
+	.bootcards-nav-secondary.navbar-nav li>a {
 		padding-top: 5px;
 		padding-bottom: 5px;
-	}	
+	}
+
+	/*.bootcards-nav-secondary.navbar-nav>li>a {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}*/
 	
 	.bootcards-nav-primary,
 	.bootcards-nav-secondary {

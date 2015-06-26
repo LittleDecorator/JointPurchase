@@ -1,9 +1,11 @@
-var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ngTree' ,'ngBreadcrumbs' ,'ngAnimate']);
+var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ngTree' ,'ngBreadcrumbs' ,'ngAnimate','angular-jwt']);
 
     //TODO: Нужен нормальны BreadCrumbs
 
     // configure our routes
-    purchase.config(function ($stateProvider, $urlRouterProvider,$httpProvider) {
+    purchase.config(function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider) {
+
+        //$locationProvider.html5Mode(true).hashPrefix('!');
 
         $httpProvider.interceptors.push('authInterceptor');
 
@@ -18,7 +20,7 @@ var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstra
 
     purchase.run(function ($state, $rootScope, $location,$cookies,loginModal) {
 
-        /*$cookies.remove('token');*/
+        //$cookies.remove('token');
         $rootScope.currentUser = {};
         $rootScope.menu = {};
 

@@ -2,7 +2,9 @@ package com.acme.controller;
 
 import com.acme.gen.domain.Credentials;
 import com.acme.gen.domain.CredentialsExample;
+import com.acme.gen.domain.Person;
 import com.acme.gen.mapper.CredentialsMapper;
+import com.acme.gen.mapper.PersonMapper;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,17 +25,26 @@ public class AuthController {
     @Autowired
     CredentialsMapper credentialsMapper;
 
+    @Autowired
+    PersonMapper personMapper;
+
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public LoginResponse auth(@RequestBody UserLogin login) throws ServletException {
         if (!Strings.isNullOrEmpty(login.name)){
+            System.out.println(login);
             CredentialsExample example = new CredentialsExample();
             example.createCriteria().andLoginEqualTo(login.name);
             List<Credentials> credentiaList = credentialsMapper.selectByExample(example);
             if(credentiaList.size()>0){
                 Credentials credential = credentiaList.get(0);
-                System.out.println("login -> "+credential.getLogin());
-                System.out.println("role -> "+credential.getRoleId());
-                return new LoginResponse(Jwts.builder().setSubject(login.name).claim("roles", credential.getRoleId()).setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretkey").compact());
+                Person person = personMapper.selectByPrimaryKey(credential.getUserId());
+                return new LoginResponse(Jwts.builder()
+                        .setId(credential.getUserId())
+                        .claim("roles", credential.getRoleId())
+                        .claim("user", person.getLastName()+" "+person.getFirstName())
+                        .setIssuedAt(new Date())
+                        .signWith(SignatureAlgorithm.HS256, "secretkey")
+                        .compact());
             }
         }
 //        throw new ServletException("Invalid login");
@@ -45,6 +56,14 @@ public class AuthController {
     private static class UserLogin {
         public String name;
         public String password;
+
+        @Override
+        public String toString() {
+            return "UserLogin{" +
+                    "name='" + name + '\'' +
+                    ", password='" + password + '\'' +
+                    '}';
+        }
     }
 
     private static class LoginResponse {

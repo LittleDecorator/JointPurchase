@@ -29,8 +29,7 @@
             )
             SELECT id FROM LINK WHERE NAME IS NOT NULL and id in (
                   select id from category where
-                      id not in (select distinct parent_id from category where parent_id is not null)
-                  and id !='${baseId}');
+                      id not in (select distinct parent_id from category where parent_id is not null));
         ]]>
     </select>
 

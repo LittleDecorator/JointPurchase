@@ -56,7 +56,13 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" ui-sref="home">Join Purchase</a>
                 </div>
-                <ul class="nav navbar-nav navbar-right" ng-menu="menu"></ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-show="auth.isAuth()" class="">
+                        <p class="navbar-text">Hello, <strong class="ng-binding">{{currentUser.name}}</strong></p>
+                    </li>
+                    <ng-menu ng-model="menu"></ng-menu>
+                </ul>
+                <!--<ul class="nav navbar-nav navbar-right" ng-menu="menu"></ul>-->
             </div>
         </nav>
     </header>

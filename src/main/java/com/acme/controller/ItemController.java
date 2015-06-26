@@ -235,6 +235,7 @@ public class ItemController{
         ItemExample itemExample = new ItemExample();
         //TODO: use this category list down here
 //        List<String> list = customMapper.getSubCategoryLeafs(categoryId);
+//        System.out.println(list);
         itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
 
         List<Item> items = itemMapper.selectByExample(itemExample);

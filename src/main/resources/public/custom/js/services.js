@@ -1,29 +1,30 @@
 
 purchase.service('loginModal', function ($modal, $rootScope) {
 
-    function assignCurrentUser (user) {
+    /*function assignCurrentUser (user) {
         console.log("in assign user -> "+user);
         $rootScope.currentUser = user;
         return user;
-    }
+    }*/
 
     return function() {
         var instance = $modal.open({
             templateUrl: 'pages/template/loginModal.html',
             controller: 'mainController'
-            //controllerAs: 'authController'
         });
         console.log(instance);
-        return instance.result.then(assignCurrentUser);
+        //return instance.result.then(assignCurrentUser);
+        return instance.result;
     };
 
 });
 
 purchase.service('authService',function($rootScope,$cookies){
+    console.log("in auth service");
     console.log($rootScope.currentUser);
     return {
         isAdmin: function () {
-            //console.log("check isAdmin");
+            console.log("check isAdmin");
             if (typeof $rootScope.currentUser != 'undefined') {
                 return $rootScope.currentUser.isAdmin;
             } else {
@@ -32,7 +33,12 @@ purchase.service('authService',function($rootScope,$cookies){
         },
 
         isAuth : function () {
-            //console.log("check isAuth");
+            console.log("check isAuth");
+            if($cookies.get('token')){
+                console.log('token present');
+            } else {
+                console.log('no token present');
+            }
             if (typeof $cookies.get('token') == 'undefined') {
                 return false;
             } else {
