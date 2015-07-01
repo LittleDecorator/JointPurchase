@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acme.model.mapper.CustomMapper">
+
+    <resultMap type="java.lang.String" id="list">
+        <result property="" column="list"/>
+    </resultMap>
+
+    <select id="getContentHashes" resultMap="list">
+        <![CDATA[
+		    select c.hash_sum as list from content c
+        ]]>
+    </select>
+
+    <select id="isHashExists" resultType="boolean">
+        <![CDATA[
+		    select exists(select 1 from content where hash_sum = '${hash}')
+        ]]>
+    </select>
+
+    <!--h2 only-->
+    <select id="getSubCategoryLeafs" resultType="string">
+        <![CDATA[
+            WITH LINK(id, name, parent_id) AS (
+                SELECT id, name, parent_id FROM category WHERE id='${baseId}'
+                UNION ALL
+                SELECT category.id, category.name, category.parent_id FROM LINK INNER JOIN category ON LINK.ID = category.PARENT_ID
+            )
+            SELECT id FROM LINK WHERE NAME IS NOT NULL and id in (
+                  select id from category where
+                      id not in (select distinct parent_id from category where parent_id is not null));
+        ]]>
+    </select>
+
+</mapper>

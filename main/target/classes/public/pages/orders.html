@@ -1,0 +1,44 @@
+<div class="table-container">
+    <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
+    <button class="btn btn-primary" ng-click="addOrder()">Добавить заказ</button>
+    <h3 class="example_head">Заказы:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover">
+            <thead style="background-color: darkseagreen;">
+                <tr>
+                    <th style="width: 20%">Название</th>
+                    <th style="width: 40%">Получатель</th>
+                    <th>Дата заказа</th>
+                    <th>Дата закрытия заказа</th>
+                    <th>Статус заказа</th>
+                    <th>Сумма к оплате</th>
+                    <th style="width: 6.6%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="order in orders" id="{{order.id}}">
+                    <td>{{order.name}}</td>
+                    <td>{{order.personName}}</td>
+                    <td>{{order.createOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td>{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td>{{order.status}}</td>
+                    <td>{{order.payment}} руб</td>
+                    <td>
+                        <a class="btn btn-primary" ng-click="editOrder(order.id)">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-primary" ng-click="deleteOrder(order.id)">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+

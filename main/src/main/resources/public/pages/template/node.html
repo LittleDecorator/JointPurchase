@@ -1,0 +1,7 @@
+<a ng-click="toggle(this)" style="color: #080808">
+    <span ng-if="hasChild()" class="fa fa-chevron-right" ng-class="{'fa fa-sm fa-chevron-right': collapsed, 'fa fa-chevron-down': !collapsed}" style="cursor: pointer;" ng-click="findProduct()">{{node.title}}</span>
+    <span ng-if="!hasChild()" style="cursor: pointer;" ng-click="findProduct()">{{node.title}}</span>
+</a>
+<ol ng-if="hasChild()" ng-class="{hidden: collapsed}">
+    <node ng-repeat="node in node.nodes" ng-include="'pages/template/node.html'" ng-model="node" />
+</ol>

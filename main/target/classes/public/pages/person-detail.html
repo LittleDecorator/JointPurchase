@@ -1,0 +1,62 @@
+<!-- ITEM MODAL CONTENT BELOW -->
+<div class="table-container">
+    <form role="form">
+        <div class="modal-body">
+
+            <div class="form-group">
+                <label class="control-label">First Name</label>
+                <input type="text" name="firstName" class="form-control" placeholder="Person first name" ng-model="current.firstName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input type="text" name="lastName" class="form-control" placeholder="Person last name" ng-model="current.lastName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Middle Name</label>
+                <input type="text" name="middleName" class="form-control" placeholder="Person middle name" ng-model="current.middleName">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person phone number:</label>
+                <input type="text" name="phoneNumber" class="form-control" placeholder="Phone number" ng-model="current.phoneNumber">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person email:</label>
+                <input type="text" name="email" class="form-control" placeholder="email" ng-model="current.email">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Person address:</label>
+                <input type="text" name="address" class="form-control" placeholder="address" ng-model="current.address">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Post address:</label>
+                <input type="text" name="postAddress" class="form-control" placeholder="post address" ng-model="current.postAddress">
+            </div>
+
+            <div class="form-group" ng-show="current.isEmployer">
+                <label class="control-label">Company</label>
+                <select name="companyId" class="form-control" ng-model="selectedCompany" ng-options="company.name for company in companyNames track by company.id">
+                    <option value="" selected="">Select a Company...</option>
+                </select>
+            </div>
+
+            <div class="form-group" ng-show="current.isEmployer">
+                <label class="control-label">Job position:</label>
+                <input type="text" name="job" class="form-control" placeholder="job position" ng-model="current.job">
+            </div>
+
+            <div class="form-group">
+                <label><input type="checkbox" ng-model="current.isEmployer"> Is company employer</label>
+            </div>
+        </div>
+
+        <div class="btn-group pull-right">
+            <button class="btn btn-success" ng-click="save()">Save</button>
+        </div>
+    </form>
+</div>
