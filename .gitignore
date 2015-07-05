@@ -2,3 +2,5 @@
 *.iml
 /target
 *.*~
+model/target
+main/target

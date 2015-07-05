@@ -1,0 +1,16 @@
+<div class="table-result">
+    <table class="table table-bordered table-hover items-table">
+        <tbody>
+        <tr ng-repeat="item in cart" id="{{item.id}}">
+            <td>{{item.name}}</td>
+            <td>{{item.article}}</td>
+            <td>{{item.price}} руб</td>
+            <td>1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" ng-click="createOrder(cart)">Оформить заказ
+        <i class="fa"></i>
+    </a>
+</div>

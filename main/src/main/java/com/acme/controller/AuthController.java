@@ -24,6 +24,7 @@ public class AuthController {
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public LoginResponse auth(@RequestBody UserLogin login) throws ServletException {
+        System.out.println("AuthLogin: login credentials -> "+ login.toString());
         if (!Strings.isNullOrEmpty(login.name)){
             Credential credential = credentialMapper.selectByPrimaryKey(login.name);
             if(credential.getPassword().contentEquals(login.password)){

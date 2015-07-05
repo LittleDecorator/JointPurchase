@@ -8,12 +8,32 @@ var route = {
                 url: '/',
                 views: {
                     'main@': {
-                        templateUrl: 'pages/home.html',
+                        templateUrl: 'pages/home.html'
                     }
                 },
                 data: {
                     requireLogin: false,
                     base:true
+                }
+            },
+
+            {
+                name: 'bla',
+                url: '/bla',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/orderPreview.html',
+                        controller: 'orderController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                    base:true
+                },
+                resolve: {
+                    order: function() {
+                        return null;
+                    }
                 }
             },
             {
@@ -46,7 +66,7 @@ var route = {
                     base:true
                 }
             },
-            {
+            /*{
                 name:'login',
                 url:'/login',
                 views: {
@@ -57,10 +77,10 @@ var route = {
                 },
                 data: {
                     //displayName: 'Войти',
-                    requireLogin: true,
+                    requireLogin: false,
                     base:true
                 }
-            },
+            },*/
 
             {
                 name:'registration',

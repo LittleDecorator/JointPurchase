@@ -1,17 +1,38 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //MAIN CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory,jwtHelper) {
+    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory,jwtHelper, store) {
         console.log("Enter main controller");
+
+        $scope.uname = "";
+        $scope.password = "";
+
+        $scope.cart = store.get("cart");
+
+        if($cookies.get('token')){
+            var decodedToken = jwtHelper.decodeToken($cookies.get('token'));
+            console.log(decodedToken);
+            $rootScope.currentUser.name = decodedToken.jti;
+            $rootScope.currentUser.roles = decodedToken.roles;
+        }
+
+        $scope.addToCart = function(item){
+            $scope.cart.push(item);
+            console.log($scope.cart.length);
+            store.set("cart",$scope.cart);
+        };
 
         //нажата кнопка меню login
         $scope.login = function(){
-            loginModal()
+            $scope.modal = loginModal()
                 .then(function () {
+                    console.log("then");
                     $scope.refreshMenu();
+
                     //return $state.transitionTo(toState.name, toParams);
                 })
                 .catch(function () {
+                    console.log("catch");
                     //return $state.go('welcome');
                     console.log("direct login failed");
                     //return $state.transitionTo('home');
@@ -28,6 +49,7 @@
         };
 
         //обновление меню после login/logout
+        //TODO: исправить зависимость меню от роли
         $scope.refreshMenu = function(){
             $scope.menu = [];
             angular.forEach(menu.getMenu(),function(item){
@@ -42,9 +64,6 @@
                 } else {
                     $scope.menu.push(item);
                 }
-                if($rootScope.currentUser){
-
-                }
             })
         };
 
@@ -52,22 +71,27 @@
         $scope.cancel = $scope.$dismiss;
 
         //подтверждение аутентификации, получение token'а
-        $scope.submit = function (email, password) {
+        $scope.submit = function () {
+            console.log($scope);
             console.log("submit user");
-
-            factory.authLogin.post({name: email,password:password},
+            console.log($scope.uname);
+            factory.authLogin.post({name: $scope.uname,password:$scope.password},
                 function (response) {
+                    console.log("like normal");
                     if(response && response.token){
                         var token = response.token;
                         $cookies.put('token',token);
                         console.log(token);
                         var decodedToken = jwtHelper.decodeToken(token);
-                        $rootScope.currentUser.name = decodedToken.user;
+                        console.log(decodedToken);
+                        $rootScope.currentUser.name = decodedToken.jti;
                         $rootScope.currentUser.roles = decodedToken.roles;
                         //set current user promises
-                        //$scope.$close(email);
-                        $scope.$close(email);
+                        $scope.$close($scope.uname);
                         $scope.refreshMenu();
+                    } else {
+                        console.log("null came");
+                        $scope.$close();
                     }
                 }, function(){
                     console.log("some error");
@@ -77,8 +101,12 @@
 
         };
 
+
+
         $scope.mainMenu = $scope.refreshMenu();
         $scope.auth = authService;
+
+        console.log($scope);
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ABOUT CONTROLLER//
@@ -95,7 +123,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //ORDER CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('orderController', function ($scope, $state, order,$stateParams, factory) {
+    purchase.controller('orderController', function ($scope, $state, order,$stateParams, factory, store) {
         //TODO: Написать сервис подсчета товаров при заказах
         //TODO: Определиться со статусами заказа (можно ли редактироватьб и когда, или же это будет работать автоматом)
         console.log("Enter order controller");
@@ -195,6 +223,10 @@
             };
 
             factory.order.save(respData);
+        };
+
+        $scope.createOrder = function(cart){
+            factory.order.save({items:cart});
         };
 
         //add item to order
@@ -634,7 +666,7 @@
         //pagination
         $scope.currPage = 1;
         $scope.maxPage = 5;
-        $scope.itemsPerPage = 10;
+        $scope.itemsPerPage = 9;
         $scope.totalItems = null;
 
         //get all items

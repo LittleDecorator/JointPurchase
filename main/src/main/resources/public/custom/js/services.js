@@ -19,6 +19,37 @@ purchase.service('loginModal', function ($modal, $rootScope) {
 
 });
 
+purchase.service('store', function ($window) {
+
+    return {
+
+        get: function (key) {
+            if ($window.localStorage [key]) {
+                console.log("in get");
+                //var cart = angular.fromJson($window.localStorage [key]);
+                var cart = $window.localStorage [key];
+                console.log(cart);
+                return JSON.parse(cart);
+                //return cart
+            }
+            //return false;
+            return [];
+
+        },
+
+
+        set: function (key, val) {
+
+            if (val === undefined) {
+                $window.localStorage .removeItem(key);
+            } else {
+                $window.localStorage [key] = angular.toJson(val);
+            }
+            return $window.localStorage [key];
+        }
+    }
+});
+
 purchase.service('authService',function($rootScope,$cookies){
     console.log("in auth service");
     console.log($rootScope.currentUser);
@@ -33,7 +64,7 @@ purchase.service('authService',function($rootScope,$cookies){
         },
 
         isAuth : function () {
-            console.log("check isAuth");
+            //console.log("check isAuth");
             if($cookies.get('token')){
                 console.log('token present');
             } else {

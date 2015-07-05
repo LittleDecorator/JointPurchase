@@ -1,39 +1,40 @@
-<!--<div>
-    <form ng-submit="submit(_email, _password)">
+<div>
+    <!--<form ng-submit="submit(_email, _password)">-->
         <div class="modal-body">
             <div class="form-group">
                 <label class="control-label">Email/Логин</label>
-                <input type="email" ng-model="_email" />
+                <!--<input type="email" ng-model="email" />-->
+                <input ng-model="uname" />
             </div>
             <div class="form-group">
                 <label class="control-label">Пароль</label>
-                <input type="password" ng-model="_password" />
+                <input type="password" ng-model="password" />
             </div>
         </div>
-    </form>
+    <!--</form>-->
     <div class="modal-footer">
 
         <div class="btn-group pull-right">
-            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+            <a class="btn btn-danger" ng-click="cancel()">Cancel</a>
         </div>
 
         <div class="btn-group pull-right">
-            <button class="btn btn-success" ng-click="submit()">OK</button>
+            <a class="btn btn-success" ng-click="submit()">OK</a>
         </div>
 
         <div class="btn-group pull-right">
-            <button class="btn btn-warning" ui-sref="product">Зарегистрироваться</button>
+            <a class="btn btn-warning" ui-sref="product">Зарегистрироваться</a>
         </div>
     </div>
-</div>-->
+</div>
 
 
 
-<div>
+<!--<div>
     <form ng-submit="submit(_email, _password)">
         <input type="email" ng-model="_email" />
         <input type="password" ng-model="_password" />
         <button>Submit</button>
     </form>
     <button ng-click="cancel()">Cancel</button>
-</div>
+</div>-->

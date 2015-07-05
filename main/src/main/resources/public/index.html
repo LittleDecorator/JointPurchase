@@ -7,6 +7,7 @@
     <!-- load bootstrap and font-awesome via CDN -->
     <link rel="stylesheet" href="official/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="official/font-awesome/font-awesome.css" />
+    <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">-->
     <link rel="stylesheet" href="official/bootcard/bootcards-desktop.min.css">
     <link rel="stylesheet" href="official/angular/angular-ui-tree.min.css">
     <link rel="stylesheet" href="official/angular/angular-motion.css">
@@ -47,16 +48,21 @@
 </head>
 
 <!-- define angular controller -->
-<body ng-app="purchase" ng-controller="mainController">
+<body ng-app="purchase" ng-controller="mainController" style="padding-left: 10%;padding-right: 10%;border: 1px solid #ddd; background-color: #fff">
 
     <!-- HEADER AND NAVBAR -->
     <header>
         <nav class="navbar navbar-default">
-            <div class="container">
+            <div class="container" style="  margin-right: 0px;">
                 <div class="navbar-header">
                     <a class="navbar-brand" ui-sref="home">Join Purchase</a>
                 </div>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" style="width: 700px">
+                    <li>
+                        <a ui-sref="bla"><i class="fa fa-2x fa-shopping-cart"></i>
+                            <span class="label label-info">{{cart.length}}</span>
+                        </a>
+                    </li>
                     <li ng-show="auth.isAuth()" class="">
                         <p class="navbar-text">Hello, <strong class="ng-binding">{{currentUser.name}}</strong></p>
                     </li>
