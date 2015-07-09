@@ -7,6 +7,8 @@ insert into company(id,name,description,url)
         values ('288a0fb1-f49e-4cd9-b339-e995a86c1376','Мелик-Пашаев','Издательство выпускающее книги для детей от 0 до 10 лет','http://www.melik-pashaev.ru/');
 insert into company(id,name,description,url)
         values ('f837c608-40de-42e6-99c4-e389c5f6a5be','Речь','Издательство','http://rech-deti.ru/');
+insert into company(id,name,description,url)
+        values ('40636ca3-6c19-4ecb-83a2-9027dcd5b22f','Grimms','Производитель настоящих деревянных игрушек','http://www.grimms.eu/en/');
 
 /* ROLES */
 insert into role(id,description)
@@ -61,6 +63,10 @@ insert into category(id,name,parent_id)
         values ('3d021e55-4c08-4b93-95eb-9db447ea3cee','Мебель','4fe67e25-6557-41a8-b59d-187e19f121b2');
 insert into category(id,name,parent_id)
         values ('74e92d18-007e-4896-96b3-0d11c21279cb','Шелк','4fe67e25-6557-41a8-b59d-187e19f121b2');
+insert into category(id,name,parent_id)
+        values ('4e09566a-73a4-4274-8681-fafa52e6fa9b','Складывание и Сортировка','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+insert into category(id,name,parent_id)
+        values ('e88d2030-a352-448f-bad4-0996880302a5','Складывание','4e09566a-73a4-4274-8681-fafa52e6fa9b');
 
 /* ITEMS */
 insert into item(id,name,company_id,category_id,price)
@@ -71,7 +77,16 @@ insert into item(id,name,company_id,category_id,price)
         values ('23f9a890-525e-401d-9499-cd51dedc4103', 'Кубики «Цифры»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',150);
 insert into item(id,name,company_id,category_id,price)
         values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',200);
+
 insert into item(id,name,company_id,category_id,price)
+        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',1000);
+insert into item(id,name,company_id,category_id,price)
+        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',1650);
+insert into item(id,name,company_id,category_id,price)
+        values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',3500);
+insert into item(id,name,company_id,category_id,price)
+        values ('6a20e159-7951-4f65-88f8-3b5696e411fd', 'Радуга (6 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',2000);
+/*insert into item(id,name,company_id,category_id,price)
         values ('bd55b526-a698-41f9-8bf4-85fc8eb061f9', 'Кубики «Сложи рисунок: животные»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
 insert into item(id,name,company_id,category_id,price)
         values ('2d808a5c-cbec-4481-a273-9127c8caa326', 'Кубики «Сложи рисунок: Фрукты-ягоды»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
@@ -82,7 +97,7 @@ insert into item(id,name,company_id,category_id,price)
 insert into item(id,name,company_id,category_id,price)
         values ('ab5333b1-2b57-4c6f-9ca0-43dc251a79aa', 'Кубики «Сложи рисунок: мебель»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
 insert into item(id,name,company_id,category_id,price)
-        values ('846ffe25-bc3a-4188-8ef1-be6c3e9e04e3', 'Кубики «Сложи рисунок: овощи»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
+        values ('846ffe25-bc3a-4188-8ef1-be6c3e9e04e3', 'Кубики «Сложи рисунок: овощи»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);*/
 
 /* ORDERS */
 insert into purchase_order(id,subject_id,payment,comment)

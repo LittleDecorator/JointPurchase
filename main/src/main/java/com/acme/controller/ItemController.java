@@ -200,26 +200,28 @@ public class ItemController{
 
         Item item = itemMapper.selectByPrimaryKey(itemId);
 
-            jsonObject = new JSONObject();
+        jsonObject = new JSONObject();
 
-            //check orig image
-            itemContentExample = new ItemContentExample();
-            itemContentExample.createCriteria().andItemIdEqualTo(itemId);
-            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
-            if(itemContents.size()>0){
-                //just take first image
-                String contentId = itemContents.get(0).getContentId();
-                jsonObject.put("url",Constants.VIEW_URL+contentId);
-                jsonObject.put("contentId",contentId);
-            } else {
-                //else default image
-                jsonObject.put("url",noImage);
-                jsonObject.put("contentId",content.getId());
+        //check orig image
+        itemContentExample = new ItemContentExample();
+        itemContentExample.createCriteria().andItemIdEqualTo(itemId);
+        List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+
+        JSONArray jsonArray = new JSONArray();
+        if(itemContents.size()>0){
+            //take all image
+            for(ItemContent itemContent : itemContents){
+                jsonArray.add(itemContent.getContentId());
             }
-            jsonObject.put("description",item.getDescription());
-            jsonObject.put("price",item.getPrice());
-            jsonObject.put("name",item.getName());
-            jsonObject.put("id",item.getId());
+        } else {
+            //else default image
+            jsonArray.add(content.getId());
+        }
+        jsonObject.put("description",item.getDescription());
+        jsonObject.put("price",item.getPrice());
+        jsonObject.put("name",item.getName());
+        jsonObject.put("id",item.getId());
+        jsonObject.put("media",jsonArray);
         return jsonObject;
     }
 

@@ -738,8 +738,40 @@
     //ITEM DETAIL CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('detailController', function ($scope, $state, product) {
-        $scope.item = product;
-        //console.log($scope.item);
+        $scope.mainImage = null;
+        $scope.item = angular.extend({},product);
+
+        $scope.THUMB_URL = "media/image/thumb/";
+        $scope.PREVIEW_URL = "media/image/preview/";
+        $scope.VIEW_URL = "media/image/view/";
+
+        $scope.mainImage = $scope.item.media[0];
+        if($scope.item.media.length>1){
+            $scope.item.media.splice(0,1);
+        }
+
+        $scope.next = function(id){
+            $scope.item.media.push($scope.mainImage);
+
+            var keepGoing = true;
+            var res = null;
+
+            $scope.item.media.forEach(function(elem,index){
+                if (keepGoing) {
+                    if(elem === id) {
+                        res = index;
+                        keepGoing = false;
+                    }
+                }
+            });
+            $scope.mainImage = id;
+            $scope.item.media.splice(res,1);
+        }
+
+        $scope.view= function(id){
+
+        }
+
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //REGISTRATION CONTROLLER//

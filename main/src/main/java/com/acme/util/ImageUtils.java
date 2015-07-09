@@ -21,7 +21,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage getImage(byte[] binary) throws IOException {
-        System.out.println(binary.length);
+//        System.out.println(binary.length);
         ByteArrayInputStream bis = new ByteArrayInputStream(binary);
         BufferedImage image = ImageIO.read(bis);
         bis.close();
@@ -34,7 +34,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage writeToStream (byte[] binary, String type, OutputStream stream) throws IOException {
-        System.out.println(binary.length);
+//        System.out.println(binary.length);
         ByteArrayInputStream bis = new ByteArrayInputStream(binary);
         BufferedImage image = ImageIO.read(bis);
         bis.close();

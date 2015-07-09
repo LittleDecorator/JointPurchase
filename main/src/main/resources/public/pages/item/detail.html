@@ -7,14 +7,27 @@
 <div class="table-container">
 
     <div class="container bootcards-container" id="main" style="width:auto">
-        <div style="float: left;">
-            <img ng-src="{{item.url}}" id="{{item.contentId}}" class="item_image" />
-            <b style="font-weight: 700;font-size: 12px;">{{item.name}}</b>
-            <p>{{item.description}}</p>
-            <b>Цена: </b>{{item.price}}
-            <a class="btn btn-primary" ng-click="addToCart(item)" title="Добавить в корзину">
-                <i class="fa fa-plus"></i>
-            </a>
+        <div>
+            <div style="width: 300px;float: left">
+                <div style="display: inline-block;width: 300px;height: 300px">
+                    <img ng-src="{{PREVIEW_URL+mainImage}}" class="item_image" style="cursor: pointer" ng-click="view(mainImage)"/>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 col-md-4" ng-repeat="img in item.media" ng-click="next(img)" style="padding-left: 0px;padding-right: 0px">
+                        <a class="thumbnail">
+                            <img ng-src="{{THUMB_URL+img}}" >
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-left: 150px;display: inline-block;">
+                <b style="font-weight: 700;font-size: 12px;">{{item.name}}</b>
+                <p>{{item.description}}</p>
+                <b>Цена: </b>{{item.price}}
+                <a class="btn btn-primary" ng-click="addToCart(item)" title="Добавить в корзину">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
             <!--<button type="button" class="btn btn-danger" data-animation="am-fade-and-scale" data-placement="center" bs-modal="modal">modal from center<br><small>(am-fade-and-scale)</small></button>-->
         </div>
     </div>

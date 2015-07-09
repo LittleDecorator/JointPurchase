@@ -66,9 +66,9 @@ purchase.service('authService',function($rootScope,$cookies){
         isAuth : function () {
             //console.log("check isAuth");
             if($cookies.get('token')){
-                console.log('token present');
+                //console.log('token present');
             } else {
-                console.log('no token present');
+                //console.log('no token present');
             }
             if (typeof $cookies.get('token') == 'undefined') {
                 return false;
