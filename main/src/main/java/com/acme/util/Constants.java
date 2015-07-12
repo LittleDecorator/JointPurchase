@@ -7,6 +7,7 @@ public interface Constants {
     public static String ORIG_URL = "media/image/";
     public static String VIEW_URL = "media/image/view/";
     public static String THUMB_URL = "media/image/thumb/";
+    public static String GALLERY_URL = "media/image/gallery/";
     public static String PREVIEW_URL = "media/image/preview/";
 
 }

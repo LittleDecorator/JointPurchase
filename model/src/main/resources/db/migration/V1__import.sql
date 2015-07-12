@@ -87,7 +87,7 @@ create table item (
   company_id varchar(37) not null,
   category_id varchar(37) not null,
   article varchar(30),
-  description varchar(255),
+  description varchar(2000),
   price decimal(20,2) not null, --цена еденицы товара
   primary key (id),
   foreign key (company_id) references company,

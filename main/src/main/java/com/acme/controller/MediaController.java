@@ -40,4 +40,11 @@ public class MediaController {
         ImageIO.write(ImageCropper.cropForThumb(content.getContent()), content.getType(), response.getOutputStream());
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/image/gallery/{contentId}")
+    public void getImageForGallery(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        Content content = contentMapper.selectByPrimaryKey(contentId);
+        response.setContentType(content.getMime());
+        ImageIO.write(ImageCropper.cropForGallery(content.getContent()), content.getType(), response.getOutputStream());
+    }
+
 }
