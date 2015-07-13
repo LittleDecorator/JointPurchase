@@ -3,6 +3,7 @@ package com.acme.controller;
 import com.acme.gen.domain.Content;
 import com.acme.gen.mapper.ContentMapper;
 import com.acme.util.ImageCropper;
+import com.acme.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,13 @@ public class MediaController {
         Content content = contentMapper.selectByPrimaryKey(contentId);
         response.setContentType(content.getMime());
         ImageIO.write(ImageCropper.cropForGallery(content.getContent()), content.getType(), response.getOutputStream());
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/image/{contentId}")
+    public void getImageForOrig(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        Content content = contentMapper.selectByPrimaryKey(contentId);
+        response.setContentType(content.getMime());
+        ImageIO.write(ImageUtils.getImage(content.getContent()), content.getType(),response.getOutputStream());
     }
 
 }

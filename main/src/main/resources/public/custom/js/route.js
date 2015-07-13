@@ -18,22 +18,17 @@ var route = {
             },
 
             {
-                name: 'bla',
-                url: '/bla',
+                name: 'cart',
+                url: '/cart',
                 views: {
                     'main@': {
                         templateUrl: 'pages/orderPreview.html',
-                        controller: 'orderController'
+                        controller: 'cartController'
                     }
                 },
                 data: {
                     requireLogin: false,
                     base:true
-                },
-                resolve: {
-                    order: function() {
-                        return null;
-                    }
                 }
             },
             {

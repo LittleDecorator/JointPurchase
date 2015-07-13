@@ -37,6 +37,15 @@ purchase.service('store', function ($window) {
 
         },
 
+        remove: function(key){
+            if ($window.localStorage [key]) {
+                $window.localStorage.removeItem(key);
+                return true;
+            } else {
+                return false;
+            }
+        },
+
 
         set: function (key, val) {
 
@@ -122,3 +131,19 @@ purchase.service('resolveService',function($q,factory){
         return deferred.promise;
     }
 });
+
+/*
+purchase.service('imageView', function ($modal, $rootScope) {
+
+    return function(scope) {
+        var instance = $modal.open({
+            templateUrl: 'pages/template/imageView.html',
+            scope:scope,
+            windowClass: 'center-modal'
+        });
+        console.log(instance);
+
+        return instance.result;
+    };
+
+});*/

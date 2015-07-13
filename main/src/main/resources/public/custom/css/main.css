@@ -221,3 +221,53 @@ div.col-sm-6:nth-child(2n){
     width: 48.5%;
     margin-left: 10px;
 }
+
+/* image view css */
+
+.modal.fade .modal-dialog {
+    -webkit-transform: scale(0.1);
+    -moz-transform: scale(0.1);
+    -ms-transform: scale(0.1);
+    transform: scale(0.1);
+    top: 300px;
+    opacity: 0;
+    -webkit-transition: all 0.7s;
+    -moz-transition: all 0.7s;
+    transition: all 0.7s;
+}
+
+.modal.fade.in .modal-dialog {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    -webkit-transform: translate3d(0, -300px, 0);
+    transform: translate3d(0, -300px, 0);
+    opacity: 1;
+}
+
+.modal-header {
+    font-family: "Bree Serif";
+    background-color: #F6F5F5;
+    border-radius: 5px;
+}
+
+.modal-body {
+    font-size: 16px;
+}
+
+.center-modal {
+    position: fixed;
+    top: 10%;
+    left: 18.5%;
+    z-index: 1050;
+    width: 80%;
+    height: 80%;
+    margin-left: -10%;
+}
+
+/* cart */
+
+.table tbody tr.gray > td {
+    background-color: #f5f5f5;
+}

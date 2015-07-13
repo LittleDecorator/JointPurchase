@@ -43,6 +43,8 @@
         //явный logout через меню
         $scope.logout = function(){
             $cookies.remove('token');
+            store.remove('cart');
+            $scope.cart = null;
             $rootScope.currentUser = {};
             $scope.refreshMenu();
             $state.transitionTo("home");
@@ -108,9 +110,7 @@
 
         console.log($scope);
     });
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //ABOUT CONTROLLER//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     purchase.controller('aboutController', function ($scope) {
         $scope.message = 'Look! I am an about page.';
     });
@@ -637,26 +637,6 @@
             $scope.data.push(content);
         });
 
-        /*$scope.data = [
-            {
-                "id": 1,
-                "title": "node1",
-                "nodes": [
-                    {
-                        "id": 11,
-                        "title": "node1.1",
-                        "nodes": [
-                            {
-                                "id": 111,
-                                "title": "node1.1.1",
-                                "nodes": []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ];*/
-
         //maps
         $scope.companyNames = factory.companyMap.get();
         $scope.categoryTypes = factory.categoryMap.get();
@@ -738,12 +718,16 @@
     //ITEM DETAIL CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('detailController', function ($scope, $state, product) {
+        console.log("enter detail controller");
+
         $scope.mainImage = null;
         $scope.item = angular.extend({},product);
 
         $scope.THUMB_URL = "media/image/thumb/";
         $scope.PREVIEW_URL = "media/image/preview/";
         $scope.VIEW_URL = "media/image/view/";
+        $scope.ORIG_URL = "media/image/";
+
 
         $scope.mainImage = $scope.item.media[0];
         if($scope.item.media.length>1){
@@ -766,10 +750,25 @@
             });
             $scope.mainImage = id;
             $scope.item.media.splice(res,1);
-        }
+        };
 
-        $scope.view= function(id){
+        $scope.view= function(){
+            console.log("in view");
+            console.log($scope);
 
+            //угобая центролизация modal dialog'а
+            function centerModal() {
+                $(this).css('display', 'block');
+                var $dialog = $(this).find(".modal-dialog");
+                var offset = ($(window).height()-150 - $dialog.height()) / 2;
+                // Center modal vertically in window
+                $dialog.css("margin-top", offset);
+            }
+
+            $('.modal').on('show.bs.modal', centerModal);
+            $(window).on("resize", function () {
+                $('.modal:visible').each(centerModal);
+            });
         }
 
     });
@@ -781,3 +780,26 @@
             console.log($scope);
         }
     });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //CART CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+purchase.controller('cartController',function($scope,factory){
+    console.log("enter cart controller");
+    console.log($scope.cart);
+    $scope.showContent = false;
+
+    if(!$scope.cart || $scope.cart.length==0){
+        $scope.showContent = false;
+        console.log("NO ITEMS in CART")
+    } else {
+        $scope.showContent = true;
+        $scope.orderItemsCou = $scope.cart.length;
+        console.log($scope.orderItemsCou);
+    }
+
+    $scope.createOrder = function(cart){
+        factory.order.save({items:cart});
+    };
+
+
+});
