@@ -1,173 +1,64 @@
 <div class="table-result" ng-if="showContent">
 
-    <h2 style="margin-top:30px;">В корзине {{orderItemsCou}} товар</h2>
-
-    <!--<table class="table table-bordered table-hover items-table">
-        <tbody>
-        <tr ng-repeat="item in cart" id="{{item.id}}">
-            <td>{{item.name}}</td>
-            <td>{{item.price}} руб</td>
-            <td>1</td>
-        </tr>
-        </tbody>
-    </table>-->
+    <h4 class="header">В корзине {{orderItemsCou}} товар</h4>
 
     <table class="table-purchases table">
         <tbody>
-            <tr ng-repeat="item in cart">
+            <tr ng-repeat="item in cart.content">
                 <td class="image">
-                    <!--<a class="image" href="products/dzhemper-myatno-rozovyj"><img src="http://jupon-pantalon.ru/files/products/machooka-dvuhstoronij-djemper-mjatnij.140x140.bg.jpg?5be2a143041d66754b6ac6748aaddd43" alt=""></a>-->
                     <a class="thumbnail" style="width: 110px;height: 110px;vertical-align: middle;display: table-cell">
                         <img ng-src="/media/image/gallery/{{item.media[0]}}" class="image" />
                     </a>
                 </td>
                 <td class="name">
-                    <h3><a href="products/dzhemper-myatno-rozovyj">{{item.name}}</a></h3>
+                    <h5><a href="products/dzhemper-myatno-rozovyj">{{item.name}}</a></h5>
                 </td>
                 <td class="price"><span class="price">{{item.price}} руб</span></td>
-                <td class="amount">
-                    1
-                </td>
-                <td class="price"><span class="price">{{item.price * 1}} руб</span></td>
-                <td class="remove">
-                    <!--<a href="cart/remove/791" title="Удалить"><img src="design/bw2/images/round_delete.png"></a>-->
-                </td>
+                <td class="amount">{{item.cou}}</td>
+                <td class="price"><span class="price">{{item.price * item.cou}} руб</span></td>
+                <td class="remove"></td>
             </tr>
-            <tr class="gray">
-                <td colspan="3"></td>
-                <td class="name"><strong>БЕЗ СКИДКИ:</strong></td>
-                <td class="price"><span class="price" style="font-size:16px; ">SUMM руб</span></td>
-                <td></td>
-            </tr>
-
-            <tr class="gray">
-                <td colspan="3"></td>
-                <td class="name"><strong>СКИДКА:</strong></td>
-                <td class="price"><span class="price" style="font-size:16px; ">DISCOUNT руб</span></td>
-                <td></td>
-            </tr>
-
             <tr class="gray">
                 <td colspan="3"></td>
                 <td class="name"><strong>ИТОГО:</strong></td>
-                <td class="price"><span class="price" style="font-size:16px; ">TOTAL руб</span></td>
+                <td class="price"><span class="price" style="font-size:16px; ">{{cart.content|sumByKey}} руб</span></td>
                 <td></td>
             </tr>
         </tbody>
     </table>
 
-    <h2 style="padding-left:240px;">Выберите способ доставки:</h2>
-    <div id="deliveries">
-        <div class="control-group" style="margin-left:-20px;">
-            <div class="controls">
-                <label class="radio">
-                    <input type="radio" name="delivery_id" value="1" checked="" id="deliveries_1">
-                    <h4 style="margin:0; display:inline; ">Курьерская доставка по Москве —</h4> <span class="price"> 350&nbsp;руб</span>
-                    <div><p align="center" style="text-align: left;"><span>Если Вы находитесь&nbsp;</span><strong>в Москве</strong><span>&nbsp;мы доставим Вам заказ, сделанный до 14.00, на следующий день после его оформления. Менеджер нашего магазина свяжется с Вами по телефону и договорится об удобном времени доставки. Оплата – наличными курьеру при получении заказа. Стоимость доставки в пределах МКАД 350 руб.&nbsp;</span></p><p align="center" style="text-align: left;"><span></span><span>Доплата за доставку за МКАД&nbsp;</span><span>(не далее 15 км от МКАД)</span><span>&nbsp;+ 50 руб. за каждые полные/неполные 5 км. от МКАД</span></p><p align="center" style="text-align: left;">Доставка осуществляется ежедневно c 10:00 до 20:00. В день доставки за полчаса или час курьер свяжется с Вами.&nbsp;Курьер может подождать 15 минут для того, чтобы Вы проверили и примерили заказанные товары.&nbsp;</p><p align="center" style="text-align: left;">При заказе от 7000 руб. доставка осуществляется бесплатно.</p></div>
-                </label>
-            </div>
-        </div>
-        <div class="control-group" style="margin-left:-20px;">
-            <div class="controls">
-                <label class="radio">
-                    <input type="radio" name="delivery_id" value="2" id="deliveries_2">
-                    <h4 style="margin:0; display:inline; ">Самовывоз —</h4> <span class="price"> 100&nbsp;руб</span>
-                    <div><p><span>Вы также можете самостоятельно забрать заказ в Пункте Самовывоза, расположенном по адресу г. Москва, Огородный проезд, 20, стр. 38 с понедельника по субботу с 10-30 до 20-00. Пункт расположен в&nbsp;10&nbsp;минутах от&nbsp;метро Тимирязевская и&nbsp;в&nbsp;2&nbsp;минутах от&nbsp;станции монорельсовой дороги Улица Милашенкова (</span><a href="http://www.axiomus.ru/i/carry_new.png">посмотреть схему прохода</a><span>). Это одноэтажное здание с&nbsp;деревянной дверью, как будто в&nbsp;сказке про трех медведей.&nbsp;Для прохода в&nbsp;пункт не&nbsp;требуется никаких пропусков, внутри есть примерочная кабина, столы для проверки заказов. Для автомобилистов всегда есть места для парковки, а&nbsp;удобное расположение пункта позволяет быстро добраться до&nbsp;ТТК, Алтуфьевского, Дмитровского, Ярославского шоссе. Стоимость доставки заказа в пункт самовывоза 100 руб.&nbsp;</span></p></div>
-                </label>
-            </div>
-        </div>
-        <div class="control-group" style="margin-left:-20px;">
-            <div class="controls">
-                <label class="radio">
-                    <input type="radio" name="delivery_id" value="3" id="deliveries_3">
-                    <h4 style="margin:0; display:inline; ">Курьерская доставка по России —</h4> <span class="price"></span>
-                    <div><p>Примерные тарифы и варианты доставки в Ваш регион Вы можете увидеть в разделе <span style="text-decoration: underline;"><a href="/oplata">Оплата и доставка</a></span>&nbsp;, выбрав Ваш город в окошке над картой. &nbsp;После получения заказа, мы дополнительно свяжемся с Вами для согласования точной стоимости доставки.&nbsp;</p></div>
-                </label>
-            </div>
-        </div>
-    </div>
+    <h4 class="header">Выберите способ доставки:</h4>
 
-    <a class="btn btn-primary" ng-click="createOrder(cart)">Оформить заказ
-        <i class="fa"></i>
-    </a>
+    <form action="#">
+        <p>
+            <input class="with-gap" name="group1" type="radio" id="test1" ng-model="delivery.type" value="moscow" />
+            <label for="test1">Курьерская доставка по Москве — 350&nbsp;руб
+                <br><span>Если Вы находитесь в Москве мы доставим Вам заказ, сделанный до 14.00, на следующий день после его оформления.
+                    Менеджер нашего магазина свяжется с Вами по телефону и договорится об удобном времени доставки. Оплата – наличными курьеру при получении заказа.
+                    Стоимость доставки в пределах МКАД 350 руб.&nbsp;</span>
+                <span>Доплата за доставку за МКАД(не далее 15 км от МКАД) + 50 руб. за каждые полные/неполные 5 км. от МКАД</span>
+                <span>Доставка осуществляется ежедневно c 10:00 до 20:00. В день доставки за полчаса или час курьер свяжется с Вами.&nbsp;Курьер может подождать 15 минут для того, чтобы Вы проверили и примерили заказанные товары.&nbsp;При заказе от 7000 руб. доставка осуществляется бесплатно.</span>
+            </label>
+        </p>
+        <p>
+            <input class="with-gap" name="group1" type="radio" id="test2" ng-model="delivery.type" value="self" />
+            <label for="test2">Самовывоз — 100&nbsp;руб
+                <br><span>Вы также можете самостоятельно забрать заказ в Пункте Самовывоза, расположенном по адресу г. Москва, Огородный проезд, 20, стр. 38 с понедельника по субботу с 10-30 до 20-00. Пункт расположен в&nbsp;10&nbsp;минутах от&nbsp;метро Тимирязевская и&nbsp;в&nbsp;2&nbsp;минутах от&nbsp;станции монорельсовой дороги Улица Милашенкова (</span><a href="http://www.axiomus.ru/i/carry_new.png">посмотреть схему прохода</a><span>). Это одноэтажное здание с&nbsp;деревянной дверью, как будто в&nbsp;сказке про трех медведей.&nbsp;Для прохода в&nbsp;пункт не&nbsp;требуется никаких пропусков, внутри есть примерочная кабина, столы для проверки заказов. Для автомобилистов всегда есть места для парковки, а&nbsp;удобное расположение пункта позволяет быстро добраться до&nbsp;ТТК, Алтуфьевского, Дмитровского, Ярославского шоссе. Стоимость доставки заказа в пункт самовывоза 100 руб.&nbsp;</span>
+            </label>
+        </p>
+        <p>
+            <input class="with-gap" name="group1" type="radio" id="test3" ng-model="delivery.type" value="country" />
+            <label for="test3">Курьерская доставка по России
+                <br><span>Примерные тарифы и варианты доставки в Ваш регион Вы можете увидеть в разделе <span style="text-decoration: underline;"><a href="/oplata">Оплата и доставка</a></span>&nbsp;, выбрав Ваш город в окошке над картой. &nbsp;После получения заказа, мы дополнительно свяжемся с Вами для согласования точной стоимости доставки.&nbsp;</span>
+            </label>
+        </p>
+    </form>
 
-<!--    <div id="content">
-        <form id="cart-form" class="form-horizontal" method="post" name="cart" novalidate="novalidate">
+    <a class="btn btn-primary" ng-click="createOrder()">Оформить заказ</a>
+
+    <a class="btn btn-primary" ng-click="clearCart()">Очистить корзину</a>
 
 
-            <br>
-            <h2 style="padding-left:240px;">Адрес получателя</h2>
-            <div class="form cart_form">
-
-                <div class="control-group">
-                    <label class="control-label" for="name">Имя, фамилия <em>*</em></label>
-                    <div class="controls">
-                        <input type="text" name="name" id="name" value="" maxlength="255">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="email">Email <em>*</em></label>
-                    <div class="controls">
-                        <input type="text" name="email" id="email" value="" maxlength="255">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="phone">Телефон <em>*</em></label>
-                    <div class="controls">
-                        <input type="text" name="phone" id="phone" value="" maxlength="255">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="address">Адрес доставки</label>
-                    <div class="controls">
-                        <input type="text" name="address" id="address" value="">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="comment">Комментарий к&nbsp;заказу</label>
-                    <div class="controls">
-                        <textarea rows="3" class="span4" name="comment" id="order_comment"></textarea>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="comment">Подписаться на новости?</label>
-                    <div class="controls">
-                        <input type="checkbox" name="subscribe" value="1"> Да
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <div class="capcha"><img src="captcha/image.php?8869"></div> <input id="captcha_code" type="text" name="captcha_code" value="" class="input-small" autocomplete="off">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls" style="margin-top:20px;">
-                        <input type="submit" class="btn btn-primary btn-large" name="checkout" value="Оформить заказ">
-                    </div>
-                </div>
-            </div>
-
-            &lt;!&ndash;<script>
-
-                $(document).ready(function(){
-                    $('#cart-form').validate({
-                        rules: {
-                            name: "required",
-                            email: {
-                                required: true,
-                                email: true
-                            },
-                            phone: "required",
-                            captcha_code: "required"
-                        }
-                    });
-                });
-
-            </script>&ndash;&gt;
-
-
-        </form>
-    </div>-->
 </div>
 <div class="table-result" ng-if="!showContent">
     Не выбранно ни одного товара

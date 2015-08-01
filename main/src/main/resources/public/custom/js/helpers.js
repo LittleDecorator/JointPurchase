@@ -17,12 +17,12 @@ var helpers = {
 
     findInArrayById: function(array,id){
         var res = {};
-        array.forEach(function(elem){
+        array.some(function(elem){
             if(elem.id === id){
                 res = elem;
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         });
         return res;
@@ -45,18 +45,32 @@ var helpers = {
 
     findRouteByName: function(name){
         var res = {};
-        route.getRoutes().forEach(function(elem){
+        route.getRoutes().some(function(elem){
             console.log(elem);
             console.log(name);
             if(elem.name === name){
                 console.log("match");
                 angular.extend(res,elem);
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         });
         return res;
+    },
+
+    isEmpty: function(ob) {
+        for (var i in ob) {
+            return false;
+        }
+        return true;
+    },
+
+    isArray: function(obj){
+        if( Object.prototype.toString.call(obj) === '[object Array]' ) {
+            return true;
+        }
+        return false;
     }
 
 };

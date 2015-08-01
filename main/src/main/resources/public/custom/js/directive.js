@@ -157,3 +157,30 @@ purchase.directive('ngMenu',function($compile){
     };*/
 
 });
+
+/* директива переопределяет стандартную выборку */
+purchase.directive('select', function($timeout){
+    return {
+            restrict: 'E',
+            require: '?ngModel',
+            link: function (scope, element, attrs, ngModel) {
+
+                var post = function(selector){
+                    angular.element($('#'+selector+' .select-wrapper')).addClass('inactive');
+                    angular.element($('#'+selector+' ul li:first span')).addClass('inactive');
+                }
+
+                /* сделан упор на callback пустой модели и условие не пустого списка в элементе */
+                if(ngModel) {
+                    ngModel.$isEmpty = function(){
+                        if(element[0].length > 1){
+                            element.material_select();
+                            post('company');
+                            post('category');
+                        }
+                    }
+                }
+        }
+    };
+
+});

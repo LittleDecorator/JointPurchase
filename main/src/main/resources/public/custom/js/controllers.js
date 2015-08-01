@@ -1,14 +1,37 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //MAIN CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory,jwtHelper, store) {
+    purchase.controller('mainController', function ($scope,$rootScope,$cookies, $state, loginModal,authService, factory,jwtHelper, store,factoryModal) {
         console.log("Enter main controller");
 
         $scope.uname = "";
         $scope.password = "";
 
-        $scope.cart = store.get("cart");
+        $scope.isCollapsed = false;
 
+
+
+        angular.element(document).ready(function(){
+            // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+            $('.modal-trigger').leanModal();
+        });
+
+        $scope.initCart = function(){
+            $scope.cart = {cou:0,content:[]};
+            console.log($scope.cart);
+            console.log(typeof $scope.cart);
+            var c = store.get("cart");
+            console.log(c);
+            if(helpers.isArray(c)) {
+                console.log(c);
+            } else {
+                console.log(c);
+                $scope.cart = store.get("cart");
+                console.log($scope.cart);
+            }
+        };
+
+        //restore token
         if($cookies.get('token')){
             var decodedToken = jwtHelper.decodeToken($cookies.get('token'));
             console.log(decodedToken);
@@ -16,14 +39,37 @@
             $rootScope.currentUser.roles = decodedToken.roles;
         }
 
+        //add new item to cart
         $scope.addToCart = function(item){
-            $scope.cart.push(item);
-            console.log($scope.cart.length);
+            //console.log($scope.cart);
+            //check if item already in cart
+            var item_in = helpers.findInArrayById($scope.cart.content,item.id);
+            if(helpers.isEmpty(item_in)){
+                $scope.cart.content.push(angular.extend({cou:1},item));
+            } else {
+                item_in.cou++;
+            }
+            $scope.cart.cou++;
             store.set("cart",$scope.cart);
+        };
+
+        $scope.clearCart = function(){
+            store.remove('cart');
+            $scope.cart = null;
+            $scope.initCart();
+            $state.reload();
         };
 
         //нажата кнопка меню login
         $scope.login = function(){
+            //angular.element('#modal1').openModal();
+            /*$scope.modal = factoryModal.open({
+                    /!*templateUrl: 'pages/template/loginModal.html',*!/
+                    templateUrl:'pages/template/loginModal.html',
+                    controller: 'mainController'
+                });*/
+
+
             $scope.modal = loginModal()
                 .then(function () {
                     console.log("then");
@@ -107,6 +153,9 @@
 
         $scope.mainMenu = $scope.refreshMenu();
         $scope.auth = authService;
+
+        //init and restore cart content
+        $scope.initCart();
 
         console.log($scope);
     });
@@ -373,6 +422,12 @@
         console.log("enter item controller");
         //for filter you may use % for replace other symbols
 
+        $scope.select = {
+            value1: "Option1",
+            value2: "I'm an option",
+            choices: ["Option1", "I'm an option", "This is materialize", "No, this is Patrick."]
+        };
+
         //maps
         $scope.companyNames = factory.companyMap.get();
         $scope.categoryTypes = factory.categoryMap.get();
@@ -399,6 +454,8 @@
         $scope.totalItems = null;
 
         console.log(item);
+
+        $scope.needInit= true;
 
         if(item){
             $scope.selected = item;
@@ -508,11 +565,34 @@
             });
         };
 
+        $scope.companyChanged = function(){
+            console.log("company changed");
+            var elem = $('#company .select-wrapper');
+            if($scope.filter.selectedCompany == null){
+                angular.element(elem).addClass('inactive');
+            } else {
+                if(angular.element(elem).hasClass('inactive')){
+                    angular.element(elem).removeClass('inactive');
+                }
+            }
+        };
+
+        $scope.categoryChanged = function(){
+            console.log("category changed");
+            var elem = $('#category .select-wrapper');
+            if($scope.filter.selectedCategory == null){
+                angular.element(elem).addClass('inactive');
+            } else {
+                if(angular.element(elem).hasClass('inactive')){
+                    angular.element(elem).removeClass('inactive');
+                }
+            }
+        };
+
         $scope.showGallery = function (id) {
             $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
             $state.go("item.gallery", {itemId: id});
         }
-
 
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -646,7 +726,7 @@
         //pagination
         $scope.currPage = 1;
         $scope.maxPage = 5;
-        $scope.itemsPerPage = 9;
+        $scope.itemsPerPage = 20;
         $scope.totalItems = null;
 
         //get all items
@@ -712,6 +792,8 @@
                 });
             })
         }
+
+
 
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -785,15 +867,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 purchase.controller('cartController',function($scope,factory){
     console.log("enter cart controller");
-    console.log($scope.cart);
-    $scope.showContent = false;
 
-    if(!$scope.cart || $scope.cart.length==0){
+    $scope.showContent = false;
+    $scope.delivery = {type:"moscow"};
+
+    if($scope.cart.cou==0){
         $scope.showContent = false;
         console.log("NO ITEMS in CART")
     } else {
         $scope.showContent = true;
-        $scope.orderItemsCou = $scope.cart.length;
+        $scope.orderItemsCou = $scope.cart.cou;
         console.log($scope.orderItemsCou);
     }
 
@@ -802,4 +885,13 @@ purchase.controller('cartController',function($scope,factory){
     };
 
 
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//HOME CONTROLLER//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+purchase.controller('homeController',function($scope) {
+    angular.element(document).ready(function () {
+        $('.slider').slider({full_width: true});
+    });
 });

@@ -1,5 +1,5 @@
 
-purchase.service('loginModal', function ($modal, $rootScope) {
+purchase.service('loginModal', function ($modal, $rootScope,factoryModal) {
 
     /*function assignCurrentUser (user) {
         console.log("in assign user -> "+user);
@@ -8,13 +8,19 @@ purchase.service('loginModal', function ($modal, $rootScope) {
     }*/
 
     return function() {
-        var instance = $modal.open({
+        var instance = /*$modal.open({
             templateUrl: 'pages/template/loginModal.html',
             controller: 'mainController'
-        });
+        });*/
+            factoryModal.open({
+                templateUrl:'pages/template/loginModal.html',
+                controller: 'mainController',
+                sizeClass: 'modal-sm'
+            });
         console.log(instance);
         //return instance.result.then(assignCurrentUser);
-        return instance.result;
+        //return instance.result;
+        return instance;
     };
 
 });

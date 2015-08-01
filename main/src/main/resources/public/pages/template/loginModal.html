@@ -1,40 +1,21 @@
 <div>
-    <!--<form ng-submit="submit(_email, _password)">-->
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="control-label">Email/Логин</label>
-                <!--<input type="email" ng-model="email" />-->
-                <input ng-model="uname" />
+        <div class="modal-content">
+            <!--Registration via icon-->
+            <h4>Авторизация<i class="material-icons medium" style="float: right;cursor: pointer" ng-click="register()">account_circle</i></h4>
+
+            <div class="input-field col s12">
+                <input type="text" ng-model="uname" id="email"/>
+                <label for="email" class="">Email/Login</label>
             </div>
-            <div class="form-group">
-                <label class="control-label">Пароль</label>
-                <input type="password" ng-model="password" />
+            <div class="input-field col s12">
+                <input type="password" ng-model="password" id="password" />
+                <label class="control-label" for="password">Пароль</label>
             </div>
         </div>
-    <!--</form>-->
-    <div class="modal-footer">
-
-        <div class="btn-group pull-right">
-            <a class="btn btn-danger" ng-click="cancel()">Cancel</a>
+        <div class="modal-footer">
+            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat">Регистрация</a>
+            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="cancel()">Отмена</a>
+            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="submit()">Подтвердить</a>
         </div>
 
-        <div class="btn-group pull-right">
-            <a class="btn btn-success" ng-click="submit()">OK</a>
-        </div>
-
-        <div class="btn-group pull-right">
-            <a class="btn btn-warning" ui-sref="product">Зарегистрироваться</a>
-        </div>
-    </div>
 </div>
-
-
-
-<!--<div>
-    <form ng-submit="submit(_email, _password)">
-        <input type="email" ng-model="_email" />
-        <input type="password" ng-model="_password" />
-        <button>Submit</button>
-    </form>
-    <button ng-click="cancel()">Cancel</button>
-</div>-->

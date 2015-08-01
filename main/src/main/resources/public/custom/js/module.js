@@ -1,4 +1,4 @@
-var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ngTree' ,'ngBreadcrumbs' ,/*'ngAnimate',*/'angular-jwt']);
+var purchase = angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'ngTree' ,'ngBreadcrumbs' ,'angular-jwt'/*,'ui.materialize'*/]);
 
     //TODO: Нужен нормальны BreadCrumbs
 

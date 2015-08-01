@@ -1,9 +1,10 @@
 <div class="table-container">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
-    <button class="btn btn-primary" ng-click="addOrder()">Добавить заказ</button>
+    <a class="waves-effect waves-light btn" ng-click="addOrder()"><span>Добавить заказ</span></a>
+
     <h3 class="example_head">Заказы:</h3>
     <div class="table-result">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-hover collection">
             <thead style="background-color: darkseagreen;">
                 <tr>
                     <th style="width: 20%">Название</th>
@@ -16,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="order in orders" id="{{order.id}}">
+                <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
                     <td>{{order.name}}</td>
                     <td>{{order.personName}}</td>
                     <td>{{order.createOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
@@ -24,12 +25,8 @@
                     <td>{{order.status}}</td>
                     <td>{{order.payment}} руб</td>
                     <td>
-                        <a class="btn btn-primary" ng-click="editOrder(order.id)">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a class="btn btn-primary" ng-click="deleteOrder(order.id)">
-                            <i class="fa fa-times"></i>
-                        </a>
+                        <a class="btn-floating btn-sm waves-effect waves-light" ng-click="editOrder(order.id)"><i class="fa fa-pencil"></i></a>
+                        <a class="btn-floating btn-sm waves-effect waves-light" ng-click="deleteOrder(order.id)"><i class="fa fa-times"></i></a>
                     </td>
                 </tr>
             </tbody>

@@ -1,48 +1,67 @@
 <!-- Item Table Filter -->
 <div class="table-container filter-item">
-    <div class="row">
-        <div class="col-sm-3">
-            <label>Название</label>
-            <input type="text" name="name" class="form-control">
-        </div>
-        <div class="col-sm-2">
+
+        <div class="row">
+            <div class="input-field col s2">
+                <input id="name" type="text" class="validate" name="name">
+                <label for="name">Название</label>
+            </div>
+            <div class="input-field col s2">
+                <input id="article" type="text" class="validate" name="article">
+                <label for="article">Артикул</label>
+            </div>
+
+            <div class="input-field col s3" id="company">
+                <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.selectedCompany" ng-change="companyChanged()">
+                    <option value="">Выберите компанию ...</option>
+                </select>
+            </div>
+
+            <div class="input-field col s3" id="category">
+                <select  name="category" ng-options="category.name for category in categoryTypes track by category.id" ng-model="filter.selectedCategory" ng-change="categoryChanged()">
+                    <option value="">Выберите Категорию ...</option>
+                </select>
+            </div>
+
+            <!--<select ng-options=" user as user.Name for user in userList " ng-if="userList" ng-model="selected" >
+            </select>
+            {{ selected }}-->
+
+                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
+                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
+
+
+
+        <!--<div class="col-sm-2">
             <label>Производитель</label>
             <select name="company" class="form-control" ng-model="filter.selectedCompany" ng-options="company.name for company in companyNames track by company.id">
                 <option value="">Select a Company...</option>
             </select>
-        </div>
-        <div class="col-sm-3">
+        </div>-->
+        <!--<div class="col-sm-3">
             <label>Категория</label>
             <select name="category" class="form-control" ng-model="filter.selectedCategory" ng-options="category.name for category in categoryTypes track by category.id">
                 <option value="">Select a Category...</option>
             </select>
         </div>
-        <div class="col-sm-2">
-            <label>Артикул</label>
-            <input name="article" type="text" class="form-control">
-        </div>
-        <div class="col-sm-2" style="margin-top: 21px;">
-            <a class="btn btn-primary" style="width:100px" ng-click="filter.apply()">
-                <span>Найти</span>
-            </a>
-            <a class="btn btn-primary" style="width:100px" ng-click="filter.clear()">
-                <span>Сбросить</span>
-            </a>
-        </div>
     </div>
+
 </div>
 
 <!-- Item Table -->
 <div class="table-container">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
-    <a class="btn btn-primary btn-block" ng-click="addItem()" style="width:150px">
-        <span>Добавить товар</span>
-    </a>
+    <div>
+        <a class="btn btn-primary btn-block" ng-click="addItem()" style="width:150px">
+            <span>Добавить товар</span>
+        </a>
 
-    <h4 class="example_head">Товары:</h4>
+        <h4 class="example_head">Товары:</h4>
+    </div>
+
 
     <div class="table-result">
-        <table class="table table-bordered table-hover items-table">
+        <table class="table table-bordered table-hover items-table collection">
             <thead style="background-color: darkseagreen;">
             <tr>
                 <th></th>
@@ -57,33 +76,27 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in filteredItems" id="{{item.id}}">
+            <tr ng-repeat="item in filteredItems" id="{{item.id}}" class="collection-item">
                 <td><input type="checkbox"></td>
                 <td>{{item.name}}</td>
                 <td>{{item.companyName}}</td>
                 <td>{{item.categoryType}}</td>
                 <td>{{item.article}}</td>
                 <td>{{item.price}} руб</td>
-                <td>{{item.inStock}}</td>
-                <td>{{item.inOrder}}</td>
+                <td>{{item.inStock|asZero}}</td>
+                <td>{{item.inOrder|asZero}}</td>
                 <td>
-                    <a class="btn btn-primary" ng-click="editItem(item.id)">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <a class="btn btn-primary" ng-click="deleteItem(item.id)">
-                        <i class="fa fa-times"></i>
-                    </a>
-                    <a class="btn btn-primary" ng-click="showGallery(item.id)">
-                        <i class="fa fa-camera"></i>
-                    </a>
+                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
+                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id)"><i class="fa fa-times"></i></a>
+                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><i class="fa fa-camera"></i></a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div style="text-align: center">
+    <!--<div style="text-align: center">
         <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currPage" max-size="maxPage" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
-    </div>
+    </div>-->
 </div>
 
 
