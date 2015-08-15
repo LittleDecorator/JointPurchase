@@ -9,7 +9,7 @@
 
         $scope.isCollapsed = false;
 
-
+        //$scope.boolChangeClass = false;
 
         angular.element(document).ready(function(){
             // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
@@ -158,6 +158,11 @@
         $scope.initCart();
 
         console.log($scope);
+
+        /*$scope.click = function() {
+            $scope.boolChangeClass = !$scope.boolChangeClass;
+            //$scope.$apply();
+        };*/
     });
 
     purchase.controller('aboutController', function ($scope) {
@@ -708,7 +713,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //PRODUCT CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    purchase.controller('productController', function ($scope, $state, factory) {
+    purchase.controller('productController', function ($scope, $state, factory,$rootScope) {
         console.log("Enter Product controller");
 
         $scope.data = [];
@@ -791,7 +796,7 @@
                     $scope.subList();
                 });
             })
-        }
+        };
 
 
 
@@ -858,8 +863,38 @@
     //REGISTRATION CONTROLLER//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     purchase.controller('registrationController',function($scope,$state,factory){
+
+        $scope.card={
+            fio:"",
+            phone:"",
+            mail:"",
+            pwd:"",
+            repeat:""
+        };
         $scope.register = function(){
-            console.log($scope);
+            factory.reg.post($scope.card/*,
+            function (response) {
+                console.log("like normal");
+                if(response && response.token){
+                    var token = response.token;
+                    $cookies.put('token',token);
+                    console.log(token);
+                    var decodedToken = jwtHelper.decodeToken(token);
+                    console.log(decodedToken);
+                    $rootScope.currentUser.name = decodedToken.jti;
+                    $rootScope.currentUser.roles = decodedToken.roles;
+                    //set current user promises
+                    $scope.$close($scope.uname);
+                    $scope.refreshMenu();
+                } else {
+                    console.log("null came");
+                    $scope.$close();
+                }
+            }, function(){
+                console.log("some error");
+                $scope.$dismiss;
+                //$scope.$close("fla");
+            }*/);
         }
     });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

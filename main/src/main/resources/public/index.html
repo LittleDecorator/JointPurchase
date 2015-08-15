@@ -1,10 +1,7 @@
 <!doctype html>
 <html>
-<head>
     <!-- SCROLLS -->
-    <!-- load bootstrap and font-awesome via CDN -->
     <!--<link rel="stylesheet" href="official/bootstrap/bootstrap.min.css" />-->
-    <link rel="stylesheet" href="official/font-awesome/font-awesome.css" />
     <link rel="stylesheet" href="official/angular/angular-ui-tree.min.css">
     <link rel="stylesheet" href="official/angular/angular-motion.css">
 
@@ -12,49 +9,21 @@
     <!--<link rel="stylesheet" href="custom/css/style.css">-->
 
     <!--materialize-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">-->
+    <link href="official/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- SIDE -->
+
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="custom/css/side.css">
+
+    <!--========================================================-->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <script src="official/jquery-2.1.3.min.js"></script>
 
-    <script src="official/angular/angular.js"></script>
-    <script src="official/angular/angular-cookies.js" ></script>
-    <script src="official/angular/angular-ui-router.js"></script>
-    <script src="official/angular/angular-resource.js" ></script>
-    <script src="official/angular/angular-file-upload.js" ></script>
-    <script src="official/angular/angular-animate.js"></script>
-    <script src="official/angular/auth0-angular.js"></script>
-
-    <script src="custom/js/helpers/ngTree.js"></script>
-    <script src="custom/js/helpers/ngBreadcrumbs.js"></script>
-
-    <script src="official/bootstrap/bootstrap.min.js"></script>
-    <script src="official/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
-
-
-    <!--<script src="official/materialize.min.js"></script>-->
-    <!--<script src="official/materialize-ui.js"></script>-->
-
-    <!-- AUTH -->
-    <script src="official/auth0/auth0.js"></script>
-    <script src="official/auth0/angular-storage.js"></script>
-    <script src="official/auth0/angular-jwt.js"></script>
-
-
-    <script src="custom/js/helpers.js"></script>
-    <script src="custom/js/route.js"></script>
-    <script src="custom/js/menu.js"></script>
-    <script src="custom/js/module.js"></script>
-    <script src="custom/js/factories.js"></script>
-    <script src="custom/js/services.js"></script>
-    <script src="custom/js/controllers.js"></script>
-    <script src="custom/js/directive.js"></script>
-    <script src="custom/js/filter.js"></script>
-
+    <!--====================================================-->
 
 
 </head>
@@ -88,14 +57,87 @@
                 </div>
             </nav>
         </div>
+        <ul id="side-mobile" class="side-nav fixed sidebart slide-outt">
+            <li class="bold"><a href="about.html" class="waves-effect waves-teal">About</a></li>
+            <li class="bold"><a href="getting-started.html" class="waves-effect waves-teal">Getting Started</a></li>
+            <li class="no-padding">
+                <ul class="collapsible collapsible-accordion">
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal">CSS</a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="color.html">Color</a></li>
+                                <li><a href="grid.html">Grid</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal">Components</a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="badges.html">Badges</a></li>
+                                <li><a href="buttons.html">Buttons</a></li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="bold"><a class="collapsible-header active waves-effect waves-teal">JavaScript</a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li><a href="collapsible.html">Collapsible</a></li>
+                                <li><a href="dialogs.html">Dialogs</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li class="bold"><a href="http://materializecss.com/mobile.html" class="waves-effect waves-teal">Mobile</a></li>
+            <li class="bold"><a href="showcase.html" class="waves-effect waves-teal">Showcase</a></li>
+        </ul>
+        <!--<div ng-include="'pages/template/productType.html'"></div>-->
     </header>
 
-    <!--<breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>-->
 
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
     <div class="main container">
+        <!--<button class="btn btn-default collapse-button" ng-click="click()">Toggle collapse</button>-->
         <div ui-view="main" ></div>
     </div>
+
+
+    <!--  Scripts-->
+    <script src="official/jquery-2.1.3.min.js"></script>
+
+    <script src="official/angular/angular.js"></script>
+    <script src="official/angular/angular-cookies.js" ></script>
+    <script src="official/angular/angular-ui-router.js"></script>
+    <script src="official/angular/angular-resource.js" ></script>
+    <script src="official/angular/angular-file-upload.js" ></script>
+    <script src="official/angular/angular-animate.js"></script>
+    <script src="official/angular/auth0-angular.js"></script>
+
+    <script src="official/bootstrap/bootstrap.min.js"></script>
+    <script src="official/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+
+    <!--materialize-->
+    <script src="official/materialize.js"></script>
+
+    <!--AUTH-->
+    <script src="official/auth0/auth0.js"></script>
+    <script src="official/auth0/angular-storage.js"></script>
+    <script src="official/auth0/angular-jwt.js"></script>
+
+    <!--SOME HELP JS-->
+    <script src="custom/js/helpers/side.js"></script>
+
+    <script src="custom/js/helpers.js"></script>
+    <script src="custom/js/route.js"></script>
+    <script src="custom/js/menu.js"></script>
+    <script src="custom/js/module.js"></script>
+    <script src="custom/js/factories.js"></script>
+    <script src="custom/js/services.js"></script>
+    <script src="custom/js/controllers.js"></script>
+    <script src="custom/js/directive.js"></script>
+    <script src="custom/js/filter.js"></script>
+
 
 
 </body>

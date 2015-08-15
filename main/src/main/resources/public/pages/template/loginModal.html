@@ -1,21 +1,20 @@
-<div>
-        <div class="modal-content">
-            <!--Registration via icon-->
-            <h4>Авторизация<i class="material-icons medium" style="float: right;cursor: pointer" ng-click="register()">account_circle</i></h4>
 
-            <div class="input-field col s12">
-                <input type="text" ng-model="uname" id="email"/>
-                <label for="email" class="">Email/Login</label>
-            </div>
-            <div class="input-field col s12">
-                <input type="password" ng-model="password" id="password" />
-                <label class="control-label" for="password">Пароль</label>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat">Регистрация</a>
-            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="cancel()">Отмена</a>
-            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="submit()">Подтвердить</a>
-        </div>
+            <div class="modal-content">
+                <!--Registration via icon-->
+                <h4>Авторизация<i class="material-icons medium" style="float: right;cursor: pointer" ng-click="register()">account_circle</i></h4>
 
-</div>
+                <div class="input-field col s12">
+                    <input type="text" ng-model="uname" id="email"/>
+                    <label for="email" class="">Email/Login</label>
+                </div>
+                <div class="input-field col s12">
+                    <input type="password" ng-model="password" id="password" />
+                    <label class="control-label" for="password">Пароль</label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a ui-sref="registration" style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" >Регистрация</a>
+                <!--<a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="cancel()">Отмена</a>-->
+                <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="submit()">Подтвердить</a>
+            </div>

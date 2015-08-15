@@ -80,6 +80,11 @@ purchase.factory('factory',['$resource',function($resource){
         authLogin: $resource('/auth/login',{},{
             post:{method:'POST'}
         }),
+
+        reg: $resource('/auth/register',{},{
+            post:{method:'POST'}
+        }),
+
         authRoleCheck: $resource('/api/role/:role',{},{
             get:{method:'GET',
                 isArray:false
