@@ -1,0 +1,41 @@
+<div>
+    <h4>Информация о доставке</h4>
+    <div>
+        <div class="input-field col s3" id="delivery">
+            <select  name="company" ng-options="delivery.name for delivery in deliveries.data track by delivery.type" ng-model="info.delivery" post-init="postDelivery">
+                <option value="">Выберите способ доставки ...</option>
+            </select>
+        </div>
+        <div class="input-field">
+            <input type="text" id="recipient" class="form-control" ng-model="info.recipient">
+            <label class="control-label" for="recipient">Имя получателя</label>
+        </div>
+        <div class="input-field">
+            <input type="text" id="email" class="form-control" ng-model="info.email">
+            <label class="control-label" for="email">Кому писать</label>
+        </div>
+        <div class="input-field">
+            <input type="text" id="phone" class="form-control" ng-model="info.phone">
+            <label class="control-label" for="phone">Куда звонить</label>
+        </div>
+        <div class="input-field">
+            <input type="text" id="address" class="form-control" ng-model="info.address">
+            <label class="control-label" for="address">Куда везти</label>
+        </div>
+        <div class="input-field">
+            <input type="text" id="comment" class="form-control" ng-model="info.comment">
+            <label class="control-label" for="comment">Комментарии?</label>
+        </div>
+        <div class="row" ng-if="info.delivery">
+            <div class="col s12 m5">
+                <div class="card-panel teal">
+                    <span class="white-text">
+                        {{info.delivery.desc}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-primary" ng-click="createOrder()">Оформить заказ</a>

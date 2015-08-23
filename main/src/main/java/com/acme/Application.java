@@ -21,17 +21,17 @@ public class Application {
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter());
-        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns("/private/*");
         return registrationBean;
     }
 
-    @Bean
+    /*@Bean
     public ServletRegistrationBean publicServlet(){
         ServletRegistrationBean registrationBean = new ServletRegistrationBean();
         registrationBean.setServlet(new PublicServlet());
-        registrationBean.addUrlMappings("/public/auth/confirm/*");
+        registrationBean.addUrlMappings("/public/auth/confirm*//*");
         return registrationBean;
-    }
+    }*/
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

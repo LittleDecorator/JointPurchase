@@ -61,7 +61,11 @@ create table credential(
 -- таблица заказов
 create table purchase_order (
   id varchar(37) not null,      --id
-  subject_id varchar(37) not null,        -- ссылка на покупателя
+  subject_id varchar(37) not null,        -- ссылка на оформителя
+  recipient_fio varchar(37) not null,     -- фио получателя
+  recipient_email varchar(37) not null,     -- email получателя
+  recipient_phone varchar(37),              -- телефон получателя
+  recipient_address varchar(255) not null,        -- адрес доставки
   create_order_date timestamp default current_timestamp,    --дата создания заказа
   close_order_date timestamp,     --дата закрытия заказа
   comment varchar(255),     -- комментарий

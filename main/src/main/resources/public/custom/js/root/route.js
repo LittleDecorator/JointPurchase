@@ -32,6 +32,20 @@ var route = {
                 }
             },
             {
+                name: 'cart.checkout',
+                url: '/private/cartCheckout',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/cartCheckout.html',
+                        controller: 'cartCheckoutController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                    base:true
+                }
+            },
+            {
                 name: 'about',
                 url:'/about',
                 views: {
@@ -41,7 +55,6 @@ var route = {
                     }
                 },
                 data:{
-                    //displayName: 'О нас',
                     requireLogin: false,
                     base:true
                 }
@@ -56,27 +69,10 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Контакты',
                     requireLogin: false,
                     base:true
                 }
             },
-            /*{
-                name:'login',
-                url:'/login',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/login.html',
-                        controller: 'authController'
-                    }
-                },
-                data: {
-                    //displayName: 'Войти',
-                    requireLogin: false,
-                    base:true
-                }
-            },*/
-
             {
                 name:'registration',
                 url:'/registration',

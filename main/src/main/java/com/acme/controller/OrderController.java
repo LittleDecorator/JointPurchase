@@ -40,9 +40,12 @@ public class OrderController{
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public PurchaseOrder createOrder(@RequestBody String input) throws ParseException, IOException {
+    public PurchaseOrder createOrder(@RequestBody PurchaseOrder input) throws ParseException, IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
+        System.out.println("createOrder");
+        System.err.println(input);
+
+        /*ObjectMapper mapper = new ObjectMapper();
         JSONParser parser=new JSONParser();
         JSONObject main = (JSONObject) parser.parse(input);
         String orderS = ((JSONObject) main.get("order")).toJSONString();
@@ -66,7 +69,8 @@ public class OrderController{
                 orderItemsMapper.insertSelective(orderItem);
             }
         }
-        return order;
+        return order;*/
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
