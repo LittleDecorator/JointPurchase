@@ -8,14 +8,14 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.servlet.Servlet;
 import java.util.Locale;
 
 @ComponentScan
 @Configurable
 @SpringBootApplication
-public class Application {
+public class Application extends WebMvcConfigurerAdapter {
 
     @Bean
     public FilterRegistrationBean jwtFilter() {
@@ -25,13 +25,13 @@ public class Application {
         return registrationBean;
     }
 
-    /*@Bean
+    @Bean
     public ServletRegistrationBean publicServlet(){
         ServletRegistrationBean registrationBean = new ServletRegistrationBean();
         registrationBean.setServlet(new PublicServlet());
-        registrationBean.addUrlMappings("/public/auth/confirm*//*");
+        registrationBean.addUrlMappings("/public/auth/confirm");
         return registrationBean;
-    }*/
+    }
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

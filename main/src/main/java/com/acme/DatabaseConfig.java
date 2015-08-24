@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@MapperScan(basePackages="com.acme")
+@MapperScan(basePackages="com.acme.gen")
 public class DatabaseConfig {
 
     @Bean

@@ -37,7 +37,7 @@ create table role (
 -- таблица покупателей
 create table subject (
   id varchar(37) not null,
-  enabled char(1) not null default 'Y' check(enabled in ('Y', 'N')),
+  enabled char(1) not null default 'N' check(enabled in ('Y', 'N')),
   first_name varchar(30) not null,
   middle_name varchar(30),
   last_name varchar(30),
@@ -51,7 +51,7 @@ create table subject (
 -- удостоверение покупателя
 create table credential(
   subject_id varchar(37) not null,
-  password varchar(37) not null,
+  password varchar(255) not null,
   role_id varchar(37),
   primary key (subject_id),
   foreign key (subject_id) references subject,

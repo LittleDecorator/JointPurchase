@@ -17,16 +17,18 @@ insert into role(id,description,parent_role_id)
         values('user','user role description','admin');
 
 /* PERSON */
-insert into subject(id,first_name,last_name,middle_name,phone_number,email,address)
-        values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north');
-insert into subject(id,first_name,last_name,middle_name,phone_number,email,address)
-        values ('guzel','Guzel', 'Kobzeva', 'Zulfarovna','+79258552096','fazylovagz@mail.ru','Moscow');
+insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
+        values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','Y');
+insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
+        values ('guzel','Guzel', 'Kobzeva', 'Zulfarovna','+79258552096','fazylovagz@mail.ru','Moscow','Y');
 
 /*CREDENTIALS*/
+--password
 insert into credential(subject_id,password,role_id)
-        values('test','password','user');
+        values('test','56cc66bac5b167db62297f5a6ee06af3b5efce10aa8bcc6a70ea2ffc785961c7e852257a1796e4ab9fd9737928c5bbea40225564868341cf8db69e2ae599dcc8','user');
+--nina21032013
 insert into credential(subject_id,password,role_id)
-        values('guzel','nina21032013','admin');
+        values('guzel','094de90aaea4750489a2f8c7a8cefd5a50a135cb12e4970d84586f3f1e883872640ff304b9ace30adcda5d8a2c6e92063e9875983788cd9829ca62a972465429','admin');
 
 /* CATEGORY */
 insert into category(id,name)
@@ -100,17 +102,17 @@ insert into item(id,name,company_id,category_id,price)
         values ('846ffe25-bc3a-4188-8ef1-be6c3e9e04e3', 'Кубики «Сложи рисунок: овощи»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);*/
 
 /* ORDERS */
-insert into purchase_order(id,subject_id,payment,comment)
-        values ('f266904c-ecc7-4b8b-97d6-ef61571cde66','test',350,'test purchase');
-insert into purchase_order(id,subject_id,payment,comment)
-        values ('ad7d2c80-fb59-4968-9862-a10282a5477d','test',1350,'another test purchase');
+-- insert into purchase_order(id,subject_id,payment,comment)
+--         values ('f266904c-ecc7-4b8b-97d6-ef61571cde66','test',350,'test purchase');
+-- insert into purchase_order(id,subject_id,payment,comment)
+--         values ('ad7d2c80-fb59-4968-9862-a10282a5477d','test',1350,'another test purchase');
 
 /* ORDER_ITEMS */
-insert into order_items(id,order_id,item_id,cou)
-        values ('074a766a-cf0b-4666-94fb-ffad98a4dcdf','f266904c-ecc7-4b8b-97d6-ef61571cde66','622323dd-00eb-4a94-b7f0-31b91d91fefa',1);
-insert into order_items(id,order_id,item_id,cou)
-        values ('a7cbd408-b108-4b3b-8b6e-434f8be0da07','f266904c-ecc7-4b8b-97d6-ef61571cde66','1a05535f-c373-404d-9117-e920792cecf0',1);
-insert into order_items(id,order_id,item_id,cou)
-        values ('8846694c-6c74-481b-bdda-9120d6f8c0b9','f266904c-ecc7-4b8b-97d6-ef61571cde66','23f9a890-525e-401d-9499-cd51dedc4103',1);
-insert into order_items(id,order_id,item_id,cou)
-        values ('64a72ecd-7fc1-40b8-b89f-46554479a253','f266904c-ecc7-4b8b-97d6-ef61571cde66','91972e13-1983-4a74-9b48-c8e4909dd324',1);
+-- insert into order_items(id,order_id,item_id,cou)
+--         values ('074a766a-cf0b-4666-94fb-ffad98a4dcdf','f266904c-ecc7-4b8b-97d6-ef61571cde66','622323dd-00eb-4a94-b7f0-31b91d91fefa',1);
+-- insert into order_items(id,order_id,item_id,cou)
+--         values ('a7cbd408-b108-4b3b-8b6e-434f8be0da07','f266904c-ecc7-4b8b-97d6-ef61571cde66','1a05535f-c373-404d-9117-e920792cecf0',1);
+-- insert into order_items(id,order_id,item_id,cou)
+--         values ('8846694c-6c74-481b-bdda-9120d6f8c0b9','f266904c-ecc7-4b8b-97d6-ef61571cde66','23f9a890-525e-401d-9499-cd51dedc4103',1);
+-- insert into order_items(id,order_id,item_id,cou)
+--         values ('64a72ecd-7fc1-40b8-b89f-46554479a253','f266904c-ecc7-4b8b-97d6-ef61571cde66','91972e13-1983-4a74-9b48-c8e4909dd324',1);
