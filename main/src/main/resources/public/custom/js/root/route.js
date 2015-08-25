@@ -88,6 +88,20 @@ var route = {
                 }
             },
             {
+                name:'registration.result',
+                url:'/result',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/registrationResult.html',
+                        controller: 'registrationResultController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                    base:true
+                }
+            },
+            {
                 name:'product.detail',
                 url:'/:itemId',
                 views: {

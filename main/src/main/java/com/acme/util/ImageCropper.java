@@ -70,9 +70,9 @@ public class ImageCropper {
 
     private static BufferedImage getResizeBuffer(BufferedImage originalImage, int side){
         int origin_w = originalImage.getWidth();
-        System.out.println("Original width -> "+origin_w);
+//        System.out.println("Original width -> "+origin_w);
         int origin_h = originalImage.getHeight();
-        System.out.println("Original height -> "+origin_h);
+//        System.out.println("Original height -> "+origin_h);
         int resize_w=0,resize_h=0;
         Number origionRation;
         BufferedImage image;
@@ -85,7 +85,7 @@ public class ImageCropper {
             //get side ratio for resize
             if(origin_w > origin_h){
                 origionRation = (float) origin_h / origin_w;
-                System.out.println("Origin ratio -> "+origionRation);
+//                System.out.println("Origin ratio -> "+origionRation);
                 String fd = df.format(origionRation.doubleValue()+0.001);
                 if((origin_w > side)){
                     resize_w = side;
@@ -96,9 +96,9 @@ public class ImageCropper {
                 }*/
             } else {
                 origionRation = (float) origin_w / origin_h;
-                System.out.println("Origin ratio -> "+origionRation);
+//                System.out.println("Origin ratio -> "+origionRation);
                 String fd = df.format(origionRation.doubleValue()+0.001);
-                System.out.println(fd);
+//                System.out.println(fd);
                 if(origin_h > side){
                     resize_h = side;
                     resize_w = ((Double)(side * (Double.valueOf(fd)))).intValue();
@@ -107,8 +107,8 @@ public class ImageCropper {
                     resize_w = origin_w;
                 }*/
             }
-            System.out.println("Resized height-> "+resize_h);
-            System.out.println("Resized width -> "+resize_w);
+//            System.out.println("Resized height-> "+resize_h);
+//            System.out.println("Resized width -> "+resize_w);
             image = new BufferedImage(resize_w, resize_h, originalImage.getType());
         } else {
             image = originalImage;

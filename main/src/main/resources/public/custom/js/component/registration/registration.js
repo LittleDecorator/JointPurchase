@@ -8,7 +8,8 @@
     angular.module('registration')
         .factory('registrationResource',['$resource',function($resource){
             return {
-                _register: $resource('/auth/register',{},{post:{method:'POST'}})
+                _register: $resource('/auth/register',{},{post:{method:'POST'}}),
+                _throughLogin: $resource('/auth/register',{},{post:{method:'POST'}})
             }
         }])
 
@@ -24,5 +25,15 @@
             $scope.register = function(){
                 registrationResource._register.post($scope.card);
             }
-        }]);
+        }])
+
+        .controller('registrationController',['$scope','$state','registrationResource', function($scope,$state,registrationResource) {
+
+            $scope._registrationStatus = false;
+
+            $scope.prosside = function(){
+
+            }
+
+        }])
 })();

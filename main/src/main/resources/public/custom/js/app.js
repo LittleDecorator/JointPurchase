@@ -26,6 +26,10 @@
 
             $rootScope.$on('$locationChangeSuccess', function (event, toState, toParams) {
                 //$rootScope.actualLocation = $location.path();
+
+                //hide side menu
+                $('.slide-outt').removeClass('slide-inn');
+
                 $rootScope.actualLocation = $location.$$url;
             });
 

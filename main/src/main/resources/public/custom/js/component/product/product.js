@@ -39,6 +39,9 @@
             $scope.$watch('currPage + itemsPerPage', function () {
                 $scope.subList();
             });
+
+                //show side menu
+                $('.slide-outt').addClass('slide-inn');
         });
 
         $scope.toggle = function(scope) {

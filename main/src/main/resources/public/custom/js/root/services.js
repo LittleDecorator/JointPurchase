@@ -8,14 +8,29 @@
     angular.module('purchase.services')
         .service('loginModal',['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
             return function() {
-                var instance = factoryModal.open({
-                    templateUrl:'pages/template/loginModal.html',
-                    controller: 'mainController',
-                    sizeClass: 'modal-sm'
-                });
+                var instance =
+                    factoryModal.open({
+                        templateUrl:'pages/template/loginModal.html',
+                        controller: 'loginController',
+                        sizeClass: 'modal-sm'
+                    });
                 console.log(instance);
                 return instance;
             }
+        }])
+
+        .service('loaderModal', ['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
+
+            return function() {
+                var instance =
+                    factoryModal.open({
+                        templateUrl:'pages/template/loaderModal.html',
+                        controller: 'loaderController',
+                        sizeClass: 'modal-xs loader modal-backdrop'
+                    });
+                return instance;
+            };
+
         }])
 
         .service('store',['$window',function ($window) {
@@ -124,6 +139,21 @@
                     deferred.resolve(data);
                 });
                 return deferred.promise;
+            }
+        }])
+
+        .service('eventService',['$rootScope',function($rootScope){
+            return {
+                data:{},
+                onLogin: function(data){
+                    console.log("in login broad");
+                    this.data = data;
+                    $rootScope.$broadcast('onLogin');
+                },
+                onComplete: function(){
+                    console.log("in complete broad");
+                    $rootScope.$broadcast('onComplete');
+                }
             }
         }])
 })();

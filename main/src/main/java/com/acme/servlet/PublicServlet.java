@@ -1,4 +1,4 @@
-package com.acme.util;
+package com.acme.servlet;
 
 import com.acme.gen.domain.Subject;
 import com.acme.gen.mapper.SubjectMapper;
@@ -53,13 +53,15 @@ public class PublicServlet extends HttpServlet {
                 }
                 subject.setEnabled(true);
                 subjectMapper.updateByPrimaryKeySelective(subject);
-                res.getWriter().append("Hello, "+subject.getLastName()+" "+subject.getFirstName()+"\n You're now validate. Congrats!!!");
-            } else {
+                res.sendRedirect("http://localhost:7979/#/registration/result?confirmed=1");
+//                res.getWriter().append("Hello, "+subject.getLastName()+" "+subject.getFirstName()+"\n You're now validate. Congrats!!!");
+            }/* else {
                 res.getWriter().append("Hello World\nCan't inject any service or mapper :(");
-            }
+            }*/
 
         } else {
-            res.getWriter().append("Sorry, token expired!");
+            res.sendRedirect("http://localhost:7979/#/registration/result?confirmed=0");
+//            res.getWriter().append("Sorry, token expired!");
         }
     }
 
@@ -67,5 +69,7 @@ public class PublicServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
     }
+
+
 }
 

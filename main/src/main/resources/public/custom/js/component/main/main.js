@@ -6,8 +6,8 @@
     'use strict';
 
     angular.module('main')
-        .controller('mainController',['$scope','$rootScope','$cookies','$state','loginModal','authService','dataResources','jwtHelper','store','factoryModal',
-            function ($scope,$rootScope,$cookies, $state, loginModal,authService, dataResources,jwtHelper, store,factoryModal) {
+        .controller('mainController',['$scope','$rootScope','$cookies','$state','loginModal','authService','dataResources','jwtHelper','store','eventService','$timeout',
+            function ($scope,$rootScope,$cookies, $state, loginModal,authService, dataResources,jwtHelper, store,eventService,$timeout) {
             console.log("Enter main controller");
 
             $scope.uname = "";
@@ -68,16 +68,9 @@
 
             //нажата кнопка меню login
             $scope.login = function(){
-                //angular.element('#modal1').openModal();
-                /*$scope.modal = factoryModal.open({
-                 /!*templateUrl: 'pages/template/loginModal.html',*!/
-                 templateUrl:'pages/template/loginModal.html',
-                 controller: 'mainController'
-                 });*/
 
-
-                $scope.modal = loginModal()
-                    .then(function () {
+                $scope.modal = loginModal();
+                    /*.then(function () {
                         console.log("then");
                         $scope.refreshMenu();
 
@@ -88,7 +81,7 @@
                         //return $state.go('welcome');
                         console.log("direct login failed");
                         //return $state.transitionTo('home');
-                    });
+                    });*/
 
             };
 
@@ -125,11 +118,11 @@
             $scope.cancel = $scope.$dismiss;
 
             //подтверждение аутентификации, получение token'а
-            $scope.submit = function () {
+            $scope.$on('onLogin',function(){
                 console.log($scope);
                 console.log("submit user");
                 console.log($scope.uname);
-                dataResources.authLogin.post({name: $scope.uname,password:$scope.password},
+                dataResources.authLogin.post(eventService.data,
                     function (response) {
                         console.log("like normal");
                         if(response && response.token){
@@ -141,21 +134,19 @@
                             $rootScope.currentUser.name = decodedToken.jti;
                             $rootScope.currentUser.roles = decodedToken.roles;
                             //set current user promises
-                            $scope.$close($scope.uname);
-                            $scope.refreshMenu();
+                            //$scope.refreshMenu();
+                            $timeout(eventService.onComplete(),500);
                         } else {
                             console.log("null came");
-                            $scope.$close();
+                            eventService.onComplete();
                         }
                     }, function(){
                         console.log("some error");
-                        $scope.$dismiss;
-                        //$scope.$close("fla");
+                        eventService.onComplete();
                     });
+            });
 
-            };
-
-            $scope.mainMenu = $scope.refreshMenu();
+            //$scope.mainMenu = $scope.refreshMenu();
             $scope.auth = authService;
 
             //init and restore cart content

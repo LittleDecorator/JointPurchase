@@ -303,6 +303,10 @@ nav .brand-logo-lpad {
     width:30%!important;
 }
 
+.modal-xs{
+    width:26%!important;
+}
+
 .side-nav{
     top:inherit!important;
 }
