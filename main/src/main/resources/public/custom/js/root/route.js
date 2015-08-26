@@ -89,7 +89,7 @@ var route = {
             },
             {
                 name:'registration.result',
-                url:'/result',
+                url:'/result?confirmed',
                 views: {
                     'main@': {
                         templateUrl : 'pages/registrationResult.html',

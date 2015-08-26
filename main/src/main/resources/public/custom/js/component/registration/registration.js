@@ -27,13 +27,10 @@
             }
         }])
 
-        .controller('registrationController',['$scope','$state','registrationResource', function($scope,$state,registrationResource) {
-
-            $scope._registrationStatus = false;
-
-            $scope.prosside = function(){
-
-            }
+        .controller('registrationResultController',['$scope','$state','registrationResource','$stateParams', function($scope,$state,registrationResource,$stateParams) {
+            console.log("in registrationResultController");
+            //TODO: through login, pretty info page
+            $scope._registrationStatus = $stateParams.confirmed;
 
         }])
 })();

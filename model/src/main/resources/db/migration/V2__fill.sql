@@ -18,7 +18,7 @@ insert into role(id,description,parent_role_id)
 
 /* PERSON */
 insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
-        values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','Y');
+        values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','N');
 insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
         values ('guzel','Guzel', 'Kobzeva', 'Zulfarovna','+79258552096','fazylovagz@mail.ru','Moscow','Y');
 
