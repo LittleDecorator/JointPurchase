@@ -1,0 +1,12 @@
+label.required:before{
+    content: '\002A   ';
+    color: red;
+}
+
+label.activate:before {
+    color: blue;
+}
+
+label.required.activate:before {
+    color: blue;
+}

@@ -1,33 +1,33 @@
 <div class="table-container">
-    <div>
+    <div ng-form="registration">
         <div class="input-field">
-            <input type="text" id="fname" class="form-control" ng-model="card.FirstName">
-            <label class="control-label" for="fname">Имя</label>
+            <input name="fname" type="text" id="fname" class="form-control" ng-model="card.FirstName">
+            <label class="control-label required" for="fname">Имя</label>
         </div>
         <div class="input-field">
-            <input type="text" id="lname" class="form-control" ng-model="card.LastName">
-            <label class="control-label" for="lname">Фамилия</label>
+            <input name="lname" type="text" id="lname" class="form-control" ng-model="card.LastName">
+            <label class="control-label required" for="lname">Фамилия</label>
         </div>
         <div class="input-field">
-            <input type="text" id="mname" class="form-control" ng-model="card.MiddleName">
+            <input name="mname" type="text" id="mname" class="form-control" ng-model="card.MiddleName">
             <label class="control-label" for="mname">Отчество</label>
         </div>
         <div class="input-field">
-            <input type="text" id="phone" class="form-control" ng-model="card.phone">
+            <input name="phone" type="text" id="phone" class="form-control" ng-model="card.phone">
             <label class="control-label" for="phone">Телефон</label>
         </div>
         <div class="input-field">
-            <input type="text" id="mail" class="form-control" ng-model="card.mail">
-            <label class="control-label" for="mail">Почта</label>
+            <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail">
+            <label class="control-label required" for="mail">Почта</label>
         </div>
         <div class="input-field">
-            <input type="text" id="pwd" class="form-control" ng-model="card.pwd">
-            <label class="control-label" for="pwd">Пароль</label>
+            <input name="pwd" type="text" id="pwd" class="form-control validate" ng-model="card.pwd">
+            <label class="control-label required" for="pwd">Пароль</label>
         </div>
         <div class="input-field">
-            <input type="text" id="repeat" class="form-control" ng-model="card.repeat">
-            <label class="control-label" for="repeat">Пароль</label>
+            <input name="pwdRepeat" type="text" id="pwdRepeat" class="form-control validate" ng-model="card.repeat">
+            <label class="control-label" for="pwdRepeat" >Пароль</label>
         </div>
-        <a class="btn btn-default" ng-click="register()">Подтвердить</a>
+        <a class="btn btn-default disabled" ng-click="register()">Подтвердить</a>
     </div>
 </div>

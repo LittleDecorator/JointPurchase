@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService{
         System.out.println(tmpToken);
 
         //send email
-        String html = "<a href='http://localhost:7979/public/auth/confirm/test?jwt="+tmpToken+"'>Confirm test user registration</a>";
+        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm test user registration</a>";
         try{
             MimeMessage message = emailService.getBuiler().setTo(data.getMail()).setSubject("Registration confirmation").setFrom("purchase@service.com").setHtmlContent(html).build();
            emailService.send(message);

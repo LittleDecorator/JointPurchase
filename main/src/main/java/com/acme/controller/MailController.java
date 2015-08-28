@@ -22,7 +22,7 @@ public class MailController {
     @ResponseStatus(HttpStatus.CREATED)
     public void send() throws MessagingException, UnsupportedEncodingException {
 
-        String html = "<a href='http://localhost:7979/public/auth/confirm/test'>Confirm test user registration</a>";
+        String html = "<a href='http://localhost:7979/public/auth/confirm'>Confirm test user registration</a>";
 
         EmailBuilder builder = emailService.getBuiler();
         MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("purchase@auth.com").setHtmlContent(html).setSubject("Registration confirmation").build();

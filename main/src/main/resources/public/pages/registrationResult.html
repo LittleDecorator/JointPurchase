@@ -1,8 +1,9 @@
-<div>
+<div class="jumbotron text-center">
     <div ng-if="_registrationStatus">
-        Registration Success!
+        <h2>Registration Success!</h2>
     </div>
     <div ng-if="!_registrationStatus">
-        Registration Failed!
+        <h2>Registration Failed!</h2>
     </div>
+    <p>{{ message }}</p>
 </div>

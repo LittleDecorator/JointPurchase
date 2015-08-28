@@ -31,6 +31,10 @@
             console.log("in registrationResultController");
             //TODO: through login, pretty info page
             $scope._registrationStatus = $stateParams.confirmed;
-
+            if($stateParams.confirmed){
+                $scope.message = "You can now login and continue your shopping!"
+            } else {
+                $scope.message = "Your timeout for confirm expired. Please repeat registration process!"
+            }
         }])
 })();

@@ -8,7 +8,17 @@
     angular.module('purchase.factories')
         .factory('authInterceptor',['$rootScope','$q','$cookies',function ($rootScope, $q, $cookies) {
             return {
+                response: function(response) {
+                    // do something on success
+                    console.log(response);
+                    return response;
+                },
+
                 request: function (config) {
+
+                    console.log(config);
+                    console.log(config.headers);
+
                     config.headers = config.headers || {};
                     if ($cookies.get('token')) {
                         config.headers.Authorization = 'Bearer ' + $cookies.get('token');
