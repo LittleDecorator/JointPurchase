@@ -1,11 +1,11 @@
 <div class="table-container">
-    <div ng-form="registration">
+    <div ng-form="registration" >
         <div class="input-field">
-            <input name="fname" type="text" id="fname" class="form-control" ng-model="card.FirstName">
+            <input name="fname" type="text" id="fname" class="form-control" ng-model="card.FirstName" required>
             <label class="control-label required" for="fname">Имя</label>
         </div>
         <div class="input-field">
-            <input name="lname" type="text" id="lname" class="form-control" ng-model="card.LastName">
+            <input name="lname" type="text" id="lname" class="form-control" ng-model="card.LastName" required>
             <label class="control-label required" for="lname">Фамилия</label>
         </div>
         <div class="input-field">
@@ -17,17 +17,16 @@
             <label class="control-label" for="phone">Телефон</label>
         </div>
         <div class="input-field">
-            <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail">
-            <label class="control-label required" for="mail">Почта</label>
+            <input name="mail" type="email" id="mail" class="form-control" ng-model="card.mail" required email-validate
+                   ng-class="{'invalid': registration.mail.$error.emailValidator && card.mail.length > 0, 'valid':!registration.mail.$error.emailValidator && card.mail.length > 0}">
+            <label class="control-label required" for="mail" data-error='Not valid semail'>Почта</label>
         </div>
         <div class="input-field">
-            <input name="pwd" type="text" id="pwd" class="form-control validate" ng-model="card.pwd">
-            <label class="control-label required" for="pwd">Пароль</label>
+            <input name="password" type="password" id="password" class="form-control" ng-model="card.password" password-validate required
+                   ng-class="{'invalid': !$validation.password.valid && card.password.length>0, 'valid':$validation.password.valid}">
+            <label class="control-label required" for="password" data-error="{{$validation.password.errorText}}">Пароль</label>
         </div>
-        <div class="input-field">
-            <input name="pwdRepeat" type="text" id="pwdRepeat" class="form-control validate" ng-model="card.repeat">
-            <label class="control-label" for="pwdRepeat" >Пароль</label>
-        </div>
-        <a class="btn btn-default disabled" ng-click="register()">Подтвердить</a>
     </div>
+    <a class="btn btn-default " ng-click="register()" ng-class="{'disabled':registration.$invalid}" style="margin-top: 30px">Подтвердить</a>
+
 </div>

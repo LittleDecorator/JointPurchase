@@ -16,15 +16,21 @@
         .controller('registrationController',['$scope','$state','registrationResource', function($scope,$state,registrationResource){
 
             $scope.card={
-                fio:"",
+                firstName:"",
+                lastName:"",
+                middleName:"",
                 phone:"",
                 mail:"",
-                pwd:"",
-                repeat:""
+                password:"",
+                repeat:"",
             };
+
             $scope.register = function(){
                 registrationResource._register.post($scope.card);
-            }
+            };
+
+
+            console.log($scope);
         }])
 
         .controller('registrationResultController',['$scope','$state','registrationResource','$stateParams', function($scope,$state,registrationResource,$stateParams) {

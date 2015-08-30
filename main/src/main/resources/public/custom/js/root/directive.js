@@ -211,4 +211,95 @@
                 }
             }
         })
+
+        .directive('passwordValidate', function() {
+            return {
+                restrict:'A',
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.push(function(value) {
+
+                        if(!scope.$validation){
+                            scope.$validation = {};
+                        }
+
+                        var valid = true;
+                        var errText = null;
+
+                        if (/[A-Z]/.test(value)) {
+                            ctrl.$setValidity('uppercaseValidator', true);
+                        } else {
+                            ctrl.$setValidity('uppercaseValidator', false);
+                            valid = false;
+                            errText = "Strong secret has to contain at least 1 uppercase";
+                        }
+
+                        if (/[0-9]/.test(value)) {
+                            ctrl.$setValidity('numberValidator', true);
+                        } else {
+                            ctrl.$setValidity('numberValidator', false);
+                            valid = false;
+                            errText = "Strong secret has to contain at least 1 number";
+                        }
+
+                        if (value.length === 6) {
+                            ctrl.$setValidity('sixCharactersValidator', true);
+                        } else {
+                            ctrl.$setValidity('sixCharactersValidator', false);
+                            valid = false;
+                            errText = "Strong secret has to be exactly 6 characters long";
+                        }
+
+                        scope.$validation[attrs.name] = {valid:valid,errorText:errText};
+                        console.log(scope);
+
+                        return value;
+
+                    });
+                }
+            };
+        })
+
+        .directive('emailValidate', function() {
+        return {
+            restrict:'A',
+            require: 'ngModel',
+            link: function (scope, elm, attrs, ctrl) {
+                ctrl.$parsers.push(function(value) {
+                    if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value)) {
+                        ctrl.$setValidity('emailValidator', true);
+                    } else {
+                        ctrl.$setValidity('emailValidator', false);
+
+                    }
+                    console.log(scope);
+
+                    return value;
+
+                });
+            }
+        };
+    })
+
+        //TODO: phone validation and string limit
+        .directive('phoneValidate', function() {
+            return {
+                restrict:'A',
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.push(function(value) {
+                        if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value)) {
+                            ctrl.$setValidity('emailValidator', true);
+                        } else {
+                            ctrl.$setValidity('emailValidator', false);
+
+                        }
+                        console.log(scope);
+
+                        return value;
+
+                    });
+                }
+            };
+        })
 })();
