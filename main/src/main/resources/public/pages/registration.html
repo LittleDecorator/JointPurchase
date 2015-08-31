@@ -17,7 +17,7 @@
             <label class="control-label" for="phone">Телефон</label>
         </div>
         <div class="input-field">
-            <input name="mail" type="email" id="mail" class="form-control" ng-model="card.mail" required email-validate
+            <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail" required email-validate
                    ng-class="{'invalid': registration.mail.$error.emailValidator && card.mail.length > 0, 'valid':!registration.mail.$error.emailValidator && card.mail.length > 0}">
             <label class="control-label required" for="mail" data-error='Not valid semail'>Почта</label>
         </div>

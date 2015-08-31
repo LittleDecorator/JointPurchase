@@ -13,46 +13,6 @@
             }
         })
 
-        .directive('modal', function () {
-            return {
-                templateUrl: 'pages/template/modal.html',
-                restrict: 'E',
-                transclude: true,
-                replace: true,
-                scope: true,
-                link: function postLink(scope, element, attrs) {
-
-                    scope.title = attrs.title;
-
-                    scope.$watch(attrs.visible, function (value) {
-                        if (value == true)
-                            $(element).modal('show');
-                        else
-                            $(element).modal('hide');
-                    });
-
-                    scope.$watch(attrs.hideFooter, function (value) {
-                        if (value == true)
-                            $(element).find('.modal-footer').hide();
-                        else
-                            $(element).find('.modal-footer').show();
-                    });
-
-                    $(element).on('shown.bs.modal', function () {
-                        scope.$apply(function () {
-                            scope.$parent[attrs.visible] = true;
-                        });
-                    });
-
-                    $(element).on('hidden.bs.modal', function () {
-                        scope.$apply(function () {
-                            scope.$parent[attrs.visible] = false;
-                        });
-                    });
-                }
-            };
-        })
-
         .directive('ngThumb', ['$window', function($window) {
             var helper = {
                 support: !!($window.FileReader && $window.CanvasRenderingContext2D),
@@ -266,7 +226,8 @@
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
                 ctrl.$parsers.push(function(value) {
-                    if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value)) {
+                    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                    if (re.test(value)) {
                         ctrl.$setValidity('emailValidator', true);
                     } else {
                         ctrl.$setValidity('emailValidator', false);
@@ -292,6 +253,27 @@
                             ctrl.$setValidity('emailValidator', true);
                         } else {
                             ctrl.$setValidity('emailValidator', false);
+
+                        }
+                        console.log(scope);
+
+                        return value;
+
+                    });
+                }
+            };
+        })
+
+        .directive('emptyValidate', function() {
+            return {
+                restrict:'A',
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.push(function(value) {
+                        if (value && value.length == 0) {
+                            ctrl.$setValidity('emptyValidator', true);
+                        } else {
+                            ctrl.$setValidity('emptyValidator', false);
 
                         }
                         console.log(scope);

@@ -19,6 +19,19 @@
             }
         }])
 
+        /*.service('uploadModal',['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
+            return function() {
+                var instance =
+                    factoryModal.open({
+                        templateUrl:'pages/template/uploadModal.html',
+                        controller: 'uploadController',
+                        sizeClass: 'modal-sm'
+                    });
+                console.log(instance);
+                return instance;
+            }
+        }])*/
+
         .service('loaderModal', ['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
 
             return function() {

@@ -8,9 +8,9 @@ import java.util.Locale;
 
 public class ImageCropper {
 
-    private static final int PREVIEW_SIDE = 200;
-    private static final int GALLERY_SIDE = 100;
-    private static final int VIEW_SIDE = 300;
+    private static final int PREVIEW_SIDE = 500;
+    private static final int GALLERY_SIDE = 500;
+    private static final int VIEW_SIDE = 500;
     private static final int THUMB_SIDE = 60;
 
     /*public static String cropImage(String encodedImage,String type) throws Exception {

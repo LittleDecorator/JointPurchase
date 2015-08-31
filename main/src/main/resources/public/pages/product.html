@@ -1,23 +1,21 @@
 
-<!--old side nav-->
-<!--<div ng-include="'pages/template/productType.html'"></div>-->
-    <div class="row">
+
 
         <div class="row">
             <div class="col s12 m4" ng-repeat="item in filteredItems">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <!--<img class="activator" src="images/office.jpg">-->
                         <img ng-src="{{item.url}}" ng-click="itemView(item.id)" />
                     </div>
+
                     <div class="card-content" style="font-size: 18px!important;">
                         <span class="card-title activator grey-text text-darken-4" style="font-size: 18px!important;">{{item.name}}<i class="material-icons right">more_vert</i></span>
                         <br><b>Цена: </b>{{item.price}}
-                        <!--<p><a href="#">This is a link</a></p>-->
                         <p><a class="btn btn-primary" ng-click="addToCart(item)" title="Добавить в корзину">
                             <i class="fa fa-plus"></i>
                         </a></p>
                     </div>
+
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
                         <p>{{item.description}}</p>
@@ -30,5 +28,3 @@
             <div style="text-align: center" ng-show="totalItems>itemsPerPage">
                 <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currPage" max-size="maxPage" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
             </div>
-        <!--</div>-->
-    </div>

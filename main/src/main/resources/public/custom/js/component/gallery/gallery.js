@@ -7,7 +7,7 @@
 
     angular.module('gallery')
         .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','FileUploader',
-            function($scope, $location, $state, $stateParams, dataResources, FileUploader){
+            function($scope, $location, $state, $stateParams, dataResources, FileUploader, uploadModal){
             console.log("Enter gallery controller");
 
             var uploader = $scope.uploader = new FileUploader();
@@ -27,7 +27,15 @@
 
             //toggle modal image
             $scope.toggleGallery = function () {
+                //$scope.upload = uploadModal();
                 $scope.showUpload = !$scope.showUpload;
+                //show modal for upload
+                if($scope.showUpload){
+                    $('#modal1').openModal();
+                } else {
+                    $('#modal1').closeModal();
+                }
+
             };
 
             $scope.toggleView = function () {

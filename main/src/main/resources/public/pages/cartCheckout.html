@@ -1,33 +1,34 @@
 <div>
     <h4>Информация о доставке</h4>
-    <div>
-        <div class="input-field col s3" id="delivery">
-            <select  name="company" ng-options="delivery.name for delivery in deliveries.data track by delivery.type" ng-model="info.delivery" post-init="postDelivery">
-                <option value="">Выберите способ доставки ...</option>
-            </select>
+    <div ng-form="checkout">
+        <div class="input-field">
+            <input type="text" id="recipient" class="form-control" ng-model="info.recipient" required>
+            <label class="control-label required" for="recipient">Имя получателя</label>
         </div>
         <div class="input-field">
-            <input type="text" id="recipient" class="form-control" ng-model="info.recipient">
-            <label class="control-label" for="recipient">Имя получателя</label>
-        </div>
-        <div class="input-field">
-            <input type="text" id="email" class="form-control" ng-model="info.email">
-            <label class="control-label" for="email">Кому писать</label>
+            <input type="text" id="email" name="email" class="form-control" ng-model="info.email" required email-validate
+                   ng-class="{'invalid': checkout.email.$error.emailValidator && info.email.length > 0, 'valid':!checkout.email.$error.emailValidator && info.email.length > 0}">
+            <label class="control-label required" for="email" data-error='Not valid semail'>Кому писать</label>
         </div>
         <div class="input-field">
             <input type="text" id="phone" class="form-control" ng-model="info.phone">
             <label class="control-label" for="phone">Куда звонить</label>
         </div>
         <div class="input-field">
-            <input type="text" id="address" class="form-control" ng-model="info.address">
-            <label class="control-label" for="address">Куда везти</label>
+            <input type="text" id="address" class="form-control" ng-model="info.address" required>
+            <label class="control-label required" for="address">Куда везти</label>
         </div>
         <div class="input-field">
             <input type="text" id="comment" class="form-control" ng-model="info.comment">
             <label class="control-label" for="comment">Комментарии?</label>
         </div>
+        <div class="input-field col s3" id="delivery">
+            <select name="company" ng-options="delivery.name for delivery in deliveries.data track by delivery.type" ng-model="info.delivery" post-init="postDelivery">
+                <option value="" class="required">Выберите способ доставки ...</option>
+            </select>
+        </div>
         <div class="row" ng-if="info.delivery">
-            <div class="col s12 m5">
+            <div class="col s12">
                 <div class="card-panel teal">
                     <span class="white-text">
                         {{info.delivery.desc}}
@@ -38,4 +39,4 @@
     </div>
 </div>
 
-<a class="btn btn-primary" ng-click="createOrder()">Оформить заказ</a>
+<a class="btn btn-primary" ng-click="createOrder()" ng-class="{'disabled':(info.delivery == null || checkout.$invalid)}" >Оформить заказ</a>

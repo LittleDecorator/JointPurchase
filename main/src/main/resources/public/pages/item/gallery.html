@@ -1,45 +1,30 @@
-<div class="table-container">
+
 
     <div class="fileUpload btn btn-primary">
         <span>Добавить изображение</span>
         <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple=""/>
     </div>
-    <!--<input type="file" id="files" name="files[]" multiple onchange="angular.element(this).scope().handleFile(this.files);"/>
-    <output id="list"></output>-->
 
-    <div class="container bootcards-container" id="main" style="width:auto">
+    <div class="row">
         <div class="row">
-            <div class="bootcards-cards">
-                <div class="col-sm-12">
-                    <div class="panel panel-default bootcards-summary" style="overflow-y: auto;height: 500px">
-
-                        <div class="panel-body">
-                            <!--<div class="row">
-                                <div ng-repeat="image in images" style="width: 12.5%" class="col-xs-2">
-                                    &lt;!&ndash;<img ng-src="{{image.content}}" class="image" id="{{image.id}}" width="150" height="100"/>&ndash;&gt;
-                                    <img ng-src="{{image.url}}" class="image" id="{{image.id}}" ng-click="imageView(image.id)" style="border: 1px solid #dddddd"/>
-                                </div>
-                            </div>-->
-                            <div class="row">
-                                <div ng-repeat="image in images" style="min-height: 1px;padding-right: 5px;padding-left: 5px;float: left;">
-                                    <a class="thumbnail" style="width: 110px;height: 110px;vertical-align: middle;display: table-cell">
-                                        <img ng-src="{{image.url}}" class="image" id="{{image.id}}" ng-click="imageView(image.id)"/>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img height="200" ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" />
+                    </div>
+                    <div class="card-content" style="font-size: 18px!important;">
+                        <span class="card-title activator grey-text text-darken-4" style="font-size: 18px!important;">Here will be image details</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
 
 <!-- ITEM IMAGE UPLOAD MODAL -->
-<modal title="Item Image" visible="showUpload" hide-footer="true">
+<div class="modal" title="Item Image" visible="showUpload" hide-footer="true" id="modal1">
     <form role="form">
-        <div class="modal-body">
-
+        <div class="modal-content">
             <div ng-repeat="item in uploader.queue" class="ng-scope">
                 <div class="row" style="border-bottom: 1px solid #ddd">
 
@@ -53,14 +38,16 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-success btn-s" ng-click="uploadFiles()" ng-show="uploader.queue.length>0">
-                <span class="glyphicon glyphicon-upload"></span> Загрузить
-            </button>
         </div>
-    </form>
-</modal>
+        <div class="modal-footer">
+            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadFiles()" ng-show="uploader.queue.length>0">Загрузить</a>
+        </div>
 
-<!-- IMAGE MODAL CONTENT BELOW -->
+    </form>
+</div>
+
+<!-- IMAGE MODAL DETAIL CONTENT BELOW -->
+<!--
 <modal title="Item Edit" visible="showImage">
     <form role="form">
         <div class="modal-body">
@@ -69,4 +56,4 @@
             </div>
         </div>
     </form>
-</modal>
+</modal>-->

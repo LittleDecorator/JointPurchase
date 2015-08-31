@@ -8,17 +8,7 @@
     angular.module('purchase.factories')
         .factory('authInterceptor',['$rootScope','$q','$cookies',function ($rootScope, $q, $cookies) {
             return {
-                response: function(response) {
-                    // do something on success
-                    console.log(response);
-                    return response;
-                },
-
                 request: function (config) {
-
-                    console.log(config);
-                    console.log(config.headers);
-
                     config.headers = config.headers || {};
                     if ($cookies.get('token')) {
                         config.headers.Authorization = 'Bearer ' + $cookies.get('token');
@@ -72,6 +62,7 @@
 
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
+                order:$resource('/order'),
                 orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
                 orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
                 orderedItem: $resource('/order/:orderId/item/:itemId',{},{
@@ -88,7 +79,7 @@
                 }),
                 categoryTree: $resource("/category/tree",{},{
                     get:{method:'GET',isArray:false}
-                }),
+                })
             }
         }])
 

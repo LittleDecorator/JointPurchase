@@ -30,6 +30,7 @@ public class ContentController{
 
     @RequestMapping(value = "/upload/item", method = RequestMethod.POST)
     public JSONArray itemImageUpload(MultipartHttpServletRequest request ,@RequestParam(value = "itemId", required = true) String itemId) throws Exception {
+        System.out.println("came TO controller");
         //TODO: MAYBE NEED HASH CHECK
         JSONArray array = new JSONArray();
         JSONObject object;
