@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<head>
     <!-- SCROLLS -->
     <!--<link rel="stylesheet" href="official/bootstrap/bootstrap.min.css" />-->
     <link rel="stylesheet" href="official/angular/angular-ui-tree.min.css">
@@ -53,6 +54,8 @@
                         <li><a ui-sref="product">Каталог</a></li>
                         <li><a ui-sref="about">О нас</a></li>
                         <li><a ui-sref="contact">Контакты</a></li>
+                        <li><a ui-sref="contact">Заказ/доставка</a></li>
+                        <li><a ui-sref="contact">Акции</a></li>
                         <li><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown1">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
                         <li ng-if="auth.isAuth()" ng-click="logout()"><i style="margin: 0px 15px; cursor: pointer" class="material-icons">exit_to_app</i></li>
                     </ul>
@@ -102,42 +105,8 @@
                 </li>
             </ul>-->
         </div>
-        <ul id="side-mobile" class="side-nav fixed sidebart slide-outt">
-            <li class="bold"><a href="about.html" class="waves-effect waves-teal">About</a></li>
-            <li class="bold"><a href="getting-started.html" class="waves-effect waves-teal">Getting Started</a></li>
-            <li class="no-padding">
-                <ul class="collapsible collapsible-accordion">
-                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal">CSS</a>
-                        <div class="collapsible-body">
-                            <ul>
-                                <li><a href="color.html">Color</a></li>
-                                <li><a href="grid.html">Grid</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="bold"><a class="collapsible-header  waves-effect waves-teal">Components</a>
-                        <div class="collapsible-body">
-                            <ul>
-                                <li><a href="badges.html">Badges</a></li>
-                                <li><a href="buttons.html">Buttons</a></li>
 
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="bold"><a class="collapsible-header active waves-effect waves-teal">JavaScript</a>
-                        <div class="collapsible-body">
-                            <ul>
-                                <li><a href="collapsible.html">Collapsible</a></li>
-                                <li><a href="dialogs.html">Dialogs</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="bold"><a href="http://materializecss.com/mobile.html" class="waves-effect waves-teal">Mobile</a></li>
-            <li class="bold"><a href="showcase.html" class="waves-effect waves-teal">Showcase</a></li>
-        </ul>
-        <!--<div ng-include="'pages/template/productType.html'"></div>-->
+        <div ng-include="'pages/template/sideMenu.html'"></div>
     </header>
 
 

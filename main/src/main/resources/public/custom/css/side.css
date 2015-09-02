@@ -8744,7 +8744,7 @@ body.parallax-demo footer {
     -webkit-transition: left .1s;
     -o-transition: left .1s;
     transition: left .1s;
-    width: 210px;
+    width: 280px;
     height:100%;
     /*background-color:#2a3542;*/
     /*position: absolute;*/
@@ -8758,7 +8758,7 @@ body.parallax-demo footer {
     -o-transition: left 1s;
     transition: left 1s;
 
-    left: -210px;
+    left: -280px;
 
 }
 

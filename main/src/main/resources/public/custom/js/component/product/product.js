@@ -94,5 +94,7 @@
             })
         };
 
+            $(".collapsible").collapsible();
+
     }]);
 })();

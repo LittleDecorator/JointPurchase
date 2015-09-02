@@ -154,5 +154,7 @@
 
             console.log($scope);
 
+
+
         }]);
 })();
