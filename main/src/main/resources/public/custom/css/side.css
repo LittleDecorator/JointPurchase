@@ -8215,8 +8215,9 @@ ul.side-nav.fixed:hover {
     font-weight: bold; }
 
 #logo-container {
-    height: 57px;
-    margin-bottom: 32px; }
+    /*height: 57px;*/
+    /*margin-bottom: 32px; */
+}
 
 nav.top-nav {
     height: 122px;
