@@ -19,19 +19,6 @@
             }
         }])
 
-        /*.service('uploadModal',['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
-            return function() {
-                var instance =
-                    factoryModal.open({
-                        templateUrl:'pages/template/uploadModal.html',
-                        controller: 'uploadController',
-                        sizeClass: 'modal-sm'
-                    });
-                console.log(instance);
-                return instance;
-            }
-        }])*/
-
         .service('loaderModal', ['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
 
             return function() {
@@ -113,10 +100,12 @@
             }
         }])
 
-        .service('resolveService',['$q','factory',function($q,factory){
+        .service('resolveService',['$q','dataResources',function($q,dataResources){
+            console.log("in resolver");
             this.getItem = function(id){
+                console.log("in resolver -> get item");
                 var deferred = $q.defer();
-                factory.item.get({id:id},function(data){
+                dataResources.item.get({id:id},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;
@@ -124,7 +113,7 @@
 
             this.getPerson = function(id){
                 var deferred = $q.defer();
-                factory.customer.get({id:id},function(data){
+                dataResources.customer.get({id:id},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;
@@ -132,7 +121,7 @@
 
             this.getOrder = function(id){
                 var deferred = $q.defer();
-                factory.order.get({id:id},function (data) {
+                dataResources.order.get({id:id},function (data) {
                     deferred.resolve(data);
                 });
                 return deferred.promise;
@@ -140,7 +129,7 @@
 
             this.getCompany = function(id){
                 var deferred = $q.defer();
-                factory.company.get({id:id},function(data){
+                dataResources.company.get({id:id},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;
@@ -148,7 +137,7 @@
 
             this.getProduct = function(itemId){
                 var deferred = $q.defer();
-                factory.itemDetail.get({id: itemId},function(data){
+                dataResources.itemDetail.get({id: itemId},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;

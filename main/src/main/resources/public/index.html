@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="custom/css/styles.css">
     <!--<link rel="stylesheet" href="custom/css/style.css">-->
 
-    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <!--<link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>-->
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
 
     <!--materialize-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">-->
@@ -35,7 +36,7 @@
 
 </head>
 
-<body ng-app="purchase" ng-controller="mainController">
+<body ng-app="purchase" ng-controller="mainController" class="home blog">
 
     <!-- HEADER AND NAVBAR -->
     <header>
@@ -48,23 +49,27 @@
                 <li><a ui-sref="company">Поставщики</a></li>
             </ul>
             <nav class="white">
-                <div class="nav-wrapper">
-                    <div id="logo-container">
-                        <a class="brand-logo-lpad" ui-sref="home">Join Purchase</a>
-                    </div>
-                    <div class="menu-adbeus-container">
-                        <ul id="nav-mobile" class="right hide-on-med-and-down">
-                            <li><a ui-sref="cart"><i class="fa fa-2x fa-shopping-cart"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
-                            <li ng-if="auth.isAuth()"><a>Hello, <strong class="ng-binding">{{currentUser.name}}</strong></a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Контакты</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Акции</a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown1">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
-                            <li ng-if="auth.isAuth()" ng-click="logout()"><i style="margin: 0px 15px; cursor: pointer" class="material-icons">exit_to_app</i></li>
-                        </ul>
+                <div class="container">
+                    <div class="nav-wrapper">
+                        <div id="logo-container">
+                            <a class="brand-logo-lpad" ui-sref="home">Join Purchase</a>
+                        </div>
+                        <div class="menu-adbeus-container">
+                            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                                <li><a ui-sref="cart"><i class="fa fa-2x fa-shopping-cart"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
+                                <li ng-if="auth.isAuth()"><a>Hello, <strong class="ng-binding">{{currentUser.name}}</strong></a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Контакты</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="item.detail">Акции</a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown1">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()">
+                                    <i style="padding: 0px 15px; cursor: pointer" class="material-icons menu">exit_to_app</i>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>

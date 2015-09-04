@@ -17,14 +17,17 @@ var helpers = {
 
     findInArrayById: function(array,id){
         var res = {};
+        console.log(array);
         array.some(function(elem){
-            if(elem.id === id){
+            console.log(elem);
+            if(elem.id == id){
                 res = elem;
                 return true;
             } else {
                 return false;
             }
         });
+        console.log(res);
         return res;
     },
 
@@ -71,6 +74,14 @@ var helpers = {
             return true;
         }
         return false;
+    },
+
+    toArray: function(obj){
+        var array = $.map(obj, function(value, index) {
+            console.log(value);
+            return [value];
+        });
+        return array;
     }
 
 };

@@ -6,7 +6,7 @@
 (function() {
     angular.module('purchase')
 
-        .config(['$stateProvider', '$urlRouterProvider','$httpProvider',function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider) {
+        .config(['$stateProvider', '$urlRouterProvider','$httpProvider',function ($stateProvider, $urlRouterProvider,$httpProvider) {
             $httpProvider.interceptors.push('authInterceptor');
 
             // For any unmatched url, redirect to /state1

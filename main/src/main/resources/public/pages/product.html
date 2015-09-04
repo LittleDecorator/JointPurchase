@@ -1,30 +1,43 @@
+<div class="section" style="margin-top: 20px;">
+    <div class="row isotope">
+        <div class="col s12 m4" ng-repeat="item in filteredItems">
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img ng-src="{{item.url}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
+                </div>
 
-
-
-        <div class="row">
-            <div class="col s12 m4" ng-repeat="item in filteredItems">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img ng-src="{{item.url}}" ng-click="itemView(item.id)" />
-                    </div>
-
-                    <div class="card-content" style="font-size: 18px!important;">
-                        <span class="card-title activator grey-text text-darken-4" style="font-size: 18px!important;">{{item.name}}<i class="material-icons right">more_vert</i></span>
-                        <br><b>Цена: </b>{{item.price}}
-                        <p><a class="btn btn-primary" ng-click="addToCart(item)" title="Добавить в корзину">
+                <div class="card-content" style="padding: 15px!important;" >
+                        <span class="card-title activator grey-text text-darken-4" style="font-size: 15px!important; color: #88AAA9!important;    line-height: 25px;">{{item.name}}</span>
+                        <a class="btn btn-primary right" ng-click="addToCart(item)" title="Добавить в корзину">
                             <i class="fa fa-plus"></i>
-                        </a></p>
-                    </div>
+                        </a>
+                        <br><b>Цена: </b>{{item.price}}
+                </div>
 
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
-                        <p>{{item.description}}</p>
-                    </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                    <p>{{item.description}}</p>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
+    <form action="http://adbeus.com" id="searchform" method="get">
+        <a class="btn-floating btn-large red">
+            <i class="large mdi-action-search"></i>
+        </a>
+
+        <input type="text" name="s" class="search">
+    </form>
+</div>
+
+
+<!--
 
 
             <div style="text-align: center" ng-show="totalItems>itemsPerPage">
                 <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currPage" max-size="maxPage" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
             </div>
+-->

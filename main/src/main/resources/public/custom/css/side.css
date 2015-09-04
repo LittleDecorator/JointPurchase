@@ -8203,7 +8203,7 @@ ul.side-nav.fixed li {
 ul.side-nav.fixed li:hover, ul.side-nav.fixed li.active {
     background-color: rgba(0, 0, 0, 0.05); }
 ul.side-nav.fixed li a {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 44px;
     height: 44px; }
 ul.side-nav.fixed ul.collapsible-accordion {
@@ -8745,7 +8745,7 @@ body.parallax-demo footer {
     -webkit-transition: left .1s;
     -o-transition: left .1s;
     transition: left .1s;
-    width: 280px;
+    width: 280px!important;
     height:100%;
     /*background-color:#2a3542;*/
     /*position: absolute;*/
@@ -8759,10 +8759,30 @@ body.parallax-demo footer {
     -o-transition: left 1s;
     transition: left 1s;
 
-    left: -280px;
+    left: -280px!important;
 
 }
 
 .slide-inn{
     left: 0px!important;
 }
+
+.menu-up-lvl{
+    color: #846C63!important;
+    font-weight: 300;
+    font-size: large;
+}
+
+/*table header*/
+.table-result > table > thead > tr > th {
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 0.5pt;
+    color: #CDC0B0!important;
+}
+
+/*@media only screen and (min-width: 993px) {
+    .container {
+        width: 80%!important;
+    }
+}*/

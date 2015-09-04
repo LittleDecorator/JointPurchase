@@ -5,18 +5,20 @@
                 <label class="control-label">Название</label>
                 <input type="text" name="name" class="form-control" placeholder="Item name" ng-model="selected.name">
             </div>
-            <div class="form-group">
+            <div class="form-group" id="company">
                 <label>Производитель</label>
-                <select name="companyId" class="form-control" ng-model="selected.company" ng-options="company.name for company in companyNames track by company.id">
-                    <option value="">Select a Company...</option>
+                <select name="companyId" class="form-control" ng-model="selected.company" ng-options="company.name for company in companyNames track by company.id" ng-change="companyChanged()">
+                    <option value="">Выберите компанию ...</option>
                 </select>
             </div>
-            <div class="form-group">
+
+            <div class="form-group" id="category">
                 <label>Категория</label>
-                <select name="categoryId" class="form-control" ng-model="selected.category" ng-options="category.name for category in categoryTypes track by category.id">
-                    <option value="">Select a Category...</option>
+                <select name="categoryId" class="form-control" ng-model="selected.category" ng-options="category.name for category in categoryTypes track by category.id" ng-change="categoryChanged()">
+                    <option value="">Выберите Категорию ...</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label class="control-label">Артикул</label>
                 <input type="text" name="article" class="form-control" placeholder="Item article" ng-model="selected.article">

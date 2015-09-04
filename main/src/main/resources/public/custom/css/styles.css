@@ -11,7 +11,9 @@ label.required:before{
  * Made By TANIOS
  */
 body,html {
-    font-family: 'Abel', sans-serif;
+    /*font-family: 'Abel', sans-serif;*/
+    font-family: Ubuntu Condensed;
+    letter-spacing: 0.5pt;
     color:#846C63;
 }
 
@@ -19,7 +21,7 @@ body {
     background-color: #F6F4F1!important;
 }
 /* COLORS */
-a {
+a,i.menu {
     color:#88AAA9!important;
 }
 /*a:hover {
@@ -91,10 +93,11 @@ hr {
     padding-top: 13px;
     margin-right: 5px;
 }
-nav ul a:hover {
+nav ul a:hover, nav ul i:hover {
     background-color: #BDB1AD;
     color:white!important;
 }
+
 /*.parallax-container {
     height: 600px;
   }*/

@@ -1,11 +1,11 @@
-<div class="table-container">
+<div style="padding-top: 20px;">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
     <a class="waves-effect waves-light btn" ng-click="addOrder()"><span>Добавить заказ</span></a>
 
     <h3 class="example_head">Заказы:</h3>
     <div class="table-result">
-        <table class="table table-bordered table-hover collection">
-            <thead style="background-color: darkseagreen;">
+        <table class="table table-bordered table-hover collection adm-table">
+            <thead>
                 <tr>
                     <th style="width: 20%">Название</th>
                     <th style="width: 40%">Получатель</th>
@@ -18,15 +18,15 @@
             </thead>
             <tbody>
                 <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
-                    <td>{{order.name}}</td>
-                    <td>{{order.personName}}</td>
-                    <td>{{order.createOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
-                    <td>{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
-                    <td>{{order.status}}</td>
-                    <td>{{order.payment}} руб</td>
-                    <td>
-                        <a class="btn-floating btn-sm waves-effect waves-light" ng-click="editOrder(order.id)"><i class="fa fa-pencil"></i></a>
-                        <a class="btn-floating btn-sm waves-effect waves-light" ng-click="deleteOrder(order.id)"><i class="fa fa-times"></i></a>
+                    <td class="center-align">{{order.name}}</td>
+                    <td class="center-align">{{order.personName}}</td>
+                    <td class="center-align">{{order.createOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td class="center-align">{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td class="center-align">{{order.status}}</td>
+                    <td class="center-align">{{order.payment}} руб</td>
+                    <td class="right-align">
+                        <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editOrder(order.id)"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteOrder(order.id)"><i class="fa fa-times"></i></a>
                     </td>
                 </tr>
             </tbody>

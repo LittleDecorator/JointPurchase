@@ -119,7 +119,7 @@ ul.navbar-nav>li:hover {
     vertical-align: inherit;
 }
 
-.items-table>thead>tr>th{
+.adm-table>thead>tr>th{
     text-align: center;
 }
 
@@ -318,6 +318,10 @@ nav .brand-logo-lpad {
 .inactive {
     color: #9e9e9e!important;
 }
+.inactive.holder {
+    color: #CFCFCF!important
+}
+
 
 
 /* FLIP */

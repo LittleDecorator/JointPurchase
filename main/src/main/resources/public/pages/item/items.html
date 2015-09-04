@@ -1,5 +1,5 @@
 <!-- Item Table Filter -->
-<div class="table-container filter-item">
+<div class="filter-item">
 
         <div class="row">
             <div class="input-field col s2">
@@ -22,16 +22,17 @@
                     <option value="">Выберите Категорию ...</option>
                 </select>
             </div>
-
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
+            <div class="right">
+                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
+                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
+            </div>
         </div>
 
 <!-- Item Table -->
-<div class="table-container">
+<div class="item_result">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
     <div>
-        <a class="btn btn-primary btn-block" ng-click="addItem()" style="width:150px">
+        <a class="btn white-text" ng-click="addItem()">
             <span>Добавить товар</span>
         </a>
 
@@ -40,8 +41,8 @@
 
 
     <div class="table-result">
-        <table class="table table-bordered table-hover items-table collection">
-            <thead style="background-color: darkseagreen;">
+        <table class="table table-bordered table-hover adm-table collection">
+            <thead>
             <tr>
                 <th></th>
                 <th>Название</th>
@@ -57,17 +58,17 @@
             <tbody>
             <tr ng-repeat="item in filteredItems" id="{{item.id}}" class="collection-item">
                 <td><input type="checkbox"></td>
-                <td>{{item.name}}</td>
-                <td>{{item.companyName}}</td>
-                <td>{{item.categoryType}}</td>
-                <td>{{item.article}}</td>
-                <td>{{item.price}} руб</td>
-                <td>{{item.inStock|asZero}}</td>
-                <td>{{item.inOrder|asZero}}</td>
-                <td>
-                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
-                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id)"><i class="fa fa-times"></i></a>
-                    <a class="btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><i class="fa fa-camera"></i></a>
+                <td class="center-align">{{item.name}}</td>
+                <td class="center-align">{{item.companyName}}</td>
+                <td class="center-align">{{item.categoryType}}</td>
+                <td class="center-align">{{item.article}}</td>
+                <td class="center-align">{{item.price}} руб</td>
+                <td class="center-align">{{item.inStock|asZero}}</td>
+                <td class="center-align">{{item.inOrder|asZero}}</td>
+                <td class="right-align">
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id)"><i class="fa fa-times"></i></a>
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><i class="fa fa-camera"></i></a>
                 </td>
             </tr>
             </tbody>

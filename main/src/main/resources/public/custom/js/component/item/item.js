@@ -11,8 +11,27 @@
             //for filter you may use % for replace other symbols
 
             //maps
-            $scope.companyNames = dataResources.companyMap.get();
-            $scope.categoryTypes = dataResources.categoryMap.get();
+            dataResources.companyMap.get(function(res){
+                $scope.companyNames = [];
+                angular.forEach(res, function (comp) {
+                    console.log(comp);
+                    $scope.companyNames.push(comp);
+                    if($scope.selected){
+                        $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
+                    }
+                });
+
+            });
+            dataResources.categoryMap.get(function(res) {
+                $scope.categoryTypes=[];
+                angular.forEach(res, function (comp) {
+                    console.log(comp);
+                    $scope.categoryTypes.push(comp);
+                    if($scope.selected){
+                        $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
+                    }
+                });
+            });
 
             //filter
             $scope.filter = {};
@@ -41,10 +60,12 @@
 
             if(item){
                 $scope.selected = item;
+                console.log($scope.selected);
+                console.log($scope.companyNames);
                 //find company in company list for select
-                $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
+                //$scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
                 //find category in category list for select
-                $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
+                //$scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
             } else {
                 console.log("get all");
                 //get all items
@@ -88,7 +109,10 @@
 
             //edit item
             $scope.editItem = function (id) {
-                $state.transitionTo("item.detail", {id: id});
+                console.log($state);
+                $state.go("item.detail", {id: id});
+                //$state.go("item.gallery", {itemId: id});
+                //$state.transitionTo("item.detail", {id: id});
 
             };
 
@@ -150,10 +174,13 @@
             $scope.companyChanged = function(){
                 console.log("company changed");
                 var elem = $('#company .select-wrapper');
-                if($scope.filter.selectedCompany == null){
+                console.log($scope.selected.company)
+                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
+                    console.log("add inactive");
                     angular.element(elem).addClass('inactive');
                 } else {
                     if(angular.element(elem).hasClass('inactive')){
+                        console.log("remove inactive");
                         angular.element(elem).removeClass('inactive');
                     }
                 }
@@ -162,7 +189,7 @@
             $scope.categoryChanged = function(){
                 console.log("category changed");
                 var elem = $('#category .select-wrapper');
-                if($scope.filter.selectedCategory == null){
+                if($scope.filter.selectedCategory == null || $scope.selected.category == null){
                     angular.element(elem).addClass('inactive');
                 } else {
                     if(angular.element(elem).hasClass('inactive')){
@@ -174,7 +201,9 @@
             $scope.showGallery = function (id) {
                 $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
                 $state.go("item.gallery", {itemId: id});
-            }
+            };
+
+            console.log($scope);
 
         }])
 
@@ -230,7 +259,10 @@
                 $(window).on("resize", function () {
                     $('.modal:visible').each(centerModal);
                 });
-            }
+            };
+
+
 
         }]);
+
 })();

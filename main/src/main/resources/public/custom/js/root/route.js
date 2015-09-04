@@ -13,7 +13,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
 
@@ -28,7 +28,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -42,7 +42,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -56,7 +56,7 @@ var route = {
                 },
                 data:{
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -70,7 +70,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -84,7 +84,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -98,7 +98,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
             {
@@ -111,9 +111,9 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: '{{product.name}}',
+                    //displayName: '{{product.name}}',
                     requireLogin: false,
-                    base:false
+                    //base:false
                 },
                 resolve: {
                     product: function($stateParams, resolveService) {
@@ -131,9 +131,9 @@ var route = {
                     }
                 },
                 data:{
-                    displayName: 'Продукция',
+                    //displayName: 'Продукция',
                     requireLogin: false,
-                    base:true
+                    //base:true
                 }
             },
 
@@ -148,8 +148,8 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{order.name}}',
-                    base:false
+                    //displayName: '{{order.name}}',
+                    //base:false
                 },
                 resolve: {
                     order: function($stateParams, resolveService) {
@@ -167,9 +167,9 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: 'Заказы',
+                    //displayName: 'Заказы',
                     requireLogin: true,
-                    base:true
+                    //base:true
                 },
                 resolve: {
                     order: function() {
@@ -188,8 +188,8 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
-                    base:false
+                    //displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
+                    //base:false
                 },
                 resolve: {
                     person: function($stateParams, resolveService) {
@@ -207,9 +207,9 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: 'Клиенты',
+                    //displayName: 'Клиенты',
                     requireLogin: true,
-                    base:true
+                    //base:true
                 },
                 resolve: {
                     person: function() {
@@ -228,8 +228,8 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName:'{{ company.name }}',
-                    base:false
+                    //displayName:'{{ company.name }}',
+                    //base:false
                 },
                 resolve: {
                     company: function($stateParams, resolveService) {
@@ -247,34 +247,13 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: 'Поставщики',
+                    //displayName: 'Поставщики',
                     requireLogin: true,
-                    base:true
+                    //base:true
                 },
                 resolve: {
                     company: function() {
                         return null;
-                    }
-                }
-            },
-
-            {
-                name:'item.detail',
-                url:'/:id',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/item-detail.html',
-                        controller: 'itemController'
-                    }
-                },
-                data: {
-                    requireLogin: true,
-                    displayName:'{{ item.name }}',
-                    base:false
-                },
-                resolve: {
-                    item: function($stateParams, resolveService) {
-                        return resolveService.getItem($stateParams.id);
                     }
                 }
             },
@@ -288,13 +267,33 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: 'Товар',
+                    //displayName: 'Товар',
                     requireLogin: true,
-                    base:true
+                    //base:true
                 },
                 resolve: {
                     item: function() {
                         return null;
+                    }
+                }
+            },
+            {
+                name:'item.detail',
+                url:'/:id',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/item-detail.html',
+                        controller: 'itemController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    //displayName:'{{ item.name }}',
+                    //base:false
+                },
+                resolve: {
+                    item: function($stateParams, resolveService) {
+                        return resolveService.getItem($stateParams.id);
                     }
                 }
             },
@@ -309,7 +308,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    base:false
+                    //base:false
                 }
             }
 

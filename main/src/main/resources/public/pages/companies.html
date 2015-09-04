@@ -1,29 +1,25 @@
-<div class="table-container">
+<div style="padding-top: 20px;">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
     <button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>
     <h3 class="example_head">Компании:</h3>
     <div class="table-result">
-        <table class="table table-bordered table-hover">
-            <thead style="background-color: darkseagreen;">
-            <tr>
-                <th>Название</th>
-                <th>Описание</th>
-                <th></th>
-            </tr>
+        <table class="table table-bordered table-hover adm-table">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="company in companies" id="{{company.id}}">
-                <td>{{company.name}}</td>
-                <td>{{company.description}}</td>
-                <td style="width: 108px; padding-right: 10px;">
-                    <a class="btn btn-primary" ng-click="edit(company.id)" title="Изменить">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <a class="btn btn-primary" ng-click="delete(company.id)" title="Удалить">
-                        <i class="fa fa-times"></i>
-                    </a>
-                </td>
-            </tr>
+                <tr ng-repeat="company in companies" id="{{company.id}}">
+                    <td class="center-align">{{company.name}}</td>
+                    <td class="center-align">{{company.description}}</td>
+                    <td class="right-align">
+                        <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="edit(company.id)"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="delete(company.id)"><i class="fa fa-times"></i></a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
