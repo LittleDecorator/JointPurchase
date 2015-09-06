@@ -1288,7 +1288,7 @@ return _.node(
                                         })([ settings.klass.day ]),
                                         'data-pick=' + targetDate.pick + ' ' + _.ariaAttr({
                                             role: 'gridcell',
-                                            label: formattedDate,
+                                            title: formattedDate,
                                             selected: isSelected && calendar.$node.val() === formattedDate ? true : null,
                                             activedescendant: isHighlighted ? true : null,
                                             disabled: isDisabled ? true : null

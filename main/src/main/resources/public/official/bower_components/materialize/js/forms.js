@@ -222,7 +222,7 @@
     });
 
     $(document).on('mousemove touchmove', range_wrapper, function(e) {
-      var thumb = $(this).children('.thumb');
+      var thumb = $(this).nodes('.thumb');
       var left;
       if (range_mousedown) {
         if (!thumb.hasClass('active')) {
@@ -251,7 +251,7 @@
     $(document).on('mouseout touchleave', range_wrapper, function() {
       if (!range_mousedown) {
 
-        var thumb = $(this).children('.thumb');
+        var thumb = $(this).nodes('.thumb');
 
         if (thumb.hasClass('active')) {
           thumb.velocity({ height: '0', width: '0', top: '10px', marginLeft: '-6px'}, { duration: 100 });
@@ -295,7 +295,7 @@
       var wrapper = $('<div class="select-wrapper"></div>');
       wrapper.addClass($select.attr('class'));
       var options = $('<ul id="select-options-' + uniqueID+'" class="dropdown-content select-dropdown"></ul>');
-      var selectOptions = $select.children('option');
+      var selectOptions = $select.nodes('option');
 
       var label;
       if ($select.find('option:selected') !== undefined) {

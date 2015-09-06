@@ -3343,7 +3343,7 @@ forEach({
     });
   },
 
-  children: function(element) {
+  nodes: function(element) {
     var children = [];
     forEach(element.childNodes, function(element) {
       if (element.nodeType === NODE_TYPE_ELEMENT) {
@@ -12292,7 +12292,7 @@ function ensureSafeObject(obj, fullExpression) {
           'Referencing the Window in Angular expressions is disallowed! Expression: {0}',
           fullExpression);
     } else if (// isElement(obj)
-        obj.children && (obj.nodeName || (obj.prop && obj.attr && obj.find))) {
+        obj.nodes && (obj.nodeName || (obj.prop && obj.attr && obj.find))) {
       throw $parseMinErr('isecdom',
           'Referencing DOM nodes in Angular expressions is disallowed! Expression: {0}',
           fullExpression);
@@ -25797,7 +25797,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
     function Option(selectValue, viewValue, label, group, disabled) {
       this.selectValue = selectValue;
       this.viewValue = viewValue;
-      this.label = label;
+      this.title = label;
       this.group = group;
       this.disabled = disabled;
     }
@@ -25910,7 +25910,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
       // The emptyOption allows the application developer to provide their own custom "empty"
       // option when the viewValue does not match any of the option values.
       var emptyOption;
-      for (var i = 0, children = selectElement.children(), ii = children.length; i < ii; i++) {
+      for (var i = 0, children = selectElement.nodes(), ii = children.length; i < ii; i++) {
         if (children[i].value === '') {
           emptyOption = children.eq(i);
           break;
@@ -26082,9 +26082,9 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
         option.element = element;
         element.disabled = option.disabled;
         if (option.value !== element.value) element.value = option.selectValue;
-        if (option.label !== element.label) {
-          element.label = option.label;
-          element.textContent = option.label;
+        if (option.title !== element.title) {
+          element.title = option.title;
+          element.textContent = option.title;
         }
       }
 
@@ -26172,7 +26172,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
               currentElement = groupElement.nextSibling;
 
               // Update the label on the group element
-              groupElement.label = option.group;
+              groupElement.title = option.group;
 
               // Store it for use later
               group = groupMap[option.group] = {

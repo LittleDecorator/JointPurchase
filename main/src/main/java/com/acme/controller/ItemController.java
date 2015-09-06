@@ -172,7 +172,8 @@ public class ItemController{
             if(itemContents.size()>0){
                 //just take first image
                 String contentId = itemContents.get(0).getContentId();
-                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
+//                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
+                jsonObject.put("url", Constants.ORIG_URL+contentId);
             } else {
                 //else default image
                 jsonObject.put("url",noImage);

@@ -41,7 +41,7 @@
         }
 
         $panel_headers.not(object).removeClass('active').parent().removeClass('active');
-        $panel_headers.not(object).parent().children('.collapsible-body').stop(true,false).slideUp(
+        $panel_headers.not(object).parent().nodes('.collapsible-body').stop(true,false).slideUp(
           {
             duration: 350,
             easing: "easeOutQuart",

@@ -310,6 +310,21 @@ var route = {
                     requireLogin: true,
                     //base:false
                 }
+            },
+            {
+                name: 'category',
+                url:'/category',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/category.html',
+                        controller: 'categoryController'
+                    }
+                },
+                data: {
+                    //displayName: 'Поставщики',
+                    requireLogin: true
+                    //base:true
+                }
             }
 
         ]

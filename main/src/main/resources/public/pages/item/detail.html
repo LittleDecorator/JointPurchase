@@ -1,6 +1,39 @@
-<div class="table-container">
+<!--<div class="table-container">-->
+<div style="padding-top: 20px;">
+    <div class="section">
+        <div class="row">
+            <div class="col l12">
+                <div class="col l8 s12">
+                    <h2>{{item.name}}</h2>
+                    <img width="700" ng-src="{{ORIG_URL+mainImage}}" class="responsive-img z-depth-3 wp-post-image materialboxed" style="cursor: pointer;margin: auto" ng-click="view(mainImage)"/>
+                    <div class="section">
+                        <div class="row">
+                            <div class="col l11 s12" style="width: 85.66667%!important;margin-left: 0">
+                                <div ng-repeat="img in item.media" class="left" ng-click="show(img)">
 
-    <div class="container bootcards-container" id="main" style="width:auto">
+                                    <!--<img class="responsive-img z-depth-3 wp-post-image materialboxed" ng-src="{{THUMB_URL+img}}">-->
+                                    <img width=100 height="100" class="responsive-img z-depth-3 wp-post-image materialboxed" ng-src="{{ORIG_URL+img}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col l4 s12">
+                    <div class="card-panel alcaramel">
+                        <h6>DETAILS</h6>
+                        <hr>
+                        <p style="margin: 0px">{{item.description}}</p>
+                        <hr>
+                        <b>Цена: </b>{{item.price}}
+                        <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="addToCart(item)">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--<div class="container bootcards-container" id="main" style="width:auto">
         <div>
             <div style="width: 20%;float: left">
                 <div style="vertical-align: middle;display: table-cell;width: 310px;height: 310px">
@@ -24,15 +57,15 @@
                 </a>
             </div>
         </div>
-    </div>
-</div>
+    </div>-->
+<!--</div>-->
 
-<div class="modal fade " id="demo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <img ng-src="{{ORIG_URL+mainImage}}" style="cursor: pointer;margin: auto;height: auto;max-width: 100%;"/>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="modal fade " id="demo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--<div class="modal-dialog">-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-body">-->
+                <!--<img ng-src="{{ORIG_URL+mainImage}}" style="cursor: pointer;margin: auto;height: auto;max-width: 100%;"/>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->

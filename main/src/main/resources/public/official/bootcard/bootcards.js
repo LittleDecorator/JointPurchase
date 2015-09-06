@@ -244,7 +244,7 @@ Bootcards.DEFAULTS = {
                     Bootcards.OffCanvas.$menuEl.toggleClass("active");
                     Bootcards.OffCanvas.$menuTitleEl.toggleClass("active");
                 })
-                .children("i")
+                .nodes("i")
                     .removeClass('fa-bars')
                     .addClass('fa-angle-left');
         }

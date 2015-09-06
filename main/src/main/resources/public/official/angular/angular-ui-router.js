@@ -3899,7 +3899,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
                             scope[locals.$$controllerAs] = controller;
                         }
                         $element.data('$ngControllerController', controller);
-                        $element.children().data('$ngControllerController', controller);
+                        $element.nodes().data('$ngControllerController', controller);
                     }
 
                     link(scope);

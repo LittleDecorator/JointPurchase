@@ -53,8 +53,9 @@
                 item: $resource("/item/:id"),
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
+                categoryTree: $resource("/category/tree",{},{ get:{method:'GET',isArray:false}}),
                 itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
-                //itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}})
+                itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
 
                 authLogin: $resource('/auth/login',{},{
                     post:{method:'POST'}
@@ -76,10 +77,8 @@
                 previewItems: $resource('/item/preview',{},{
                     get:{method:'GET',isArray:true},
                     filter:{method:'POST',isArray:true}
-                }),
-                categoryTree: $resource("/category/tree",{},{
-                    get:{method:'GET',isArray:false}
                 })
+
             }
         }])
 

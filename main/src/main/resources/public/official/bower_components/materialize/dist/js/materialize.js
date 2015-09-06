@@ -331,7 +331,7 @@ else {
         }
 
         $panel_headers.not(object).removeClass('active').parent().removeClass('active');
-        $panel_headers.not(object).parent().children('.collapsible-body').stop(true,false).slideUp(
+        $panel_headers.not(object).parent().nodes('.collapsible-body').stop(true,false).slideUp(
           {
             duration: 350,
             easing: "easeOutQuart",
@@ -1043,12 +1043,12 @@ $(document).ready(function(){
         function updateParallax(initial) {
           var container_height;
           if (window_width < 601) {
-            container_height = ($this.height() > 0) ? $this.height() : $this.children("img").height();
+            container_height = ($this.height() > 0) ? $this.height() : $this.nodes("img").height();
           }
           else {
             container_height = ($this.height() > 0) ? $this.height() : 500;
           }
-          var $img = $this.children("img").first();
+          var $img = $this.nodes("img").first();
           var img_height = $img.height();
           var parallax_dist = img_height - container_height;
           var bottom = $this.offset().top + container_height;
@@ -1069,7 +1069,7 @@ $(document).ready(function(){
         }
 
         // Wait for image load
-        $this.children("img").one("load", function() {
+        $this.nodes("img").one("load", function() {
           updateParallax(true);
         }).each(function() {
           if(this.complete) $(this).load();
@@ -1101,8 +1101,8 @@ $(document).ready(function(){
 
       $this.width('100%');
       // Set Tab Width for each tab
-      var $num_tabs = $(this).children('li').length;
-      $this.children('li').each(function() {
+      var $num_tabs = $(this).nodes('li').length;
+      $this.nodes('li').each(function() {
         $(this).width((100/$num_tabs)+'%');
       });
       var $active, $content, $links = $this.find('li.tab a'),
@@ -1270,7 +1270,7 @@ $(document).ready(function(){
             newTooltip.css({ display: 'block', left: '0px', top: '0px' });
 
             // Set Tooltip text
-            newTooltip.children('span').text(origin.attr('data-tooltip'));
+            newTooltip.nodes('span').text(origin.attr('data-tooltip'));
 
             // Tooltip positioning
             var originWidth = origin.outerWidth();
@@ -2670,7 +2670,7 @@ $(document).ready(function(){
     });
 
     $(document).on('mousemove touchmove', range_wrapper, function(e) {
-      var thumb = $(this).children('.thumb');
+      var thumb = $(this).nodes('.thumb');
       var left;
       if (range_mousedown) {
         if (!thumb.hasClass('active')) {
@@ -2699,7 +2699,7 @@ $(document).ready(function(){
     $(document).on('mouseout touchleave', range_wrapper, function() {
       if (!range_mousedown) {
 
-        var thumb = $(this).children('.thumb');
+        var thumb = $(this).nodes('.thumb');
 
         if (thumb.hasClass('active')) {
           thumb.velocity({ height: '0', width: '0', top: '10px', marginLeft: '-6px'}, { duration: 100 });
@@ -2743,7 +2743,7 @@ $(document).ready(function(){
       var wrapper = $('<div class="select-wrapper"></div>');
       wrapper.addClass($select.attr('class'));
       var options = $('<ul id="select-options-' + uniqueID+'" class="dropdown-content select-dropdown"></ul>');
-      var selectOptions = $select.children('option');
+      var selectOptions = $select.nodes('option');
 
       var label;
       if ($select.find('option:selected') !== undefined) {
@@ -3686,7 +3686,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
 
                 // Once we’re all set, check the theme in use.
-                IS_DEFAULT_THEME = isUsingDefaultTheme( P.$root.children()[ 0 ] )
+                IS_DEFAULT_THEME = isUsingDefaultTheme( P.$root.nodes()[ 0 ] )
 
 
                 // If the element has autofocus, open the picker.
@@ -3811,7 +3811,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                             // If the target was the holder that covers the screen,
                             // keep the element focused to maintain tabindex.
-                            P.close( target === P.$root.children()[0] )
+                            P.close( target === P.$root.nodes()[0] )
                         }
 
                     }).on( 'keydown.' + STATE.id, function( event ) {
@@ -4205,7 +4205,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     var target = event.target
 
                     // Make sure the target isn’t the root holder so it can bubble up.
-                    if ( target != P.$root.children()[ 0 ] ) {
+                    if ( target != P.$root.nodes()[ 0 ] ) {
 
                         event.stopPropagation()
 
@@ -5958,7 +5958,7 @@ return _.node(
                                         })([ settings.klass.day ]),
                                         'data-pick=' + targetDate.pick + ' ' + _.ariaAttr({
                                             role: 'gridcell',
-                                            label: formattedDate,
+                                            title: formattedDate,
                                             selected: isSelected && calendar.$node.val() === formattedDate ? true : null,
                                             activedescendant: isHighlighted ? true : null,
                                             disabled: isDisabled ? true : null

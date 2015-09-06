@@ -1,0 +1,43 @@
+<div style="padding-top: 20px;">
+    <div class="section">
+        <div class="row">
+            <div class="col l12">
+                <div class="col l4 s12">
+                    <div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
+                        <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>
+                    </div>
+                </div>
+                <div class="col l8 s12">
+                    <div>
+                        <div class="form-group">
+                            <label for="selectedCategory" class="control-label">Выбранная категории</label>
+                            <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title" maxlength="25">
+                        </div>
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
+                    </div>
+
+                    <div style="padding-top: 20px;">
+                        <div class="input-field" >
+                            <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
+                            <label class="control-label" for="newCategory">Новая категория</label>
+                        </div>
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
+                    </div>
+
+                    <div style="padding-top: 10%">
+                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="right">-->
+        <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>-->
+    <!--</div>-->
+
+</div>

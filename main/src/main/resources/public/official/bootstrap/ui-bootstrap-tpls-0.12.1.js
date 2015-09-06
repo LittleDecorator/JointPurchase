@@ -1080,7 +1080,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
     var model = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : null;
     return {
       date: date,
-      label: dateFilter(date, format),
+      title: dateFilter(date, format),
       selected: model && this.compare(date, model) === 0,
       disabled: this.isDisabled(date),
       current: this.compare(date, new Date()) === 0
@@ -1376,7 +1376,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
           });
         }
 
-        scope.title = [years[0].label, years[range - 1].label].join(' - ');
+        scope.title = [years[0].title, years[range - 1].title].join(' - ');
         scope.rows = ctrl.split(years, 5);
       };
 
@@ -1460,7 +1460,7 @@ function ($compile, $parse, $document, $position, dateFilter, dateParser, datepi
       }
 
       // datepicker element
-      var datepickerEl = angular.element(popupEl.children()[0]);
+      var datepickerEl = angular.element(popupEl.nodes()[0]);
       if ( attrs.datepickerOptions ) {
         angular.forEach(scope.$parent.$eval(attrs.datepickerOptions), function( value, option ) {
           datepickerEl.attr( cameltoDash(option), value );
@@ -2879,7 +2879,7 @@ angular.module('ui.bootstrap.progressbar', [])
         },
         templateUrl: 'template/progressbar/progressbar.html',
         link: function(scope, element, attrs, progressCtrl) {
-            progressCtrl.addBar(scope, angular.element(element.children()[0]));
+            progressCtrl.addBar(scope, angular.element(element.nodes()[0]));
         }
     };
 });
@@ -3644,7 +3644,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap
                 locals[parserResult.itemName] = matches[i];
                 scope.matches.push({
                   id: getMatchId(i),
-                  label: parserResult.viewMapper(scope, locals),
+                  title: parserResult.viewMapper(scope, locals),
                   model: matches[i]
                 });
               }

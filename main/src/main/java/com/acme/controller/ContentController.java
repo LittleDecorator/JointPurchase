@@ -77,6 +77,7 @@ public class ContentController{
         for(ItemContent item : itemContentMapper.selectByExample(itemContentExample)){
             jsonObject = new JSONObject();
             jsonObject.put("url", Constants.GALLERY_URL+item.getContentId());
+//            jsonObject.put("url", Constants.ORIG_URL+item.getContentId());
             jsonObject.put("id", item.getContentId());
             array.add(jsonObject);
         }

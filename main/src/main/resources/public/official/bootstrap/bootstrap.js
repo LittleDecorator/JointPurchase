@@ -355,7 +355,7 @@ if (typeof jQuery === 'undefined') {
   }
 
   Carousel.prototype.getItemIndex = function (item) {
-    this.$items = item.parent().children('.item')
+    this.$items = item.parent().nodes('.item')
     return this.$items.index(item || this.$active)
   }
 
@@ -427,7 +427,7 @@ if (typeof jQuery === 'undefined') {
 
     if (this.$indicators.length) {
       this.$indicators.find('.active').removeClass('active')
-      var $nextIndicator = $(this.$indicators.children()[this.getItemIndex($next)])
+      var $nextIndicator = $(this.$indicators.nodes()[this.getItemIndex($next)])
       $nextIndicator && $nextIndicator.addClass('active')
     }
 
@@ -574,7 +574,7 @@ if (typeof jQuery === 'undefined') {
     if (this.transitioning || this.$element.hasClass('in')) return
 
     var activesData
-    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+    var actives = this.$parent && this.$parent.nodes('.panel').nodes('.in, .collapsing')
 
     if (actives && actives.length) {
       activesData = actives.data('bs.collapse')
@@ -1746,7 +1746,7 @@ if (typeof jQuery === 'undefined') {
     var content = this.getContent()
 
     $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
-    $tip.find('.popover-content').children().detach().end()[ // we use append for html objects to maintain js events
+    $tip.find('.popover-content').nodes().detach().end()[ // we use append for html objects to maintain js events
       this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
     ](content)
 

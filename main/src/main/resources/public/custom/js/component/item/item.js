@@ -207,62 +207,6 @@
 
         }])
 
-        .controller('detailController',['$scope','$state','product',function ($scope, $state, product) {
-            console.log("enter detail controller");
 
-            $scope.mainImage = null;
-            $scope.item = angular.extend({},product);
-
-            $scope.THUMB_URL = "media/image/thumb/";
-            $scope.PREVIEW_URL = "media/image/preview/";
-            $scope.VIEW_URL = "media/image/view/";
-            $scope.ORIG_URL = "media/image/";
-
-
-            $scope.mainImage = $scope.item.media[0];
-            if($scope.item.media.length>1){
-                $scope.item.media.splice(0,1);
-            }
-
-            $scope.next = function(id){
-                $scope.item.media.push($scope.mainImage);
-
-                var keepGoing = true;
-                var res = null;
-
-                $scope.item.media.forEach(function(elem,index){
-                    if (keepGoing) {
-                        if(elem === id) {
-                            res = index;
-                            keepGoing = false;
-                        }
-                    }
-                });
-                $scope.mainImage = id;
-                $scope.item.media.splice(res,1);
-            };
-
-            $scope.view= function(){
-                console.log("in view");
-                console.log($scope);
-
-                //угобая центролизация modal dialog'а
-                function centerModal() {
-                    $(this).css('display', 'block');
-                    var $dialog = $(this).find(".modal-dialog");
-                    var offset = ($(window).height()-150 - $dialog.height()) / 2;
-                    // Center modal vertically in window
-                    $dialog.css("margin-top", offset);
-                }
-
-                $('.modal').on('show.bs.modal', centerModal);
-                $(window).on("resize", function () {
-                    $('.modal:visible').each(centerModal);
-                });
-            };
-
-
-
-        }]);
 
 })();

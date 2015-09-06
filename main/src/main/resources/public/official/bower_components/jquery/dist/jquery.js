@@ -2841,7 +2841,7 @@ rootjQuery = jQuery( document );
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 	// Methods guaranteed to produce a unique set when starting from a unique set
 	guaranteedUnique = {
-		children: true,
+		nodes: true,
 		contents: true,
 		next: true,
 		prev: true
@@ -2992,7 +2992,7 @@ jQuery.each({
 	siblings: function( elem ) {
 		return jQuery.sibling( ( elem.parentNode || {} ).firstChild, elem );
 	},
-	children: function( elem ) {
+	nodes: function( elem ) {
 		return jQuery.sibling( elem.firstChild );
 	},
 	contents: function( elem ) {

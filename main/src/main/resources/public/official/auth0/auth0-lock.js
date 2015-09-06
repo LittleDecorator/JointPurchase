@@ -5422,7 +5422,7 @@ Auth0.prototype._redirect = function (url) {
 Auth0.prototype._renderAndSubmitWSFedForm = function (options, formHtml) {
   var div = document.createElement('div');
   div.innerHTML = formHtml;
-  var form = document.body.appendChild(div).children[0];
+  var form = document.body.appendChild(div).nodes[0];
 
   if (options.popup && !this._callbackOnLocationHash) {
     form.target = 'auth0_signup_popup';

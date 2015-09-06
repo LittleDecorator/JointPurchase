@@ -205,7 +205,7 @@ Auth0.prototype._getCallbackURL = function(options) {
 Auth0.prototype._renderAndSubmitWSFedForm = function (options, formHtml) {
   var div = document.createElement('div');
   div.innerHTML = formHtml;
-  var form = document.body.appendChild(div).children[0];
+  var form = document.body.appendChild(div).nodes[0];
 
   if (options.popup && !this._getCallbackOnLocationHash(options)) {
     form.target = 'auth0_signup_popup';

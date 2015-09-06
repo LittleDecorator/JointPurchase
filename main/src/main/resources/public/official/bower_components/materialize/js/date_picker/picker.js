@@ -139,7 +139,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
 
                 // Once we’re all set, check the theme in use.
-                IS_DEFAULT_THEME = isUsingDefaultTheme( P.$root.children()[ 0 ] )
+                IS_DEFAULT_THEME = isUsingDefaultTheme( P.$root.nodes()[ 0 ] )
 
 
                 // If the element has autofocus, open the picker.
@@ -264,7 +264,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
                             // If the target was the holder that covers the screen,
                             // keep the element focused to maintain tabindex.
-                            P.close( target === P.$root.children()[0] )
+                            P.close( target === P.$root.nodes()[0] )
                         }
 
                     }).on( 'keydown.' + STATE.id, function( event ) {
@@ -658,7 +658,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                     var target = event.target
 
                     // Make sure the target isn’t the root holder so it can bubble up.
-                    if ( target != P.$root.children()[ 0 ] ) {
+                    if ( target != P.$root.nodes()[ 0 ] ) {
 
                         event.stopPropagation()
 

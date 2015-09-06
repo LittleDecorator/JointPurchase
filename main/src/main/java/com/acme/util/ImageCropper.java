@@ -11,7 +11,8 @@ public class ImageCropper {
     private static final int PREVIEW_SIDE = 500;
     private static final int GALLERY_SIDE = 500;
     private static final int VIEW_SIDE = 500;
-    private static final int THUMB_SIDE = 60;
+//    private static final int THUMB_SIDE = 60;
+    private static final int THUMB_SIDE = 100;
 
     /*public static String cropImage(String encodedImage,String type) throws Exception {
         return ImageUtils.encodeToString(ImageUtils.decodeToImage(encodedImage), type);

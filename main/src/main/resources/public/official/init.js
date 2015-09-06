@@ -19,7 +19,7 @@
         }
 
         $('.dynamic-color .col').each(function () {
-            $(this).children().each(function () {
+            $(this).nodes().each(function () {
                 var color = $(this).css('background-color'),
                     classes = $(this).attr('class');
                 $(this).html(rgb2hex(color) + " " + classes);
@@ -83,7 +83,7 @@
         // Toggle Flow Text
         var toggleFlowTextButton = $('#flow-toggle');
         toggleFlowTextButton.click( function(){
-            $('#flow-text-demo').children('p').each(function(){
+            $('#flow-text-demo').nodes('p').each(function(){
                 $(this).toggleClass('flow-text');
             });
         });

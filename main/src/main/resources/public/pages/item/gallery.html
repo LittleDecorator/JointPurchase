@@ -1,4 +1,4 @@
-
+<div style="padding-top: 20px">
 
     <div class="fileUpload btn btn-primary">
         <span>Добавить изображение</span>
@@ -10,16 +10,19 @@
             <div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img height="200" ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" />
-                    </div>
-                    <div class="card-content" style="font-size: 18px!important;">
-                        <span class="card-title activator grey-text text-darken-4" style="font-size: 18px!important;">Here will be image details</span>
+                        <img ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" class="responsive-img z-depth-3 wp-post-image"/>
+                        <div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px">
+                            <i class="material-icons ">turned_in_not</i>
+                            <i class="material-icons ">call_made</i>
+                            <i class="material-icons ">clear</i>
+                        </div>
                     </div>
                 </div>
+                <!--<img ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" class="responsive-img z-depth-3 wp-post-image"/>-->
             </div>
         </div>
     </div>
-
+</div>
 
 <!-- ITEM IMAGE UPLOAD MODAL -->
 <div class="modal" title="Item Image" visible="showUpload" hide-footer="true" id="modal1">

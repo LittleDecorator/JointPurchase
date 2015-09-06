@@ -1,5 +1,5 @@
 (function(){
-    angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap', 'ngResource', 'angularFileUpload', 'angular-jwt',
+    angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap','angularBootstrapNavTree' ,'ngResource', 'angularFileUpload', 'angular-jwt',
         'purchase.controllers','purchase.directives','purchase.factories','purchase.filters','purchase.services']);
 })();
 

@@ -1816,7 +1816,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                     complete: function () {
                         a(this).css("height", "")
                     }
-                }), h.not(b).removeClass("active").parent().removeClass("active"), h.not(b).parent().children(".collapsible-body").stop(!0, !1).slideUp({
+                }), h.not(b).removeClass("active").parent().removeClass("active"), h.not(b).parent().nodes(".collapsible-body").stop(!0, !1).slideUp({
                     duration: 350,
                     easing: "easeOutQuart",
                     queue: !1,
@@ -2105,13 +2105,13 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
         return this.each(function (c) {
             function d(c) {
                 var d;
-                d = 601 > b ? e.height() > 0 ? e.height() : e.children("img").height() : e.height() > 0 ? e.height() : 500;
-                var f = e.children("img").first(), g = f.height(), h = g - d, i = e.offset().top + d, j = e.offset().top, k = a(window).scrollTop(), l = window.innerHeight, m = k + l, n = (m - j) / (d + l), o = Math.round(h * n);
+                d = 601 > b ? e.height() > 0 ? e.height() : e.nodes("img").height() : e.height() > 0 ? e.height() : 500;
+                var f = e.nodes("img").first(), g = f.height(), h = g - d, i = e.offset().top + d, j = e.offset().top, k = a(window).scrollTop(), l = window.innerHeight, m = k + l, n = (m - j) / (d + l), o = Math.round(h * n);
                 c && f.css("display", "block"), i > k && k + l > j && f.css("transform", "translate3D(-50%," + o + "px, 0)")
             }
 
             var e = a(this);
-            e.addClass("parallax"), e.children("img").one("load", function () {
+            e.addClass("parallax"), e.nodes("img").one("load", function () {
                 d(!0)
             }).each(function () {
                 this.complete && a(this).load()
@@ -2129,8 +2129,8 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                 var b = a(this);
                 a(window).width();
                 b.width("100%");
-                var c = a(this).children("li").length;
-                b.children("li").each(function () {
+                var c = a(this).nodes("li").length;
+                b.nodes("li").each(function () {
                     a(this).width(100 / c + "%")
                 });
                 var d, e, f = b.find("li.tab a"), g = b.width(), h = b.find("li").first().outerWidth(), i = 0;
@@ -2193,7 +2193,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                                 display: "block",
                                 left: "0px",
                                 top: "0px"
-                            }), i.children("span").text(g.attr("data-tooltip"));
+                            }), i.nodes("span").text(g.attr("data-tooltip"));
                             var a = g.outerWidth(), b = g.outerHeight(), e = g.attr("data-position"), k = i.outerHeight(), l = i.outerWidth(), m = "0px", n = "0px", o = 8;
                             "top" === e ? (i.css({
                                 top: g.offset().top - k - f,
@@ -2752,7 +2752,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
         }), a(document).on("mouseup touchend", i, function () {
             h = !1, a(this).removeClass("active")
         }), a(document).on("mousemove touchmove", i, function (b) {
-            var c, d = a(this).children(".thumb");
+            var c, d = a(this).nodes(".thumb");
             if (h) {
                 d.hasClass("active") || d.velocity({
                     height: "30px",
@@ -2768,7 +2768,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
             }
         }), a(document).on("mouseout touchleave", i, function () {
             if (!h) {
-                var b = a(this).children(".thumb");
+                var b = a(this).nodes(".thumb");
                 b.hasClass("active") && b.velocity({
                     height: "0",
                     width: "0",
@@ -2786,7 +2786,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                 $select.data("select-id", d);
                 var e = a('<div class="select-wrapper"></div>');
                 e.addClass($select.attr("class"));
-                var f, g = a('<ul id="select-options-' + d + '" class="dropdown-content select-dropdown"></ul>'), h = $select.children("option");
+                var f, g = a('<ul id="select-options-' + d + '" class="dropdown-content select-dropdown"></ul>'), h = $select.nodes("option");
                 f = void 0 !== $select.find("option:selected") ? $select.find("option:selected") : g.first(), h.each(function () {
                     g.append(a('<li class="' + (a(this).is(":disabled") ? "disabled" : "") + '"><span>' + a(this).html() + "</span></li>"))
                 }), g.find("li").each(function (c) {
@@ -3137,7 +3137,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                     y.$root.removeClass(v.focused), a.stopPropagation()
                 }, "mousedown click": function (b) {
                     var c = b.target;
-                    c != y.$root.children()[0] && (b.stopPropagation(), "mousedown" != b.type || a(c).is("input, select, textarea, button, option") || (b.preventDefault(), y.$root[0].focus()))
+                    c != y.$root.nodes()[0] && (b.stopPropagation(), "mousedown" != b.type || a(c).is("input, select, textarea, button, option") || (b.preventDefault(), y.$root[0].focus()))
                 }
             }).on({
                 focus: function () {
@@ -3186,7 +3186,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                     open: u.onOpen,
                     close: u.onClose,
                     set: u.onSet
-                }), s = c(y.$root.children()[0]), f.autofocus && y.open(), y.trigger("start").trigger("render"))
+                }), s = c(y.$root.nodes()[0]), f.autofocus && y.open(), y.trigger("start").trigger("render"))
             }, render: function (a) {
                 return a ? y.$root.html(m()) : y.$root.find("." + v.box).html(y.component.nodes(t.open)), y.trigger("render")
             }, stop: function () {
@@ -3198,7 +3198,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                     y.$root.addClass(v.opened), e(y.$root[0], "hidden", !1)
                 }, 0), c !== !1 && (t.open = !0, s && k.css("overflow", "hidden").css("padding-right", "+=" + d()), y.$root[0].focus(), j.on("click." + t.id + " focusin." + t.id, function (a) {
                     var b = a.target;
-                    b != f && b != document && 3 != a.which && y.close(b === y.$root.children()[0])
+                    b != f && b != document && 3 != a.which && y.close(b === y.$root.nodes()[0])
                 }).on("keydown." + t.id, function (c) {
                     var d = c.keyCode, e = y.component.key[d], f = c.target;
                     27 == d ? y.close(!0) : f != y.$root[0] || !e && 13 != d ? a.contains(y.$root[0], f) && 13 == d && (c.preventDefault(), f.click()) : (c.preventDefault(), e ? b._.trigger(y.component.key.go, y, [b._.trigger(e)]) : y.$root.find("." + v.highlighted).hasClass(v.disabled) || y.set("select", y.component.item.highlight).close())
@@ -3608,7 +3608,7 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
                                     return b.push(k.month == a.month ? c.klass.infocus : c.klass.outfocus), h.pick == a.pick && b.push(c.klass.now), d && b.push(c.klass.selected), e && b.push(c.klass.highlighted), g && b.push(c.klass.disabled), b.join(" ")
                                 }([c.klass.day]), "data-pick=" + a.pick + " " + f.ariaAttr({
                                         role: "gridcell",
-                                        label: o,
+                                        title: o,
                                         selected: d && b.$node.val() === o ? !0 : null,
                                         activedescendant: e ? !0 : null,
                                         disabled: g ? !0 : null
