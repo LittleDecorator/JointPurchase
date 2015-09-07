@@ -60,6 +60,9 @@ public class ContentController{
                 object = new JSONObject();
                 object.put("url", Constants.PREVIEW_URL + content.getId());
                 object.put("id",content.getId());
+                object.put("isMain",itemContent.isMain());
+                object.put("isShown",itemContent.isShow());
+
                 array.add(object);
             }
         }
@@ -79,9 +82,27 @@ public class ContentController{
             jsonObject.put("url", Constants.GALLERY_URL+item.getContentId());
 //            jsonObject.put("url", Constants.ORIG_URL+item.getContentId());
             jsonObject.put("id", item.getContentId());
+            jsonObject.put("isMain", item.isMain());
+            jsonObject.put("isShown", item.isShow());
             array.add(jsonObject);
         }
         return array;
+    }
+
+    @RequestMapping(value = "/remove",method = RequestMethod.DELETE)
+    public void contentDelete(@RequestParam(value = "id", required = true) String itemImageId){
+        String contentId = itemContentMapper.selectByPrimaryKey(itemImageId).getContentId();
+        //delete link between content and item
+        itemContentMapper.deleteByPrimaryKey(itemImageId);
+        //delete content
+        contentMapper.deleteByPrimaryKey(contentId);
+    }
+
+    @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
+    public void setAsMain(@RequestParam(value = "id", required = true) String itemImageId){
+        ItemContent itemContent = itemContentMapper.selectByPrimaryKey(itemImageId);
+        itemContent.setMain(true);
+        itemContentMapper.updateByPrimaryKey(itemContent);
     }
 
 

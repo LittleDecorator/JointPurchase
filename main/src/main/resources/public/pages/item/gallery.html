@@ -5,58 +5,46 @@
         <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple=""/>
     </div>
 
-    <div class="row">
-        <div class="row">
+    <div class="row" style="padding-top: 20px">
             <div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" class="responsive-img z-depth-3 wp-post-image"/>
-                        <div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px">
-                            <i class="material-icons ">turned_in_not</i>
-                            <i class="material-icons ">call_made</i>
-                            <i class="material-icons ">clear</i>
-                        </div>
+                <div style="position: relative">
+                    <div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px; position: absolute; bottom: 5px; z-index: 500">
+                        <i class="material-icons" ng-class="{'main':image.isMain}" ng-click="toggleMain($event,image.id)" style="cursor: pointer;">{{image.isMain?'star':'star_border'}}</i>
+                        <i class="material-icons" ng-class="{'show':image.isShow}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;">done</i>
+                        <i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;">clear</i>
                     </div>
+                    <img ng-src="{{image.url}}" id="{{image.id}}" class="responsive-img z-depth-3 wp-post-image materialboxed"/>
                 </div>
-                <!--<img ng-src="{{image.url}}" id="{{image.id}}" ng-click="imageView(image.id)" class="responsive-img z-depth-3 wp-post-image"/>-->
             </div>
-        </div>
     </div>
 </div>
 
 <!-- ITEM IMAGE UPLOAD MODAL -->
-<div class="modal" title="Item Image" visible="showUpload" hide-footer="true" id="modal1">
-    <form role="form">
-        <div class="modal-content">
-            <div ng-repeat="item in uploader.queue" class="ng-scope">
-                <div class="row" style="border-bottom: 1px solid #ddd">
-
-                    <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }" class="col-sm-3">
-                        <canvas width="150" height="100"></canvas>
-                    </div>
-                    <div class="col-sm-9" style="height: 100px; border-left: 1px solid #ddd; margin-top: 5px; margin-bottom: 5px;">
-                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                            <span class="glyphicon glyphicon-trash"></span> Удалить
-                        </button>
-                    </div>
+<div class="modal modal-fixed-footer" title="Item Image" visible="showUpload" hide-footer="true" id="modal1">
+    <div class="modal-content" style="padding: 20px;">
+        <div ng-repeat="item in uploader.queue" class="ng-scope">
+            <div class="row" style="margin-bottom: 0">
+                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }" class="col s2">
+                    <canvas width="150" height="100"></canvas>
+                </div>
+                <div class="col s6">
+                    <span class="black-text">{{item.file.name}}</span>
+                </div>
+                <!--<div class="progress col s2" style="margin-bottom: 0;">
+                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                </div>-->
+                <div class="col s2">
+                    <span class="black-text">{{ item.file.size/1024/1024|number:2 }} MB</span>
+                </div>
+                <div class="col s2 valign-wrapper">
+                    <a style="cursor: pointer" class="valign waves-effect waves-green btn" ng-click="item.remove()" >Удалить</a>
                 </div>
             </div>
+            <div class="divider" ng-if="!$last"></div>
         </div>
-        <div class="modal-footer">
-            <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadFiles()" ng-show="uploader.queue.length>0">Загрузить</a>
-        </div>
-
-    </form>
+    </div>
+    <div class="modal-footer">
+        <!--<a style="cursor: pointer" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadFiles()" ng-show="uploader.queue.length>0">Загрузить</a>-->
+        <a style="cursor: pointer" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="uploadFiles()" ng-show="uploader.queue.length>0">Загрузить</a>
+    </div>
 </div>
-
-<!-- IMAGE MODAL DETAIL CONTENT BELOW -->
-<!--
-<modal title="Item Edit" visible="showImage">
-    <form role="form">
-        <div class="modal-body">
-            <div class="form-group">
-                <img ng-src="{{currentImage.content}}" class="image" />
-            </div>
-        </div>
-    </form>
-</modal>-->

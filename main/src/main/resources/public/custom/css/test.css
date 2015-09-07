@@ -1,3 +1,5 @@
+/* OLD VERSION */
+
 /*img:hover>div> .hiden-option{
     opacity: .6;
 }
@@ -14,29 +16,76 @@
     /!*-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";*!/
 }*/
 
-div.card-title:hover i.hiden-option{
+/* NEW VERSION */
+
+/*div.card-title:hover i.hiden-option{
     opacity: .7;
+}*/
+
+#materialbox-overlay{
+    opacity: .7!important;
 }
 
 .hiden-option {
-    opacity: 0;
+    opacity: 1;
+}
+
+.hiden-option > i.main,.hiden-option > i.show{
+    opacity: .9!important;
+    display: inline-block!important;
+    color: #88AAA9!important;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.45);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
 }
 
 div.hiden-option > i.material-icons{
     font-size: 35px;
+    opacity: 0;
 }
 
 div.hiden-option > i.material-icons:hover{
     font-size: 35px;
-    color: #846C63;
-    /*background-color: black;*/
+    color: #88AAA9;
+    opacity: .9;
+
+
+
 }
 
-.hiden-option:hover,img:hover~div{
-    opacity: 1;
-    color: #FFF2F2!important;
+.hiden-option:hover > i.material-icons{
+    opacity: .9;
+
     background: rgb(0, 0, 0);
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0);
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+}
+
+.hiden-option:hover{
+    opacity: .9;
+    color: #FFF2F2!important;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.45);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
 }

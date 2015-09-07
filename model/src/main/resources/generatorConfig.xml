@@ -34,7 +34,10 @@
 		<table tableName="company" />
 		<table tableName="item" />
 		<table tableName="item_owner" />
-		<table tableName="item_content" />
+		<table tableName="item_content" >
+			<columnOverride column="main" javaType="boolean" typeHandler="yn" />
+			<columnOverride column="show" javaType="boolean" typeHandler="yn" />
+		</table>
 		<table tableName="order_items" />
 		<table tableName="category" />
 		<table tableName="credential" />

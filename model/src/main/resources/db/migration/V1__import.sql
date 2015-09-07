@@ -126,6 +126,8 @@ create table item_content(
   id varchar(37) not null,
   item_id varchar(37) not null,
   content_id varchar(37) not null,
+  show char(1) not null default 'N' check(show in ('Y', 'N')),
+  main char(1) not null default 'N' check(main in ('Y', 'N')),
   primary key (id),
   foreign key (item_id) references item,
   foreign key (content_id) references content
