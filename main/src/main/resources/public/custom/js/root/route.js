@@ -13,7 +13,6 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    //base:true
                 }
             },
 
@@ -287,9 +286,7 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: true,
-                    //displayName:'{{ item.name }}',
-                    //base:false
+                    requireLogin: true
                 },
                 resolve: {
                     item: function($stateParams, resolveService) {
@@ -324,6 +321,19 @@ var route = {
                     //displayName: 'Поставщики',
                     requireLogin: true
                     //base:true
+                }
+            },
+            {
+                name: 'guides',
+                url: '/guides',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/guides.html',
+                        controller:'guideController'
+                    }
+                },
+                data: {
+                    requireLogin: false
                 }
             }
 

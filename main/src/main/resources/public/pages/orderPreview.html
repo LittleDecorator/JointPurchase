@@ -6,7 +6,8 @@
         <tbody>
             <tr ng-repeat="item in cart.content">
                 <td class="image">
-                    <img height="110" ng-src="{{item.url}}" class="materialboxed" />
+                    <!--<img height="110" ng-src="{{item.url}}" class="materialboxed" />-->
+                    <img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" class="materialboxed" />
                 </td>
                 <td class="name">
                     <h5><a href="products/dzhemper-myatno-rozovyj">{{item.name}}</a></h5>

@@ -17,9 +17,9 @@ var helpers = {
 
     findInArrayById: function(array,id){
         var res = {};
-        console.log(array);
+        //console.log(array);
         array.some(function(elem){
-            console.log(elem);
+            //console.log(elem);
             if(elem.id == id){
                 res = elem;
                 return true;
@@ -27,7 +27,7 @@ var helpers = {
                 return false;
             }
         });
-        console.log(res);
+        //console.log(res);
         return res;
     },
 
@@ -49,10 +49,10 @@ var helpers = {
     findRouteByName: function(name){
         var res = {};
         route.getRoutes().some(function(elem){
-            console.log(elem);
-            console.log(name);
+            //console.log(elem);
+            //console.log(name);
             if(elem.name === name){
-                console.log("match");
+                //console.log("match");
                 angular.extend(res,elem);
                 return true;
             } else {
@@ -78,7 +78,7 @@ var helpers = {
 
     toArray: function(obj){
         var array = $.map(obj, function(value, index) {
-            console.log(value);
+            //console.log(value);
             return [value];
         });
         return array;

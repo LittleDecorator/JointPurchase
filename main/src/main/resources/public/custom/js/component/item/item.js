@@ -14,7 +14,7 @@
             dataResources.companyMap.get(function(res){
                 $scope.companyNames = [];
                 angular.forEach(res, function (comp) {
-                    console.log(comp);
+                    //console.log(comp);
                     $scope.companyNames.push(comp);
                     if($scope.selected){
                         $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
@@ -25,7 +25,7 @@
             dataResources.categoryMap.get(function(res) {
                 $scope.categoryTypes=[];
                 angular.forEach(res, function (comp) {
-                    console.log(comp);
+                    //console.log(comp);
                     $scope.categoryTypes.push(comp);
                     if($scope.selected){
                         $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
@@ -67,6 +67,9 @@
                 //find category in category list for select
                 //$scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
             } else {
+
+
+
                 console.log("get all");
                 //get all items
                 dataResources.item.query(function (data) {

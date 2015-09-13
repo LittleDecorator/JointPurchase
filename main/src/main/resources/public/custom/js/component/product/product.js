@@ -111,7 +111,10 @@
             $scope.VIEW_URL = "media/image/view/";
             $scope.ORIG_URL = "media/image/";
 
-            if($scope.item.media.length>1){
+
+            console.log($scope);
+
+            if($scope.item.media.length>0){
                 $scope.mainImage = $scope.item.media[0];
                 //$scope.item.media.splice(0,1);
             }

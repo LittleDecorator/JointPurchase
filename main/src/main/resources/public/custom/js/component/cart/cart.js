@@ -16,11 +16,14 @@
             console.log("enter cart controller");
             $scope.showContent = false;
 
+            $scope.THUMB_URL = "media/image/thumb/";
+            $scope.ORIG_URL = "media/image/";
 
             if($scope.cart && $scope.cart.cou==0){
                 $scope.showContent = false;
                 console.log("NO ITEMS in CART")
             } else {
+                console.log($scope);
                 $scope.showContent = true;
                 $scope.orderItemsCou = $scope.cart.cou;
                 console.log($scope.orderItemsCou);
