@@ -54,6 +54,7 @@
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
                 categoryTree: $resource("/category/tree",{},{ get:{method:'GET',isArray:false}}),
+                categoryTypes:$resource("/category/types",{},{get:{method:'GET',isArray:true}}),
                 itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
                 itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
 

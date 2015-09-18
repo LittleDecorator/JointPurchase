@@ -75,7 +75,7 @@ create table purchase_order (
   foreign key (subject_id) references subject
 );
 
---категории товаров (дерево которое содержит также и подкатегорию)
+--категории товаров (дерево которое содержит также и подкатегорию) - меню
 create table category (
    id varchar(37) not null,
    name varchar(37) not null,
@@ -84,18 +84,35 @@ create table category (
    foreign key (parent_id) references category
 );
 
+--типы товаров
+create table type (
+  id varchar(37) not null,
+  name varchar(37) not null,
+  PRIMARY key (id)
+);
+
+--связь категорий и типов товара
+create table category_type(
+  id varchar(37) not null,
+  category_id varchar(37) not null,
+  type_id varchar(37) not null,
+  PRIMARY key (id),
+  foreign key (category_id) REFERENCES category,
+  FOREIGN key (type_id) REFERENCES type
+);
+
 -- таблица товара
 create table item (
   id varchar(37) not null,
   name varchar(255) not null,
   company_id varchar(37) not null,
-  category_id varchar(37) not null,
+  type_id varchar(37) not null,
   article varchar(30),
   description varchar(2000),
   price decimal(20,2) not null, --цена еденицы товара
   primary key (id),
   foreign key (company_id) references company,
-  foreign key (category_id) references category
+  foreign key (type_id) references type
 );
 
 -- таблица связи товара с добавляющим, для строгого разграничения кураторов товара

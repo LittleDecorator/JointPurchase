@@ -1,6 +1,6 @@
 package com.acme.service;
 
-import com.acme.gen.domain.Category;
+import com.acme.helper.CategoryTypeLink;
 import com.acme.model.domain.Node;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class TreeService {
     Node tree;
     List<Node> roots;
 
-    public Node generateCategoryTree(List<Category> list){
+    public Node generateCategoryTree(List<CategoryTypeLink> list){
         roots = new ArrayList<>();
         lookUp(list);
         if(roots.size()==1){
@@ -27,20 +27,20 @@ public class TreeService {
         return tree;
     }
 
-    private void lookUp(List<Category> list){
-        List<Category> nodes = new ArrayList<>(list);
-        for (Iterator<Category> iterator = nodes.iterator(); iterator.hasNext();) {
-            Category category = iterator.next();
+    private void lookUp(List<CategoryTypeLink> list){
+        List<CategoryTypeLink> nodes = new ArrayList<>(list);
+        for (Iterator<CategoryTypeLink> iterator = nodes.iterator(); iterator.hasNext();) {
+            CategoryTypeLink categoryTypeLink = iterator.next();
             //если попался корень
-            if(Strings.isNullOrEmpty(category.getParentId())){
-                roots.add(category2Node(category));
+            if(Strings.isNullOrEmpty(categoryTypeLink.getParentId())){
+                roots.add(category2Node(categoryTypeLink));
                 iterator.remove();
             } else {
                 //ищем родителя в корнях
                 for(Node node: roots){
-                    Node res = findNode(node,category.getParentId());
+                    Node res = findNode(node,categoryTypeLink.getParentId());
                     if(res!=null){
-                        res.getNodes().add(category2Node(category));
+                        res.getNodes().add(category2Node(categoryTypeLink));
                         iterator.remove();
                     }
                 }
@@ -51,8 +51,8 @@ public class TreeService {
         }
     }
 
-    private Node category2Node(Category category){
-        return new Node(category.getId(),category.getName());
+    private Node category2Node(CategoryTypeLink category){
+        return new Node(category.getId(),category.getName(),category.getTypes());
     }
 
 /*

@@ -40,6 +40,8 @@
 		</table>
 		<table tableName="order_items" />
 		<table tableName="category" />
+		<table tableName="type" />
+		<table tableName="category_type" />
 		<table tableName="credential" />
 	</context>
 </generatorConfiguration>

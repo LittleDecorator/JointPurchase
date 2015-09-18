@@ -12,6 +12,9 @@
             $scope.tree = {};
 
             $scope.selected = null;
+            $scope.selectedCategoryType = null;
+            $scope.selectedType = null;
+
             $scope.selectedCopy = null;
             $scope.newCategory = "";
             var newCategoryList=[];
@@ -21,9 +24,36 @@
                 $scope.tree.expand_all();
             });
 
+            $scope.types = dataResources.categoryTypes.get();
+
+            $scope.storeType = function(type){
+                $scope.selectedType=type;
+                console.log($scope.selectedType);
+            };
+
+            $scope.storeCategoryType = function(type){
+                $scope.selectedCategoryType=type;
+                console.log($scope.selectedCategoryType);
+            };
+
+            $scope.addType = function(){
+                $scope.selected.types.push(angular.copy($scope.selectedType));
+                console.log($scope.selected.types);
+            };
+
+            $scope.removeType = function(){
+                var idx = $scope.selected.types.indexOf($scope.selectedCategoryType);
+                $scope.selected.types.splice(idx,1);
+                console.log($scope.selected.types);
+            };
+
             $scope.treeHandler = function(branch) {
                 $scope.selected = branch;
                 $scope.selectedCopy = angular.copy(branch);
+                //check if we have any type in category
+                /*if($scope.selected.types.length==0){
+                    $scope.selected.types.push({name:'&#160'})
+                }*/
             };
 
             $scope.edit = function(){
@@ -77,7 +107,6 @@
             $scope.addAsRoot = function() {
                 $scope.add({});
             };
-
 
         }]);
 })();

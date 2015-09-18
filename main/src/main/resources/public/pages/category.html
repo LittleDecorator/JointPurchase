@@ -27,7 +27,28 @@
                         <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
                     </div>
 
-                    <div style="padding-top: 10%">
+                    <div class="section" ng-if="selected!=null">
+                        <div class="row">
+                            <div class="col l12">
+                                <div class="col l4 s12">
+                                    <div class="collection">
+                                        <a class="collection-item" ng-repeat="type in selected.types" ng-click="storeCategoryType(type)" style="cursor: pointer">{{type.name}}</a>
+                                    </div>
+                                </div>
+                                <div class="col l1 s12" style="padding-top: 5%;">
+                                    <i class="material-icons" ng-click="addType()" style="cursor: pointer">arrow_back</i>
+                                    <i class="material-icons" ng-click="removeType()" style="cursor: pointer">arrow_forward</i>
+                                </div>
+                                <div class="col l4 s12">
+                                    <div class="collection">
+                                        <a class="collection-item" ng-repeat="type in types" ng-click="storeType(type)" style="cursor: pointer">{{type.name}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
                         <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>
                     </div>
                 </div>

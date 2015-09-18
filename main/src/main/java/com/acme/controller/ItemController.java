@@ -139,7 +139,7 @@ public class ItemController{
             criteria.andCompanyIdEqualTo(company);
         }
         if(!Strings.isNullOrEmpty(category)){
-            criteria.andCategoryIdEqualTo(category);
+            criteria.andTypeIdEqualTo(category);
         }
         if(!Strings.isNullOrEmpty(article)){
             criteria.andArticleLike(article);
@@ -247,7 +247,7 @@ public class ItemController{
         //TODO: use this category list down here
 //        List<String> list = customMapper.getSubCategoryLeafs(categoryId);
 //        System.out.println(list);
-        itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
+        itemExample.createCriteria().andTypeIdIn(customMapper.getSubCategoryLeafs(categoryId));
 
         List<Item> items = itemMapper.selectByExample(itemExample);
         for(Item item : items){

@@ -32,87 +32,116 @@ insert into credential(subject_id,password,role_id)
 
 /* CATEGORY */
 insert into category(id,name)
-        values ('ce449af7-6ef5-4457-9ecc-9abb40e9044c','Деревянные игрушки');
+        values ('ce449af7-6ef5-4457-9ecc-9abb40e9044c','Малышам (первые игрушки)');
 insert into category(id,name,parent_id)
-        values ('8318fcf0-5885-462b-abf5-6916f273f86b','Кубики','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+        values ('8318fcf0-5885-462b-abf5-6916f273f86b','Мобили погремушки грызунки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('7dab5183-219d-436a-9aa2-8a576596d9fc','Шумелки и Хваталки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+        values ('7dab5183-219d-436a-9aa2-8a576596d9fc','Каталки, машинки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('8ae88b67-02e1-4b29-98b8-e5c8df2cab9b','Шумелки','7dab5183-219d-436a-9aa2-8a576596d9fc');
+        values ('876d17c2-647c-4b00-9f5e-195d5e57b0b7','Пирамидки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('c947b8fb-dd0c-45fc-a735-d2c80f99dfac','Хваталки','7dab5183-219d-436a-9aa2-8a576596d9fc');
+        values ('259a8b87-358a-44f3-8878-9fb53437921c','Первые кубики','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('8c460c13-449e-44e2-a577-00acc7d86f09','Пробудить Любопытство','7dab5183-219d-436a-9aa2-8a576596d9fc');
+        values ('d400fe53-8918-4ece-821b-07c9cd5932f8','Куколки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('6c34bb23-9702-41ec-a4b4-506616c3e0aa','Животные и Транспорт','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+        values ('a00ce058-a855-407c-ac37-641f8f46fa43','Сортеры','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
 insert into category(id,name,parent_id)
-        values ('4171ca0f-db80-42c1-8dd1-4a0bc2bfdbdc','Каталки','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
+        values ('bd1c8d73-d3a5-476b-a116-4321e058332a','Творчество','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+
+insert into category(id,name)
+        values ('8ae88b67-02e1-4b29-98b8-e5c8df2cab9b','Строительные наборы');
 insert into category(id,name,parent_id)
-        values ('b89b3849-6a19-44e0-9d7c-f97170bbfff2','Движущиеся животные','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
+        values ('7b5ba523-0128-4619-97e3-0b8bb44d1d37','Первые кубики','7dab5183-219d-436a-9aa2-8a576596d9fc');
 insert into category(id,name,parent_id)
-        values ('2f01a4b9-f145-4321-a63d-ff2915817291','Транспорт','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
+        values ('34a56bf2-f7b5-4649-b087-cf1b34c5e739','Большие конструкторы','7dab5183-219d-436a-9aa2-8a576596d9fc');
 insert into category(id,name,parent_id)
-        values ('f1d3d600-3206-40e8-89bd-48f0ad58f4b0','Лошади и Повозки','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
+        values ('39b79b6f-095c-4d5b-a861-fbd1c7dd4770','Настольные конструкторы','7dab5183-219d-436a-9aa2-8a576596d9fc');
 insert into category(id,name,parent_id)
-        values ('4fe67e25-6557-41a8-b59d-187e19f121b2','Куклы и Наряжайки','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+        values ('ed7cffb0-dbd4-420a-a1f6-15425fd1585f','Наборы "Фэнтэзи" и неправильные формы','7dab5183-219d-436a-9aa2-8a576596d9fc');
 insert into category(id,name,parent_id)
-        values ('cd564aa1-d3d6-4761-94f9-31ace8394c3c','Куклы','4fe67e25-6557-41a8-b59d-187e19f121b2');
+        values ('15226981-a954-40a0-9763-89c6dbdf6884','Большие мозаики','7dab5183-219d-436a-9aa2-8a576596d9fc');
 insert into category(id,name,parent_id)
-        values ('f679c54c-bd8d-4e5c-9a8d-f9e2a546d096','Кукольные семьи','4fe67e25-6557-41a8-b59d-187e19f121b2');
+        values ('2c6f60b6-a289-47a7-8557-134c32b026e0','Маленькие мозаики','7dab5183-219d-436a-9aa2-8a576596d9fc');
+
+insert into category(id,name)
+        values ('6c34bb23-9702-41ec-a4b4-506616c3e0aa','Бусины');
 insert into category(id,name,parent_id)
-        values ('9ac57c37-3914-473d-bdfa-9dd7724b0796','Кукольные дома','4fe67e25-6557-41a8-b59d-187e19f121b2');
+        values ('4171ca0f-db80-42c1-8dd1-4a0bc2bfdbdc','Бусины','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
 insert into category(id,name,parent_id)
-        values ('3d021e55-4c08-4b93-95eb-9db447ea3cee','Мебель','4fe67e25-6557-41a8-b59d-187e19f121b2');
+        values ('b89b3849-6a19-44e0-9d7c-f97170bbfff2','Диски','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
 insert into category(id,name,parent_id)
-        values ('74e92d18-007e-4896-96b3-0d11c21279cb','Шелк','4fe67e25-6557-41a8-b59d-187e19f121b2');
+        values ('2f01a4b9-f145-4321-a63d-ff2915817291','Ожерелье','6c34bb23-9702-41ec-a4b4-506616c3e0aa');
+
+
+insert into category(id,name)
+        values ('4fe67e25-6557-41a8-b59d-187e19f121b2','Транспорт');
 insert into category(id,name,parent_id)
-        values ('4e09566a-73a4-4274-8681-fafa52e6fa9b','Складывание и Сортировка','ce449af7-6ef5-4457-9ecc-9abb40e9044c');
+        values ('cd564aa1-d3d6-4761-94f9-31ace8394c3c','Машинки, поезда, лодки','4fe67e25-6557-41a8-b59d-187e19f121b2');
 insert into category(id,name,parent_id)
-        values ('e88d2030-a352-448f-bad4-0996880302a5','Складывание','4e09566a-73a4-4274-8681-fafa52e6fa9b');
+        values ('f679c54c-bd8d-4e5c-9a8d-f9e2a546d096','Лошади и повозки','4fe67e25-6557-41a8-b59d-187e19f121b2');
+
+insert into category(id,name)
+        values ('4e09566a-73a4-4274-8681-fafa52e6fa9b','Домики и куклы');
+insert into category(id,name,parent_id)
+        values ('9ac57c37-3914-473d-bdfa-9dd7724b0796','Первые куклы','4e09566a-73a4-4274-8681-fafa52e6fa9b');
+insert into category(id,name,parent_id)
+        values ('3d021e55-4c08-4b93-95eb-9db447ea3cee','Куклы','4e09566a-73a4-4274-8681-fafa52e6fa9b');
+insert into category(id,name,parent_id)
+        values ('74e92d18-007e-4896-96b3-0d11c21279cb','Домики и мебель','4e09566a-73a4-4274-8681-fafa52e6fa9b');
+
+insert into category(id,name)
+        values ('0e7b3010-74cd-4f93-acd5-ecc883737828','Фигурки для сюжетных и ролевых игр');
+insert into category(id,name,parent_id)
+        values ('f1d3d600-3206-40e8-89bd-48f0ad58f4b0','Животные и птицы','0e7b3010-74cd-4f93-acd5-ecc883737828');
+insert into category(id,name,parent_id)
+        values ('e88d2030-a352-448f-bad4-0996880302a5','Деревья','0e7b3010-74cd-4f93-acd5-ecc883737828');
+insert into category(id,name,parent_id)
+        values ('cfe35ede-468b-4ded-9bce-d0ebf7efca74','Люди, сказочные персонажи','0e7b3010-74cd-4f93-acd5-ecc883737828');
+insert into category(id,name,parent_id)
+        values ('757ab974-d336-4c5c-9f4e-48f88509e875','Игровой шёлк','0e7b3010-74cd-4f93-acd5-ecc883737828');
+insert into category(id,name,parent_id)
+        values ('02d4a7ad-efc6-4616-8de7-e6a386ac685f','Аксессуары','0e7b3010-74cd-4f93-acd5-ecc883737828');
+
+insert into category(id,name)
+        values ('1f8d4232-01d2-473d-ba44-4a61b1e408c3','Учимся играя');
+insert into category(id,name,parent_id)
+        values ('e38e77a8-afe8-4a65-bc8e-342731d303ee','Буквы, цифры','1f8d4232-01d2-473d-ba44-4a61b1e408c3');
+insert into category(id,name,parent_id)
+        values ('8470062a-7521-4a14-a916-845f1b1f4422','Игры, головоломки','1f8d4232-01d2-473d-ba44-4a61b1e408c3');
+insert into category(id,name,parent_id)
+        values ('fd78f25e-b1cf-4b07-8b44-89e08140abe6','Карточки','1f8d4232-01d2-473d-ba44-4a61b1e408c3');
+
+insert into category(id,name)
+        values ('a597eaa5-b74a-45ef-af60-18c7c7d3e140','Любимые книги');
+insert into category(id,name,parent_id)
+        values ('a9c1f075-658d-41d8-a721-5d302f880f44','Виммельбуки','a597eaa5-b74a-45ef-af60-18c7c7d3e140');
+insert into category(id,name,parent_id)
+        values ('049f1393-3454-4dd1-ae50-82fa6cc329c0','Книги на простом языке','a597eaa5-b74a-45ef-af60-18c7c7d3e140');
+insert into category(id,name,parent_id)
+        values ('9c70fde0-86b3-4aab-9fe8-b1b22515697b','Открытки','a597eaa5-b74a-45ef-af60-18c7c7d3e140');
+
+insert into type(id,name)
+        values ('9c70fde0-86b3-4aab-9fe8-b1b22515697b','Сортёр');
+insert into type(id,name)
+        values ('049f1393-3454-4dd1-ae50-82fa6cc329c0','Книга');
+insert into type(id,name)
+        values ('a9c1f075-658d-41d8-a721-5d302f880f44','Кубики');
 
 /* ITEMS */
-insert into item(id,name,company_id,category_id,price)
-        values ('622323dd-00eb-4a94-b7f0-31b91d91fefa', 'Кубики «Алфавит» английский','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',150);
-insert into item(id,name,company_id,category_id,price)
-        values ('1a05535f-c373-404d-9117-e920792cecf0', 'Кубики «Алфавит» русский','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',150);
-insert into item(id,name,company_id,category_id,price)
-        values ('23f9a890-525e-401d-9499-cd51dedc4103', 'Кубики «Цифры»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',150);
-insert into item(id,name,company_id,category_id,price)
-        values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',200);
+insert into item(id,name,company_id,type_id,price)
+        values ('622323dd-00eb-4a94-b7f0-31b91d91fefa', 'Кубики «Алфавит» английский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150);
+insert into item(id,name,company_id,type_id,price)
+        values ('1a05535f-c373-404d-9117-e920792cecf0', 'Кубики «Алфавит» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150);
+insert into item(id,name,company_id,type_id,price)
+        values ('23f9a890-525e-401d-9499-cd51dedc4103', 'Кубики «Цифры»','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150);
+insert into item(id,name,company_id,type_id,price)
+        values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',200);
 
-insert into item(id,name,company_id,category_id,description,price)
-        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);
-insert into item(id,name,company_id,category_id,price)
-        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',1650);
-insert into item(id,name,company_id,category_id,description,price)
-        values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5','The large Rainbow is really versatile and ideal already for small children! Toddlers stack, sort and build and as the children get older they will use it as a cradle for dolls, as fence for animals, like a tunnel or bridge for vehicles, as house for dwarfs and dollhouse dolls, build amazing sculptures... this rainbow will always be integrated in playing with a lot of fantasy. Materials: lime wood, non-toxic water based color stain. Size: length 38cm, height 18cm.',3500);
-insert into item(id,name,company_id,category_id,price)
-        values ('6a20e159-7951-4f65-88f8-3b5696e411fd', 'Радуга (6 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','e88d2030-a352-448f-bad4-0996880302a5',2000);
-/*insert into item(id,name,company_id,category_id,price)
-        values ('bd55b526-a698-41f9-8bf4-85fc8eb061f9', 'Кубики «Сложи рисунок: животные»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
-insert into item(id,name,company_id,category_id,price)
-        values ('2d808a5c-cbec-4481-a273-9127c8caa326', 'Кубики «Сложи рисунок: Фрукты-ягоды»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
-insert into item(id,name,company_id,category_id,price)
-        values ('5e5ec03d-c084-430e-93dc-3571600cfa87', 'Кубики «Сложи рисунок: игрушки»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
-insert into item(id,name,company_id,category_id,price)
-        values ('99085e3e-3f6e-4ccd-9c12-81c4ada6c161', 'Кубики «Сложи рисунок: посуда»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
-insert into item(id,name,company_id,category_id,price)
-        values ('ab5333b1-2b57-4c6f-9ca0-43dc251a79aa', 'Кубики «Сложи рисунок: мебель»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);
-insert into item(id,name,company_id,category_id,price)
-        values ('846ffe25-bc3a-4188-8ef1-be6c3e9e04e3', 'Кубики «Сложи рисунок: овощи»','5e895423-3d9d-4415-a136-558762e7ac02','8318fcf0-5885-462b-abf5-6916f273f86b',90);*/
-
-/* ORDERS */
--- insert into purchase_order(id,subject_id,payment,comment)
---         values ('f266904c-ecc7-4b8b-97d6-ef61571cde66','test',350,'test purchase');
--- insert into purchase_order(id,subject_id,payment,comment)
---         values ('ad7d2c80-fb59-4968-9862-a10282a5477d','test',1350,'another test purchase');
-
-/* ORDER_ITEMS */
--- insert into order_items(id,order_id,item_id,cou)
---         values ('074a766a-cf0b-4666-94fb-ffad98a4dcdf','f266904c-ecc7-4b8b-97d6-ef61571cde66','622323dd-00eb-4a94-b7f0-31b91d91fefa',1);
--- insert into order_items(id,order_id,item_id,cou)
---         values ('a7cbd408-b108-4b3b-8b6e-434f8be0da07','f266904c-ecc7-4b8b-97d6-ef61571cde66','1a05535f-c373-404d-9117-e920792cecf0',1);
--- insert into order_items(id,order_id,item_id,cou)
---         values ('8846694c-6c74-481b-bdda-9120d6f8c0b9','f266904c-ecc7-4b8b-97d6-ef61571cde66','23f9a890-525e-401d-9499-cd51dedc4103',1);
--- insert into order_items(id,order_id,item_id,cou)
---         values ('64a72ecd-7fc1-40b8-b89f-46554479a253','f266904c-ecc7-4b8b-97d6-ef61571cde66','91972e13-1983-4a74-9b48-c8e4909dd324',1);
+insert into item(id,name,company_id,type_id,description,price)
+        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);
+insert into item(id,name,company_id,type_id,price)
+        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b',1650);
+insert into item(id,name,company_id,type_id,description,price)
+        values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b','The large Rainbow is really versatile and ideal already for small children! Toddlers stack, sort and build and as the children get older they will use it as a cradle for dolls, as fence for animals, like a tunnel or bridge for vehicles, as house for dwarfs and dollhouse dolls, build amazing sculptures... this rainbow will always be integrated in playing with a lot of fantasy. Materials: lime wood, non-toxic water based color stain. Size: length 38cm, height 18cm.',3500);
+insert into item(id,name,company_id,type_id,price)
+        values ('6a20e159-7951-4f65-88f8-3b5696e411fd', 'Радуга (6 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b',2000);
