@@ -274,7 +274,6 @@ public class ItemController{
         return jsonArray;
     }
 
-
     class ItemView implements Serializable{
         Item item;
         int totalInStock;

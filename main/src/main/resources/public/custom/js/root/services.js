@@ -105,9 +105,13 @@
             this.getItem = function(id){
                 console.log("in resolver -> get item");
                 var deferred = $q.defer();
-                dataResources.item.get({id:id},function(data){
-                    deferred.resolve(data);
-                });
+                if(id){
+                    dataResources.item.get({id:id},function(data){
+                        deferred.resolve(data);
+                    });
+                } else {
+                    deferred.resolve(null);
+                }
                 return deferred.promise;
             };
 
