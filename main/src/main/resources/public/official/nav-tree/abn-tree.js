@@ -7,7 +7,8 @@
         '$timeout', function($timeout) {
             return {
                 restrict: 'E',
-                template: "<ul class=\"nav nav-list nav-pills nav-stacked abn-tree\">\n  <li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\">\n    <a ng-click=\"user_clicks_branch(row.branch)\">\n      <i ng-class=\"row.tree_icon\" ng-click=\"row.branch.expanded = !row.branch.expanded\" class=\"indented tree-icon\"> </i>\n      <span class=\"indented tree-label\">{{ row.title }} </span>\n    </a>\n  </li>\n</ul>",
+                //template: "<ul class=\"nav nav-list nav-pills nav-stacked abn-tree\">\n  <li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\" ng-click=\"user_clicks_branch(row.branch)\">\n    <a ng-click=\"user_clicks_branch(row.branch)\">\n      <i ng-class=\"row.tree_icon\" ng-click=\"row.branch.expanded = !row.branch.expanded\" class=\"indented tree-icon\"> </i>\n      <span class=\"indented tree-label\">{{ row.title }} </span>\n    </a>\n  </li>\n</ul>",
+                template: "<ul class=\"nav nav-list nav-pills nav-stacked abn-tree\">\n  <li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\" ng-click=\"user_clicks_branch(row.branch)\">\n    <a>\n      <i ng-class=\"row.tree_icon\" ng-click=\"row.branch.expanded = !row.branch.expanded\" class=\"indented tree-icon\"> </i>\n      <span class=\"indented tree-label\">{{ row.title }} </span>\n    </a>\n  </li>\n</ul>",
                 replace: true,
                 scope: {
                     treeData: '=',
@@ -36,6 +37,7 @@
                         attrs.expandLevel = '3';
                     }
                     expand_level = parseInt(attrs.expandLevel, 10);
+                    console.log(scope.treeData);
                     if (!scope.treeData) {
                         alert('no treeData defined for the tree!');
                         return;
@@ -48,6 +50,7 @@
                             return;
                         }
                     }
+
                     for_each_branch = function(f) {
                         var do_f, root_branch, _i, _len, _ref, _results;
                         do_f = function(branch, level) {
@@ -71,7 +74,9 @@
                         }
                         return _results;
                     };
+
                     selected_branch = null;
+
                     select_branch = function(branch) {
                         if (!branch) {
                             if (selected_branch != null) {
@@ -102,12 +107,14 @@
                             }
                         }
                     };
+
                     scope.user_clicks_branch = function(branch) {
                         console.log(branch);
                         if (branch !== selected_branch) {
                             return select_branch(branch);
                         }
                     };
+
                     get_parent = function(child) {
                         var parent;
                         parent = void 0;
@@ -141,7 +148,7 @@
                                 return b.uid = "" + Math.random();
                             }
                         });
-                        console.log('UIDs are set.');
+
                         for_each_branch(function(b) {
                             var child, _i, _len, _ref, _results;
                             if (angular.isArray(b.nodes)) {
@@ -224,7 +231,9 @@
                         }
                         return _results;
                     };
+
                     scope.$watch('treeData', on_treeData_change, true);
+
                     if (attrs.initialSelection != null) {
                         for_each_branch(function(b) {
                             if (b.title === attrs.initialSelection) {
@@ -235,11 +244,15 @@
                         });
                     }
                     n = scope.treeData.length;
+
+                    console.log(scope.treeData);
+
                     console.log('num root branches = ' + n);
                     for_each_branch(function(b, level) {
                         b.level = level;
                         return b.expanded = b.level < expand_level;
                     });
+
                     if (scope.treeControl != null) {
                         if (angular.isObject(scope.treeControl)) {
                             tree = scope.treeControl;

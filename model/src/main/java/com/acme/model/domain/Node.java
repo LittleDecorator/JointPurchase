@@ -60,4 +60,13 @@ public class Node implements Serializable {
     public boolean haveChildren(){
         return (nodes!=null && nodes.size()>0);
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", types=" + types +
+                '}';
+    }
 }

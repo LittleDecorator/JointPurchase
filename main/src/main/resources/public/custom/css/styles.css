@@ -261,3 +261,14 @@ input.search {
 footer.page-footer {
     margin: 0;
 }
+
+
+/* types */
+
+div.collection a:hover{
+    background-color: #E0BB8E!important;
+}
+
+div.collection a.active{
+    background-color: #ddd!important;
+}

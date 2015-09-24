@@ -12,19 +12,12 @@ import java.util.List;
 @Service
 public class TreeService {
 
-    Node tree;
     List<Node> roots;
 
-    public Node generateCategoryTree(List<CategoryTypeLink> list){
+    public List<Node> generateCategoryTree(List<CategoryTypeLink> list){
         roots = new ArrayList<>();
         lookUp(list);
-        if(roots.size()==1){
-            tree = roots.get(0);
-        } else {
-            tree = new Node();
-            tree.getNodes().addAll(roots);
-        }
-        return tree;
+        return roots;
     }
 
     private void lookUp(List<CategoryTypeLink> list){
@@ -54,16 +47,6 @@ public class TreeService {
     private Node category2Node(CategoryTypeLink category){
         return new Node(category.getId(),category.getName(),category.getTypes());
     }
-
-/*
-    private List<Node> category2Node(List<Category> list){
-        List<Node> nodes = new ArrayList<>();
-        for(Category c : list){
-            nodes.add(new Node(c.getId(),c.getName()));
-        }
-        return nodes;
-    }
-*/
 
     private Node findNode(Node node, String id){
         Node res = null;

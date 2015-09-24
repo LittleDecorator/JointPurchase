@@ -1,0 +1,16 @@
+<ul id="side-mobile" class="side-nav fixed sidebart slide-outt">
+    <li ng-class="{'no-padding':menu.nodes.length>0}" ng-repeat="menu in nodes" >
+        <a ng-if="menu.nodes.length==0" class="waves-effect waves-teal menu-up-lvl">{{menu.title}}</a>
+
+        <ul class="collapsible collapsible-accordion" ng-if="menu.nodes.length>0">
+            <li><a class="collapsible-header waves-effect waves-teal menu-up-lvl">{{menu.title}}<i class="material-icons" style="float: right;margin-right: 0px">keyboard_arrow_right</i></a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li ng-repeat="menu in menu.nodes" style="cursor: pointer"><a>{{menu.title}}</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <!--<li><a href="http://materializecss.com/mobile.html" class="waves-effect waves-teal menu-up-lvl">ПРОИЗВОДИТЕЛИ</a></li>-->
+</ul>

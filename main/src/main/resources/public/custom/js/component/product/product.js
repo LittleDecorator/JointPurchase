@@ -6,7 +6,7 @@
     'use strict';
 
     angular.module('product')
-        .controller('productController', ['$scope', '$state','dataResources',function ($scope, $state, dataResources) {
+        .controller('productController', ['$scope', '$state','dataResources','$timeout',function ($scope, $state, dataResources,$timeout) {
             console.log("Enter Product controller");
 
             $scope.data = [];
@@ -96,7 +96,10 @@
             })
         };
 
-            $(".collapsible").collapsible();
+           $timeout(function() {
+                console.log("DONE!");
+                $(".collapsible").collapsible();
+            }, 300);
 
     }])
 

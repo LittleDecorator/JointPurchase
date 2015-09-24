@@ -152,9 +152,16 @@
             //init and restore cart content
             $scope.initCart();
 
+                dataResources.categoryMenu.get(function(data){
+                    console.log(data);
+                    $scope.nodes= data;
+
+                    /* на всякий случай */
+                    $(".collapsible").collapsible();
+                });
+
             console.log($scope);
 
-
-
         }]);
+
 })();

@@ -3,6 +3,7 @@ package com.acme.controller;
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.CategoryMapper;
 import com.acme.gen.mapper.CategoryTypeMapper;
+import com.acme.gen.mapper.CompanyMapper;
 import com.acme.gen.mapper.TypeMapper;
 import com.acme.helper.CategoryTypeLink;
 import com.acme.model.domain.Node;
@@ -10,10 +11,9 @@ import com.acme.service.TreeService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.*;
 
 @RestController
@@ -32,6 +32,9 @@ public class CategoryController {
     @Autowired
     TypeMapper typeMapper;
 
+    @Autowired
+    CompanyMapper companyMapper;
+
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String, String>> getCategoryMap() {
         List<Map<String,String>> list = new ArrayList<>();
@@ -47,7 +50,9 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
-    public Node getCategoryTree(){
+//    public Node getCategoryTree(){
+        public List<Node> getCategoryTree(){
+
         List<CategoryTypeLink> links = new ArrayList<>();
         CategoryTypeLink link;
         List<String> list = Lists.newArrayList();
@@ -90,8 +95,52 @@ public class CategoryController {
         return treeService.generateCategoryTree(links);
     }
 
+    @RequestMapping(method = RequestMethod.POST,value = "/tree")
+    public List<Node> saveCategoryTree(@RequestBody String obj){
+        return null;
+    }
+
+    /* get all types */
     @RequestMapping(method = RequestMethod.GET,value = "/types")
     public List getAllTypes(){
         return typeMapper.selectByExample(new TypeExample());
+    }
+
+    /* update or insert type */
+    @RequestMapping(method = RequestMethod.POST,value = "/types")
+    public Type addType(@RequestBody Type type){
+        if(!Strings.isNullOrEmpty(type.getId())){
+            typeMapper.updateByPrimaryKey(type);
+        } else {
+            typeMapper.insertSelective(type);
+        }
+        return type;
+    }
+
+    /* delete type */
+    @RequestMapping(method = RequestMethod.DELETE,value = "/types/{id}")
+    public void addType(@PathVariable("id") String id){
+        typeMapper.deleteByPrimaryKey(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/side/menu")
+    public List<Node> getSideMenuContent(){
+        //fill with categories
+        List<Node> nodes = getCategoryTree();
+        //add companies
+
+        //create root company node
+        Node rootCompany = new Node();
+        rootCompany.setTitle("Производители");
+        //add child companies
+        Node node;
+        for(Company company : companyMapper.selectByExample(new CompanyExample())){
+            node = new Node();
+            node.setTitle(company.getName());
+            node.setId(company.getId());
+            rootCompany.getNodes().add(node);
+        }
+        nodes.add(rootCompany);
+        return nodes;
     }
 }

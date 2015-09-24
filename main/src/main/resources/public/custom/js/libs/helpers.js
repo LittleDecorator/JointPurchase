@@ -1,4 +1,26 @@
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
 var helpers = {
+
+    isEmptyObject: function(obj) {
+
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+    },
 
     dateFormat : function(dateMilliseconds) {
         var YYYY, M, D,MM,DD, h,hh, m,mm, s,ss;
@@ -62,6 +84,8 @@ var helpers = {
         return res;
     },
 
+
+
     isEmpty: function(ob) {
         for (var i in ob) {
             return false;
@@ -92,6 +116,23 @@ var helpers = {
         }
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
             s4() + '-' + s4() + s4() + s4();
+    },
+
+    filterArray: function(src, filt) {
+        //console.log("IT WORK INCORRECT. REPAIR IT!!!!!!!!!!!!!!!!!!");
+        var temp = {}, i, result = [];
+        // load contents of filt into object keys for faster lookup
+        for (i = 0; i < filt.length; i++) {
+            temp[filt[i].id] = true;
+        }
+
+        // go through src
+        for (i = 0; i < src.length; i++) {
+            if (!(src[i].id in temp)) {
+                result.push(src[i]);
+            }
+        }
+        return(result);
     }
 
 };

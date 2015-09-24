@@ -7000,6 +7000,8 @@ select {
 .side-nav.fixed {
     /*left: 0;*/
     /*position: fixed; */
+    padding-bottom: 80px;
+    height: 100%;
 }
 .side-nav.fixed.right-aligned {
     right: 0;

@@ -10,9 +10,49 @@
             $('ul.tabs').tabs();
         })
 
-        .controller('typeController',function(){
+        .controller('typeController',['$scope','dataResources',function($scope,dataResources){
 
-        })
+            $scope.current = {type :null};
+            $scope.types = [];
+
+            dataResources.categoryTypes.get(function(result) {
+                angular.forEach(result, function (node) {
+                    $scope.types.push(node);
+                });
+            });
+
+            //select type element
+            $scope.select = function(idx){
+                $scope.current.type = angular.copy($scope.types[idx]);
+                $('a').removeClass('active');
+                $('#'+$scope.types[idx].id).addClass('active');
+
+            };
+
+            /* on client only */
+            $scope.edit = function(){
+                var orig = helpers.findInArrayById($scope.types,$scope.current.type.id);
+                orig.name = $scope.current.type.name;
+                dataResources.categoryTypes.update(orig);
+            };
+
+            /* work only on client */
+            $scope.delete = function(){
+                var orig = helpers.findInArrayById($scope.types,$scope.current.type.id);
+                var idx = $scope.types.indexOf(orig);
+                $scope.types.splice(idx,1);
+                dataResources.categoryTypes.delete({id: orig.id});
+            };
+
+            /* use db for generate */
+            $scope.add = function() {
+                var copy = angular.copy($scope.current.type);
+                dataResources.categoryTypes.update(copy, function(data){
+                    $scope.current.type = angular.copy(data);
+                    $scope.types.push(data);
+                });
+            };
+        }])
 
         .controller('categoryController',['$scope','dataResources',function($scope,dataResources){
 
@@ -20,22 +60,57 @@
             $scope.tree = {};
 
             $scope.selected = null;
+            $scope.types = [];
+            $scope.filteredTypes = [];
             $scope.selectedCopy = null;
             $scope.newCategory = "";
-            var newCategoryList=[];
+
+            var newCategoryList=[],editCategoryList=[],deleteCategoryList=[];
 
             dataResources.categoryTree.get(function(result){
-                $scope.categories.push(result);
+                angular.forEach(result, function (node) {
+                    $scope.categories.push(node);
+                });
                 $scope.tree.expand_all();
             });
 
+            dataResources.categoryTypes.get(function(data){
+                angular.forEach(data,function(rec){
+                    console.log(rec);
+                    $scope.types.push(rec);
+                });
+            });
+
+            //filter total array
             $scope.treeHandler = function(branch) {
+                console.log(branch);
                 $scope.selected = branch;
                 $scope.selectedCopy = angular.copy(branch);
+                $scope.filteredTypes = helpers.filterArray($scope.types,$scope.selected.types);
+
             };
 
             $scope.edit = function(){
+                console.log($scope.selected.title);
+
                 $scope.selected.title = $scope.selectedCopy.title;
+
+                //check branch in new list
+                var b = helpers.findInArrayById(newCategoryList,$scope.selectedCopy.id);
+
+                if(!helpers.isEmptyObject(b)){
+                    console.log(b.title);
+                    b.title = $scope.selected.title;
+                    console.log(b.title);
+                } else {
+                    //check in edit list
+                    var e = helpers.findInArrayById(editCategoryList,$scope.selectedCopy.id);
+                    if(!helpers.isEmptyObject(e)){
+                        e.title = $scope.selected.title;
+                    } else {
+                        editCategoryList.push($scope.selected);
+                    }
+                }
             };
 
             $scope.delete = function(){
@@ -43,15 +118,26 @@
                 var parent = $scope.tree.get_parent_branch(selected);
                 var idx = parent.nodes.indexOf(selected);
                 parent.nodes.splice(idx,1);
+                //TODO add new and edit list check, add to del list
+
+                //check branch in new list
+                var b = helpers.findInArrayById(newCategoryList,$scope.selectedCopy.id);
+
+                if(!helpers.isEmptyObject(b)){
+                    console.log(b.title);
+                    b.title = $scope.selected.title;
+                    console.log(b.title);
+                } else {
+                    //check in edit list
+                    var e = helpers.findInArrayById(editCategoryList,$scope.selectedCopy.id);
+                    if(!helpers.isEmptyObject(e)){
+                        e.title = $scope.selected.title;
+                    } else {
+                        editCategoryList.push($scope.selected);
+                    }
+                }
             };
 
-            /**
-             *
-             * @param selected
-             * if null then find selected and use it as parent.
-             * if NOT null use as parent
-             * if empty object then create as ROOT node
-             */
             $scope.add = function(selected) {
                 var parent,id = helpers.guid();
                 if(!selected){
@@ -71,7 +157,6 @@
                 }
                 //stash new node for DB update
                 newCategoryList.push({id:id,name:$scope.newCategory,parentId:parentId});
-                console.log(newCategoryList);
             };
 
             //add new node on the same level
@@ -86,7 +171,20 @@
                 $scope.add({});
             };
 
+            $scope.addType = function(idx){
+                $scope.selected.types.push(angular.copy($scope.filteredTypes[idx]));
+                $scope.filteredTypes.splice(idx,1);
+            };
 
+            $scope.removeType = function(idx){
+                $scope.filteredTypes.push(angular.copy($scope.selected.types[idx]));
+                $scope.selected.types.splice(idx,1);
+            };
+
+            $scope.save = function(){
+                console.log($scope.categories);
+                //TODO send all lists
+            }
         }]);
 })();
 

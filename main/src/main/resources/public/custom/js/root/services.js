@@ -14,7 +14,7 @@
                         controller: 'loginController',
                         sizeClass: 'modal-sm'
                     });
-                console.log(instance);
+                //console.log(instance);
                 return instance;
             }
         }])
@@ -40,7 +40,7 @@
                         console.log("in get");
                         //var cart = angular.fromJson($window.localStorage [key]);
                         var cart = $window.localStorage [key];
-                        console.log(cart);
+                        //console.log(cart);
                         return JSON.parse(cart);
                         //return cart
                     }

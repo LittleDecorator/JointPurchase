@@ -284,4 +284,28 @@
                 }
             };
         })
+
+        .directive('ngSide',function(){
+            return {
+                restrict: 'E',
+                require: ['ngModel'],
+                scope: true,
+                //controller: 'sideController',
+                link: function(scope, element, attrs, controllersArr) {
+                    var ngModel = controllersArr[0];
+
+
+                    if(ngModel) {
+                        //вызовится при изменении $modelValue
+                        ngModel.$render = function() {
+                            console.log(ngModel);
+                            if (!ngModel.$modelValue || !angular.isArray(ngModel.$modelValue)) {
+                                scope.$modelValue = [];
+                            }
+                            scope.$modelValue = ngModel.$modelValue;
+                        };
+                    }
+                }
+            };
+        })
 })();
