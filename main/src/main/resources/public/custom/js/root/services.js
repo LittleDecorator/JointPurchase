@@ -159,6 +159,11 @@
                 onComplete: function(){
                     console.log("in complete broad");
                     $rootScope.$broadcast('onComplete');
+                },
+                onFilter: function(data){
+                    console.log("in sideMenu broad");
+                    this.data = data;
+                    $rootScope.$broadcast('onFilter');
                 }
             }
         }])

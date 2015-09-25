@@ -10,16 +10,26 @@ import java.util.List;
 public class Node implements Serializable {
     String id;
     String title;
+    String parentId;
     List<Type> types;
     List<Node> nodes;
+    boolean isCompany = Boolean.FALSE;
 
-    public Node(String id, String title, List<Type> types) {
+    public Node(String id, String title, List<Type> types,String parentId) {
         this.id = id;
         this.title = title;
         this.types = Lists.newArrayList(types);
+        this.parentId = parentId;
     }
 
-    public Node() {
+    public Node() {}
+
+    public boolean isCompany() {
+        return isCompany;
+    }
+
+    public void setIsCompany(boolean isCompany) {
+        this.isCompany = isCompany;
     }
 
     public String getId() {
@@ -59,6 +69,14 @@ public class Node implements Serializable {
 
     public boolean haveChildren(){
         return (nodes!=null && nodes.size()>0);
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     @Override

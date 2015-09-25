@@ -22,13 +22,13 @@
                 });
 
             });
-            dataResources.categoryMap.get(function(res) {
-                $scope.categoryTypes=[];
+            dataResources.typeMap.get(function(res) {
+                $scope.types=[];
                 angular.forEach(res, function (comp) {
                     //console.log(comp);
-                    $scope.categoryTypes.push(comp);
+                    $scope.types.push(comp);
                     if($scope.selected){
-                        $scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
+                        $scope.selected.type = helpers.findInArrayById($scope.types, $scope.selected.typeId);
                     }
                 });
             });
@@ -36,12 +36,12 @@
             //filter
             $scope.filter = {};
             $scope.filter.selectedCompany = "";
-            $scope.filter.selectedCategory = "";
+            $scope.filter.selectedType = "";
 
             //selected
             $scope.selected = {};
             $scope.selected.company = {};
-            $scope.selected.category = {};
+            $scope.selected.type = {};
 
             //main
             $scope.index = null;
@@ -60,24 +60,14 @@
 
             if(item){
                 $scope.selected = item;
-                console.log($scope.selected);
-                console.log($scope.companyNames);
-                //find company in company list for select
-                //$scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
-                //find category in category list for select
-                //$scope.selected.category = helpers.findInArrayById($scope.categoryTypes, $scope.selected.categoryId);
             } else {
-
-
-
-                console.log("get all");
                 //get all items
                 dataResources.item.query(function (data) {
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
-                        item.categoryType = category.name;
+                        var type = helpers.findInArrayById($scope.types, item.typeId);
+                        item.type = type.name;
                         $scope.items.push(item);
                     });
                     //get total items cou, for pagination
@@ -107,16 +97,13 @@
             $scope.clearSelected = function(){
                 $scope.selected = {};
                 $scope.selected.company = {};
-                $scope.selected.category = {};
+                $scope.selected.type = {};
             };
 
             //edit item
             $scope.editItem = function (id) {
                 console.log($state);
                 $state.go("item.detail", {id: id});
-                //$state.go("item.gallery", {itemId: id});
-                //$state.transitionTo("item.detail", {id: id});
-
             };
 
             //delete current item
@@ -137,7 +124,7 @@
             //modal button save listener
             $scope.save = function () {
                 $scope.selected.companyId = $scope.selected.company.id;
-                $scope.selected.categoryId = $scope.selected.category.id;
+                $scope.selected.typeId = $scope.selected.type.id;
                 dataResources.item.save($scope.selected);
             };
 
@@ -148,8 +135,8 @@
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
-                        item.categoryType = category.name;
+                        var type = helpers.findInArrayById($scope.types, item.typeId);
+                        item.type = type.name;
                         $scope.items.push(item);
                     });
                     $scope.currPage = 1;
@@ -165,8 +152,8 @@
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var category = helpers.findInArrayById($scope.categoryTypes, item.categoryId);
-                        item.categoryType = category.name;
+                        var type = helpers.findInArrayById($scope.types, item.typeId);
+                        item.type = type.name;
                         $scope.items.push(item);
                     });
                     $scope.currPage = 1;
@@ -189,10 +176,10 @@
                 }
             };
 
-            $scope.categoryChanged = function(){
-                console.log("category changed");
-                var elem = $('#category .select-wrapper');
-                if($scope.filter.selectedCategory == null || $scope.selected.category == null){
+            $scope.typeChanged = function(){
+                console.log("type changed");
+                var elem = $('#type .select-wrapper');
+                if($scope.filter.selectedType == null || $scope.selected.type == null){
                     angular.element(elem).addClass('inactive');
                 } else {
                     if(angular.element(elem).hasClass('inactive')){

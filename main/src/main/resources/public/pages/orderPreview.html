@@ -2,15 +2,16 @@
 
     <h4 class="header">В корзине {{orderItemsCou}} товар</h4>
 
-    <table class="table-purchases table">
+    <table class="table-purchases table collection" >
         <tbody>
-            <tr ng-repeat="item in cart.content">
+            <tr ng-repeat="item in cart.content" class="collection-item">
                 <td class="image">
                     <!--<img height="110" ng-src="{{item.url}}" class="materialboxed" />-->
                     <img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" class="materialboxed" />
                 </td>
                 <td class="name">
-                    <h5><a href="products/dzhemper-myatno-rozovyj">{{item.name}}</a></h5>
+                    <!--<h5><a href="products/dzhemper-myatno-rozovyj">{{item.name}}</a></h5>-->
+                    <h5><a>{{item.name}}</a></h5>
                 </td>
                 <td class="price"><span class="price">{{item.price}} руб</span></td>
                 <td class="amount">{{item.cou}}</td>

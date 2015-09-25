@@ -67,6 +67,7 @@
 
             var newCategoryList=[],editCategoryList=[],deleteCategoryList=[];
 
+            // get category tree
             dataResources.categoryTree.get(function(result){
                 angular.forEach(result, function (node) {
                     $scope.categories.push(node);
@@ -74,6 +75,7 @@
                 $scope.tree.expand_all();
             });
 
+            //get all types
             dataResources.categoryTypes.get(function(data){
                 angular.forEach(data,function(rec){
                     console.log(rec);
@@ -81,30 +83,29 @@
                 });
             });
 
-            //filter total array
+            //get selected node
             $scope.treeHandler = function(branch) {
-                console.log(branch);
                 $scope.selected = branch;
                 $scope.selectedCopy = angular.copy(branch);
                 $scope.filteredTypes = helpers.filterArray($scope.types,$scope.selected.types);
 
+                $("#add_sibling").removeClass('disabled');
+                $("#add").removeClass('disabled');
             };
 
+            //edit node
             $scope.edit = function(){
-                console.log($scope.selected.title);
-
                 $scope.selected.title = $scope.selectedCopy.title;
 
                 //check branch in new list
                 var b = helpers.findInArrayById(newCategoryList,$scope.selectedCopy.id);
-
+                //if found change stashed title
                 if(!helpers.isEmptyObject(b)){
-                    console.log(b.title);
                     b.title = $scope.selected.title;
-                    console.log(b.title);
                 } else {
                     //check in edit list
                     var e = helpers.findInArrayById(editCategoryList,$scope.selectedCopy.id);
+                    //if found update title
                     if(!helpers.isEmptyObject(e)){
                         e.title = $scope.selected.title;
                     } else {
@@ -114,26 +115,29 @@
             };
 
             $scope.delete = function(){
+                //remove node from tree
                 var selected = $scope.tree.get_selected_branch();
                 var parent = $scope.tree.get_parent_branch(selected);
                 var idx = parent.nodes.indexOf(selected);
                 parent.nodes.splice(idx,1);
-                //TODO add new and edit list check, add to del list
 
-                //check branch in new list
-                var b = helpers.findInArrayById(newCategoryList,$scope.selectedCopy.id);
 
+                //check if removed branch in new list
+                var b = helpers.findInArrayById(newCategoryList,selected.id);
+                //remove from new list deleted branch
                 if(!helpers.isEmptyObject(b)){
-                    console.log(b.title);
-                    b.title = $scope.selected.title;
-                    console.log(b.title);
+                    var b_idx = newCategoryList.indexOf(b);
+                    newCategoryList.splice(b_idx,1);
                 } else {
-                    //check in edit list
-                    var e = helpers.findInArrayById(editCategoryList,$scope.selectedCopy.id);
+                    //add to remove list
+                    deleteCategoryList.push(selected);
+
+                    //check if deleted branch in edit list
+                    var e = helpers.findInArrayById(editCategoryList,selected.id);
+                    //remove from edit list
                     if(!helpers.isEmptyObject(e)){
-                        e.title = $scope.selected.title;
-                    } else {
-                        editCategoryList.push($scope.selected);
+                        var e_idx = editCategoryList.indexOf(e);
+                        editCategoryList.splice(e_idx,1);
                     }
                 }
             };
@@ -148,7 +152,7 @@
                 //check that parent exists and not empty
                 var parentId = (parent && !$.isEmptyObject(parent))?parent.id:null;
                 //prepare added node
-                var newNode = {id:id,title:$scope.newCategory,nodes:null,parentId:parentId};
+                var newNode = {id:id,title:$scope.newCategory,nodes:[],parentId:parentId,types:[]};
                 //insert new node in tree
                 if(parentId==null){
                     $scope.tree.add_branch(null,newNode);
@@ -156,7 +160,7 @@
                     $scope.tree.add_branch(parent,newNode);
                 }
                 //stash new node for DB update
-                newCategoryList.push({id:id,name:$scope.newCategory,parentId:parentId});
+                newCategoryList.push(newNode);
             };
 
             //add new node on the same level
@@ -174,16 +178,53 @@
             $scope.addType = function(idx){
                 $scope.selected.types.push(angular.copy($scope.filteredTypes[idx]));
                 $scope.filteredTypes.splice(idx,1);
+                //TODO check in edit and new lists
+                //check branch in new list
+                var b = helpers.findInArrayById(newCategoryList,$scope.selected.id);
+                //if found change stashed title
+                if(!helpers.isEmptyObject(b)){
+                    b.types = [].concat($scope.selected.types);
+                } else {
+                    //check in edit list
+                    var e = helpers.findInArrayById(editCategoryList,$scope.selected.id);
+                    //if found update title
+                    if(!helpers.isEmptyObject(e)){
+                        e.types = [].concat($scope.selected.types);
+                    } else {
+                        editCategoryList.push($scope.selected);
+                    }
+                }
+
             };
 
             $scope.removeType = function(idx){
                 $scope.filteredTypes.push(angular.copy($scope.selected.types[idx]));
                 $scope.selected.types.splice(idx,1);
+                //TODO check in edit and new lists
+                //check branch in new list
+                var b = helpers.findInArrayById(newCategoryList,$scope.selected.id);
+                //if found change stashed title
+                if(!helpers.isEmptyObject(b)){
+                    b.types = [].concat($scope.selected.types);
+                } else {
+                    //check in edit list
+                    var e = helpers.findInArrayById(editCategoryList,$scope.selected.id);
+                    //if found update title
+                    if(!helpers.isEmptyObject(e)){
+                        e.types = [].concat($scope.selected.types);
+                    } else {
+                        editCategoryList.push($scope.selected);
+                    }
+                }
             };
 
             $scope.save = function(){
-                console.log($scope.categories);
-                //TODO send all lists
+                console.log({new:newCategoryList,update:editCategoryList,delete:deleteCategoryList});
+                dataResources.categoryTree.post({new:newCategoryList,update:editCategoryList,delete:deleteCategoryList});
+                //clear stash
+                newCategoryList = [];
+                editCategoryList = [];
+                deleteCategoryList = [];
             }
         }]);
 })();

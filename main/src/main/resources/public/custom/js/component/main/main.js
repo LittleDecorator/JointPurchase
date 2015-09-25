@@ -160,6 +160,10 @@
                     $(".collapsible").collapsible();
                 });
 
+                $scope.filterProduct = function(node){
+                    eventService.onFilter(node);
+                };
+
             console.log($scope);
 
         }]);

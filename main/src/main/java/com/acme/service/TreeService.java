@@ -45,7 +45,7 @@ public class TreeService {
     }
 
     private Node category2Node(CategoryTypeLink category){
-        return new Node(category.getId(),category.getName(),category.getTypes());
+        return new Node(category.getId(),category.getName(),category.getTypes(),category.getParentId());
     }
 
     private Node findNode(Node node, String id){

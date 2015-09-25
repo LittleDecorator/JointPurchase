@@ -6,7 +6,7 @@
     'use strict';
 
     angular.module('product')
-        .controller('productController', ['$scope', '$state','dataResources','$timeout',function ($scope, $state, dataResources,$timeout) {
+        .controller('productController', ['$scope', '$state','dataResources','$timeout','eventService',function ($scope, $state, dataResources,$timeout,eventService) {
             console.log("Enter Product controller");
 
             $scope.data = [];
@@ -95,6 +95,48 @@
                 });
             })
         };
+
+            $scope.$on('onFilter',function() {
+                var node = eventService.data;
+                console.log(node);
+                if(node==null || helpers.isEmptyObject(node)){
+                    dataResources.previewItems.get(function (data) {
+                        $scope.items = [];
+                        angular.forEach(data, function (item) {
+                            $scope.items.push(item);
+                        });
+                        $scope.filteredItems = $scope.items;
+                    });
+                } else {
+                    if (!node.company) {
+                        //collect all inner types
+                        var types = [];
+
+                        if (node.types.length > 0) {
+                            angular.forEach(node.types, function (type) {
+                                types.push(type.id);
+                            })
+                        }
+
+                        if (node.nodes.length > 0) {
+                            angular.forEach(node.nodes, function (node) {
+                                if (node.types.length > 0) {
+                                    angular.forEach(node.types, function (type) {
+                                        types.push(type.id);
+                                    })
+                                }
+                            })
+                        }
+
+                        dataResources.filterByType.filter(types, function (data) {
+                            $scope.filteredItems = [];
+                            angular.forEach(data, function (item) {
+                                $scope.filteredItems.push(item);
+                            });
+                        })
+                    }
+                }
+            });
 
            $timeout(function() {
                 console.log("DONE!");

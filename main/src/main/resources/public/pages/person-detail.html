@@ -55,8 +55,15 @@
             </div>
         </div>
 
-        <div class="btn-group pull-right">
-            <button class="btn btn-success" ng-click="save()">Save</button>
+        <!--<div class="btn-group pull-right">-->
+            <!--<button class="btn btn-success" ng-click="save()">Save</button>-->
+        <!--</div>-->
+
+        <div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large" ng-click="save()">
+                <i class="large mdi-content-save"></i>
+            </a>
+            <input type="text" name="s" class="search">
         </div>
     </form>
 </div>

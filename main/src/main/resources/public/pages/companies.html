@@ -3,7 +3,7 @@
     <button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>
     <h3 class="example_head">Компании:</h3>
     <div class="table-result">
-        <table class="table table-bordered table-hover adm-table">
+        <table class="table table-bordered table-hover adm-table collection">
             <thead>
                 <tr>
                     <th>Название</th>
@@ -12,7 +12,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="company in companies" id="{{company.id}}">
+                <tr ng-repeat="company in companies" id="{{company.id}}" class="collection-item">
                     <td class="center-align">{{company.name}}</td>
                     <td class="center-align">{{company.description}}</td>
                     <td class="right-align">

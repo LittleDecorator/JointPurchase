@@ -2,7 +2,7 @@
     <button class="btn btn-primary" ng-click="addPerson()">Добавить покупателя</button>
     <h3 class="example_head">Покупатели:</h3>
     <div class="table-result">
-        <table class="table table-bordered table-hover adm-table">
+        <table class="table table-bordered table-hover adm-table collection">
             <thead>
             <tr>
                 <th style="width: 55%">ФИО</th>
@@ -12,8 +12,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="customer in customers" id="{{customer.id}}">
-                <td class="center-align">{{customer.firstName}} {{customer.middleName}} {{customer.lastName}}</td>
+            <tr ng-repeat="customer in customers" id="{{customer.id}}" class="collection-item">
+                <td class="center-align">{{customer.lastName}} {{customer.firstName}} {{customer.middleName}}</td>
                 <td class="center-align">{{customer.phoneNumber}}</td>
                 <td class="center-align">{{customer.email}}</td>
                 <td class="right-align">

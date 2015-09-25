@@ -8,12 +8,23 @@ import com.acme.gen.mapper.TypeMapper;
 import com.acme.helper.CategoryTypeLink;
 import com.acme.model.domain.Node;
 import com.acme.service.TreeService;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -49,8 +60,21 @@ public class CategoryController {
         return list;
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/type/map")
+    public List<Map<String, String>> getTypeMap() {
+        List<Map<String,String>> list = new ArrayList<>();
+        Map<String,String> map;
+
+        for(Type type : typeMapper.selectByExample(new TypeExample())){
+            map = new HashMap<>();
+            map.put("id",type.getId());
+            map.put("name",type.getName());
+            list.add(map);
+        }
+        return list;
+    }
+
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
-//    public Node getCategoryTree(){
         public List<Node> getCategoryTree(){
 
         List<CategoryTypeLink> links = new ArrayList<>();
@@ -96,8 +120,113 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/tree")
-    public List<Node> saveCategoryTree(@RequestBody String obj){
-        return null;
+    public void saveCategoryTree(@RequestBody String input) throws ParseException, IOException {
+        JSONParser parser=new JSONParser();
+        JSONObject main = (JSONObject) parser.parse(input);
+
+        ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+
+        JSONArray newArray = (JSONArray)main.get("new");
+        if(newArray.size()>0){
+            /* add new nodes */
+            List<Node> newNodes = mapper.readValue(newArray.toJSONString(), new TypeReference<List<Node>>(){});
+
+            Category category;
+            CategoryType categoryType;
+
+            for(Node node: newNodes){
+                //create category
+                category = new Category();
+                category.setName(node.getTitle());
+                category.setId(node.getId());
+                category.setParentId(node.getParentId());
+                categoryMapper.insertSelective(category);
+                for(Type type : node.getTypes()){
+                    //link with type
+                    categoryType = new CategoryType();
+                    categoryType.setCategoryId(category.getId());
+                    categoryType.setTypeId(type.getId());
+                    categoryTypeMapper.insertSelective(categoryType);
+                }
+            }
+        }
+
+        JSONArray updateArray = (JSONArray)main.get("update");
+        if(updateArray.size()>0){
+            List<Node> updateNodes = mapper.readValue(updateArray.toJSONString(), new TypeReference<List<Node>>(){});
+
+            Category category;
+            CategoryType categoryType;
+
+            for(Node node: updateNodes){
+                //create category
+                category = new Category();
+                category.setName(node.getTitle());
+                category.setId(node.getId());
+                category.setParentId(node.getParentId());
+                categoryMapper.updateByPrimaryKeySelective(category);
+                //get linked types
+                CategoryTypeExample example = new CategoryTypeExample();
+                example.createCriteria().andCategoryIdEqualTo(category.getId());
+
+                List<String> oldTypes = Lists.transform(categoryTypeMapper.selectByExample(example), new Function<CategoryType, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nullable CategoryType categoryType) {
+                        return categoryType.getTypeId();
+                    }
+                });
+
+                List<String> newTypes = Lists.transform(node.getTypes(), new Function<Type, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nullable Type categoryType) {
+                        return categoryType.getId();
+                    }
+                });
+
+                System.out.println("old type contains -> "+oldTypes);
+                System.out.println("new type contains -> "+newTypes);
+
+                Iterator<String> oldIt = oldTypes.iterator();
+                while (oldIt.hasNext()){
+                    String old = oldIt.next();
+                    System.out.println("old type id -> "+old);
+                    if(newTypes.contains(old)){
+                        System.out.println("find in new");
+                        oldIt.remove();
+                        newTypes.remove(old);
+                    }
+                }
+                System.out.println("Will be deleted -> "+ oldTypes);
+                //remove old
+                CategoryTypeExample oldExample = new CategoryTypeExample();
+                oldExample.createCriteria().andTypeIdIn(oldTypes);
+                categoryTypeMapper.deleteByExample(oldExample);
+
+                //add new link with type
+                for(String typeId : newTypes){
+                    categoryType = new CategoryType();
+                    categoryType.setCategoryId(category.getId());
+                    categoryType.setTypeId(typeId);
+                    categoryTypeMapper.insertSelective(categoryType);
+                }
+            }
+        }
+
+        JSONArray deleteArray = (JSONArray)main.get("delete");
+        if(deleteArray.size()>0){
+            List<Node> deleteNodes = mapper.readValue(deleteArray.toJSONString(), new TypeReference<List<Node>>(){});
+
+            for(Node node: deleteNodes){
+                CategoryTypeExample delExample = new CategoryTypeExample();
+                delExample.createCriteria().andCategoryIdEqualTo(node.getId());
+                categoryTypeMapper.deleteByExample(delExample);
+                categoryMapper.deleteByPrimaryKey(node.getId());
+            }
+
+        }
     }
 
     /* get all types */
@@ -138,9 +267,11 @@ public class CategoryController {
             node = new Node();
             node.setTitle(company.getName());
             node.setId(company.getId());
+            node.setIsCompany(true);
             rootCompany.getNodes().add(node);
         }
         nodes.add(rootCompany);
         return nodes;
     }
+
 }

@@ -29,8 +29,8 @@
                                     <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
                                     <label class="control-label" for="newCategory">Новая категория</label>
                                 </div>
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
+                                <a id="add_sibling" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
+                                <a id="add" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
                                 <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
                             </div>
 
@@ -55,9 +55,9 @@
                                 </div>
                             </div>
 
-                            <div style="padding-top: 10%">
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>
-                            </div>
+                            <!--<div style="padding-top: 10%">-->
+                                <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>-->
+                            <!--</div>-->
                         </div>
 
                     </div>
@@ -70,9 +70,16 @@
 
         </div>
 
+        <div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large" ng-click="save()">
+                <i class="large mdi-content-save"></i>
+            </a>
+            <input type="text" name="s" class="search">
+        </div>
+
     </div>
 
-    <div id="test2" class="col s12" ng-controller="typeController">
+    <div id="test2" class="col s12" ng-controller="typeController" style="padding-top: 30px">
         <div class="collection">
             <a id={{type.id}} class="collection-item" ng-repeat="type in types" ng-click="select($index)" style="cursor: pointer">{{type.name}}</a>
         </div>
@@ -86,5 +93,17 @@
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
         </div>
+
+        <div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
+
+                <a class="btn-floating btn-large ">
+                    <i class="large mdi-content-save"></i>
+                </a>
+
+                <input type="text" name="s" class="search">
+
+        </div>
     </div>
+
+
 </div>

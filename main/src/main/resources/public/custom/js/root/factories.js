@@ -51,9 +51,30 @@
                 }),
 
                 item: $resource("/item/:id"),
+                filterByType:$resource('/item/filter/type',{},{
+                    filter:{
+                        method:'POST',
+                        isArray:true
+                    }
+                }),
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
-                categoryTree: $resource("/category/tree",{},{ get:{method:'GET',isArray:true}}),
+                typeMap:$resource('category/type/map',{},{
+                    get:{
+                        method:'GET',
+                        isArray:true
+                    }
+                }),
+                categoryTree: $resource("/category/tree",{},{
+                    get:{
+                        method:'GET',
+                        isArray:true
+                    },
+                    post:{
+                        method:'POST',
+                        isArray:false
+                    }
+                }),
                 categoryTypes:$resource("/category/types/:id",{},{
                     get:{
                         method:'GET',
