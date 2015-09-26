@@ -291,7 +291,50 @@ public class ItemController{
         List<String> types = mapper.readValue(input, new TypeReference<List<String>>(){});
 
         ItemExample itemExample = new ItemExample();
-        itemExample.createCriteria().andTypeIdIn(types);
+        itemExample.createCriteria().andTypeIdIn(types).andNotForSaleEqualTo(false);
+        List<Item> itemList = itemMapper.selectByExample(itemExample);
+
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject;
+        ItemContentExample itemContentExample;
+
+        // get base64 default image if no orig image linked with item
+        ContentExample example = new ContentExample();
+        example.createCriteria().andIsDefaultEqualTo(true);
+        Content defContent = contentMapper.selectByExample(example).get(0);
+
+        String noImage = Constants.PREVIEW_URL+defContent.getId();
+
+        for(Item item : itemList){
+            jsonObject = new JSONObject();
+
+            //check orig image
+            itemContentExample = new ItemContentExample();
+            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+            if(itemContents.size()>0){
+                //just take first image
+                String contentId = itemContents.get(0).getContentId();
+//                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
+                jsonObject.put("url", Constants.ORIG_URL+contentId);
+            } else {
+                //else default image
+                jsonObject.put("url",noImage);
+            }
+            jsonObject.put("description",item.getDescription());
+            jsonObject.put("price",item.getPrice());
+            jsonObject.put("name",item.getName());
+            jsonObject.put("id",item.getId());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/filter/company")
+    public JSONArray filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
+        System.out.println(companyId);
+        ItemExample itemExample = new ItemExample();
+        itemExample.createCriteria().andCompanyIdEqualTo(companyId).andNotForSaleEqualTo(false);
         List<Item> itemList = itemMapper.selectByExample(itemExample);
 
         JSONArray jsonArray = new JSONArray();

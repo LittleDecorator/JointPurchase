@@ -134,6 +134,15 @@
                                 $scope.filteredItems.push(item);
                             });
                         })
+                    } else {
+                        if(node.nodes.length == 0){
+                            dataResources.filterByCompany.filter({companyId:node.id}, function (data) {
+                                $scope.filteredItems = [];
+                                angular.forEach(data, function (item) {
+                                    $scope.filteredItems.push(item);
+                                });
+                            })
+                        }
                     }
                 }
             });

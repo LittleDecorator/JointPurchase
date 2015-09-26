@@ -134,8 +134,8 @@ insert into item(id,name,company_id,type_id,price,not_for_sale)
         values ('1a05535f-c373-404d-9117-e920792cecf0', 'Кубики «Алфавит» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150,'Y');
 insert into item(id,name,company_id,type_id,price,not_for_sale)
         values ('23f9a890-525e-401d-9499-cd51dedc4103', 'Кубики «Цифры»','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150,'Y');
-insert into item(id,name,company_id,type_id,price,not_for_sale)
-        values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',200,'Y');
+insert into item(id,name,company_id,type_id,price)
+        values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',200);
 
 insert into item(id,name,company_id,type_id,description,price)
         values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);

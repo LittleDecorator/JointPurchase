@@ -261,6 +261,7 @@ public class CategoryController {
         //create root company node
         Node rootCompany = new Node();
         rootCompany.setTitle("Производители");
+        rootCompany.setIsCompany(true);
         //add child companies
         Node node;
         for(Company company : companyMapper.selectByExample(new CompanyExample())){

@@ -57,6 +57,12 @@
                         isArray:true
                     }
                 }),
+                filterByCompany:$resource('/item/filter/company',{},{
+                    filter:{
+                        method:'GET',
+                        isArray:true
+                    }
+                }),
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
                 typeMap:$resource('category/type/map',{},{
