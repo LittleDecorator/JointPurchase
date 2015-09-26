@@ -24,8 +24,6 @@
                     if (response.status === 401) {
                         // remove any stale tokens
                         $cookies.remove('token');
-                        //$location.path('/home');
-                        //$state.transitionTo("home");
                         return $q.reject(response);
                     } else {
                         return $q.reject(response);
@@ -112,7 +110,7 @@
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
                 image: $resource('/content/remove',{},{remove:{method:'DELETE'}}),
-                order:$resource('/order'),
+                order:$resource('/order/:id'),
                 orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
                 orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
                 orderedItem: $resource('/order/:orderId/item/:itemId',{},{

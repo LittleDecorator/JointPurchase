@@ -117,25 +117,37 @@
 
             this.getPerson = function(id){
                 var deferred = $q.defer();
-                dataResources.customer.get({id:id},function(data){
-                    deferred.resolve(data);
-                });
+                if(id){
+                    dataResources.customer.get({id:id},function(data){
+                        deferred.resolve(data);
+                    });
+                } else {
+                    deferred.resolve(null);
+                }
                 return deferred.promise;
             };
 
             this.getOrder = function(id){
                 var deferred = $q.defer();
-                dataResources.order.get({id:id},function (data) {
-                    deferred.resolve(data);
-                });
+                if(id){
+                    dataResources.order.get({id:id},function (data) {
+                        deferred.resolve(data);
+                    });
+                } else {
+                    deferred.resolve(null);
+                }
                 return deferred.promise;
             };
 
             this.getCompany = function(id){
                 var deferred = $q.defer();
-                dataResources.company.get({id:id},function(data){
-                    deferred.resolve(data);
-                });
+                if(id){
+                    dataResources.company.get({id:id},function(data){
+                        deferred.resolve(data);
+                    });
+                } else {
+                    deferred.resolve(null);
+                }
                 return deferred.promise;
             };
 
