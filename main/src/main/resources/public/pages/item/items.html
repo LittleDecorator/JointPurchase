@@ -56,8 +56,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in filteredItems" id="{{item.id}}" class="collection-item">
-                <td><input type="checkbox"></td>
+            <tr ng-repeat="item in filteredItems" class="collection-item">
+                <td>
+                    <input type="checkbox" class="filled-in" id="{{item.id}}" ng-model="item.notForSale" ng-change="forSaleToggle($index)"/>
+                    <label for="{{item.id}}"></label>
+                </td>
                 <td class="center-align">{{item.name}}</td>
                 <td class="center-align">{{item.companyName}}</td>
                 <td class="center-align">{{item.type}}</td>

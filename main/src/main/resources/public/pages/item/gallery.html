@@ -9,8 +9,8 @@
             <div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">
                 <div style="position: relative">
                     <div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px; position: absolute; bottom: 5px; z-index: 500">
-                        <i class="material-icons" ng-class="{'main':image.isMain}" ng-click="toggleMain($event,image.id)" style="cursor: pointer;">{{image.isMain?'star':'star_border'}}</i>
-                        <i class="material-icons" ng-class="{'show':image.isShow}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;">done</i>
+                        <i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)" style="cursor: pointer;">{{image.main?'star':'star_border'}}</i>
+                        <i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;">done</i>
                         <i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;">clear</i>
                     </div>
                     <img ng-src="{{image.url}}" id="{{image.id}}" class="responsive-img z-depth-3 wp-post-image materialboxed"/>

@@ -6,6 +6,7 @@ create table content (
 	mime varchar(25),
 	type varchar(25),
 	is_default char(1) not null default 'N',
+	date_add timestamp default current_timestamp,
 	primary key (id)
 );
 
@@ -22,6 +23,7 @@ create table company (
   inn varchar(10),
   ks varchar(10),
   rs varchar(10),
+  date_add timestamp default current_timestamp,
   primary key (id)
 );
 
@@ -30,6 +32,7 @@ create table role (
   id varchar(37) not null,
   description varchar(255),
   parent_role_id varchar(37),
+  date_add timestamp default current_timestamp,
   primary key (id),
   foreign key (parent_role_id) references role on delete cascade
 );
@@ -45,6 +48,7 @@ create table subject (
   email varchar(30),
   address varchar(255),
   post_address integer,
+  date_add timestamp default current_timestamp,
   primary key (id)
 );
 
@@ -53,6 +57,7 @@ create table credential(
   subject_id varchar(37) not null,
   password varchar(255) not null,
   role_id varchar(37),
+  date_add timestamp default current_timestamp,
   primary key (subject_id),
   foreign key (subject_id) references subject,
   foreign key (role_id) references role
@@ -80,6 +85,7 @@ create table category (
    id varchar(37) not null,
    name varchar(37) not null,
    parent_id varchar(37),
+   date_add timestamp default current_timestamp,
    PRIMARY key (id),
    foreign key (parent_id) references category
 );
@@ -88,6 +94,7 @@ create table category (
 create table type (
   id varchar(37) not null,
   name varchar(37) not null,
+  date_add timestamp default current_timestamp,
   PRIMARY key (id)
 );
 
@@ -96,6 +103,7 @@ create table category_type(
   id varchar(37) not null,
   category_id varchar(37) not null,
   type_id varchar(37) not null,
+  date_add timestamp default current_timestamp,
   PRIMARY key (id),
   foreign key (category_id) REFERENCES category,
   FOREIGN key (type_id) REFERENCES type
@@ -110,6 +118,8 @@ create table item (
   article varchar(30),
   description varchar(2000),
   price decimal(20,2) not null, --цена еденицы товара
+  date_add timestamp default current_timestamp,
+  not_for_sale char(1) not null default 'N' check(not_for_sale in ('Y', 'N')),
   primary key (id),
   foreign key (company_id) references company,
   foreign key (type_id) references type
@@ -121,7 +131,7 @@ create table item_owner (
     item_id varchar(37) not null,
     count int default 0,
     user_add varchar(37) not null,
-    date_add timestamp default CURRENT_TIMESTAMP,
+    date_add timestamp default current_timestamp,
     primary key (id),
     foreign key (item_id) references item,
     foreign key (user_add) references subject
@@ -133,6 +143,7 @@ create table order_items (
   order_id varchar(37) not null,
   item_id varchar(37) not null,
   cou int not null,       --количество наименования в заказе
+  date_add timestamp default current_timestamp,
   primary key (id),
   foreign key (order_id) REFERENCES purchase_order,
   FOREIGN key (item_id) REFERENCES item
@@ -145,6 +156,7 @@ create table item_content(
   content_id varchar(37) not null,
   show char(1) not null default 'N' check(show in ('Y', 'N')),
   main char(1) not null default 'N' check(main in ('Y', 'N')),
+  date_add timestamp default current_timestamp,
   primary key (id),
   foreign key (item_id) references item,
   foreign key (content_id) references content

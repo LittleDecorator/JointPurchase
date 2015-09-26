@@ -161,12 +161,9 @@
 
             if($scope.item.media.length>0){
                 $scope.mainImage = $scope.item.media[0];
-                //$scope.item.media.splice(0,1);
             }
 
             $scope.show = function(id){
-                //$scope.item.media.push($scope.mainImage);
-
                 var keepGoing = true;
                 var res = null;
 
@@ -179,29 +176,7 @@
                     }
                 });
                 $scope.mainImage = id;
-                //$scope.item.media.splice(res,1);
             };
-
-            /*$scope.view= function(){
-                console.log("in view");
-                console.log($scope);
-
-                //угобая центролизация modal dialog'а
-                function centerModal() {
-                    $(this).css('display', 'block');
-                    var $dialog = $(this).find(".modal-dialog");
-                    var offset = ($(window).height()-150 - $dialog.height()) / 2;
-                    // Center modal vertically in window
-                    $dialog.css("margin-top", offset);
-                }
-
-                $('.modal').on('show.bs.modal', centerModal);
-                $(window).on("resize", function () {
-                    $('.modal:visible').each(centerModal);
-                });
-            };*/
-
-
 
         }]);
 })();

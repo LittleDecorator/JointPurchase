@@ -32,7 +32,9 @@
 		</table>
 		<table tableName="role" />
 		<table tableName="company" />
-		<table tableName="item" />
+		<table tableName="item" >
+			<columnOverride column="not_for_sale" javaType="boolean" typeHandler="yn" />
+		</table>
 		<table tableName="item_owner" />
 		<table tableName="item_content" >
 			<columnOverride column="main" javaType="boolean" typeHandler="yn" />

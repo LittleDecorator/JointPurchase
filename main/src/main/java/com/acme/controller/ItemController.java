@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/item")
@@ -56,9 +53,9 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getItems() {
         //get all items
-        List<Item> items = itemMapper.selectByExample(new ItemExample());
-        //get current user items count
-
+        ItemExample itemExample = new ItemExample();
+        itemExample.setOrderByClause("date_add asc");
+        List<Item> items = itemMapper.selectByExample(itemExample);
         return items;
     }
 
@@ -167,19 +164,28 @@ public class ItemController{
 
         String noImage = Constants.PREVIEW_URL+defContent.getId();
 
-        List<Item> items = itemMapper.selectByExample(new ItemExample());
+        ItemExample itemExample = new ItemExample();
+        itemExample.createCriteria().andNotForSaleEqualTo(false);
+
+        List<Item> items = itemMapper.selectByExample(itemExample);
         for(Item item : items){
             jsonObject = new JSONObject();
 
             //check orig image
             itemContentExample = new ItemContentExample();
-            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
+            itemContentExample.createCriteria().andItemIdEqualTo(item.getId()).andShowEqualTo(true);
             List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
             if(itemContents.size()>0){
-                //just take first image
-                String contentId = itemContents.get(0).getContentId();
-//                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
-                jsonObject.put("url", Constants.ORIG_URL+contentId);
+                //take main image
+                Iterator<ItemContent> iterator = itemContents.iterator();
+                while(iterator.hasNext()){
+                    ItemContent itemContent = iterator.next();
+                    if(itemContent.isMain()){
+                        String contentId = itemContent.getContentId();
+                        jsonObject.put("url", Constants.ORIG_URL+contentId);
+                        break;
+                    }
+                }
             } else {
                 //else default image
                 jsonObject.put("url",noImage);
@@ -203,7 +209,7 @@ public class ItemController{
         example.createCriteria().andIsDefaultEqualTo(true);
         Content content = contentMapper.selectByExample(example).get(0);
 
-        String noImage = Constants.VIEW_URL+content.getId();
+//        String noImage = Constants.VIEW_URL+content.getId();
 
         Item item = itemMapper.selectByPrimaryKey(itemId);
 
@@ -211,7 +217,7 @@ public class ItemController{
 
         //check orig image
         itemContentExample = new ItemContentExample();
-        itemContentExample.createCriteria().andItemIdEqualTo(itemId);
+        itemContentExample.createCriteria().andItemIdEqualTo(itemId).andShowEqualTo(true);
         List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
 
         JSONArray jsonArray = new JSONArray();
@@ -224,10 +230,10 @@ public class ItemController{
             //else default image
             jsonArray.add(content.getId());
         }
-        jsonObject.put("description",item.getDescription());
+        jsonObject.put("description", item.getDescription());
         jsonObject.put("price", item.getPrice());
         jsonObject.put("name",item.getName());
-        jsonObject.put("id",item.getId());
+        jsonObject.put("id", item.getId());
         jsonObject.put("media",jsonArray);
         return jsonObject;
     }
@@ -322,6 +328,22 @@ public class ItemController{
             jsonArray.add(jsonObject);
         }
         return jsonArray;
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/set/sale")
+    public void saleToggle(@RequestBody String input) throws ParseException {
+        System.out.println(input);
+        JSONParser parser=new JSONParser();
+        JSONObject main = (JSONObject) parser.parse(input);
+
+        String itemId = main.get("itemId").toString();
+        Boolean notForSale = (Boolean) main.get("notForSale");
+
+        Item item = new Item();
+        item.setId(itemId);
+        item.setNotForSale(notForSale);
+
+        itemMapper.updateByPrimaryKeySelective(item);
     }
 
     class ItemView implements Serializable{

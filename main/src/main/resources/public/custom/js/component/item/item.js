@@ -193,6 +193,15 @@
                 $state.go("item.gallery", {itemId: id});
             };
 
+            //изъятие\включение в продажу
+            $scope.forSaleToggle = function(idx){
+                console.log(idx);
+                console.log($scope.filteredItems);
+                var item = $scope.filteredItems[idx];
+                console.log(item);
+                dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
+            };
+
             console.log($scope);
 
         }])

@@ -120,6 +120,19 @@
                 previewItems: $resource('/item/preview',{},{
                     get:{method:'GET',isArray:true},
                     filter:{method:'POST',isArray:true}
+                }),
+
+                galleryShow: $resource('content/set/show',{},{
+                    toggle:{method:'PUT',isArray:false}
+                }),
+                galleryMain: $resource('content/set/main',{},{
+                    toggle:{method:'PUT',isArray:false}
+                }),
+                notForSale:$resource('item/set/sale',{},{
+                    toggle:{
+                        method:'POST',
+                        isArray:false
+                    }
                 })
 
             }
