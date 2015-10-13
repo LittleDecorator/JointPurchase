@@ -1,20 +1,20 @@
 package com.acme.controller;
 
 import com.acme.gen.domain.*;
+import com.acme.gen.mapper.CategoryItemMapper;
 import com.acme.gen.mapper.CategoryMapper;
-import com.acme.gen.mapper.CategoryTypeMapper;
 import com.acme.gen.mapper.CompanyMapper;
-import com.acme.gen.mapper.TypeMapper;
-import com.acme.helper.CategoryTypeLink;
+import com.acme.gen.mapper.ItemMapper;
+import com.acme.model.domain.CategoryItemLink;
 import com.acme.model.domain.Node;
+//import com.acme.model.mapper.CustomMapper;
+import com.acme.model.mapper.CustomMapper;
 import com.acme.service.TreeService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,7 +23,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 
@@ -38,14 +37,20 @@ public class CategoryController {
     TreeService treeService;
 
     @Autowired
-    CategoryTypeMapper categoryTypeMapper;
+    CategoryItemMapper categoryItemMapper;
 
     @Autowired
-    TypeMapper typeMapper;
+    ItemMapper itemMapper;
 
     @Autowired
     CompanyMapper companyMapper;
 
+    @Autowired
+    CustomMapper customMapper;
+
+    /**
+     * Get all categories as map
+     **/
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String, String>> getCategoryMap() {
         List<Map<String,String>> list = new ArrayList<>();
@@ -60,62 +65,52 @@ public class CategoryController {
         return list;
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/type/map")
-    public List<Map<String, String>> getTypeMap() {
-        List<Map<String,String>> list = new ArrayList<>();
-        Map<String,String> map;
-
-        for(Type type : typeMapper.selectByExample(new TypeExample())){
-            map = new HashMap<>();
-            map.put("id",type.getId());
-            map.put("name",type.getName());
-            list.add(map);
-        }
-        return list;
-    }
-
+    /**
+     * Get all categories as tree
+     **/
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
         public List<Node> getCategoryTree(){
 
-        List<CategoryTypeLink> links = new ArrayList<>();
-        CategoryTypeLink link;
+        //old version
+        /*List<CategoryItemLink> links = new ArrayList<>();
+        CategoryItemLink link;
         List<String> list = Lists.newArrayList();
-        //TODO: move code below to custom mapper
-        //get categories
         List<Category> categories = categoryMapper.selectByExample(new CategoryExample());
-        //get all types
-        List<Type> types = typeMapper.selectByExample(new TypeExample());
+        List<Item> types = itemMapper.selectByExample(new ItemExample());
         //get linked types
-        List<CategoryType> categoryTypes = categoryTypeMapper.selectByExample(new CategoryTypeExample());
+        List<CategoryItem> categoryTypes = categoryItemMapper.selectByExample(new CategoryItemExample());
 
         //merge lists into fake model
         for(Category category : categories){
-            List<Type> typeList = Lists.newArrayList();
-            link = new CategoryTypeLink();
+            List<Item> typeList = Lists.newArrayList();
+            link = new CategoryItemLink();
             link.setId(category.getId());
             link.setName(category.getName());
             link.setParentId(category.getParentId());
 
-            Iterator<CategoryType> categoryTypeIterator = categoryTypes.iterator();
+            Iterator<CategoryItem> categoryTypeIterator = categoryTypes.iterator();
             while(categoryTypeIterator.hasNext()){
-                CategoryType categoryType = categoryTypeIterator.next();
+                CategoryItem categoryType = categoryTypeIterator.next();
                 if(categoryType.getCategoryId().contentEquals(category.getId())){
-                    list.add(categoryType.getTypeId());
+                    list.add(categoryType.getItemId());
                 }
             }
             if(list.size()>0){
-                Iterator<Type> typeIterator = types.iterator();
+                Iterator<Item> typeIterator = types.iterator();
                 while(typeIterator.hasNext()){
-                    Type type = typeIterator.next();
+                    Item type = typeIterator.next();
                     if(list.contains(type.getId())){
                         typeList.add(type);
                     }
                 }
             }
 
-            link.setTypes(typeList);
+            link.setItems(typeList);
             links.add(link);
-        }
+        }*/
+
+        List<CategoryItemLink> links = customMapper.getCategoryTreeItems();
+
         return treeService.generateCategoryTree(links);
     }
 
@@ -133,7 +128,7 @@ public class CategoryController {
             List<Node> newNodes = mapper.readValue(newArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             Category category;
-            CategoryType categoryType;
+            CategoryItem categoryItem;
 
             for(Node node: newNodes){
                 //create category
@@ -142,12 +137,12 @@ public class CategoryController {
                 category.setId(node.getId());
                 category.setParentId(node.getParentId());
                 categoryMapper.insertSelective(category);
-                for(Type type : node.getTypes()){
+                for(Item item : node.getItems()){
                     //link with type
-                    categoryType = new CategoryType();
-                    categoryType.setCategoryId(category.getId());
-                    categoryType.setTypeId(type.getId());
-                    categoryTypeMapper.insertSelective(categoryType);
+                    categoryItem = new CategoryItem();
+                    categoryItem.setCategoryId(category.getId());
+                    categoryItem.setItemId(item.getId());
+                    categoryItemMapper.insertSelective(categoryItem);
                 }
             }
         }
@@ -157,7 +152,7 @@ public class CategoryController {
             List<Node> updateNodes = mapper.readValue(updateArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             Category category;
-            CategoryType categoryType;
+            CategoryItem categoryItem;
 
             for(Node node: updateNodes){
                 //create category
@@ -167,50 +162,38 @@ public class CategoryController {
                 category.setParentId(node.getParentId());
                 categoryMapper.updateByPrimaryKeySelective(category);
                 //get linked types
-                CategoryTypeExample example = new CategoryTypeExample();
+                CategoryItemExample example = new CategoryItemExample();
                 example.createCriteria().andCategoryIdEqualTo(category.getId());
 
-                List<String> oldTypes = Lists.transform(categoryTypeMapper.selectByExample(example), new Function<CategoryType, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nullable CategoryType categoryType) {
-                        return categoryType.getTypeId();
-                    }
-                });
+                List<String> oldLinks = Lists.transform(categoryItemMapper.selectByExample(example), categoryItemLink -> categoryItemLink.getItemId());
 
-                List<String> newTypes = Lists.transform(node.getTypes(), new Function<Type, String>() {
-                    @Nullable
-                    @Override
-                    public String apply(@Nullable Type categoryType) {
-                        return categoryType.getId();
-                    }
-                });
+                List<String> newLinks = Lists.transform(node.getItems(), item -> item.getId());
 
-                System.out.println("old type contains -> "+oldTypes);
-                System.out.println("new type contains -> "+newTypes);
+                System.out.println("old type contains -> "+oldLinks);
+                System.out.println("new type contains -> "+newLinks);
 
-                Iterator<String> oldIt = oldTypes.iterator();
+                Iterator<String> oldIt = oldLinks.iterator();
                 while (oldIt.hasNext()){
                     String old = oldIt.next();
                     System.out.println("old type id -> "+old);
-                    if(newTypes.contains(old)){
+                    if(newLinks.contains(old)){
                         System.out.println("find in new");
                         oldIt.remove();
-                        newTypes.remove(old);
+                        newLinks.remove(old);
                     }
                 }
-                System.out.println("Will be deleted -> "+ oldTypes);
+                System.out.println("Will be deleted -> "+ oldLinks);
                 //remove old
-                CategoryTypeExample oldExample = new CategoryTypeExample();
-                oldExample.createCriteria().andTypeIdIn(oldTypes);
-                categoryTypeMapper.deleteByExample(oldExample);
+                CategoryItemExample oldExample = new CategoryItemExample();
+                oldExample.createCriteria().andItemIdIn(oldLinks);
+                categoryItemMapper.deleteByExample(oldExample);
 
                 //add new link with type
-                for(String typeId : newTypes){
-                    categoryType = new CategoryType();
-                    categoryType.setCategoryId(category.getId());
-                    categoryType.setTypeId(typeId);
-                    categoryTypeMapper.insertSelective(categoryType);
+                for(String itemId : newLinks){
+                    categoryItem = new CategoryItem();
+                    categoryItem.setCategoryId(category.getId());
+                    categoryItem.setItemId(itemId);
+                    categoryItemMapper.insertSelective(categoryItem);
                 }
             }
         }
@@ -220,9 +203,9 @@ public class CategoryController {
             List<Node> deleteNodes = mapper.readValue(deleteArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             for(Node node: deleteNodes){
-                CategoryTypeExample delExample = new CategoryTypeExample();
+                CategoryItemExample delExample = new CategoryItemExample();
                 delExample.createCriteria().andCategoryIdEqualTo(node.getId());
-                categoryTypeMapper.deleteByExample(delExample);
+                categoryItemMapper.deleteByExample(delExample);
                 categoryMapper.deleteByPrimaryKey(node.getId());
             }
 
@@ -230,26 +213,31 @@ public class CategoryController {
     }
 
     /* get all types */
+    @Deprecated
     @RequestMapping(method = RequestMethod.GET,value = "/types")
     public List getAllTypes(){
-        return typeMapper.selectByExample(new TypeExample());
+//        return typeMapper.selectByExample(new TypeExample());
+        return null;
     }
 
     /* update or insert type */
+    @Deprecated
     @RequestMapping(method = RequestMethod.POST,value = "/types")
-    public Type addType(@RequestBody Type type){
-        if(!Strings.isNullOrEmpty(type.getId())){
-            typeMapper.updateByPrimaryKey(type);
-        } else {
-            typeMapper.insertSelective(type);
-        }
-        return type;
+    public Item addType(@RequestBody Item item){
+//        if(!Strings.isNullOrEmpty(type.getId())){
+//            typeMapper.updateByPrimaryKey(type);
+//        } else {
+//            typeMapper.insertSelective(type);
+//        }
+//        return type;
+        return null;
     }
 
     /* delete type */
+    @Deprecated
     @RequestMapping(method = RequestMethod.DELETE,value = "/types/{id}")
     public void addType(@PathVariable("id") String id){
-        typeMapper.deleteByPrimaryKey(id);
+//        typeMapper.deleteByPrimaryKey(id);
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/side/menu")

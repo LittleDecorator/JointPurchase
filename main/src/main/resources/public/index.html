@@ -23,6 +23,7 @@
     <!--materialize-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">-->
     <link href="official/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+
     <!--<link rel="stylesheet" href="official/bower_components/materialize/dist/css/materialize.min.css" type="text/css" media="screen,projection"/>-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -55,18 +56,21 @@
                 <li><a ui-sref="company">Поставщики</a></li>
                 <li><a ui-sref="guides">Справочники</a></li>
             </ul>
+
             <nav class="white">
                 <div class="container">
                     <div class="nav-wrapper">
                         <div id="logo-container">
-                            <a class="brand-logo-lpad" ui-sref="home">Good-Wood</a>
+                            <a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>
+                            <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                         </div>
                         <div class="menu-adbeus-container">
                             <ul id="nav-mobile" class="right hide-on-med-and-down">
                                 <!--<li><a ui-sref="cart"><i class="fa fa-2x fa-shopping-cart"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>-->
                                 <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
                                 <li ng-if="auth.isAuth()"><a>Hello, <strong class="ng-binding">{{currentUser.name}}</strong></a></li>
-                                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>
+                                <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
+                                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Login</a></li>
                                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
                                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
                                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Контакты</a></li>-->
@@ -78,23 +82,42 @@
                                 </li>
                             </ul>
                         </div>
+                        <ul class="side-nav" id="mobile-demo">
+
+                            <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Login</a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="item.detail">Акции</a></li>
+                            <ul class="collapsible collapsible-accordion">
+                            <li><a class="collapsible-header waves-effect waves-teal menu-up-lvl" ng-show="auth.isAuth()">Администрирование<i class="material-icons" style="float: right;margin-right: 0px">keyboard_arrow_right</i></a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a ui-sref="order">Заказы</a></li>
+                                        <li><a ui-sref="person">Клиенты</a></li>
+                                        <li><a ui-sref="item">Товар</a></li>
+                                        <li><a ui-sref="company">Поставщики</a></li>
+                                        <li><a ui-sref="guides">Справочники</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                                </ul>
+                            <li><a ui-sref="cart">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()"><a style="cursor: pointer">Выход</a></li>
+                        </ul>
                     </div>
                 </div>
             </nav>
 
         </div>
 
-        <!--<div ng-include="'pages/template/sideMenu.html'"></div>-->
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
-        <!--<ul id="side-mobile" class="side-nav fixed sidebart slide-outt" >-->
-            <!--<li ng-repeat="menu in nodes" ng-class="{'no-padding':menu.nodes.length>0}" ng-model="menu" ng-include="'pages/template/side.html'"></li>-->
-        <!--</ul>-->
     </header>
 
 
     <!-- MAIN CONTENT AND INJECTED VIEWS -->
     <div class="main container">
-        <!--<button class="btn btn-default collapse-button" ng-click="click()">Toggle collapse</button>-->
         <div ui-view="main"></div>
     </div>
 
@@ -118,6 +141,7 @@
 
     <!--materialize-->
     <script src="official/materialize.js"></script>
+    <!--<script type="text/javascript" src="official/angular-materialize.js"></script>-->
 
     <!--AUTH-->
     <script src="official/auth0/auth0.js"></script>
@@ -150,35 +174,9 @@
     <script src="custom/js/component/registration/registration.js"></script>
     <script src="custom/js/component/loader/loader.js"></script>
     <script src="custom/js/component/login/login.js"></script>
-    <!--<script src="custom/js/component/category/category.js"></script>-->
     <script src="custom/js/component/guides/guide.js"></script>
 
 
 </body>
-<!--<footer class="page-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col l6 s12">
-                <h5 class="white-text">Footer Content</h5>
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-            </div>
-            <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                    <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="footer-copyright">
-        <div class="container">
-            © 2014 Copyright Text
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-        </div>
-    </div>
-</footer>-->
 </html>
 

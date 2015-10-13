@@ -1,6 +1,6 @@
 package com.acme.model.domain;
 
-import com.acme.gen.domain.Type;
+import com.acme.gen.domain.Item;
 import com.google.common.collect.Lists;
 
 import java.io.Serializable;
@@ -11,14 +11,14 @@ public class Node implements Serializable {
     String id;
     String title;
     String parentId;
-    List<Type> types;
+    List<Item> items;
     List<Node> nodes;
     boolean isCompany = Boolean.FALSE;
 
-    public Node(String id, String title, List<Type> types,String parentId) {
+    public Node(String id, String title, List<Item> items,String parentId) {
         this.id = id;
         this.title = title;
-        this.types = Lists.newArrayList(types);
+        this.items = Lists.newArrayList(items);
         this.parentId = parentId;
     }
 
@@ -55,12 +55,12 @@ public class Node implements Serializable {
         return nodes;
     }
 
-    public List<Type> getTypes() {
-        return types;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setTypes(List<Type> types) {
-        this.types = types;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public void setNodes(List<Node> nodes) {
@@ -84,7 +84,10 @@ public class Node implements Serializable {
         return "Node{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", types=" + types +
+                ", parentId='" + parentId + '\'' +
+                ", items=" + items +
+                ", nodes=" + nodes +
+                ", isCompany=" + isCompany +
                 '}';
     }
 }

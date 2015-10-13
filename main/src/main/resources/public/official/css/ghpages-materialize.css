@@ -2140,11 +2140,13 @@ ul.staggered-list li {
     .hide-on-med-only {
         display: none !important; } }
 
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .hide-on-large-only {
         display: none !important; } }
 
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .show-on-large {
         display: initial !important; } }
 
@@ -5024,7 +5026,8 @@ span.badge.new:after {
     .container {
         width: 85%; } }
 
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .container {
         width: 70%; } }
 
@@ -5177,7 +5180,8 @@ span.badge.new:after {
         margin-left: 91.66667%; }
     .row .col.offset-m12 {
         margin-left: 100%; } }
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .row .col.l1 {
         width: 8.33333%;
         margin-left: 0; }
@@ -5253,7 +5257,8 @@ nav .nav-wrapper {
 nav .nav-wrapper i {
     display: block;
     font-size: 2rem; }
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     nav a.button-collapse {
         display: none; } }
 nav .button-collapse {
@@ -5629,7 +5634,8 @@ small {
         min-width: 30%;
         left: 5%;
         bottom: 7%; } }
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     #toast-container {
         min-width: 8%;
         top: 10%;
@@ -5673,7 +5679,8 @@ small {
 @media only screen and (min-width : 601px) and (max-width : 992px) {
     .toast {
         float: left; } }
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .toast {
         float: right; } }
 
@@ -8248,7 +8255,8 @@ a.button-collapse.top-nav.full {
     nav .nav-wrapper a.page-title {
         font-size: 36px; } }
 
-@media only screen and (min-width : 993px) {
+/*@media only screen and (min-width : 993px) {*/
+@media only screen and (min-width : 1350px) {
     .container {
         width: 85%; } }
 

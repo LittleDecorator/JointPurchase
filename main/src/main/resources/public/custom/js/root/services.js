@@ -160,7 +160,7 @@
             }
         }])
 
-        .service('eventService',['$rootScope',function($rootScope){
+        .service('eventService',['$rootScope','$state',function($rootScope,$state){
             return {
                 data:{},
                 onLogin: function(data){
@@ -171,6 +171,8 @@
                 onComplete: function(){
                     console.log("in complete broad");
                     $rootScope.$broadcast('onComplete');
+                    //temporary place
+                    $state.transitionTo($rootScope.oldLocation.substring(1));
                 },
                 onFilter: function(data){
                     console.log("in sideMenu broad");

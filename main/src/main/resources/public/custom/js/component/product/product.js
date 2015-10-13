@@ -42,7 +42,7 @@
                 });
 
                 //show side menu
-                $('.slide-outt').addClass('slide-inn');
+                //$('.slide-outt').addClass('slide-inn');
             });
 
             $scope.toggle = function(scope) {
@@ -151,6 +151,17 @@
                 console.log("DONE!");
                 $(".collapsible").collapsible();
             }, 300);
+
+            $scope.toggleCategory = function(){
+                //show side menu
+                var side = $('.slide-outt');
+                if(side.hasClass('slide-inn')){
+                    side.removeClass('slide-inn')
+                } else {
+                    side.addClass('slide-inn');
+                }
+
+            }
 
     }])
 

@@ -282,7 +282,7 @@ div.col-sm-6:nth-child(2n){
 span.badge.contain{
     font-weight: 300;
     font-size: 0.8rem;
-    color: #fff;
+    color: #fff!important;
     background-color: #26a69a;
     border-radius: 2px;
     position: inherit;

@@ -65,13 +65,16 @@ create table credential(
 
 -- таблица заказов
 create table purchase_order (
-  id varchar(37) not null,      --id
-  subject_id varchar(37) not null,        -- ссылка на оформителя
-  recipient_fio varchar(37) not null,     -- фио получателя
+  id varchar(37) not null,                --id
+  subject_id varchar(37) not null,        -- ссылка на оформителя (может отсутствовать для незарегистрированных)
+  uid bigint not null,                    -- номер заказа
+  recipient_fname varchar(37) not null,     -- имя получателя
+  recipient_lname varchar(37) not null,     -- фамилия получателя
+  recipient_mname varchar(37) not null,     -- отчество получателя
   recipient_email varchar(37) not null,     -- email получателя
   recipient_phone varchar(37),              -- телефон получателя
   recipient_address varchar(255) not null,        -- адрес доставки
-  create_order_date timestamp default current_timestamp,    --дата создания заказа
+  date_add timestamp default current_timestamp,    --дата создания заказа
   close_order_date timestamp,     --дата закрытия заказа
   comment varchar(255),     -- комментарий
   status varchar(30) default 'new',     --статус заказа
@@ -90,55 +93,33 @@ create table category (
    foreign key (parent_id) references category
 );
 
---типы товаров
-create table type (
-  id varchar(37) not null,
-  name varchar(37) not null,
-  date_add timestamp default current_timestamp,
-  PRIMARY key (id)
-);
-
---связь категорий и типов товара
-create table category_type(
-  id varchar(37) not null,
-  category_id varchar(37) not null,
-  type_id varchar(37) not null,
-  date_add timestamp default current_timestamp,
-  PRIMARY key (id),
-  foreign key (category_id) REFERENCES category,
-  FOREIGN key (type_id) REFERENCES type
-);
-
 -- таблица товара
 create table item (
   id varchar(37) not null,
   name varchar(255) not null,
   company_id varchar(37) not null,
-  type_id varchar(37) not null,
   article varchar(30),
   description varchar(2000),
   price decimal(20,2) not null, --цена еденицы товара
   date_add timestamp default current_timestamp,
   not_for_sale char(1) not null default 'N' check(not_for_sale in ('Y', 'N')),
   primary key (id),
-  foreign key (company_id) references company,
-  foreign key (type_id) references type
+  foreign key (company_id) references company
 );
 
--- таблица связи товара с добавляющим, для строгого разграничения кураторов товара
-create table item_owner (
-    id varchar(37) not null,
-    item_id varchar(37) not null,
-    count int default 0,
-    user_add varchar(37) not null,
-    date_add timestamp default current_timestamp,
-    primary key (id),
-    foreign key (item_id) references item,
-    foreign key (user_add) references subject
+--связь категорий и товара
+create table category_item(
+  id varchar(37) not null,
+  category_id varchar(37) not null,
+  item_id varchar(37) not null,
+  date_add timestamp default current_timestamp,
+  PRIMARY key (id),
+  foreign key (category_id) REFERENCES category,
+  FOREIGN key (item_id) REFERENCES item
 );
 
 -- таблица связи заказа и товара
-create table order_items (
+create table order_item (
   id varchar(37) not null,
   order_id varchar(37) not null,
   item_id varchar(37) not null,

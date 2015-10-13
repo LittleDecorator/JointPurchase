@@ -137,6 +137,9 @@
                         method:'POST',
                         isArray:false
                     }
+                }),
+                orderStatus:$resource('clss/order/status',{},{
+                    get:{method:'GET',isArray:true}
                 })
 
             }

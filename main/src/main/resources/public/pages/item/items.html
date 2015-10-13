@@ -22,20 +22,15 @@
                     <option value="">Выберите Категорию ...</option>
                 </select>
             </div>
-            <div class="right">
-                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
-                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
-            </div>
+
+            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
+            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
         </div>
 
 <!-- Item Table -->
 <div class="item_result">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
     <div>
-        <a class="btn white-text" ng-click="addItem()">
-            <span>Добавить товар</span>
-        </a>
-
         <h4 class="example_head">Товары:</h4>
     </div>
 
@@ -77,9 +72,12 @@
             </tbody>
         </table>
     </div>
-    <!--<div style="text-align: center">
-        <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currPage" max-size="maxPage" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
-    </div>-->
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="addItem()">
+            <i class="large mdi-content-add"></i>
+        </a>
+    </div>
+
 </div>
-
-
+</div>

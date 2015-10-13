@@ -6,10 +6,8 @@
     'use strict';
 
     angular.module('item')
-        .controller('itemController',['$scope','$state','item','dataResources', function ($scope, $state, item, dataResources) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout', function ($scope, $state, dataResources,$timeout) {
             console.log("enter item controller");
-            //for filter you may use % for replace other symbols
-
             //maps
             dataResources.companyMap.get(function(res){
                 $scope.companyNames = [];
@@ -22,26 +20,11 @@
                 });
 
             });
-            dataResources.typeMap.get(function(res) {
-                $scope.types=[];
-                angular.forEach(res, function (comp) {
-                    //console.log(comp);
-                    $scope.types.push(comp);
-                    if($scope.selected){
-                        $scope.selected.type = helpers.findInArrayById($scope.types, $scope.selected.typeId);
-                    }
-                });
-            });
 
             //filter
             $scope.filter = {};
             $scope.filter.selectedCompany = "";
-            $scope.filter.selectedType = "";
-
-            //selected
-            $scope.selected = {};
-            $scope.selected.company = {};
-            $scope.selected.type = {};
+            $scope.filter.selectedCategory = "";
 
             //main
             $scope.index = null;
@@ -54,20 +37,16 @@
             $scope.itemsPerPage = 10;
             $scope.totalItems = null;
 
-            console.log(item);
-
             $scope.needInit= true;
 
-            if(item){
-                $scope.selected = item;
-            } else {
-                //get all items
+            //get all items
+            $timeout(function(){
                 dataResources.item.query(function (data) {
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var type = helpers.findInArrayById($scope.types, item.typeId);
-                        item.type = type.name;
+                        var category = helpers.findInArrayById($scope.categories, item.categoryId);
+                        item.category = category.name;
                         $scope.items.push(item);
                     });
                     //get total items cou, for pagination
@@ -78,7 +57,8 @@
                         $scope.subList();
                     });
                 });
-            }
+            },100);
+
 
             //get sub list of items for single page display
             $scope.subList = function () {
@@ -97,12 +77,11 @@
             $scope.clearSelected = function(){
                 $scope.selected = {};
                 $scope.selected.company = {};
-                $scope.selected.type = {};
+                $scope.selected.category = {};
             };
 
             //edit item
             $scope.editItem = function (id) {
-                console.log($state);
                 $state.go("item.detail", {id: id});
             };
 
@@ -121,12 +100,6 @@
                 $scope.subList();
             };
 
-            //modal button save listener
-            $scope.save = function () {
-                $scope.selected.companyId = $scope.selected.company.id;
-                $scope.selected.typeId = $scope.selected.type.id;
-                dataResources.item.save($scope.selected);
-            };
 
             //filter table
             $scope.filter.apply = function () {
@@ -135,8 +108,8 @@
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var type = helpers.findInArrayById($scope.types, item.typeId);
-                        item.type = type.name;
+                        var category = helpers.findInArrayById($scope.types, item.typeId);
+                        item.category = category.name;
                         $scope.items.push(item);
                     });
                     $scope.currPage = 1;
@@ -161,33 +134,6 @@
                 });
             };
 
-            $scope.companyChanged = function(){
-                console.log("company changed");
-                var elem = $('#company .select-wrapper');
-                console.log($scope.selected.company)
-                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
-                    console.log("add inactive");
-                    angular.element(elem).addClass('inactive');
-                } else {
-                    if(angular.element(elem).hasClass('inactive')){
-                        console.log("remove inactive");
-                        angular.element(elem).removeClass('inactive');
-                    }
-                }
-            };
-
-            $scope.typeChanged = function(){
-                console.log("type changed");
-                var elem = $('#type .select-wrapper');
-                if($scope.filter.selectedType == null || $scope.selected.type == null){
-                    angular.element(elem).addClass('inactive');
-                } else {
-                    if(angular.element(elem).hasClass('inactive')){
-                        angular.element(elem).removeClass('inactive');
-                    }
-                }
-            };
-
             $scope.showGallery = function (id) {
                 $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
                 $state.go("item.gallery", {itemId: id});
@@ -202,10 +148,85 @@
                 dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
             };
 
-            console.log($scope);
+            $scope.companyChanged = function(){
+                var elem = $('#company .select-wrapper');
+                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
+                    angular.element(elem).addClass('inactive');
+                } else {
+                    if(angular.element(elem).hasClass('inactive')){
+                        angular.element(elem).removeClass('inactive');
+                    }
+                }
+            };
+
+            $scope.typeChanged = function(){
+                var elem = $('#type .select-wrapper');
+                if($scope.filter.selectedType == null || $scope.selected.type == null){
+                    angular.element(elem).addClass('inactive');
+                } else {
+                    if(angular.element(elem).hasClass('inactive')){
+                        angular.element(elem).removeClass('inactive');
+                    }
+                }
+            };
 
         }])
 
+        .controller('itemDetailController',['$scope','item','dataResources', function ($scope, item, dataResources){
 
+            dataResources.categoryMap.get(function(res) {
+                $scope.categories=[];
+                angular.forEach(res, function (comp) {
+                    $scope.categories.push(comp);
+                    if($scope.selected){
+                        $scope.selected.category = helpers.findInArrayById($scope.categories, $scope.selected.categoryId);
+                    }
+                });
+            });
+
+            if(item){
+                $scope.selected = item;
+                if(!$scope.selected.inStock){
+                    $scope.selected.inStock = 0;
+                }
+            } else {
+                $scope.selected = {company:{},type:{}};
+            }
+
+            //company map
+            dataResources.companyMap.get(function(res){
+                $scope.companyNames = [];
+                angular.forEach(res, function (comp) {
+                    $scope.companyNames.push(comp);
+                });
+
+                if($scope.selected.companyId){
+                    $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
+                }
+
+            });
+
+            //category map
+            dataResources.typeMap.get(function(res) {
+                $scope.types=[];
+                angular.forEach(res, function (comp) {
+                    $scope.types.push(comp);
+                });
+
+                if($scope.selected.typeId){
+                    $scope.selected.type = helpers.findInArrayById($scope.types, $scope.selected.typeId);
+                }
+            });
+
+            //modal button save listener
+            $scope.save = function () {
+                $scope.selected.companyId = $scope.selected.company.id;
+                $scope.selected.typeId = $scope.selected.type.id;
+                dataResources.item.save($scope.selected);
+            };
+
+
+
+        }])
 
 })();

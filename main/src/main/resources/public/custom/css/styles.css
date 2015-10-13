@@ -199,9 +199,13 @@ nav ul a:hover, nav ul i:hover {
     .container {
         padding:0 0rem;
     }
-    ul.side-nav a {
+    /*ul.side-nav a {
         font-size: 36px;
         text-transform: uppercase;
+    }*/
+    ul.side-nav a {
+        font-size: 16px;
+        /*text-transform: uppercase;*/
     }
     .parallax-container {
         min-height: 275px;
@@ -271,4 +275,17 @@ div.collection a:hover{
 
 div.collection a.active{
     background-color: #ddd!important;
+}
+
+/* TABLE TOTAL*/
+.table-result .gray-row{
+    margin-left: auto!important;
+    margin-right: auto!important;
+    background: #f5f5f5;
+}
+
+.table-total {
+    text-align: right;
+    line-height: 50px;
+    font-size: 28px;
 }

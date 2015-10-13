@@ -1,6 +1,6 @@
 (function(){
     angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap','angularBootstrapNavTree' ,'ngResource', 'angularFileUpload', 'angular-jwt',
-        'purchase.controllers','purchase.directives','purchase.factories','purchase.filters','purchase.services']);
+        'purchase.controllers','purchase.directives','purchase.factories','purchase.filters','purchase.services'/*,'ui.materialize'*/]);
 })();
 
 (function() {
@@ -29,6 +29,7 @@
 
                 //hide side menu
                 $('.slide-outt').removeClass('slide-inn');
+                $('.button-collapse').sideNav('hide');
 
                 $rootScope.actualLocation = $location.$$url;
             });
@@ -60,9 +61,12 @@
                     return $location.path()
                 },
                 function (newLocation, oldLocation) {
+                    $rootScope.newLocation = newLocation;
+                    $rootScope.oldLocation = oldLocation;
                     //console.log("actual -> "+$rootScope.actualLocation);
                     if ($rootScope.actualLocation == newLocation) {
                         $rootScope.$broadcast('locBack', true);
+
                     }
                 }
             );

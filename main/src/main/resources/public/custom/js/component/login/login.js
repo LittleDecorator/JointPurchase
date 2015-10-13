@@ -16,8 +16,8 @@
 
         $scope.submit = function() {
             console.log("in submit");
-            $scope.$close();
-            $scope.$dismiss();
+            //$scope.$close();          -- uncomment if use modal login
+            //$scope.$dismiss();        -- uncomment if use modal login
             loaderModal();
 
             eventService.onLogin({name:$scope.uname,password:$scope.password});

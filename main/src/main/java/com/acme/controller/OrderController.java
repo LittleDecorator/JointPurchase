@@ -1,10 +1,10 @@
 package com.acme.controller;
 
-import com.acme.gen.domain.OrderItems;
-import com.acme.gen.domain.OrderItemsExample;
+import com.acme.gen.domain.OrderItem;
+import com.acme.gen.domain.OrderItemExample;
 import com.acme.gen.domain.PurchaseOrder;
 import com.acme.gen.domain.PurchaseOrderExample;
-import com.acme.gen.mapper.OrderItemsMapper;
+import com.acme.gen.mapper.OrderItemMapper;
 import com.acme.gen.mapper.PurchaseOrderMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
@@ -25,13 +25,23 @@ public class OrderController{
     private PurchaseOrderMapper orderMapper;
 
     @Autowired
-    private OrderItemsMapper orderItemsMapper;
+    private OrderItemMapper orderItemMapper;
 
+
+    /**
+     * Get all orders
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public List<PurchaseOrder> getOrders() {
         return orderMapper.selectByExample(new PurchaseOrderExample());
     }
 
+    /**
+     * Get specific customer order
+     * @param id - customer ID
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/customer/{id}")
     public List<PurchaseOrder> getCustomerOrders(@PathVariable("id") String id) {
         PurchaseOrderExample example = new PurchaseOrderExample();
@@ -39,15 +49,18 @@ public class OrderController{
         return orderMapper.selectByExample(example);
     }
 
+    /**
+     * Update Order if ID present, else Create new Order
+     * @param input
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.POST)
-    public PurchaseOrder createOrder(@RequestBody PurchaseOrder input) throws ParseException, IOException {
-
-        System.out.println("createOrder");
-        System.err.println(input);
-
-        /*ObjectMapper mapper = new ObjectMapper();
+    public PurchaseOrder createOrUpdateOrder(@RequestBody PurchaseOrder input) throws ParseException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
         JSONParser parser=new JSONParser();
-        JSONObject main = (JSONObject) parser.parse(input);
+        JSONObject main = (JSONObject) parser.parse(String.valueOf(input));
         String orderS = ((JSONObject) main.get("order")).toJSONString();
 
         PurchaseOrder order = mapper.readValue(orderS, PurchaseOrder.class);
@@ -61,45 +74,51 @@ public class OrderController{
         JSONArray itemsArray = (JSONArray) main.get("items");
         for(int i = 0;i<itemsArray.size();i++){
             String item = ((JSONObject) itemsArray.get(i)).toJSONString();
-            OrderItems orderItem = mapper.readValue(item, OrderItems.class);
+            OrderItem orderItem = mapper.readValue(item, OrderItem.class);
             orderItem.setOrderId(order.getId());
             if(orderItem.getId()!=null){
-                orderItemsMapper.updateByPrimaryKeySelective(orderItem);
+                orderItemMapper.updateByPrimaryKeySelective(orderItem);
             } else {
-                orderItemsMapper.insertSelective(orderItem);
+                orderItemMapper.insertSelective(orderItem);
             }
         }
-        return order;*/
-        return null;
+        return order;
     }
 
+    /**
+     * Delete specific order
+     * @param id - order ID
+     */
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public void deleteOrder(@PathVariable("id") String id){
         //delete order bind items
-        OrderItemsExample orderItemsExample = new OrderItemsExample();
+        OrderItemExample orderItemsExample = new OrderItemExample();
         orderItemsExample.createCriteria().andOrderIdEqualTo(id);
-        orderItemsMapper.deleteByExample(orderItemsExample);
+        orderItemMapper.deleteByExample(orderItemsExample);
         //delete order itself
         orderMapper.deleteByPrimaryKey(id);
     }
 
+    /**
+     * Get Order detail
+     * @param id - order ID
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public PurchaseOrder getOrder(@PathVariable("id") String id){
         return orderMapper.selectByPrimaryKey(id);
     }
 
+    /**
+     * Get Items list in order
+     * @param id - order ID
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
-    public List<OrderItems> getOrderItems(@PathVariable("id") String id) {
-        OrderItemsExample example = new OrderItemsExample();
+    public List<OrderItem> getOrderItems(@PathVariable("id") String id) {
+        OrderItemExample example = new OrderItemExample();
         example.createCriteria().andOrderIdEqualTo(id);
-        return orderItemsMapper.selectByExample(example);
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}/item/{itemId}")
-    public void removeOrderItem(@PathVariable("id") String orderId,@PathVariable("itemId") String itemId) {
-        OrderItemsExample example = new OrderItemsExample();
-        example.createCriteria().andItemIdEqualTo(itemId).andOrderIdEqualTo(orderId);
-        orderItemsMapper.deleteByExample(example);
+        return orderItemMapper.selectByExample(example);
     }
 
 }

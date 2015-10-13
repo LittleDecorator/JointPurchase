@@ -1,15 +1,15 @@
-package com.acme.helper;
+package com.acme.model.domain;
 
-import com.acme.gen.domain.Type;
+import com.acme.gen.domain.Item;
 
 import java.util.List;
 
-public class CategoryTypeLink {
+public class CategoryItemLink {
 
     String id;
     String name;
     String parentId;
-    List<Type> types;
+    List<Item> items;
 
     public String getId() {
         return id;
@@ -35,11 +35,11 @@ public class CategoryTypeLink {
         this.parentId = parentId;
     }
 
-    public List<Type> getTypes() {
-        return types;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setTypes(List<Type> types) {
-        this.types = types;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }

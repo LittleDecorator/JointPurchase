@@ -1,6 +1,6 @@
 <div style="padding-top: 20px;">
     <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
-    <button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>
+    <!--<button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>-->
     <h3 class="example_head">Компании:</h3>
     <div class="table-result">
         <table class="table table-bordered table-hover adm-table collection">
@@ -22,5 +22,11 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="addCompany()">
+            <i class="large mdi-content-add"></i>
+        </a>
     </div>
 </div>

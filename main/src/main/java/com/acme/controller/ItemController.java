@@ -2,12 +2,12 @@ package com.acme.controller;
 
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.*;
-//import model.mapper.CustomMapper;
+//import com.acme.model.mapper.CustomMapper;
+import com.acme.model.domain.ItemCategoryLink;
 import com.acme.model.mapper.CustomMapper;
 import com.acme.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +33,7 @@ public class ItemController{
     ItemMapper itemMapper;
 
     @Autowired
-    ItemOwnerMapper ownerMapper;
-
-    @Autowired
-    OrderItemsMapper orderItemsMapper;
+    OrderItemMapper orderItemMapper;
 
     @Autowired
     CompanyMapper companyMapper;
@@ -48,15 +45,40 @@ public class ItemController{
     ItemContentMapper itemContentMapper;
 
     @Autowired
+    CategoryItemMapper categoryItemMapper;
+
+    @Autowired
     CustomMapper customMapper;
 
+
+    /**
+     * Get all items as map
+     **/
+    @RequestMapping(method = RequestMethod.GET,value = "/item/map")
+    public List<Map<String, String>> getTypeMap() {
+        List<Map<String,String>> list = new ArrayList<>();
+        Map<String,String> map;
+
+        for(Item item : itemMapper.selectByExample(new ItemExample())){
+            map = new HashMap<>();
+            map.put("id",item.getId());
+            map.put("name",item.getName());
+            list.add(map);
+        }
+        return list;
+    }
+
+    /**
+     * Get all items
+     **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<Item> getItems() {
+    public List<ItemCategoryLink> getItems() {
         //get all items
-        ItemExample itemExample = new ItemExample();
-        itemExample.setOrderByClause("date_add asc");
-        List<Item> items = itemMapper.selectByExample(itemExample);
-        return items;
+//        ItemExample itemExample = new ItemExample();
+//        itemExample.setOrderByClause("date_add asc");
+//        List<Item> items = itemMapper.selectByExample(itemExample);
+//        return items;
+        return customMapper.getItemCategories();
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
@@ -67,12 +89,12 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
     public List<Item> getGoodsByOrderId(@PathVariable("id") String orderId) {
         ItemExample itemExample = new ItemExample();
-        OrderItemsExample orderItemsExample = new OrderItemsExample();
+        OrderItemExample orderItemsExample = new OrderItemExample();
         orderItemsExample.createCriteria().andOrderIdEqualTo(orderId);
-        List<String> items = Lists.transform(orderItemsMapper.selectByExample(orderItemsExample), new Function<OrderItems, String>() {
+        List<String> items = Lists.transform(orderItemMapper.selectByExample(orderItemsExample), new Function<OrderItem, String>() {
             @Override
-            public String apply(OrderItems orderItems) {
-                return orderItems.getItemId();
+            public String apply(OrderItem orderItem) {
+                return orderItem.getItemId();
             }
         });
         itemExample.createCriteria().andIdIn(items);
@@ -112,9 +134,9 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public boolean deleteGood(@PathVariable("id") String id) {
         //delete item in orders
-        OrderItemsExample orderItemsExample = new OrderItemsExample();
+        OrderItemExample orderItemsExample = new OrderItemExample();
         orderItemsExample.createCriteria().andItemIdEqualTo(id);
-        orderItemsMapper.deleteByExample(orderItemsExample);
+        orderItemMapper.deleteByExample(orderItemsExample);
         //delete item itself
         itemMapper.deleteByPrimaryKey(id);
         return true;
@@ -134,16 +156,18 @@ public class ItemController{
         String company = main.get("company").toString();
         String category = main.get("category").toString();
         String article = main.get("article").toString();
-//
+
         if(!Strings.isNullOrEmpty(name)){
-            criteria.andNameLike("%"+name+"%");
+            criteria.andNameLike("%" + name + "%");
         }
         if(!Strings.isNullOrEmpty(company)){
             criteria.andCompanyIdEqualTo(company);
         }
+/*
         if(!Strings.isNullOrEmpty(category)){
-            criteria.andTypeIdEqualTo(category);
+            criteria.andCategoryIdEqualTo(category);
         }
+*/
         if(!Strings.isNullOrEmpty(article)){
             criteria.andArticleLike(article);
         }
@@ -257,7 +281,7 @@ public class ItemController{
 
         ItemExample itemExample = new ItemExample();
         //TODO: use this category list down here
-        itemExample.createCriteria().andTypeIdIn(customMapper.getSubCategoryLeafs(categoryId));
+//        itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
 
         List<Item> items = itemMapper.selectByExample(itemExample);
         for(Item item : items){
@@ -291,7 +315,7 @@ public class ItemController{
         List<String> types = mapper.readValue(input, new TypeReference<List<String>>(){});
 
         ItemExample itemExample = new ItemExample();
-        itemExample.createCriteria().andTypeIdIn(types).andNotForSaleEqualTo(false);
+//        itemExample.createCriteria().andTypeIdIn(types).andNotForSaleEqualTo(false);
         List<Item> itemList = itemMapper.selectByExample(itemExample);
 
         JSONArray jsonArray = new JSONArray();

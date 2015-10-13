@@ -21,6 +21,10 @@ insert into subject(id,first_name,last_name,middle_name,phone_number,email,addre
         values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','N');
 insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
         values ('guzel','Guzel', 'Kobzeva', 'Zulfarovna','+79258552096','fazylovagz@mail.ru','Moscow','Y');
+insert into subject(id,first_name,enabled)
+        values ('olga','Olga','Y');
+insert into subject(id,first_name,enabled)
+        values ('LittleDecorator','Nikolay','Y');
 
 /*CREDENTIALS*/
 --password
@@ -29,6 +33,10 @@ insert into credential(subject_id,password,role_id)
 --nina21032013
 insert into credential(subject_id,password,role_id)
         values('guzel','094de90aaea4750489a2f8c7a8cefd5a50a135cb12e4970d84586f3f1e883872640ff304b9ace30adcda5d8a2c6e92063e9875983788cd9829ca62a972465429','admin');
+insert into credential(subject_id,password,role_id)
+        values('olga','0ef8288336b4f1da0eb2b8847b02efcc8a2ec2b0ec385768f8635a8f6a90e69b1145a961d52c01dd5e2275643f7f253b85e2042e17ca10f81423f6b5733da9ea','admin');
+insert into credential(subject_id,password,role_id)
+        values('LittleDecorator','1f9c15a7de0090c35d6693b76533819231d2adae494d70db74d3c12a9c0cdf189560c3623cbae47b2bc13a8ed0973aa47d9f94474fc706095786b3183da6ca20','admin');
 
 /* CATEGORY */
 insert into category(id,name)
@@ -120,28 +128,22 @@ insert into category(id,name,parent_id)
 insert into category(id,name,parent_id)
         values ('9c70fde0-86b3-4aab-9fe8-b1b22515697b','Открытки','a597eaa5-b74a-45ef-af60-18c7c7d3e140');
 
-insert into type(id,name)
-        values ('9c70fde0-86b3-4aab-9fe8-b1b22515697b','Сортёр');
-insert into type(id,name)
-        values ('049f1393-3454-4dd1-ae50-82fa6cc329c0','Книга');
-insert into type(id,name)
-        values ('a9c1f075-658d-41d8-a721-5d302f880f44','Кубики');
-
 /* ITEMS */
-insert into item(id,name,company_id,type_id,price,not_for_sale)
-        values ('622323dd-00eb-4a94-b7f0-31b91d91fefa', 'Кубики «Алфавит» английский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150,'Y');
-insert into item(id,name,company_id,type_id,price,not_for_sale)
-        values ('1a05535f-c373-404d-9117-e920792cecf0', 'Кубики «Алфавит» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150,'Y');
-insert into item(id,name,company_id,type_id,price,not_for_sale)
-        values ('23f9a890-525e-401d-9499-cd51dedc4103', 'Кубики «Цифры»','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',150,'Y');
-insert into item(id,name,company_id,type_id,price)
-        values ('91972e13-1983-4a74-9b48-c8e4909dd324', 'Кубики «Алфавит с цифрами» русский','5e895423-3d9d-4415-a136-558762e7ac02','a9c1f075-658d-41d8-a721-5d302f880f44',200);
+insert into item(id,name,company_id,description,price)
+        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);
+insert into item(id,name,company_id,price)
+        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f',1650);
+insert into item(id,name,company_id,description,price)
+        values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','The large Rainbow is really versatile and ideal already for small children! Toddlers stack, sort and build and as the children get older they will use it as a cradle for dolls, as fence for animals, like a tunnel or bridge for vehicles, as house for dwarfs and dollhouse dolls, build amazing sculptures... this rainbow will always be integrated in playing with a lot of fantasy. Materials: lime wood, non-toxic water based color stain. Size: length 38cm, height 18cm.',3500);
+insert into item(id,name,company_id,price)
+        values ('6a20e159-7951-4f65-88f8-3b5696e411fd', 'Радуга (6 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f',2000);
 
-insert into item(id,name,company_id,type_id,description,price)
-        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);
-insert into item(id,name,company_id,type_id,price)
-        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b',1650);
-insert into item(id,name,company_id,type_id,description,price)
-        values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b','The large Rainbow is really versatile and ideal already for small children! Toddlers stack, sort and build and as the children get older they will use it as a cradle for dolls, as fence for animals, like a tunnel or bridge for vehicles, as house for dwarfs and dollhouse dolls, build amazing sculptures... this rainbow will always be integrated in playing with a lot of fantasy. Materials: lime wood, non-toxic water based color stain. Size: length 38cm, height 18cm.',3500);
-insert into item(id,name,company_id,type_id,price)
-        values ('6a20e159-7951-4f65-88f8-3b5696e411fd', 'Радуга (6 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','9c70fde0-86b3-4aab-9fe8-b1b22515697b',2000);
+/* CATEGORY ITEMS */
+insert into category_item(id,category_id,item_id)
+        values ('5e24b8ea-8a81-4984-ae92-fed630d5b859','a00ce058-a855-407c-ac37-641f8f46fa43','5e24b8ea-8a81-4984-ae92-fed630d5b859');
+insert into category_item(id,category_id,item_id)
+        values ('b172e14f-33fd-4819-9831-09c54541feb4','876d17c2-647c-4b00-9f5e-195d5e57b0b7','b172e14f-33fd-4819-9831-09c54541feb4');
+insert into category_item(id,category_id,item_id)
+        values ('72fab541-593e-48ef-882e-e226775f0b6f','34a56bf2-f7b5-4649-b087-cf1b34c5e739','72fab541-593e-48ef-882e-e226775f0b6f');
+insert into category_item(id,category_id,item_id)
+        values ('6a20e159-7951-4f65-88f8-3b5696e411fd','a00ce058-a855-407c-ac37-641f8f46fa43','6a20e159-7951-4f65-88f8-3b5696e411fd');

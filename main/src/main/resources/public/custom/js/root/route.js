@@ -142,7 +142,7 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/order-detail.html',
-                        controller: 'orderController'
+                        controller: 'orderDetailController'
                     }
                 },
                 data: {
@@ -282,7 +282,7 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/item-detail.html',
-                        controller: 'itemController'
+                        controller: 'itemDetailController'
                     }
                 },
                 data: {
@@ -330,6 +330,19 @@ var route = {
                     'main@': {
                         templateUrl: 'pages/guides.html',
                         controller:'guideController'
+                    }
+                },
+                data: {
+                    requireLogin: false
+                }
+            },
+            {
+                name: 'login',
+                url: '/login',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/login.html',
+                        controller:'loginController'
                     }
                 },
                 data: {

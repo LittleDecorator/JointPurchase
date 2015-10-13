@@ -7,11 +7,11 @@
                 </div>
 
                 <div class="card-content" style="padding: 15px!important;" >
-                        <span class="card-title activator grey-text text-darken-4" style="font-size: 15px!important; color: #88AAA9!important;    line-height: 25px;">{{item.name}}</span>
+                        <span class="card-title activator grey-text text-darken-4" style="font-size: 15px!important; color: #88AAA9!important; line-height: 25px;">{{item.name}}</span>
                         <a class="btn btn-primary right" ng-click="addToCart(item)" title="Добавить в корзину">
                             <i class="fa fa-plus"></i>
                         </a>
-                        <br><b>Цена: </b>{{item.price}}
+                        <br><b>Цена: </b>{{item.price}} руб
                 </div>
 
                 <div class="card-reveal">
@@ -23,21 +23,15 @@
     </div>
 </div>
 
-<div class="fixed-action-btn hide-on-med-and-down" style="bottom: 45px; right: 24px;">
-    <!--<form action="http://adbeus.com" id="searchform" method="get">-->
-        <a class="btn-floating btn-large">
-            <i class="large mdi-action-search"></i>
-        </a>
-
-        <input type="text" name="s" class="search">
-    <!--</form>-->
+<div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
+    <a class="btn-floating btn-large blue lighten-3" ng-click="toggleCategory()">
+        <i class="large mdi-navigation-more-vert"></i>
+    </a>
 </div>
 
-
-<!--
-
-
-            <div style="text-align: center" ng-show="totalItems>itemsPerPage">
-                <pagination total-items="totalItems" items-per-page="itemsPerPage" ng-model="currPage" max-size="maxPage" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
-            </div>
--->
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large blue lighten-3">
+        <i class="large mdi-action-search"></i>
+    </a>
+    <input type="text" name="s" class="search">
+</div>
