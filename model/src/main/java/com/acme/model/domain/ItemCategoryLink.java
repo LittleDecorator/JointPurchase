@@ -1,6 +1,7 @@
 package com.acme.model.domain;
 
 import com.acme.gen.domain.Category;
+import com.acme.gen.domain.Item;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,6 +17,18 @@ public class ItemCategoryLink {
     private BigDecimal price;
     private Date dateAdd;
     private boolean notForSale;
+
+    public ItemCategoryLink() {}
+
+    public ItemCategoryLink(Item item) {
+        this.id = item.getId();
+        this.name = item.getName();
+        this.companyId = item.getCompanyId();
+        this.article = item.getArticle();
+        this.description = item.getDescription();
+        this.price = item.getPrice();
+        this.dateAdd = item.getDateAdd();
+    }
 
     List<Category> categories;
 

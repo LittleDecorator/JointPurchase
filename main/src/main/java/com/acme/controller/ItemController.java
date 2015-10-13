@@ -21,6 +21,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
@@ -50,6 +51,8 @@ public class ItemController{
     @Autowired
     CustomMapper customMapper;
 
+    @Autowired
+    CategoryMapper categoryMapper;
 
     /**
      * Get all items as map
@@ -82,8 +85,23 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public Item getGoodById(@PathVariable("id") String id) {
-        return itemMapper.selectByPrimaryKey(id);
+    public ItemCategoryLink getGoodById(@PathVariable("id") String id) {
+        Item item = itemMapper.selectByPrimaryKey(id);
+        ItemCategoryLink link = new ItemCategoryLink(item);
+
+        CategoryItemExample categoryItemExample = new CategoryItemExample();
+        categoryItemExample.createCriteria().andItemIdEqualTo(item.getId());
+
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.createCriteria().andIdIn(Lists.transform(categoryItemMapper.selectByExample(categoryItemExample), new Function<CategoryItem, String>() {
+            @Nullable
+            @Override
+            public String apply(CategoryItem categoryItem) {
+                return categoryItem.getCategoryId();
+            }
+        }));
+        link.setCategories(categoryMapper.selectByExample(categoryExample));
+        return link;
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")

@@ -45,8 +45,8 @@
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var category = helpers.findInArrayById($scope.categories, item.categoryId);
-                        item.category = category.name;
+                        //var category = helpers.findInArrayById($scope.categories, item.categoryId);
+                        //item.category = category.name;
                         $scope.items.push(item);
                     });
                     //get total items cou, for pagination
@@ -170,6 +170,30 @@
                 }
             };
 
+            var cities = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace
+            });
+
+            cities.initialize();
+
+            function initCategories(selector,data) {
+                console.log("init");
+                var elt = $('multiple');
+                elt.materialtags({
+                    itemValue: 'value',
+                    itemText: 'text',
+                    typeaheadjs: {
+                        name: 'cities',
+                        displayKey: 'text',
+                        source: cities.ttAdapter()
+                    }
+                });
+                angular.forEach(data,function(cat){
+                    elt.materialtags('add', { "value": cat.id , "text": cat.name});
+                });
+            };
+
         }])
 
         .controller('itemDetailController',['$scope','item','dataResources', function ($scope, item, dataResources){
@@ -178,9 +202,6 @@
                 $scope.categories=[];
                 angular.forEach(res, function (comp) {
                     $scope.categories.push(comp);
-                    if($scope.selected){
-                        $scope.selected.category = helpers.findInArrayById($scope.categories, $scope.selected.categoryId);
-                    }
                 });
             });
 
@@ -206,26 +227,38 @@
 
             });
 
-            //category map
-            dataResources.typeMap.get(function(res) {
-                $scope.types=[];
-                angular.forEach(res, function (comp) {
-                    $scope.types.push(comp);
-                });
-
-                if($scope.selected.typeId){
-                    $scope.selected.type = helpers.findInArrayById($scope.types, $scope.selected.typeId);
-                }
-            });
-
             //modal button save listener
             $scope.save = function () {
                 $scope.selected.companyId = $scope.selected.company.id;
-                $scope.selected.typeId = $scope.selected.type.id;
+                //$scope.selected.typeId = $scope.selected.type.id;
                 dataResources.item.save($scope.selected);
             };
 
+            function initCategories() {
+                console.log("init");
+                var cities = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace
+                });
 
+                cities.initialize();
+
+                var elt = $('#multiple');
+                elt.materialtags({
+                    itemValue: 'value',
+                    itemText: 'text',
+                    typeaheadjs: {
+                        name: 'cities',
+                        displayKey: 'text',
+                        source: cities.ttAdapter()
+                    }
+                });
+                angular.forEach(item.categories,function(cat){
+                    elt.materialtags('add', { "value": cat.id , "text": cat.name});
+                });
+            };
+
+            initCategories();
 
         }])
 
