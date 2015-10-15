@@ -8,6 +8,7 @@ import com.acme.model.mapper.CustomMapper;
 import com.acme.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -140,13 +141,56 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Item addGood(@RequestBody Item item) {
+    public ItemCategoryLink addGood(@RequestBody String input) throws ParseException, IOException {
+
+        ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
+
+        JSONParser parser=new JSONParser();
+        JSONObject main = (JSONObject) parser.parse(input);
+
+        String itemStr = main.toString();
+        System.out.println(itemStr);
+
+        Item item = mapper.readValue(itemStr,Item.class);
+        System.out.println(item);
+
+        JSONArray array = (JSONArray)main.get("categories");
+        List<String> list = Lists.newArrayList();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject jsonobject = (JSONObject)array.get(i);
+            list.add(jsonobject.get("id").toString());
+        }
+        System.out.println(list);
+
+        /* update item object */
         if(item.getId()!=null){
             itemMapper.updateByPrimaryKeySelective(item);
         } else {
             itemMapper.insertSelective(item);
         }
-        return item;
+
+        /* update or create link with categories */
+
+        /* collect and remove old one */
+        CategoryItemExample excludeExample = new CategoryItemExample();
+        excludeExample.createCriteria().andItemIdEqualTo(item.getId());
+        categoryItemMapper.deleteByExample(excludeExample);
+        /* add new */
+        CategoryItem categoryItem;
+        for(String categoryId : list){
+            categoryItem = new CategoryItem();
+            categoryItem.setItemId(item.getId());
+            categoryItem.setCategoryId(categoryId);
+            categoryItemMapper.insertSelective(categoryItem);
+        }
+        /* return linked item */
+        ItemCategoryLink link = new ItemCategoryLink(item);
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.createCriteria().andIdIn(list);
+        link.setCategories(categoryMapper.selectByExample(categoryExample));
+
+        return link;
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")

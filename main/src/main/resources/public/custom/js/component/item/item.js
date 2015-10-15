@@ -196,17 +196,21 @@
 
         }])
 
-        .controller('itemDetailController',['$scope','item','dataResources', function ($scope, item, dataResources){
+        .controller('itemDetailController',['$scope','item','dataResources','categoryClssModal','eventService', function ($scope, item, dataResources,categoryClssModal,eventService){
+
+            console.log("itemDetailController");
+
+            var elt = $('#multiple');
 
             dataResources.categoryMap.get(function(res) {
                 $scope.categories=[];
                 angular.forEach(res, function (comp) {
-                    $scope.categories.push(comp);
+                    $scope.categories.push({id:comp.id,name:comp.name});
                 });
             });
 
             if(item){
-                $scope.selected = item;
+                $scope.selected = angular.copy(item);
                 if(!$scope.selected.inStock){
                     $scope.selected.inStock = 0;
                 }
@@ -220,45 +224,68 @@
                 angular.forEach(res, function (comp) {
                     $scope.companyNames.push(comp);
                 });
-
                 if($scope.selected.companyId){
                     $scope.selected.company = helpers.findInArrayById($scope.companyNames, $scope.selected.companyId);
                 }
 
             });
 
+            $scope.showClss = function(){
+                $scope.modal = categoryClssModal( elt.materialtags('items'));
+            };
+
             //modal button save listener
             $scope.save = function () {
                 $scope.selected.companyId = $scope.selected.company.id;
-                //$scope.selected.typeId = $scope.selected.type.id;
-                dataResources.item.save($scope.selected);
+                dataResources.item.save($scope.selected, function (data){
+                    $scope.selected = data;
+                    elt.materialtags('removeAll');
+                    angular.forEach(eventService.data,function(cat){
+                        elt.materialtags('add', { "value": cat.id , "text": cat.name});
+                        $scope.selected.categories.push(cat);
+                    });
+                });
             };
 
-            function initCategories() {
-                console.log("init");
-                var cities = new Bloodhound({
+            function initMulti() {
+
+                var categories = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
                     queryTokenizer: Bloodhound.tokenizers.whitespace
                 });
 
-                cities.initialize();
+                categories.initialize();
 
-                var elt = $('#multiple');
                 elt.materialtags({
                     itemValue: 'value',
                     itemText: 'text',
                     typeaheadjs: {
                         name: 'cities',
                         displayKey: 'text',
-                        source: cities.ttAdapter()
+                        source: categories.ttAdapter()
                     }
                 });
-                angular.forEach(item.categories,function(cat){
+
+            }
+
+            function initCategories() {
+                angular.forEach($scope.selected.categories,function(cat){
                     elt.materialtags('add', { "value": cat.id , "text": cat.name});
                 });
-            };
+            }
+
+            initMulti();
 
             initCategories();
+
+            $scope.$on('onClssSelected',function(){
+                $scope.selected.categories = [];
+                elt.materialtags('removeAll');
+                angular.forEach(eventService.data,function(cat){
+                    elt.materialtags('add', { "value": cat.id , "text": cat.name});
+                    $scope.selected.categories.push(cat);
+                });
+            });
 
         }])
 

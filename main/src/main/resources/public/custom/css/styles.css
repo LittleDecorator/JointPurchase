@@ -289,3 +289,9 @@ div.collection a.active{
     line-height: 50px;
     font-size: 28px;
 }
+
+/* MULTI COL*/
+
+.row .col.s105 {
+    width: 88.33333%;
+    margin-left: 0; }
