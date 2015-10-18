@@ -49,6 +49,22 @@
 
         }])
 
+        .service('itemClssModal', ['$modal','$rootScope','factoryModal', function ($modal, $rootScope,factoryModal) {
+
+            return function(data) {
+                var instance =
+                    factoryModal.open({
+                        templateUrl:'pages/template/itemModal.html',
+                        controller: 'itemClssController',
+                        sizeClass: 'modal loader modal-backdrop',
+                        fixedFooter: true,
+                        params: data
+                    });
+                return instance;
+            };
+
+        }])
+
         .service('store',['$window',function ($window) {
             return {
                 get: function (key) {
@@ -195,11 +211,17 @@
                     this.data = data;
                     $rootScope.$broadcast('onFilter');
                 },
-                onClssSelected: function(data){
+                onCategoryClssSelected: function(data){
                     console.log("in clss selected");
                     console.log(data);
                     this.data = data;
-                    $rootScope.$broadcast('onClssSelected');
+                    $rootScope.$broadcast('onCategoryClssSelected');
+                },
+                onItemClssSelected: function(data){
+                    console.log("in clss selected");
+                    console.log(data);
+                    this.data = data;
+                    $rootScope.$broadcast('onItemClssSelected');
                 }
             }
         }])

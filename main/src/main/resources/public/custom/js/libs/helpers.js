@@ -41,7 +41,7 @@ var helpers = {
         var res = {};
         //console.log(array);
         array.some(function(elem){
-            //console.log(elem);
+            console.log(elem);
             if(elem.id == id){
                 res = elem;
                 return true;
@@ -49,7 +49,7 @@ var helpers = {
                 return false;
             }
         });
-        //console.log(res);
+        console.log(res);
         return res;
     },
 

@@ -1,0 +1,29 @@
+<div style="position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 700;
+    border-radius: 0 0 2px 2px;
+    background-color: #fafafa;
+    padding: 4px 6px;
+    height: 56px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+    <h5 style="margin-left: 2%;">Товар</h5>
+</div>
+
+<div class="modal-content" style="height: calc(100% - 112px)!important; top: 56px!important;">
+
+    <ul class="collection">
+        <li class="collection-item dismissable" ng-repeat="item in items">
+            <div>
+                <input type="checkbox" id="{{item.id}}" ng-model="item.selected"/>
+                <label for="{{item.id}}">{{item.name}}</label>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="modal-footer">
+
+    <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="select()">Выбрать</a>
+    <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" >Отмена</a>
+</div>

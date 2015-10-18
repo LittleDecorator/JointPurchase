@@ -148,52 +148,6 @@
                 dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
             };
 
-            $scope.companyChanged = function(){
-                var elem = $('#company .select-wrapper');
-                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
-                    angular.element(elem).addClass('inactive');
-                } else {
-                    if(angular.element(elem).hasClass('inactive')){
-                        angular.element(elem).removeClass('inactive');
-                    }
-                }
-            };
-
-            $scope.typeChanged = function(){
-                var elem = $('#type .select-wrapper');
-                if($scope.filter.selectedType == null || $scope.selected.type == null){
-                    angular.element(elem).addClass('inactive');
-                } else {
-                    if(angular.element(elem).hasClass('inactive')){
-                        angular.element(elem).removeClass('inactive');
-                    }
-                }
-            };
-
-            var cities = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace
-            });
-
-            cities.initialize();
-
-            function initCategories(selector,data) {
-                console.log("init");
-                var elt = $('multiple');
-                elt.materialtags({
-                    itemValue: 'value',
-                    itemText: 'text',
-                    typeaheadjs: {
-                        name: 'cities',
-                        displayKey: 'text',
-                        source: cities.ttAdapter()
-                    }
-                });
-                angular.forEach(data,function(cat){
-                    elt.materialtags('add', { "value": cat.id , "text": cat.name});
-                });
-            };
-
         }])
 
         .controller('itemDetailController',['$scope','item','dataResources','categoryClssModal','eventService', function ($scope, item, dataResources,categoryClssModal,eventService){
@@ -278,7 +232,7 @@
 
             initCategories();
 
-            $scope.$on('onClssSelected',function(){
+            $scope.$on('onCategoryClssSelected',function(){
                 $scope.selected.categories = [];
                 elt.materialtags('removeAll');
                 angular.forEach(eventService.data,function(cat){
@@ -286,6 +240,28 @@
                     $scope.selected.categories.push(cat);
                 });
             });
+
+            $scope.companyChanged = function(){
+                var elem = $('#company .select-wrapper');
+                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
+                    angular.element(elem).addClass('inactive');
+                } else {
+                    if(angular.element(elem).hasClass('inactive')){
+                        angular.element(elem).removeClass('inactive');
+                    }
+                }
+            };
+
+            //$scope.typeChanged = function(){
+            //    var elem = $('#type .select-wrapper');
+            //    if($scope.filter.selectedType == null || $scope.selected.type == null){
+            //        angular.element(elem).addClass('inactive');
+            //    } else {
+            //        if(angular.element(elem).hasClass('inactive')){
+            //            angular.element(elem).removeClass('inactive');
+            //        }
+            //    }
+            //};
 
         }])
 

@@ -48,7 +48,8 @@
                     }
                 }),
 
-                item: $resource("/item/:id"),
+                item: $resource('/item/:id'),
+                //itemClss:$resource('/item/clss',{},{get:{method:'GET',isArray:true}}),
                 filterByType:$resource('/item/filter/type',{},{
                     filter:{
                         method:'POST',
@@ -61,6 +62,9 @@
                         isArray:true
                     }
                 }),
+
+                categoryItems: $resource('/category/items/:categoryId',{},{ get : {method:'GET',isArray:true}}),
+
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
                 typeMap:$resource('category/type/map',{},{

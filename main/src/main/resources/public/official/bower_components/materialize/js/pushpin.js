@@ -4,7 +4,7 @@
     $.fn.pushpin = function (options) {
 
       var defaults = {
-        top: 0,
+        top: 64,
         bottom: Infinity,
         offset: 0
       }

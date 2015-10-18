@@ -1,104 +1,104 @@
-<div class="col s12 search">
-    <ul class="tabs" style="width: 100%;">
-        <li class="tab col s3" ><a href="#test1">Категории</a></li>
-        <li class="tab col s3"><a href="#test2">Типы</a></li>
-    </ul>
+<!--<div class="col s12 search">-->
+    <!--<ul class="tabs" style="width: 100%;">-->
+        <!--<li class="tab col s3" ><a href="#test1">Категории</a></li>-->
+        <!--<li class="tab col s3"><a href="#test2">Типы</a></li>-->
+    <!--</ul>-->
 
-    <div id="test1" class="col s12" ng-controller="categoryController">
-        <div style="padding-top: 20px;">
-            <div class="section">
-                <div class="row">
-                    <div class="col l12">
-                        <div class="col l4 s12">
-                            <div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
-                                <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>
-                            </div>
-                        </div>
-                        <div class="col l8 s12">
-                            <div>
-                                <div class="form-group">
-                                    <label for="selectedCategory" class="control-label">Выбранная категории</label>
-                                    <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title">
-                                </div>
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
-                            </div>
-
-                            <div style="padding-top: 20px;">
-                                <div class="input-field" >
-                                    <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
-                                    <label class="control-label" for="newCategory">Новая категория</label>
-                                </div>
-                                <a id="add_sibling" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
-                                <a id="add" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
-                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
-                            </div>
-
-                            <div class="section" ng-if="selected!=null">
-                                <div class="row">
-                                    <div class="col l12">
-                                        <div class="col l4 s12">
-                                            <div class="collection">
-                                                <a class="collection-item" ng-repeat="type in selected.types" ng-click="removeType($index)" style="cursor: pointer">{{type.name}}</a>
-                                            </div>
-                                        </div>
-                                        <div class="col l1 s12" style="padding-top: 5%;">
-                                            <i class="material-icons">arrow_back</i>
-                                            <i class="material-icons">arrow_forward</i>
-                                        </div>
-                                        <div class="col l4 s12">
-                                            <div class="collection">
-                                                <a class="collection-item" ng-repeat="type in filteredTypes" ng-click="addType($index)" style="cursor: pointer">{{type.name}}</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--<div style="padding-top: 10%">-->
-                                <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>-->
+    <!--<div id="test1" class="col s12" ng-controller="categoryController">-->
+        <!--<div style="padding-top: 20px;">-->
+            <!--<div class="section">-->
+                <!--<div class="row">-->
+                    <!--<div class="col l12">-->
+                        <!--<div class="col l4 s12">-->
+                            <!--<div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">-->
+                                <!--<abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>-->
                             <!--</div>-->
-                        </div>
+                        <!--</div>-->
+                        <!--<div class="col l8 s12">-->
+                            <!--<div>-->
+                                <!--<div class="form-group">-->
+                                    <!--<label for="selectedCategory" class="control-label">Выбранная категории</label>-->
+                                    <!--<input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title">-->
+                                <!--</div>-->
+                                <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>-->
+                                <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>-->
+                            <!--</div>-->
 
-                    </div>
-                </div>
-            </div>
+                            <!--<div style="padding-top: 20px;">-->
+                                <!--<div class="input-field" >-->
+                                    <!--<input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">-->
+                                    <!--<label class="control-label" for="newCategory">Новая категория</label>-->
+                                <!--</div>-->
+                                <!--<a id="add_sibling" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>-->
+                                <!--<a id="add" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>-->
+                                <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>-->
+                            <!--</div>-->
 
-            <!--<div class="right">-->
-            <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>-->
+                            <!--<div class="section" ng-if="selected!=null">-->
+                                <!--<div class="row">-->
+                                    <!--<div class="col l12">-->
+                                        <!--<div class="col l4 s12">-->
+                                            <!--<div class="collection">-->
+                                                <!--<a class="collection-item" ng-repeat="type in selected.types" ng-click="removeType($index)" style="cursor: pointer">{{type.name}}</a>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="col l1 s12" style="padding-top: 5%;">-->
+                                            <!--<i class="material-icons">arrow_back</i>-->
+                                            <!--<i class="material-icons">arrow_forward</i>-->
+                                        <!--</div>-->
+                                        <!--<div class="col l4 s12">-->
+                                            <!--<div class="collection">-->
+                                                <!--<a class="collection-item" ng-repeat="type in filteredTypes" ng-click="addType($index)" style="cursor: pointer">{{type.name}}</a>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--&lt;!&ndash;<div style="padding-top: 10%">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
             <!--</div>-->
 
-        </div>
+            <!--&lt;!&ndash;<div class="right">&ndash;&gt;-->
+            <!--&lt;!&ndash;<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
 
-        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-            <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
-                <i class="large mdi-content-save"></i>
-            </a>
-        </div>
+        <!--</div>-->
 
-    </div>
+        <!--<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">-->
+            <!--<a class="btn-floating btn-large blue lighten-3" ng-click="save()">-->
+                <!--<i class="large mdi-content-save"></i>-->
+            <!--</a>-->
+        <!--</div>-->
 
-    <div id="test2" class="col s12" ng-controller="typeController" style="padding-top: 30px">
-        <div class="collection">
-            <a id={{type.id}} class="collection-item" ng-repeat="type in types" ng-click="select($index)" style="cursor: pointer">{{type.name}}</a>
-        </div>
+    <!--</div>-->
 
-        <div>
-            <div class="form-group">
-                <label for="selectedCategory" class="control-label">Выбранный тип</label>
-                <input type="text" name="selectedCategory" class="form-control" maxlength="25" ng-model="current.type.name">
-            </div>
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="add()" >Добавить</a>
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
-        </div>
+    <!--<div id="test2" class="col s12" ng-controller="typeController" style="padding-top: 30px">-->
+        <!--<div class="collection">-->
+            <!--<a id={{type.id}} class="collection-item" ng-repeat="type in types" ng-click="select($index)" style="cursor: pointer">{{type.name}}</a>-->
+        <!--</div>-->
 
-        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-            <a class="btn-floating btn-large blue lighten-3">
-                <i class="large mdi-content-save"></i>
-            </a>
-        </div>
-    </div>
+        <!--<div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="selectedCategory" class="control-label">Выбранный тип</label>-->
+                <!--<input type="text" name="selectedCategory" class="form-control" maxlength="25" ng-model="current.type.name">-->
+            <!--</div>-->
+            <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="add()" >Добавить</a>-->
+            <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>-->
+            <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>-->
+        <!--</div>-->
+
+        <!--<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">-->
+            <!--<a class="btn-floating btn-large blue lighten-3">-->
+                <!--<i class="large mdi-content-save"></i>-->
+            <!--</a>-->
+        <!--</div>-->
+    <!--</div>-->
 
 
-</div>
+<!--</div>-->

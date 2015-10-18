@@ -7,12 +7,12 @@
         <result property="" column="list"/>
     </resultMap>
 
-    <resultMap id="categoryItemLink" type="com.acme.model.domain.CategoryItemLink">
-        <result property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="parentId" column="parent_id"/>
-        <collection property="items" resultMap="com.acme.gen.mapper.ItemMapper.BaseResultMap"/>
-    </resultMap>
+    <!--<resultMap id="categoryItemLink" type="com.acme.model.domain.Category">-->
+        <!--<result property="id" column="id"/>-->
+        <!--<result property="name" column="name"/>-->
+        <!--<result property="parentId" column="parent_id"/>-->
+        <!--<collection property="items" resultMap="com.acme.gen.mapper.ItemMapper.BaseResultMap"/>-->
+    <!--</resultMap>-->
 
     <resultMap id="itemCategoryLink" type="com.acme.model.domain.ItemCategoryLink">
         <result property="id" column="item_id"/>
@@ -51,14 +51,14 @@
         ]]>
     </select>
 
-    <select id="getCategoryTreeItems" resultMap="categoryItemLink">
-        <![CDATA[
-        select c.id,c.name,c.parent_id,i.*
-          from category c
-	        left join category_item ci on c.id=ci.category_id
-	        left join item i on i.id = ci.item_id
-	    ]]>
-    </select>
+    <!--<select id="getCategoryTreeItems" resultMap="categoryItemLink">-->
+        <!--<![CDATA[-->
+        <!--select c.id,c.name,c.parent_id,i.*-->
+          <!--from category c-->
+	        <!--left join category_item ci on c.id=ci.category_id-->
+	        <!--left join item i on i.id = ci.item_id-->
+	    <!--]]>-->
+    <!--</select>-->
 
     <select id="getItemCategories" resultMap="itemCategoryLink">
         <![CDATA[

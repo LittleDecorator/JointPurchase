@@ -56,35 +56,39 @@
 
         }])
 
-        .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout',function ($scope, $state, order,$stateParams, dataResources,$timeout){
+        .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','itemClssModal','eventService',function ($scope, $state, order,$stateParams, dataResources,$timeout,itemClssModal,eventService){
 
             /* map of item names */
             $scope.itemNames = [];
+
+            $scope.stats = [];
+
             // Status
              dataResources.orderStatus.get(function(data){
-                 $scope.status = data;
+                 console.log(data);
+                 angular.forEach(data,function(stat){
+                     $scope.stats.push(stat);
+                 });
+
+                 if (order) {
+                     $scope.currentOrder = order;
+                         //$scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
+
+                         /*dataResources.orderItems.get({id: order.id}, function (data) {
+                          angular.forEach(data, function (orderItem) {
+                          var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
+                          orderItem.name = item.name;
+                          $scope.currentOrderItems.push(orderItem);
+                          });
+                          });*/
+                 } else {
+                     $scope.currentOrder = {status:null,items:[]};
+                     $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
+                     $('#status').prop( "disabled", true );
+
+                 }
+
             });
-
-
-            $timeout(function(){
-                if (order) {
-                    $scope.currentOrder = order;
-                    //$scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
-
-                    /* dataResources.orderItems.get({id: order.id}, function (data) {
-                     angular.forEach(data, function (orderItem) {
-                     var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
-                     orderItem.name = item.name;
-                     $scope.currentOrderItems.push(orderItem);
-                     });
-                     });*/
-                } else {
-                    $scope.currentOrder = {status:$scope.status[0]};
-                }
-
-                console.log($scope.currentOrder)
-            },100);
-
 
             $scope.save = function () {
                 //iterate over order items array, and create new clean array foe mapping
@@ -104,69 +108,43 @@
                     order: $scope.currentOrder,
                     items: cleanOrderItems
                 };
-
                 dataResources.order.save(respData);
             };
 
-
             //add item to order
-            $scope.addItemsInOrder = function (id) {
-                //TODO: Проверять что товар уже в заказе, и либо ничего не делать, либо увеличивать позицию на 1, либо убирать дублируемый товар из списка возможного
-                //TODO: Нужна множественная выборка?????
-                var selectedItem = helpers.findInArrayById($scope.itemNames, id);
-                /*$scope.currentOrderItems.push({
-                    orderId: $scope.currentOrder.id,
-                    itemId: id,
-                    name: selectedItem.name,
-                    cou: 1
-                });
-                $scope.toggleItems();*/
+            $scope.addItemsInOrder = function () {
+                $scope.modal = itemClssModal($scope.currentOrder.items);
             };
 
             //remove item from order
-            $scope.remItemsFromOrder = function (item) {
-                var idx = $scope.currentOrderItems.indexOf(item);
-                if (idx > -1) {
-                    dataResources.orderedItem.delete({orderId: $scope.currentOrder.id, itemId: item.id});
-                    //$scope.currentOrderItems.splice(idx, 1);
-                }
+            $scope.remItemsFromOrder = function (idx) {
+                $scope.currentOrder.items.splice(idx,1);
             };
 
+            $scope.$on('onItemClssSelected',function() {
+                $scope.currentOrder.items = [];
+                angular.forEach(eventService.data, function (item) {
+                    item.cou = 0;
+                    $scope.currentOrder.items.push(item);
+                });
+            });
+
             //increment item cou in order
-            $scope.incrementCou = function (id) {
-                /*angular.forEach($scope.currentOrderItems, function (item) {
-                    if (item.id == id) {
-                        item.cou++;
-                        return true;
-                    } else {
-                        return false;
-                    }
-                })*/
+            $scope.incrementCou = function (idx) {
+                $scope.currentOrder.items[idx].cou++;
             };
 
             //decrement item cou in order
-            $scope.decrementCou = function (id) {
-                /*angular.forEach($scope.currentOrderItems, function (item) {
-                    if (item.id == id) {
-                        if (item.cou > 0) {
-                            item.cou--;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                })*/
+            $scope.decrementCou = function (idx) {
+                var item = $scope.currentOrder.items[idx];
+                if (item.cou > 0) {
+                    item.cou--;
+                }
             };
 
-            $scope.createOrder = function(cart){
-                dataResources.order.save({items:cart});
-            };
+            //$scope.createOrder = function(cart){
+            //    dataResources.order.save({items:cart});
+            //};
 
-
-
-            $scope.statusChanged = function(){
-                console.log($scope.currentOrder);
-                console.log($scope.currentOrder.status);
-            };
         }])
 })();

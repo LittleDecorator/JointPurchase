@@ -2976,7 +2976,9 @@ Vel = $ ? $.Velocity : Velocity, function (a) {
     a(document).ready(function () {
         a.fn.pushpin = function (b) {
             var c = {top: 0, bottom: 1 / 0, offset: 0};
-            return b = a.extend(c, b), $index = 0, this.each(function () {
+            return b = a.extend(c, b),
+                $index = 0, this.each(function () {
+
                 function c(a) {
                     a.removeClass("pin-top"), a.removeClass("pinned"), a.removeClass("pin-bottom")
                 }

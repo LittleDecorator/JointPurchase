@@ -34,13 +34,6 @@
                     <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress">
                 </div>
 
-                <!--<div class="form-group">
-                    <label class="control-label">Person</label>
-                    <select name="personId" class="form-control" ng-model="selectedPerson" ng-options="person.name for person in personNames track by person.id">
-                        <option value="" selected="">Select a customer...</option>
-                    </select>
-                </div>-->
-
                 <div class="input-field">
                     <label for="comment">Comment</label>
                     <input type="text" id="comment" class="form-control" ng-model="currentOrder.comment">
@@ -48,7 +41,7 @@
                 <!--&lt;!&ndash; must be available only in edit &ndash;&gt;-->
                 <div class="form-group">
                     <label for="status">Status</label>
-                    <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="s.text for s in status track by s.id" ng-change="statusChanged()">
+                    <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="status.text for status in stats track by status.id" ng-change="statusChanged()">
                         <option value="" >Укажите статус заказа ...</option>
                     </select>
                 </div>
@@ -57,7 +50,6 @@
                     <label for="payment">Payment</label>
                     <input type="text" id="payment" class="form-control" ng-model="currentOrder.payment">
                 </div>
-                {{currentOrder|json}}
 
             </div>
         </form>
@@ -65,20 +57,25 @@
 
     <h3>Содержимое заказа</h3>
     <div class="table-container">
-        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="toggleItems()" >Добавить товар в заказ</a>
+        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addItemsInOrder()" >Добавить товар в заказ</a>
 
-        <div class="table-container" ng-if="currentOrderItems.length>0">
-            <div class="table-result">
-                <table class="table-list table-hover">
+        <div ng-if="currentOrder.items.length>0">
+            <div class="table-result" style="margin-top: 20px">
+                <table class="bordered table-result">
                     <tbody>
-                    <tr ng-repeat="item in currentOrderItems" id="{{item.id}}" style="border-bottom: 1px solid #ddd;">
-                        <td><i class="fa fa-lg fa-times" style="color: darkslategray;float: left;cursor: pointer" ng-click="remItemsFromOrder(item)"></i></td>
-                        <td style="width: 90%;vertical-align: middle;">{{item.name}}</td>
-                        <td style="width: 10%">
-                            <div style="text-align: right;">
-                                <i class="fa fa-lg fa-chevron-left" style="color: darkslategrey;cursor: pointer" ng-click="decrementCou(item.id)"></i>
-                                <input class="pr-input" type="text" value="{{item.cou}}" style="width: 35px;margin-left: 5px;margin-right: 5px;padding: 0px 5px 0px 5px;" maxlength="3">
-                                <i class="fa fa-lg fa-chevron-right" style="color: darkslategrey;cursor: pointer" ng-click="incrementCou(item.id)"></i>
+                    <tr ng-repeat="item in currentOrder.items" id="{{item.id}}" class="row">
+                        <td class="col s6 non-float" style="text-align: center">{{item.name}}</td>
+                        <td class="col s3 non-float" style="text-align: center">{{item.article}}</td>
+                        <td class="col s2 non-float" style="text-align: center">
+                            <div>
+                                <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.cou<1}"></i>
+                                <span>{{item.cou}}</span>
+                                <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
+                            </div>
+                        </td>
+                        <td class="col s1 non-float" style="text-align: center">
+                            <div style="cursor: pointer" ng-click="remItemsFromOrder($index)">
+                                <i class="small mdi-content-clear" style="color: #ee6e73"></i>
                             </div>
                         </td>
                     </tr>

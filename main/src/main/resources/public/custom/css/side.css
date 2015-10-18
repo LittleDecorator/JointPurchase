@@ -8612,7 +8612,8 @@ pre[class*="language-"]:before {
 
 .toc-wrapper {
     position: relative;
-    margin-top: 42px; }
+    /*margin-top: 42px; */
+}
 
 #carbonads {
     max-width: 150px;

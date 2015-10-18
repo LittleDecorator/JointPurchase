@@ -5,7 +5,6 @@ import com.acme.gen.mapper.CategoryItemMapper;
 import com.acme.gen.mapper.CategoryMapper;
 import com.acme.gen.mapper.CompanyMapper;
 import com.acme.gen.mapper.ItemMapper;
-import com.acme.model.domain.CategoryItemLink;
 import com.acme.model.domain.Node;
 //import com.acme.model.mapper.CustomMapper;
 import com.acme.model.mapper.CustomMapper;
@@ -15,6 +14,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,6 +23,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 
@@ -49,8 +50,9 @@ public class CategoryController {
     CustomMapper customMapper;
 
     /**
-     * Get all categories as map
-     **/
+     *
+     * @return all categories as map
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String, String>> getCategoryMap() {
         List<Map<String,String>> list = new ArrayList<>();
@@ -67,53 +69,22 @@ public class CategoryController {
 
     /**
      * Get all categories as tree
-     **/
+     * @return list of nodes, which just category representation
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
         public List<Node> getCategoryTree(){
-
-        //old version
-        /*List<CategoryItemLink> links = new ArrayList<>();
-        CategoryItemLink link;
-        List<String> list = Lists.newArrayList();
-        List<Category> categories = categoryMapper.selectByExample(new CategoryExample());
-        List<Item> types = itemMapper.selectByExample(new ItemExample());
-        //get linked types
-        List<CategoryItem> categoryTypes = categoryItemMapper.selectByExample(new CategoryItemExample());
-
-        //merge lists into fake model
-        for(Category category : categories){
-            List<Item> typeList = Lists.newArrayList();
-            link = new CategoryItemLink();
-            link.setId(category.getId());
-            link.setName(category.getName());
-            link.setParentId(category.getParentId());
-
-            Iterator<CategoryItem> categoryTypeIterator = categoryTypes.iterator();
-            while(categoryTypeIterator.hasNext()){
-                CategoryItem categoryType = categoryTypeIterator.next();
-                if(categoryType.getCategoryId().contentEquals(category.getId())){
-                    list.add(categoryType.getItemId());
-                }
-            }
-            if(list.size()>0){
-                Iterator<Item> typeIterator = types.iterator();
-                while(typeIterator.hasNext()){
-                    Item type = typeIterator.next();
-                    if(list.contains(type.getId())){
-                        typeList.add(type);
-                    }
-                }
-            }
-
-            link.setItems(typeList);
-            links.add(link);
-        }*/
-
-        List<CategoryItemLink> links = customMapper.getCategoryTreeItems();
-
-        return treeService.generateCategoryTree(links);
+        List<Category> list = categoryMapper.selectByExample(new CategoryExample());
+        return treeService.generateCategoryTree(list);
     }
 
+    /**
+     * Save given category tree
+     *
+     * @param input
+     * @throws ParseException
+     * @throws IOException
+     */
+    //TODO: ADD Items processing in tree
     @RequestMapping(method = RequestMethod.POST,value = "/tree")
     public void saveCategoryTree(@RequestBody String input) throws ParseException, IOException {
         JSONParser parser=new JSONParser();
@@ -184,9 +155,11 @@ public class CategoryController {
                 }
                 System.out.println("Will be deleted -> "+ oldLinks);
                 //remove old
-                CategoryItemExample oldExample = new CategoryItemExample();
-                oldExample.createCriteria().andItemIdIn(oldLinks);
-                categoryItemMapper.deleteByExample(oldExample);
+                if(oldLinks.size()>0){
+                    CategoryItemExample oldExample = new CategoryItemExample();
+                    oldExample.createCriteria().andItemIdIn(oldLinks);
+                    categoryItemMapper.deleteByExample(oldExample);
+                }
 
                 //add new link with type
                 for(String itemId : newLinks){
@@ -212,32 +185,39 @@ public class CategoryController {
         }
     }
 
-    /* get all types */
-    @Deprecated
-    @RequestMapping(method = RequestMethod.GET,value = "/types")
-    public List getAllTypes(){
-//        return typeMapper.selectByExample(new TypeExample());
-        return null;
-    }
+    /**
+     * Return all items as custom array for given category
+     * @param categoryId
+     * @return JSONArray
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "/items/{id}")
+    public JSONArray getCategoryItems(@PathVariable("id") String categoryId){
+        CategoryItemExample example = new CategoryItemExample();
+        example.createCriteria().andCategoryIdEqualTo(categoryId);
+        List<String> list = Lists.transform(categoryItemMapper.selectByExample(example), new Function<CategoryItem, String>() {
+            @Nullable
+            @Override
+            public String apply(CategoryItem categoryItem) {
+                return categoryItem.getItemId();
+            }
+        });
 
-    /* update or insert type */
-    @Deprecated
-    @RequestMapping(method = RequestMethod.POST,value = "/types")
-    public Item addType(@RequestBody Item item){
-//        if(!Strings.isNullOrEmpty(type.getId())){
-//            typeMapper.updateByPrimaryKey(type);
-//        } else {
-//            typeMapper.insertSelective(type);
-//        }
-//        return type;
-        return null;
-    }
+        JSONArray array = new JSONArray();
+        if(list.size()>0){
+            ItemExample itemExample = new ItemExample();
+            itemExample.createCriteria().andIdIn(list);
 
-    /* delete type */
-    @Deprecated
-    @RequestMapping(method = RequestMethod.DELETE,value = "/types/{id}")
-    public void addType(@PathVariable("id") String id){
-//        typeMapper.deleteByPrimaryKey(id);
+
+            JSONObject object;
+            for(Item item : itemMapper.selectByExample(itemExample)){
+                object = new JSONObject(new HashMap(3));
+                object.put("id",item.getId());
+                object.put("name",item.getName());
+                object.put("article",item.getArticle());
+                array.add(object);
+            }
+        }
+        return array;
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/side/menu")

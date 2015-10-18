@@ -15,10 +15,10 @@ public class Node implements Serializable {
     List<Node> nodes;
     boolean isCompany = Boolean.FALSE;
 
-    public Node(String id, String title, List<Item> items,String parentId) {
+    public Node(String id, String title, String parentId) {
         this.id = id;
         this.title = title;
-        this.items = Lists.newArrayList(items);
+        this.items = Lists.newArrayList();
         this.parentId = parentId;
     }
 

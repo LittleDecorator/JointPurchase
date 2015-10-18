@@ -1,6 +1,6 @@
 package com.acme.service;
 
-import com.acme.model.domain.CategoryItemLink;
+import com.acme.gen.domain.Category;
 import com.acme.model.domain.Node;
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Service;
@@ -14,26 +14,26 @@ public class TreeService {
 
     List<Node> roots;
 
-    public List<Node> generateCategoryTree(List<CategoryItemLink> list){
+    public List<Node> generateCategoryTree(List<Category> list){
         roots = new ArrayList<>();
         lookUp(list);
         return roots;
     }
 
-    private void lookUp(List<CategoryItemLink> list){
-        List<CategoryItemLink> nodes = new ArrayList<>(list);
-        for (Iterator<CategoryItemLink> iterator = nodes.iterator(); iterator.hasNext();) {
-            CategoryItemLink categoryItemLink = iterator.next();
+    private void lookUp(List<Category> list){
+        List<Category> nodes = new ArrayList<>(list);
+        for (Iterator<Category> iterator = nodes.iterator(); iterator.hasNext();) {
+            Category category = iterator.next();
             //если попался корень
-            if(Strings.isNullOrEmpty(categoryItemLink.getParentId())){
-                roots.add(category2Node(categoryItemLink));
+            if(Strings.isNullOrEmpty(category.getParentId())){
+                roots.add(category2Node(category));
                 iterator.remove();
             } else {
                 //ищем родителя в корнях
                 for(Node node: roots){
-                    Node res = findNode(node,categoryItemLink.getParentId());
+                    Node res = findNode(node, category.getParentId());
                     if(res!=null){
-                        res.getNodes().add(category2Node(categoryItemLink));
+                        res.getNodes().add(category2Node(category));
                         iterator.remove();
                     }
                 }
@@ -44,8 +44,8 @@ public class TreeService {
         }
     }
 
-    private Node category2Node(CategoryItemLink category){
-        return new Node(category.getId(),category.getName(),category.getItems(),category.getParentId());
+    private Node category2Node(Category category){
+        return new Node(category.getId(),category.getName(),category.getParentId());
     }
 
     private Node findNode(Node node, String id){

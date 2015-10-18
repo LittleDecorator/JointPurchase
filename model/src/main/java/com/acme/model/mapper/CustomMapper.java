@@ -1,6 +1,6 @@
 package com.acme.model.mapper;
 
-import com.acme.model.domain.CategoryItemLink;
+//import com.acme.model.domain.Category;
 import com.acme.model.domain.ItemCategoryLink;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,7 +14,7 @@ public interface CustomMapper {
 
     List<String> getSubCategoryLeafs(@Param("baseId") String id);
 
-    List<CategoryItemLink> getCategoryTreeItems();
+//    List<Category> getCategoryTreeItems();
 
     List<ItemCategoryLink> getItemCategories();
 

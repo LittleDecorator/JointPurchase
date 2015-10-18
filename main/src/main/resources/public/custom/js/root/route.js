@@ -15,7 +15,6 @@ var route = {
                     requireLogin: false,
                 }
             },
-
             {
                 name: 'cart',
                 url: '/cart',
@@ -135,7 +134,6 @@ var route = {
                     //base:true
                 }
             },
-
             {
                 name: 'order.detail',
                 url: '/:id',
@@ -323,7 +321,7 @@ var route = {
                     //base:true
                 }
             },
-            {
+            /*{
                 name: 'guides',
                 url: '/guides',
                 views: {
@@ -335,7 +333,7 @@ var route = {
                 data: {
                     requireLogin: false
                 }
-            },
+            },*/
             {
                 name: 'login',
                 url: '/login',
@@ -349,7 +347,6 @@ var route = {
                     requireLogin: false
                 }
             }
-
         ]
     }
 };

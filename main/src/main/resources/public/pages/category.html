@@ -1,66 +1,81 @@
-<!--
-<div style="padding-top: 20px;">
-    <div class="section">
-        <div class="row">
-            <div class="col l12">
-                <div class="col l4 s12">
-                    <div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
-                        <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>
-                    </div>
-                </div>
-                <div class="col l8 s12">
-                    <div>
-                        <div class="form-group">
-                            <label for="selectedCategory" class="control-label">Выбранная категории</label>
-                            <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title" maxlength="25">
+<div id="test1" class="col s12">
+    <div style="padding-top: 20px;">
+        <div class="section">
+            <div class="row">
+                <!--<div class="col l12">-->
+                    <div class="col s12 m9 l4">
+                        <div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
+                            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>
                         </div>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
                     </div>
 
-                    <div style="padding-top: 20px;">
-                        <div class="input-field" >
-                            <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
-                            <label class="control-label" for="newCategory">Новая категория</label>
-                        </div>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
-                    </div>
+                    <div class="col m3 l8 ">
+                        <div class="toc-wrapper" style="top: 64px;">
+                            <div>
+                                <div class="form-group">
+                                    <label for="selectedCategory" class="control-label">Выбранная категории</label>
+                                    <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title">
+                                </div>
+                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
+                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
+                            </div>
 
-                    <div class="section" ng-if="selected!=null">
-                        <div class="row">
-                            <div class="col l12">
-                                <div class="col l4 s12">
-                                    <div class="collection">
-                                        <a class="collection-item" ng-repeat="type in selected.types" ng-click="storeCategoryType(type)" style="cursor: pointer">{{type.name}}</a>
-                                    </div>
+                            <div style="padding-top: 20px;">
+                                <div class="input-field" >
+                                    <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
+                                    <label class="control-label" for="newCategory">Новая категория</label>
                                 </div>
-                                <div class="col l1 s12" style="padding-top: 5%;">
-                                    <i class="material-icons" ng-click="addType()" style="cursor: pointer">arrow_back</i>
-                                    <i class="material-icons" ng-click="removeType()" style="cursor: pointer">arrow_forward</i>
+                                <a id="add_sibling" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
+                                <a id="add" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
+                                <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
+                            </div>
+
+                            <div ng-if="selected" style="margin-top: 20px;">
+                                <h5>Связанные товары:</h5>
+
+                                <div class="table-result" ng-if="selected.items && selected.items.length>0" style="margin-top: 5px;">
+                                    <table class="bordered table-result">
+                                        <tbody>
+                                        <tr ng-repeat="item in selected.items" class="row" ng-class="{'no-bottom-border':$last}">
+                                            <td class="col s3 non-float">{{item.article}}</td>
+                                            <td class="col non-float">{{item.name}}</td>
+                                            <td class="col s1 non-float" style="text-align: right">
+                                                <div style="cursor: pointer" ng-click="removeItem($index)">
+                                                    <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col l4 s12">
-                                    <div class="collection">
-                                        <a class="collection-item" ng-repeat="type in types" ng-click="storeType(type)" style="cursor: pointer">{{type.name}}</a>
-                                    </div>
+
+                                <div class="table-result" ng-if="(!selected.items || selected.items.length==0)" style="margin-top: 5px;" >
+                                    <span >Ни одного товара не связано с выбранной категорией</span>
                                 </div>
+
                             </div>
                         </div>
+
+
                     </div>
 
-                    <div>
-                        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>
-                    </div>
-                </div>
+                <!--</div>-->
 
             </div>
         </div>
+
     </div>
 
-    &lt;!&ndash;<div class="right">&ndash;&gt;
-        &lt;!&ndash;<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="save()" >Сохранить изменения</a>&ndash;&gt;
-    &lt;!&ndash;</div>&ndash;&gt;
+    <div class="fixed-action-btn" style="bottom: 105px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="showClss()">
+            <i class="large mdi-content-add"></i>
+        </a>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
+            <i class="large mdi-content-save"></i>
+        </a>
+    </div>
 
 </div>
--->

@@ -56,32 +56,10 @@ public class ItemController{
     CategoryMapper categoryMapper;
 
     /**
-     * Get all items as map
-     **/
-    @RequestMapping(method = RequestMethod.GET,value = "/item/map")
-    public List<Map<String, String>> getTypeMap() {
-        List<Map<String,String>> list = new ArrayList<>();
-        Map<String,String> map;
-
-        for(Item item : itemMapper.selectByExample(new ItemExample())){
-            map = new HashMap<>();
-            map.put("id",item.getId());
-            map.put("name",item.getName());
-            list.add(map);
-        }
-        return list;
-    }
-
-    /**
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
     public List<ItemCategoryLink> getItems() {
-        //get all items
-//        ItemExample itemExample = new ItemExample();
-//        itemExample.setOrderByClause("date_add asc");
-//        List<Item> items = itemMapper.selectByExample(itemExample);
-//        return items;
         return customMapper.getItemCategories();
     }
 
@@ -127,6 +105,9 @@ public class ItemController{
         return itemMapper.selectByExample(itemExample);
     }
 
+    /**
+     * Get all items as map
+     **/
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String,String>> getItemMap() {
         List<Map<String,String>> list = new ArrayList<>();
@@ -139,6 +120,20 @@ public class ItemController{
         }
         return list;
     }
+
+//    @RequestMapping(method = RequestMethod.GET,value = "/clss")
+//    public JSONArray getItemClss(){
+//        JSONArray array = new JSONArray();
+//        JSONObject object;
+//        for(Item item : itemMapper.selectByExample(new ItemExample())){
+//            object = new JSONObject();
+//            object.put("id",item.getId());
+//            object.put("article",item.getArticle());
+//            object.put("name",item.getName());
+//            array.add(object);
+//        }
+//        return array;
+//    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ItemCategoryLink addGood(@RequestBody String input) throws ParseException, IOException {
@@ -475,34 +470,6 @@ public class ItemController{
         itemMapper.updateByPrimaryKeySelective(item);
     }
 
-    class ItemView implements Serializable{
-        Item item;
-        int totalInStock;
-        int myCount;
-        int inOrders;
 
-        public ItemView(Item item, int totalInStock, int myCount, int inOrders) {
-            this.item = item;
-            this.totalInStock = totalInStock;
-            this.myCount = myCount;
-            this.inOrders = inOrders;
-        }
-
-        public void setItem(Item item) {
-            this.item = item;
-        }
-
-        public void setTotalInStock(int totalInStock) {
-            this.totalInStock = totalInStock;
-        }
-
-        public void setMyCount(int myCount) {
-            this.myCount = myCount;
-        }
-
-        public void setInOrders(int inOrders) {
-            this.inOrders = inOrders;
-        }
-    }
 }
 

@@ -19,6 +19,8 @@
                     $('.modal-trigger').leanModal();
                 });
 
+
+
                 $scope.initCart = function(){
                     $scope.cart = {cou:0,content:[]};
                     var c = store.get("cart");

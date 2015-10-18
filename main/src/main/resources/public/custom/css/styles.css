@@ -295,3 +295,13 @@ div.collection a.active{
 .row .col.s105 {
     width: 88.33333%;
     margin-left: 0; }
+
+/*last record in table. no bottom border*/
+.no-bottom-border{
+    border-bottom: none!important;
+}
+
+/* disabled icon*/
+.disabled{
+    color: rgba(0, 0, 0, 0.26);
+}
