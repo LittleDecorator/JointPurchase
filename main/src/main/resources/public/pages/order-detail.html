@@ -47,7 +47,7 @@
                 </div>
                 <!--&lt;!&ndash; must be available only in edit &ndash;&gt;-->
                 <div class="input-field">
-                    <label for="payment">Payment</label>
+                    <label for="payment" class="active">Payment</label>
                     <input type="text" id="payment" class="form-control" ng-model="currentOrder.payment">
                 </div>
 
@@ -61,11 +61,21 @@
 
         <div ng-if="currentOrder.items.length>0">
             <div class="table-result" style="margin-top: 20px">
-                <table class="bordered table-result">
+                <table class="bordered table-result" style="line-height: 1.5;">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center">Название</th>
+                        <th style="text-align: center">Артикул</th>
+                        <th style="text-align: center">Цена</th>
+                        <th style="text-align: center">Кол-во</th>
+                        <th></th>
+                    </tr>
+                    </thead>
                     <tbody>
-                    <tr ng-repeat="item in currentOrder.items" id="{{item.id}}" class="row">
+                    <tr ng-repeat="item in currentOrder.items" id="{{item.id}}" class="row" ng-class="{'no-bottom-border':$last}">
                         <td class="col s6 non-float" style="text-align: center">{{item.name}}</td>
-                        <td class="col s3 non-float" style="text-align: center">{{item.article}}</td>
+                        <td class="col s1 non-float" style="text-align: center">{{item.article}}</td>
+                        <td class="col s2 non-float" style="text-align: center">{{item.price}}р.</td>
                         <td class="col s2 non-float" style="text-align: center">
                             <div>
                                 <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.cou<1}"></i>
@@ -86,7 +96,7 @@
 
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <div id="save" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
             <i class="large mdi-content-save"></i>
         </a>

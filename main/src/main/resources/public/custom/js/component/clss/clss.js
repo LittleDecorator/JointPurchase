@@ -65,7 +65,7 @@
                     } else {
                         good = false;
                     }
-                    var obj = {id:item.id,name:item.name,selected:good};
+                    var obj = {id:item.id,name:item.name,selected:good,article:item.article,price:item.price};
                     $scope.items.push(obj);
                     console.log($scope.items);
                 });

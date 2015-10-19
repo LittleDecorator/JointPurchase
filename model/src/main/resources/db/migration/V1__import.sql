@@ -66,7 +66,7 @@ create table credential(
 -- таблица заказов
 create table purchase_order (
   id varchar(37) not null,                --id
-  subject_id varchar(37) not null,        -- ссылка на оформителя (может отсутствовать для незарегистрированных)
+  subject_id varchar(37),        -- ссылка на оформителя (может отсутствовать для незарегистрированных)
   uid bigint not null,                    -- номер заказа
   recipient_fname varchar(37) not null,     -- имя получателя
   recipient_lname varchar(37) not null,     -- фамилия получателя

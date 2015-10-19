@@ -63,9 +63,10 @@
 
             $scope.stats = [];
 
+            var canSaveOrder;
+
             // Status
              dataResources.orderStatus.get(function(data){
-                 console.log(data);
                  angular.forEach(data,function(stat){
                      $scope.stats.push(stat);
                  });
@@ -81,34 +82,42 @@
                           $scope.currentOrderItems.push(orderItem);
                           });
                           });*/
+
                  } else {
-                     $scope.currentOrder = {status:null,items:[]};
+                     $scope.currentOrder = {status:null,items:[],payment:0};
                      $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
                      $('#status').prop( "disabled", true );
 
                  }
-
+                 $('#payment').prop( "disabled", true );
             });
 
             $scope.save = function () {
-                //iterate over order items array, and create new clean array foe mapping
                 var cleanOrderItems = [];
-                /*$scope.currentOrderItems.forEach(function (item) {
-                    cleanOrderItems.push({
-                        id: item.id,
-                        orderId: item.orderId,
-                        itemId: item.itemId,
-                        cou: item.cou
-                    })
-                });*/
+                if(canSaveOrder){
+                    $scope.currentOrder.items.forEach(function (item) {
+                        if(item.cou>0){
+                            cleanOrderItems.push({
+                                id: item.id,
+                                orderId: item.orderId,
+                                itemId: item.itemId,
+                                cou: item.cou
+                            })
+                        }
+                    });
 
-                //prepare response object
-                $scope.currentOrder.personId = $scope.selectedPerson.id;
-                var respData = {
-                    order: $scope.currentOrder,
-                    items: cleanOrderItems
-                };
-                dataResources.order.save(respData);
+                    var correctOrder = angular.copy($scope.currentOrder);
+                    correctOrder.status = correctOrder.status.text;
+
+                    var respData = {
+                        order: correctOrder,
+                        items: cleanOrderItems
+                    };
+                    //TODO: try handle order after save
+                    console.log($scope.currentOrder);
+                    $scope.currentOrder = dataResources.order.save(respData);
+                    console.log($scope.currentOrder);
+                }
             };
 
             //add item to order
@@ -119,19 +128,26 @@
             //remove item from order
             $scope.remItemsFromOrder = function (idx) {
                 $scope.currentOrder.items.splice(idx,1);
+                recalculatePayment();
             };
 
             $scope.$on('onItemClssSelected',function() {
                 $scope.currentOrder.items = [];
                 angular.forEach(eventService.data, function (item) {
-                    item.cou = 0;
+                    item.cou = 1;
                     $scope.currentOrder.items.push(item);
                 });
+                recalculatePayment();
             });
 
             //increment item cou in order
             $scope.incrementCou = function (idx) {
-                $scope.currentOrder.items[idx].cou++;
+                var item = $scope.currentOrder.items[idx];
+                item.cou++;
+                recalculatePayment();
+                if(haveNonEmptyItems()){
+                    toggleSaveBtnOn();
+                }
             };
 
             //decrement item cou in order
@@ -139,12 +155,55 @@
                 var item = $scope.currentOrder.items[idx];
                 if (item.cou > 0) {
                     item.cou--;
+                    recalculatePayment();
+                    if(!haveNonEmptyItems()){
+                        toggleSaveBtnOff();
+                    }
                 }
             };
 
-            //$scope.createOrder = function(cart){
-            //    dataResources.order.save({items:cart});
-            //};
+            function recalculatePayment(){
+                $scope.currentOrder.payment = 0;
+                angular.forEach($scope.currentOrder.items,function(item){
+                    $scope.currentOrder.payment = $scope.currentOrder.payment + (item.cou * item.price);
+                })
+            };
+
+            function haveNonEmptyItems(){
+                var result = false;
+                $scope.currentOrder.items.some(function(item){
+                    if(item.cou>0){
+                        return result = true;
+                    } else {
+                        return result = false;
+                    }
+                });
+                return result;
+            }
+
+            function toggleSaveBtnOn(){
+                var src = $('#save a');
+                if(src.hasClass('disabled')){
+                    src.removeClass('disabled');
+                    canSaveOrder = true;
+                }
+            }
+
+            function toggleSaveBtnOff(){
+                var src = $('#save a');
+                if(!src.hasClass('disabled')){
+                    src.addClass('disabled');
+                    canSaveOrder = false;
+                }
+            }
+
+            $scope.$watchCollection('currentOrder.items', function(newNames, oldNames) {
+                if(newNames && (newNames.length==0 || (newNames.length>0 && !haveNonEmptyItems()))){
+                    toggleSaveBtnOff();
+                } else {
+                    toggleSaveBtnOn();
+                }
+            });
 
         }])
 })();

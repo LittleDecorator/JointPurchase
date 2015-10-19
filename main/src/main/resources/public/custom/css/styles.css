@@ -304,4 +304,5 @@ div.collection a.active{
 /* disabled icon*/
 .disabled{
     color: rgba(0, 0, 0, 0.26);
+    cursor: default!important;
 }
