@@ -38,50 +38,49 @@
 
                 <!-- Customer Info -->
                 <div class="row">
-                    <div class="form-group col s12 m2">
-                        <label class="control-label required" for="fname">Имя</label>
+                    <div class="col s12 m2" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                         <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname" required>
+                        <label class="control-label required" for="fname">Имя</label>
                     </div>
 
-                    <div class="form-group col s12 m3">
-                        <label class="control-label required" for="lname">Фамилия</label>
+                    <div class="col s12 m3" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                         <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname" required>
+                        <label class="control-label required" for="lname">Фамилия</label>
                     </div>
 
-                    <div class="form-group col s12 m3">
-                        <label class="control-label" for="mname">Отчество</label>
+                    <div class="col s12 m3" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                         <input type="text" id="mname" class="form-control" ng-model="currentOrder.recipientMname">
+                        <label class="control-label" for="mname">Отчество</label>
                     </div>
 
-                    <div class="form-group col s12 m2">
-                        <label class="control-label" for="email">Email</label>
-                        <input type="text" id="email" class="form-control" ng-model="currentOrder.recipientEmail">
+                    <div class="col s12 m2 " ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
+                        <input type="text" id="email" class="form-control invalid" ng-model="currentOrder.recipientEmail" email-validate>
+                        <label class="control-label" for="email" data-error='Not valid email'>Email</label>
                     </div>
 
-                    <div class="form-group col s12 m2">
-                        <label class="control-label required" for="phone">Телефон</label>
+                    <div class="col s12 m2" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                         <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone" required>
+                        <label class="control-label required" for="phone">Телефон</label>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label required" for="address">Адрес</label>
+                <div ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                     <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress" required>
+                    <label class="control-label required" for="address">Адрес</label>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="comment">Comment</label>
+                <div ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
                     <input type="text" id="comment" class="form-control" ng-model="currentOrder.comment">
+                    <label class="control-label" for="comment">Comment</label>
                 </div>
 
             </div>
     </div>
 
     <h3>Содержимое заказа</h3>
-    <div class="table-container">
+    <div class="table-container" ng-if="currentOrder.items.length>0">
         <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addItemsInOrder()" >Добавить товар в заказ</a>-->
 
-        <div ng-if="currentOrder.items.length>0">
             <div class="table-result">
                 <table class="bordered table-result" style="line-height: 1.5;">
                     <thead>
@@ -114,12 +113,11 @@
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <div ng-if="currentOrder.items.length==0">
-            <h6><span style="margin-right: 2%">Не добавлено ни одного товара</span><i class="fa fa-frown-o"></i></h6>
-        </div>
+    </div>
 
+    <div class="table-result" ng-if="currentOrder.items.length==0">
+        <span style="margin-right: 2%">Не добавлено ни одного товара</span>
     </div>
 
     <div id="add" class="fixed-action-btn" style="bottom: 105px; right: 24px;">

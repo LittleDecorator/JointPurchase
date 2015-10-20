@@ -59,14 +59,16 @@
 
             $scope.stats = [];
             $scope.deliveries = [];
-            $scope.currentOrder = {status:null,items:[],payment:0};
+            var time = new Date().getTime();
+            $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time};
+            $scope.isNewOrder = true;
 
             if (order) {
                 console.log(order);
                 $scope.currentOrder = angular.copy(order);
 
                 $scope.currentOrder.items = [];
-                $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
+
 
                 dataResources.orderItems.get({id: order.id}, function (data) {
                     angular.forEach(data, function (orderItem) {
@@ -75,7 +77,11 @@
                         $scope.currentOrder.items.push(item);
                     });
                 });
+
+                $scope.isNewOrder = !$scope.isNewOrder;
             }
+            $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
+
 
             // Status
             dataResources.orderStatus.get(function(data){

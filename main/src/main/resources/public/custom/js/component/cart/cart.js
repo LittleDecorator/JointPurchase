@@ -35,34 +35,28 @@
             }
         }])
 
-        .controller('cartCheckoutController',['$scope','cartResources','authService','loginModal',function($scope,cartResources,authService,loginModal){
+        .controller('cartCheckoutController',['$scope','cartResources','authService','loginModal','dataResources',function($scope,cartResources,authService,loginModal,dataResources){
 
             $scope.postDelivery = function(){
                 console.log("BLAAAAAA!");
             };
 
-            $scope.deliveries = {
-                inited:false,
-                data:[
-                    {type:"self",
-                        name:"Самовывоз",
-                        desc:"Стоимость доставки заказа в пункт самовывоза - 100 руб. Вы также можете самостоятельно забрать заказ в Пункте Самовывоза, расположенном по адресу г. Москва, Огородный проезд, 20, стр. 38 с понедельника по субботу с 10-30 до 20-00."
-                    },
-                    {type:"moscow",
-                        name:"Курьерская доставка",
-                        desc:"Курьерская доставка по Москве — 350руб. Если Вы находитесь в Москве мы доставим Вам заказ, сделанный до 14.00, на следующий день после его оформления. Оплата – наличными курьеру при получении заказа.Стоимость доставки в пределах МКАД 350 руб. Доплата за доставку за МКАД(не далее 15 км от МКАД) + 50 руб. за каждые полные/неполные 5 км. от МКАД. Доставка осуществляется ежедневно c 10:00 до 20:00. В день доставки за полчаса или час курьер свяжется с Вами. При заказе от 7000 руб. доставка осуществляется бесплатно."
-                    },
-                    {type:"country",
-                        name:"Доставка по России",
-                        desc:"Примерные тарифы и варианты доставки в Ваш регион Вы можете увидеть в разделе 'Оплата и доставка'. После получения заказа, мы дополнительно свяжемся с Вами для согласования точной стоимости доставки."
-                    }]
-            };
+            $scope.deliveries = [];
+
+            dataResources.orderDelivery.get(function(data){
+                angular.forEach(data,function(del){
+                    $scope.deliveries.push(del);
+                });
+
+            });
 
             $scope.info = {
-                recipient:null,
+                recipientFname:null,
+                recipientLname:null,
+                recipientMname:null,
                 delivery:null,
-                phone:null,
-                email:null,
+                recipientPhone:null,
+                recipientEmail:null,
                 address:null,
                 comment:null
             };

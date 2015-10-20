@@ -1,29 +1,41 @@
 <div>
     <h4>Информация о доставке</h4>
     <div ng-form="checkout">
-        <div class="input-field">
-            <input type="text" id="recipient" class="form-control" ng-model="info.recipient" required>
-            <label class="control-label required" for="recipient">Имя получателя</label>
+        <div class="row">
+            <div class="input-field col s12 m4">
+                <input type="text" id="fname" class="form-control" ng-model="info.recipientFname" required>
+                <label class="control-label required" for="fname">Имя получателя</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input type="text" id="lname" class="form-control" ng-model="info.recipientLname" required>
+                <label class="control-label required" for="lname">Фамилия получателя</label>
+            </div>
+            <div class="input-field col s12 m4">
+                <input type="text" id="mname" class="form-control" ng-model="info.recipientMname" required>
+                <label class="control-label required" for="mname">Отчество получателя</label>
+            </div>
         </div>
+
         <div class="input-field">
-            <input type="text" id="email" name="email" class="form-control" ng-model="info.email" required email-validate
-                   ng-class="{'invalid': checkout.email.$error.emailValidator && info.email.length > 0, 'valid':!checkout.email.$error.emailValidator && info.email.length > 0}">
-            <label class="control-label required" for="email" data-error='Not valid semail'>Кому писать</label>
+            <input type="text" id="email" name="email" class="form-control" ng-model="info.recipientEmail" required email-validate
+                   ng-class="{'invalid': (checkout.$error.emailValidator && info.recipientEmail.length>0),'valid':(!checkout.$error.emailValidator && info.recipientEmail.length>0)}">
+            <label class="control-label required" for="email" data-error='Not valid email'>Email</label>
         </div>
+
         <div class="input-field">
-            <input type="text" id="phone" class="form-control" ng-model="info.phone">
-            <label class="control-label" for="phone">Куда звонить</label>
+            <input type="text" id="phone" class="form-control" ng-model="info.recipientPhone">
+            <label class="control-label" for="phone">Телефон</label>
         </div>
         <div class="input-field">
             <input type="text" id="address" class="form-control" ng-model="info.address" required>
-            <label class="control-label required" for="address">Куда везти</label>
+            <label class="control-label required" for="address">Адрес</label>
         </div>
         <div class="input-field">
             <input type="text" id="comment" class="form-control" ng-model="info.comment">
-            <label class="control-label" for="comment">Комментарии?</label>
+            <label class="control-label" for="comment">Комментарий</label>
         </div>
         <div class="input-field col s3" id="delivery">
-            <select name="company" ng-options="delivery.name for delivery in deliveries.data track by delivery.type" ng-model="info.delivery" post-init="postDelivery">
+            <select name="company" ng-options="delivery.value for delivery in deliveries track by delivery.id" ng-model="info.delivery" post-init="postDelivery">
                 <option value="" class="required">Выберите способ доставки ...</option>
             </select>
         </div>
@@ -31,7 +43,7 @@
             <div class="col s12">
                 <div class="card-panel teal">
                     <span class="white-text">
-                        {{info.delivery.desc}}
+                        {{info.delivery.info}}
                     </span>
                 </div>
             </div>

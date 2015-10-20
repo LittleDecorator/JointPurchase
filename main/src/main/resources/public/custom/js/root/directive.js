@@ -244,7 +244,7 @@
 
         //TODO: phone validation and string limit
         .directive('phoneValidate', function() {
-            return {
+            /*return {
                 restrict:'A',
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
@@ -261,7 +261,7 @@
 
                     });
                 }
-            };
+            };*/
         })
 
         .directive('emptyValidate', function() {
