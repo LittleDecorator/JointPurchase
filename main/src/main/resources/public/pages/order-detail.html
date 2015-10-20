@@ -2,8 +2,7 @@
     <h3>Информация о заказе</h3>
     <div class="table-container">
 
-        <form role="form">
-            <div>
+            <div ng-form="_order">
                 <!-- Main Order Info -->
                 <div class="row">
                     <div class="form-group col s12 m2">
@@ -18,7 +17,7 @@
 
                     <div class="form-group col s12 m3">
                         <label class="control-label" for="status">Status</label>
-                        <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="status.value for status in stats track by status.id" ng-change="statusChanged()">
+                        <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="status.value for status in stats track by status.id">
                             <option value="" >Укажите статус заказа ...</option>
                         </select>
                     </div>
@@ -29,8 +28,10 @@
                     </div>
 
                     <div class="form-group col s12 m3">
-                        <label class="control-label" for="deliveryType">Тип доставки</label>
-                        <input type="text" id="deliveryType" class="form-control" disabled>
+                        <label class="control-label required" for="deliveryType">Тип доставки</label>
+                        <select id="deliveryType" class="form-control" ng-model="currentOrder.delivery" ng-options="delivery.value for delivery in deliveries track by delivery.id" empty-validate>
+                            <option value="" >Укажите тип доставки ...</option>
+                        </select>
                     </div>
                 </div>
 
@@ -38,13 +39,13 @@
                 <!-- Customer Info -->
                 <div class="row">
                     <div class="form-group col s12 m2">
-                        <label class="control-label" for="fname">Имя</label>
-                        <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname">
+                        <label class="control-label required" for="fname">Имя</label>
+                        <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname" required>
                     </div>
 
                     <div class="form-group col s12 m3">
-                        <label class="control-label" for="lname">Фамилия</label>
-                        <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname">
+                        <label class="control-label required" for="lname">Фамилия</label>
+                        <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname" required>
                     </div>
 
                     <div class="form-group col s12 m3">
@@ -58,15 +59,14 @@
                     </div>
 
                     <div class="form-group col s12 m2">
-                        <label class="control-label" for="phone">Телефон</label>
-                        <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone">
+                        <label class="control-label required" for="phone">Телефон</label>
+                        <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone" required>
                     </div>
                 </div>
 
-
                 <div class="form-group">
-                    <label class="control-label" for="address">Адрес</label>
-                    <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress">
+                    <label class="control-label required" for="address">Адрес</label>
+                    <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress" required>
                 </div>
 
                 <div class="form-group">
@@ -75,15 +75,14 @@
                 </div>
 
             </div>
-        </form>
     </div>
 
     <h3>Содержимое заказа</h3>
     <div class="table-container">
-        <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addItemsInOrder()" >Добавить товар в заказ</a>
+        <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addItemsInOrder()" >Добавить товар в заказ</a>-->
 
         <div ng-if="currentOrder.items.length>0">
-            <div class="table-result" style="margin-top: 20px">
+            <div class="table-result">
                 <table class="bordered table-result" style="line-height: 1.5;">
                     <thead>
                     <tr>
@@ -117,14 +116,23 @@
             </div>
         </div>
 
+        <div ng-if="currentOrder.items.length==0">
+            <h6><span style="margin-right: 2%">Не добавлено ни одного товара</span><i class="fa fa-frown-o"></i></h6>
+        </div>
+
     </div>
 
-    <div id="save" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
-            <i class="large mdi-content-save"></i>
+    <div id="add" class="fixed-action-btn" style="bottom: 105px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="addItemsInOrder()">
+            <i class="large mdi-content-add"></i>
         </a>
     </div>
 
+    <div id="save" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="save()" ng-class="{'disabled':(currentOrder.items.length==0 || haveEmptyItems() ||_order.$invalid)}">
+            <i class="large mdi-content-save"></i>
+        </a>
+    </div>
 
 
 <!--

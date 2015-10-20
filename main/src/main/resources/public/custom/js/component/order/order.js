@@ -55,44 +55,60 @@
             };
 
         }])
-
         .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','itemClssModal','eventService',function ($scope, $state, order,$stateParams, dataResources,$timeout,itemClssModal,eventService){
 
             $scope.stats = [];
+            $scope.deliveries = [];
+            $scope.currentOrder = {status:null,items:[],payment:0};
 
-            var canSaveOrder;
+            if (order) {
+                console.log(order);
+                $scope.currentOrder = angular.copy(order);
+
+                $scope.currentOrder.items = [];
+                $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
+
+                dataResources.orderItems.get({id: order.id}, function (data) {
+                    angular.forEach(data, function (orderItem) {
+                        var item = orderItem.item;
+                        item.cou = orderItem.cou;
+                        $scope.currentOrder.items.push(item);
+                    });
+                });
+            }
 
             // Status
-             dataResources.orderStatus.get(function(data){
-                 angular.forEach(data,function(stat){
-                     $scope.stats.push(stat);
-                 });
+            dataResources.orderStatus.get(function(data){
+                angular.forEach(data,function(stat){
+                    $scope.stats.push(stat);
+                });
 
-                 if (order) {
-                     $scope.currentOrder = order;
-                     $scope.currentOrder.items = [];
-                     $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
-
-                     $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, $scope.currentOrder.status);
-
-                     dataResources.orderItems.get({id: order.id}, function (data) {
-                         angular.forEach(data, function (orderItem) {
-                             var item = orderItem.item;
-                             item.cou = orderItem.cou;
-                             $scope.currentOrder.items.push(item);
-                         });
-                     });
-                 } else {
-                     $scope.currentOrder = {status:null,items:[],payment:0};
-                     $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
-                     $('#status').prop( "disabled", true );
-
-                 }
+                if (order) {
+                    $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, order.status);
+                } else {
+                    $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
+                    $('#status').prop( "disabled", true );
+                }
             });
 
+            dataResources.orderDelivery.get(function(data){
+                angular.forEach(data,function(del){
+                    $scope.deliveries.push(del);
+                });
+
+                if (order) {
+                    $scope.currentOrder.delivery = helpers.findInArrayByValue($scope.deliveries, order.delivery);
+                } else {
+                    $scope.currentOrder.delivery = helpers.findInArrayById($scope.deliveries, 0);
+                }
+            });
+
+
+
             $scope.save = function () {
+                console.log("Save button pressed");
                 var cleanOrderItems = [];
-                if(canSaveOrder){
+
                     $scope.currentOrder.items.forEach(function (item) {
                         if(item.cou>0){
                             cleanOrderItems.push({
@@ -106,6 +122,7 @@
 
                     var correctOrder = angular.copy($scope.currentOrder);
                     correctOrder.status = correctOrder.status.value;
+                    correctOrder.delivery = correctOrder.delivery.value;
 
                     var respData = {
                         order: correctOrder,
@@ -117,8 +134,6 @@
                         $scope.currentOrder = data;
                         $scope.currentOrder.items = items;
                     });
-
-                }
             };
 
             //add item to order
@@ -137,7 +152,7 @@
                 $scope.currentOrder.items = [];
                 var currItem;
                 angular.forEach(eventService.data, function (item) {
-                    currItem = helpers.findInArrayById(oldItems,item.id)
+                    currItem = helpers.findInArrayById(oldItems,item.id);
                     if(helpers.isEmpty(currItem)){
                         currItem = item;
                         currItem.cou = 1;
@@ -152,9 +167,6 @@
                 var item = $scope.currentOrder.items[idx];
                 item.cou++;
                 recalculatePayment();
-                if(haveNonEmptyItems()){
-                    toggleSaveBtnOn();
-                }
             };
 
             //decrement item cou in order
@@ -163,9 +175,6 @@
                 if (item.cou > 0) {
                     item.cou--;
                     recalculatePayment();
-                    if(!haveNonEmptyItems()){
-                        toggleSaveBtnOff();
-                    }
                 }
             };
 
@@ -176,41 +185,32 @@
                 })
             };
 
-            function haveNonEmptyItems(){
+            $scope.haveEmptyItems = function(){
                 var result = false;
                 $scope.currentOrder.items.some(function(item){
-                    if(item.cou>0){
+                    if(item.cou==0){
                         return result = true;
                     } else {
                         return result = false;
                     }
                 });
                 return result;
-            }
+            };
 
-            function toggleSaveBtnOn(){
-                var src = $('#save a');
-                if(src.hasClass('disabled')){
-                    src.removeClass('disabled');
-                    canSaveOrder = true;
-                }
-            }
-
-            function toggleSaveBtnOff(){
-                var src = $('#save a');
-                if(!src.hasClass('disabled')){
-                    src.addClass('disabled');
-                    canSaveOrder = false;
-                }
-            }
-
-            $scope.$watchCollection('currentOrder.items', function(newNames, oldNames) {
-                if(newNames && (newNames.length==0 || (newNames.length>0 && !haveNonEmptyItems()))){
-                    toggleSaveBtnOff();
+            //TODO: need add addresses for self delivery and add new address field
+            /*$scope.deliveryChanged = function(){
+                var elem = $('#deliveryType .select-wrapper');
+                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
+                    angular.element(elem).addClass('inactive');
                 } else {
-                    toggleSaveBtnOn();
+                    if(angular.element(elem).hasClass('inactive')){
+                        angular.element(elem).removeClass('inactive');
+                    }
                 }
-            });
+            };*/
+
+            console.log($scope);
 
         }])
+
 })();

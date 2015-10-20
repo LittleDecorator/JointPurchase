@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.enums.DeliveryType;
 import com.acme.enums.Status;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,4 +25,17 @@ public class ClssController {
         return array;
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/order/delivery")
+    public JSONArray getOrderDelivery(){
+        JSONArray array = new JSONArray();
+        JSONObject object;
+        for(DeliveryType delivery : DeliveryType.values()){
+            object = new JSONObject();
+            object.put("id",delivery.ordinal());
+            object.put("value",delivery.getValue());
+            object.put("info",delivery.getDesc());
+            array.add(object);
+        }
+        return array;
+    }
 }

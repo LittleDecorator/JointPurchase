@@ -92,6 +92,7 @@ public class OrderController{
         orderItemMapper.deleteByExample(deleteExample);
         //insert new links
         for(OrderItem orderItem : orderItems){
+            orderItem.setOrderId(order.getId());
             orderItemMapper.insertSelective(orderItem);
         }
         return order;

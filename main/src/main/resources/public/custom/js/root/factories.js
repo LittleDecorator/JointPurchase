@@ -144,6 +144,9 @@
                 }),
                 orderStatus:$resource('clss/order/status',{},{
                     get:{method:'GET',isArray:true}
+                }),
+                orderDelivery:$resource('clss/order/delivery',{},{
+                    get:{method:'GET',isArray:true}
                 })
 
             }

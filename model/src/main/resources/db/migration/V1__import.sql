@@ -70,14 +70,15 @@ create table purchase_order (
   uid bigint not null,                    -- номер заказа
   recipient_fname varchar(37) not null,     -- имя получателя
   recipient_lname varchar(37) not null,     -- фамилия получателя
-  recipient_mname varchar(37) not null,     -- отчество получателя
-  recipient_email varchar(37) not null,     -- email получателя
-  recipient_phone varchar(37),              -- телефон получателя
+  recipient_mname varchar(37),     -- отчество получателя
+  recipient_email varchar(37),     -- email получателя
+  recipient_phone varchar(37) not null,              -- телефон получателя
   recipient_address varchar(255) not null,        -- адрес доставки
   date_add timestamp default current_timestamp,    --дата создания заказа
   close_order_date timestamp,     --дата закрытия заказа
   comment varchar(255),     -- комментарий
   status varchar(30) default 'new',     --статус заказа
+  delivery varchar(30) default 'Самовывоз',
   payment decimal(20,2),      -- сумма к оплате
   primary key (id),
   foreign key (subject_id) references subject

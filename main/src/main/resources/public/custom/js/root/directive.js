@@ -270,8 +270,16 @@
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
                     ctrl.$parsers.push(function(value) {
-                        if (value && value.length == 0) {
-                            ctrl.$setValidity('emptyValidator', true);
+                        console.log(value);
+                        console.log(typeof value);
+                        if (value){
+                            if(typeof value == 'object' && !helpers.isEmpty(value)) {
+                                ctrl.$setValidity('emptyValidator', true);
+                            } else if(value.length == 0){
+                                ctrl.$setValidity('emptyValidator', true);
+                            } else {
+                                ctrl.$setValidity('emptyValidator', false);
+                            }
                         } else {
                             ctrl.$setValidity('emptyValidator', false);
 

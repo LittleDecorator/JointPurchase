@@ -73,8 +73,9 @@
                 } else {
                     loginModal();
                 }
-
             };
+
+            console.log($scope);
 
         }])
 })();
