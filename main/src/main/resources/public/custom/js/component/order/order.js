@@ -58,9 +58,6 @@
 
         .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','itemClssModal','eventService',function ($scope, $state, order,$stateParams, dataResources,$timeout,itemClssModal,eventService){
 
-            /* map of item names */
-            $scope.itemNames = [];
-
             $scope.stats = [];
 
             var canSaveOrder;
@@ -73,23 +70,24 @@
 
                  if (order) {
                      $scope.currentOrder = order;
-                         //$scope.selectedPerson = helpers.findInArrayById($scope.personNames, $scope.currentOrder.personId);
+                     $scope.currentOrder.items = [];
+                     $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
 
-                         /*dataResources.orderItems.get({id: order.id}, function (data) {
-                          angular.forEach(data, function (orderItem) {
-                          var item = helpers.findInArrayById($scope.itemNames, orderItem.itemId);
-                          orderItem.name = item.name;
-                          $scope.currentOrderItems.push(orderItem);
-                          });
-                          });*/
+                     $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, $scope.currentOrder.status);
 
+                     dataResources.orderItems.get({id: order.id}, function (data) {
+                         angular.forEach(data, function (orderItem) {
+                             var item = orderItem.item;
+                             item.cou = orderItem.cou;
+                             $scope.currentOrder.items.push(item);
+                         });
+                     });
                  } else {
                      $scope.currentOrder = {status:null,items:[],payment:0};
                      $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
                      $('#status').prop( "disabled", true );
 
                  }
-                 $('#payment').prop( "disabled", true );
             });
 
             $scope.save = function () {
@@ -98,25 +96,28 @@
                     $scope.currentOrder.items.forEach(function (item) {
                         if(item.cou>0){
                             cleanOrderItems.push({
-                                id: item.id,
-                                orderId: item.orderId,
-                                itemId: item.itemId,
+                                id:null,
+                                orderId: $scope.currentOrder.id,
+                                itemId: item.id,
                                 cou: item.cou
                             })
                         }
                     });
 
                     var correctOrder = angular.copy($scope.currentOrder);
-                    correctOrder.status = correctOrder.status.text;
+                    correctOrder.status = correctOrder.status.value;
 
                     var respData = {
                         order: correctOrder,
                         items: cleanOrderItems
                     };
                     //TODO: try handle order after save
-                    console.log($scope.currentOrder);
-                    $scope.currentOrder = dataResources.order.save(respData);
-                    console.log($scope.currentOrder);
+                    var items = angular.copy($scope.currentOrder.items);
+                    dataResources.order.save(respData,function(data){
+                        $scope.currentOrder = data;
+                        $scope.currentOrder.items = items;
+                    });
+
                 }
             };
 
@@ -132,10 +133,16 @@
             };
 
             $scope.$on('onItemClssSelected',function() {
+                var oldItems = $scope.currentOrder.items;
                 $scope.currentOrder.items = [];
+                var currItem;
                 angular.forEach(eventService.data, function (item) {
-                    item.cou = 1;
-                    $scope.currentOrder.items.push(item);
+                    currItem = helpers.findInArrayById(oldItems,item.id)
+                    if(helpers.isEmpty(currItem)){
+                        currItem = item;
+                        currItem.cou = 1;
+                    }
+                    $scope.currentOrder.items.push(currItem)
                 });
                 recalculatePayment();
             });

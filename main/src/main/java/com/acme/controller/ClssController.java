@@ -18,7 +18,7 @@ public class ClssController {
         for(Status status : Status.values()){
             object = new JSONObject();
             object.put("id",status.ordinal());
-            object.put("text",status.getText());
+            object.put("value",status.getText());
             array.add(object);
         }
         return array;

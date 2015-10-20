@@ -6,22 +6,22 @@
 
         <h3 class="example_head">Заказы:</h3>
         <div class="table-result">
-            <table class="table table-bordered table-hover collection adm-table">
+            <table class="table table-bordered table-hover adm-table collection">
                 <thead>
                 <tr>
-                    <th style="width: 20%">Номер заказа</th>
-                    <th style="width: 40%">Получатель</th>
+                    <th style="width: 5%">Номер заказа</th>
+                    <th style="width: 25%">Получатель</th>
                     <th>Дата заказа</th>
-                    <th>Дата закрытия заказа</th>
+                    <th style="width: 10%">Дата закрытия заказа</th>
                     <th>Статус заказа</th>
                     <th>Сумма к оплате</th>
-                    <th style="width: 6.6%"></th>
+                    <th style="width: 10%"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
                     <td class="center-align">{{order.uid}}</td>
-                    <td class="center-align">{{order.recipientLname + order.recipientFname + order.recipientMname}}</td>
+                    <td class="center-align">{{order.recipientLname +" "+ order.recipientFname + " " +order.recipientMname}}</td>
                     <td class="center-align">{{order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}</td>
                     <td class="center-align">{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
                     <td class="center-align">{{order.status}}</td>

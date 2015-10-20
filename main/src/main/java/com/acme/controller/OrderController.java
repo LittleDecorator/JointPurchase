@@ -1,9 +1,7 @@
 package com.acme.controller;
 
-import com.acme.gen.domain.OrderItem;
-import com.acme.gen.domain.OrderItemExample;
-import com.acme.gen.domain.PurchaseOrder;
-import com.acme.gen.domain.PurchaseOrderExample;
+import com.acme.gen.domain.*;
+import com.acme.gen.mapper.ItemMapper;
 import com.acme.gen.mapper.OrderItemMapper;
 import com.acme.gen.mapper.PurchaseOrderMapper;
 import com.acme.model.domain.Node;
@@ -12,6 +10,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,6 +19,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class OrderController{
 
     @Autowired
     private OrderItemMapper orderItemMapper;
+
+    @Autowired
+    private ItemMapper itemMapper;
 
 
     /**
@@ -82,13 +86,13 @@ public class OrderController{
 
         JSONArray itemsArray = (JSONArray) main.get("items");
         List<OrderItem> orderItems = mapper.readValue(itemsArray.toJSONString(), new TypeReference<List<OrderItem>>(){});
+        //delete old links
+        OrderItemExample deleteExample = new OrderItemExample();
+        deleteExample.createCriteria().andOrderIdEqualTo(order.getId());
+        orderItemMapper.deleteByExample(deleteExample);
+        //insert new links
         for(OrderItem orderItem : orderItems){
-//            orderItem.setOrderId(order.getId());
-            if(orderItem.getId()!=null){
-                orderItemMapper.updateByPrimaryKeySelective(orderItem);
-            } else {
-                orderItemMapper.insertSelective(orderItem);
-            }
+            orderItemMapper.insertSelective(orderItem);
         }
         return order;
     }
@@ -123,10 +127,43 @@ public class OrderController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
-    public List<OrderItem> getOrderItems(@PathVariable("id") String id) {
+    public JSONArray getOrderItems(@PathVariable("id") String id) {
+        System.out.println("getOrderItems");
+        //get link info
         OrderItemExample example = new OrderItemExample();
         example.createCriteria().andOrderIdEqualTo(id);
-        return orderItemMapper.selectByExample(example);
+        List<OrderItem> orderItems =  orderItemMapper.selectByExample(example);
+        List<String> itemIdList = Lists.transform(orderItems, new Function<OrderItem, String>() {
+            @Nullable
+            @Override
+            public String apply(OrderItem orderItem) {
+                return orderItem.getItemId();
+            }
+        });
+        System.out.println(itemIdList);
+        //get items
+        JSONArray array = new JSONArray();
+        if(itemIdList.size()>0){
+            ItemExample itemExample = new ItemExample();
+            itemExample.createCriteria().andIdIn(itemIdList);
+            List<Item> items = itemMapper.selectByExample(itemExample);
+
+            //create result
+
+            JSONObject object;
+            for(OrderItem orderItem : orderItems){
+                for(Item item : items){
+                    if(orderItem.getItemId().contentEquals(item.getId())){
+                        object = new JSONObject();
+                        object.put("item",item);
+                        object.put("cou",orderItem.getCou());
+                        array.add(object);
+                    }
+                }
+            }
+        }
+
+        return array;
     }
 
 }

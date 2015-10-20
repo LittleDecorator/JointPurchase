@@ -3,52 +3,75 @@
     <div class="table-container">
 
         <form role="form">
-            <div class="modal-body">
-                <div class="input-field">
-                    <label for="fname">Имя</label>
-                    <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname">
+            <div>
+                <!-- Main Order Info -->
+                <div class="row">
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="uid">Номер заказа</label>
+                        <input type="text" id="uid" class="form-control" ng-model="currentOrder.uid" disabled>
+                    </div>
+
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="dateAdd">Дата создания</label>
+                        <input type="text" id="dateAdd" class="form-control" ng-model="currentOrder.formatedDateAdd" disabled>
+                    </div>
+
+                    <div class="form-group col s12 m3">
+                        <label class="control-label" for="status">Status</label>
+                        <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="status.value for status in stats track by status.id" ng-change="statusChanged()">
+                            <option value="" >Укажите статус заказа ...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="payment" >Payment</label>
+                        <input type="text" id="payment" class="form-control" ng-model="currentOrder.payment" disabled>
+                    </div>
+
+                    <div class="form-group col s12 m3">
+                        <label class="control-label" for="deliveryType">Тип доставки</label>
+                        <input type="text" id="deliveryType" class="form-control" disabled>
+                    </div>
                 </div>
 
-                <div class="input-field">
-                    <label for="lname">Фамилия</label>
-                    <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname">
+
+                <!-- Customer Info -->
+                <div class="row">
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="fname">Имя</label>
+                        <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname">
+                    </div>
+
+                    <div class="form-group col s12 m3">
+                        <label class="control-label" for="lname">Фамилия</label>
+                        <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname">
+                    </div>
+
+                    <div class="form-group col s12 m3">
+                        <label class="control-label" for="mname">Отчество</label>
+                        <input type="text" id="mname" class="form-control" ng-model="currentOrder.recipientMname">
+                    </div>
+
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="email">Email</label>
+                        <input type="text" id="email" class="form-control" ng-model="currentOrder.recipientEmail">
+                    </div>
+
+                    <div class="form-group col s12 m2">
+                        <label class="control-label" for="phone">Телефон</label>
+                        <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone">
+                    </div>
                 </div>
 
-                <div class="input-field">
-                    <label for="mname">Отчество</label>
-                    <input type="text" id="mname" class="form-control" ng-model="currentOrder.recipientMname">
-                </div>
 
-                <div class="input-field">
-                    <label for="email">Почта</label>
-                    <input type="text" id="email" class="form-control" ng-model="currentOrder.recipientEmail">
-                </div>
-
-                <div class="input-field">
-                    <label for="phone">Телефон</label>
-                    <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone">
-                </div>
-
-                <div class="input-field">
-                    <label for="address">Адрес</label>
+                <div class="form-group">
+                    <label class="control-label" for="address">Адрес</label>
                     <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress">
                 </div>
 
-                <div class="input-field">
-                    <label for="comment">Comment</label>
-                    <input type="text" id="comment" class="form-control" ng-model="currentOrder.comment">
-                </div>
-                <!--&lt;!&ndash; must be available only in edit &ndash;&gt;-->
                 <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" class="form-control" ng-model="currentOrder.status" ng-options="status.text for status in stats track by status.id" ng-change="statusChanged()">
-                        <option value="" >Укажите статус заказа ...</option>
-                    </select>
-                </div>
-                <!--&lt;!&ndash; must be available only in edit &ndash;&gt;-->
-                <div class="input-field">
-                    <label for="payment" class="active">Payment</label>
-                    <input type="text" id="payment" class="form-control" ng-model="currentOrder.payment">
+                    <label class="control-label" for="comment">Comment</label>
+                    <input type="text" id="comment" class="form-control" ng-model="currentOrder.comment">
                 </div>
 
             </div>

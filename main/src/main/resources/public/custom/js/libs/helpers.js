@@ -22,7 +22,7 @@ var helpers = {
     return true;
     },
 
-    dateFormat : function(dateMilliseconds) {
+    dateTimeFormat : function(dateMilliseconds) {
         var YYYY, M, D,MM,DD, h,hh, m,mm, s,ss;
         var date = new Date(dateMilliseconds);
         YYYY = date.getFullYear();
@@ -37,11 +37,31 @@ var helpers = {
         return DD+"."+MM+"."+YYYY+" "+hh+":"+mm+":"+ss;
     },
 
+    dateFormat : function(dateMilliseconds) {
+        var YYYY, M, D,MM,DD;
+        var date = new Date(dateMilliseconds);
+        YYYY = date.getFullYear();
+        MM = (M=date.getMonth()+1)<10?('0'+M):M;
+        DD = (D=date.getDate())<10?('0'+D):D;
+
+        return DD+"."+MM+"."+YYYY;
+    },
+
+    arrayContainById: function(array,id){
+        var res = false;
+        array.some(function(elem){
+            if(elem.id == id){
+                return res = true;
+            } else {
+                return res = false;
+            }
+        });
+        return res;
+    },
+
     findInArrayById: function(array,id){
         var res = {};
-        //console.log(array);
         array.some(function(elem){
-            console.log(elem);
             if(elem.id == id){
                 res = elem;
                 return true;
@@ -49,7 +69,19 @@ var helpers = {
                 return false;
             }
         });
-        console.log(res);
+        return res;
+    },
+
+    findInArrayByValue: function(array,value){
+        var res = {};
+        array.some(function(elem){
+            if(elem.value == value){
+                res = elem;
+                return true;
+            } else {
+                return false;
+            }
+        });
         return res;
     },
 
@@ -71,10 +103,7 @@ var helpers = {
     findRouteByName: function(name){
         var res = {};
         route.getRoutes().some(function(elem){
-            //console.log(elem);
-            //console.log(name);
             if(elem.name === name){
-                //console.log("match");
                 angular.extend(res,elem);
                 return true;
             } else {
@@ -102,7 +131,6 @@ var helpers = {
 
     toArray: function(obj){
         var array = $.map(obj, function(value, index) {
-            //console.log(value);
             return [value];
         });
         return array;
