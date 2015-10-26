@@ -18,4 +18,8 @@ public interface CustomMapper {
 
     List<ItemCategoryLink> getItemCategories();
 
+    Integer getOrderedItemCou(@Param("itemId") String id);
+
+    List<ItemCategoryLink> getFilteredItems(@Param("name") String name, @Param("article") String article, @Param("company") String company);
+
 }

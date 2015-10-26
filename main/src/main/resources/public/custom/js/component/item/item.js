@@ -108,8 +108,8 @@
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var category = helpers.findInArrayById($scope.types, item.typeId);
-                        item.category = category.name;
+                        //var category = helpers.findInArrayById($scope.types, item.typeId);
+                        //item.category = category.name;
                         $scope.items.push(item);
                     });
                     $scope.currPage = 1;
@@ -120,15 +120,19 @@
             //clear filter
             $scope.filter.clear = function () {
                 helpers.clearFilterItem();
+                $('.filter-item .active').removeClass('active');
                 $scope.items = [];
                 dataResources.item.query(function (data) {
                     angular.forEach(data, function (item) {
                         var company = helpers.findInArrayById($scope.companyNames, item.companyId);
                         item.companyName = company.name;
-                        var type = helpers.findInArrayById($scope.types, item.typeId);
-                        item.type = type.name;
+                        //var category = helpers.findInArrayById($scope.categories, item.categoryId);
+                        //item.category = category.name;
                         $scope.items.push(item);
                     });
+                    //get total items cou, for pagination
+                    $scope.totalItems = $scope.items.length;
+
                     $scope.currPage = 1;
                     $scope.subList();
                 });

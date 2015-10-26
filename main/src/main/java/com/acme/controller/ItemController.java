@@ -9,6 +9,7 @@ import com.acme.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,8 +60,26 @@ public class ItemController{
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<ItemCategoryLink> getItems() {
-        return customMapper.getItemCategories();
+    public JSONArray getItems() throws JsonProcessingException, ParseException {
+        List<ItemCategoryLink> links = customMapper.getItemCategories();
+//        System.out.println(links);
+        if(links!=null && links.size()>0){
+            JSONParser parser = new JSONParser();
+            ObjectMapper mapper = new ObjectMapper();
+            JSONArray array = (JSONArray) parser.parse(mapper.writeValueAsString(links));
+            int arrSize = array.size();
+            JSONObject object;
+            for(int i=0;i<arrSize;i++){
+                object = (JSONObject) array.get(i);
+                //can return NULL
+                Integer val = customMapper.getOrderedItemCou((String) object.get("id"));
+                object.put("inOrder", val!=null? val :0);
+                array.set(i, object);
+            }
+            return array;
+        } else {
+            return null;
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
@@ -120,20 +139,6 @@ public class ItemController{
         }
         return list;
     }
-
-//    @RequestMapping(method = RequestMethod.GET,value = "/clss")
-//    public JSONArray getItemClss(){
-//        JSONArray array = new JSONArray();
-//        JSONObject object;
-//        for(Item item : itemMapper.selectByExample(new ItemExample())){
-//            object = new JSONObject();
-//            object.put("id",item.getId());
-//            object.put("article",item.getArticle());
-//            object.put("name",item.getName());
-//            array.add(object);
-//        }
-//        return array;
-//    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ItemCategoryLink addGood(@RequestBody String input) throws ParseException, IOException {
@@ -200,36 +205,20 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/filter")
-    public List<Item> filter(@RequestBody String input) throws ParseException, IOException {
-        System.out.println(input);
+    public List<ItemCategoryLink> filter(@RequestBody String input) throws ParseException, IOException {
+//        System.out.println(input);
         JSONParser parser=new JSONParser();
         JSONObject main = (JSONObject) parser.parse(input);
-        System.out.println(main);
+//        System.out.println(main);
 
-        ItemExample itemExample = new ItemExample();
-        ItemExample.Criteria criteria= itemExample.createCriteria();
+        String name = Strings.emptyToNull(main.get("name").toString().toLowerCase());
+        System.out.println(name);
+        String company = Strings.emptyToNull(main.get("company").toString());
+        System.out.println(company);
+        String article = Strings.emptyToNull(main.get("article").toString());
+        System.out.println(article);
 
-        String name = main.get("name").toString();
-        String company = main.get("company").toString();
-        String category = main.get("category").toString();
-        String article = main.get("article").toString();
-
-        if(!Strings.isNullOrEmpty(name)){
-            criteria.andNameLike("%" + name + "%");
-        }
-        if(!Strings.isNullOrEmpty(company)){
-            criteria.andCompanyIdEqualTo(company);
-        }
-/*
-        if(!Strings.isNullOrEmpty(category)){
-            criteria.andCategoryIdEqualTo(category);
-        }
-*/
-        if(!Strings.isNullOrEmpty(article)){
-            criteria.andArticleLike(article);
-        }
-
-        return itemMapper.selectByExample(itemExample);
+        return customMapper.getFilteredItems(name,article,company);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/preview")

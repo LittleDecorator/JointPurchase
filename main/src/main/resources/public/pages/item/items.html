@@ -3,11 +3,11 @@
 
         <div class="row">
             <div class="input-field col s2">
-                <input id="name" type="text" class="validate" name="name">
+                <input id="name" type="text" name="name">
                 <label for="name">Название</label>
             </div>
             <div class="input-field col s2">
-                <input id="article" type="text" class="validate" name="article">
+                <input id="article" type="text" name="article">
                 <label for="article">Артикул</label>
             </div>
 
@@ -17,11 +17,11 @@
                 </select>
             </div>
 
-            <div class="input-field col s3" id="category">
-                <select  name="category" ng-options="category.name for category in categoryTypes track by category.id" ng-model="filter.selectedCategory" ng-change="categoryChanged()">
-                    <option value="">Выберите Категорию ...</option>
-                </select>
-            </div>
+            <!--<div class="input-field col s3" id="category">-->
+                <!--<select  name="category" ng-options="category.name for category in categoryTypes track by category.id" ng-model="filter.selectedCategory" ng-change="categoryChanged()">-->
+                    <!--<option value="">Выберите Категорию ...</option>-->
+                <!--</select>-->
+            <!--</div>-->
 
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
@@ -42,7 +42,7 @@
                 <th></th>
                 <th>Название</th>
                 <th>Производитель</th>
-                <th>Тип</th>
+                <!--<th>Тип</th>-->
                 <th>Артикул</th>
                 <th>Цена</th>
                 <th>В наличии</th>
@@ -58,11 +58,11 @@
                 </td>
                 <td class="center-align">{{item.name}}</td>
                 <td class="center-align">{{item.companyName}}</td>
-                <td class="center-align multiple">{{item.type}}</td>
+                <!--<td class="center-align multiple">{{item.type}}</td>-->
                 <td class="center-align">{{item.article}}</td>
                 <td class="center-align">{{item.price}} руб</td>
                 <td class="center-align">{{item.inStock|asZero}}</td>
-                <td class="center-align">{{item.inOrder|asZero}}</td>
+                <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
                 <td class="right-align">
                     <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
                     <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id)"><i class="fa fa-times"></i></a>

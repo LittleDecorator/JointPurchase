@@ -21,7 +21,7 @@
                 <tbody>
                 <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
                     <td class="center-align">{{order.uid}}</td>
-                    <td class="center-align">{{order.recipientLname +" "+ order.recipientFname + " " +order.recipientMname}}</td>
+                    <td class="center-align">{{order.personName}}</td>
                     <td class="center-align">{{order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}</td>
                     <td class="center-align">{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
                     <td class="center-align">{{order.status}}</td>

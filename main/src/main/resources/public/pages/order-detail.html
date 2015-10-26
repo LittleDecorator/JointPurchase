@@ -38,40 +38,44 @@
 
                 <!-- Customer Info -->
                 <div class="row">
-                    <div class="col s12 m2" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
+                    <!--<div class="col s12 m2" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">-->
+                    <div class="col s12 m2 input-field">
                         <input type="text" id="fname" class="form-control" ng-model="currentOrder.recipientFname" required>
-                        <label class="control-label required" for="fname">Имя</label>
+                        <label class="control-label required" ng-class="{'active':!isNewOrder}" for="fname">Имя</label>
                     </div>
 
-                    <div class="col s12 m3" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
+                    <div class="col s12 m3 input-field">
                         <input type="text" id="lname" class="form-control" ng-model="currentOrder.recipientLname" required>
-                        <label class="control-label required" for="lname">Фамилия</label>
+                        <label class="control-label required" ng-class="{'active':!isNewOrder}" for="lname">Фамилия</label>
                     </div>
 
-                    <div class="col s12 m3" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
+                    <div class="col s12 m3 input-field">
                         <input type="text" id="mname" class="form-control" ng-model="currentOrder.recipientMname">
-                        <label class="control-label" for="mname">Отчество</label>
+                        <label class="control-label" ng-class="{'active':!isNewOrder && currentOrder.recipientMname.length>0}" for="mname">Отчество</label>
                     </div>
 
-                    <div class="col s12 m2 " ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
-                        <input type="text" id="email" class="form-control invalid" ng-model="currentOrder.recipientEmail" email-validate>
-                        <label class="control-label" for="email" data-error='Not valid email'>Email</label>
+                    <div class="col s12 m2 input-field">
+                        <input type="text" id="email" class="form-control" ng-model="currentOrder.recipientEmail" email-validate
+                               ng-class="{'invalid': (_order.$error.emailValidator && currentOrder.recipientEmail.length>0),'valid':(!_order.$error.emailValidator && currentOrder.recipientEmail.length>0)}">
+                        <label class="control-label" for="email" ng-class="{'active':!isNewOrder && currentOrder.recipientEmail.length>0}" data-error='Not valid email'>Email</label>
                     </div>
 
-                    <div class="col s12 m2" ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
-                        <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone" required>
-                        <label class="control-label required" for="phone">Телефон</label>
+                    <div class="col s12 m2 input-field">
+                        <input type="text" id="phone" class="form-control" ng-model="currentOrder.recipientPhone" required phone-validate
+                               ng-class="{'invalid': (_order.$error.phoneValidator && currentOrder.recipientPhone.length>0),'valid':(!_order.$error.phoneValidator && currentOrder.recipientPhone.length>0)}">
+                        <label class="control-label required" ng-class="{'active':!isNewOrder}" for="phone" data-error='Not valid phone'>Телефон</label>
                     </div>
                 </div>
 
-                <div ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
-                    <input type="text" id="address" class="form-control" ng-model="currentOrder.recipientAddress" required>
-                    <label class="control-label required" for="address">Адрес</label>
+                <!--<div -->
+                <div class="input-field">
+                    <input type="text" id="address" ng-model="currentOrder.recipientAddress" required>
+                    <label class="control-label required" ng-class="{'active':!isNewOrder}" for="address">Адрес</label>
                 </div>
 
-                <div ng-class="{'input-field':isNewOrder,'form-group':!isNewOrder}">
+                <div class="input-field">
                     <input type="text" id="comment" class="form-control" ng-model="currentOrder.comment">
-                    <label class="control-label" for="comment">Comment</label>
+                    <label class="control-label" for="comment" ng-class="{'active':!isNewOrder && currentOrder.comment.length>0}">Comment</label>
                 </div>
 
             </div>
@@ -79,7 +83,6 @@
 
     <h3>Содержимое заказа</h3>
     <div class="table-container" ng-if="currentOrder.items.length>0">
-        <!--<a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addItemsInOrder()" >Добавить товар в заказ</a>-->
 
             <div class="table-result">
                 <table class="bordered table-result" style="line-height: 1.5;">
@@ -127,7 +130,7 @@
     </div>
 
     <div id="save" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large blue lighten-3" ng-click="save()" ng-class="{'disabled':(currentOrder.items.length==0 || haveEmptyItems() ||_order.$invalid)}">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="save()" ng-class="{'disabled':(currentOrder.items.length==0 || haveEmptyItems() || _order.$invalid)}">
             <i class="large mdi-content-save"></i>
         </a>
     </div>

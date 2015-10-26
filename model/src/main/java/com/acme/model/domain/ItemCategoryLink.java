@@ -14,6 +14,7 @@ public class ItemCategoryLink {
     private String companyId;
     private String article;
     private String description;
+    private Integer inStock;
     private BigDecimal price;
     private Date dateAdd;
     private boolean notForSale;
@@ -28,6 +29,7 @@ public class ItemCategoryLink {
         this.description = item.getDescription();
         this.price = item.getPrice();
         this.dateAdd = item.getDateAdd();
+        this.inStock = item.getInStock();
     }
 
     List<Category> categories;
@@ -102,5 +104,29 @@ public class ItemCategoryLink {
 
     public void setCategories(List<Category> categories) {
         this.categories = categories;
+    }
+
+    public Integer getInStock() {
+        return inStock;
+    }
+
+    public void setInStock(Integer inStock) {
+        this.inStock = inStock;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemCategoryLink{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", companyId='" + companyId + '\'' +
+                ", article='" + article + '\'' +
+                ", description='" + description + '\'' +
+                ", inStock=" + inStock +
+                ", price=" + price +
+                ", dateAdd=" + dateAdd +
+                ", notForSale=" + notForSale +
+                ", categories=" + categories +
+                '}';
     }
 }

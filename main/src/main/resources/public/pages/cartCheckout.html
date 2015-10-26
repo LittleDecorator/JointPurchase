@@ -4,15 +4,15 @@
         <div class="row">
             <div class="input-field col s12 m4">
                 <input type="text" id="fname" class="form-control" ng-model="info.recipientFname" required>
-                <label class="control-label required" for="fname">Имя получателя</label>
+                <label class="control-label required" for="fname">Имя</label>
             </div>
             <div class="input-field col s12 m4">
                 <input type="text" id="lname" class="form-control" ng-model="info.recipientLname" required>
-                <label class="control-label required" for="lname">Фамилия получателя</label>
+                <label class="control-label required" for="lname">Фамилия</label>
             </div>
             <div class="input-field col s12 m4">
                 <input type="text" id="mname" class="form-control" ng-model="info.recipientMname" required>
-                <label class="control-label required" for="mname">Отчество получателя</label>
+                <label class="control-label required" for="mname">Отчество</label>
             </div>
         </div>
 
@@ -23,7 +23,8 @@
         </div>
 
         <div class="input-field">
-            <input type="text" id="phone" class="form-control" ng-model="info.recipientPhone">
+            <input type="text" id="phone" class="form-control" ng-model="info.recipientPhone" phone-validate
+                   ng-class="{'invalid': (_order.$error.phoneValidator && currentOrder.recipientPhone.length>0),'valid':(!_order.$error.phoneValidator && currentOrder.recipientPhone.length>0)}">
             <label class="control-label" for="phone">Телефон</label>
         </div>
         <div class="input-field">

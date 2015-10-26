@@ -104,6 +104,7 @@ create table item (
   price decimal(20,2) not null, --цена еденицы товара
   date_add timestamp default current_timestamp,
   not_for_sale char(1) not null default 'N' check(not_for_sale in ('Y', 'N')),
+  in_stock int not null default 0,
   primary key (id),
   foreign key (company_id) references company
 );

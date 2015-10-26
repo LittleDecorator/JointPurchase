@@ -225,6 +225,7 @@
             restrict:'A',
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
+                console.log(ctrl);
                 ctrl.$parsers.push(function(value) {
                     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
                     if (re.test(value)) {
@@ -244,15 +245,16 @@
 
         //TODO: phone validation and string limit
         .directive('phoneValidate', function() {
-            /*return {
+            return {
                 restrict:'A',
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
                     ctrl.$parsers.push(function(value) {
-                        if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(value)) {
-                            ctrl.$setValidity('emailValidator', true);
+                        var re = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i;
+                        if (re.test(value)) {
+                            ctrl.$setValidity('phoneValidator', true);
                         } else {
-                            ctrl.$setValidity('emailValidator', false);
+                            ctrl.$setValidity('phoneValidator', false);
 
                         }
                         console.log(scope);
@@ -261,7 +263,7 @@
 
                     });
                 }
-            };*/
+            };
         })
 
         .directive('emptyValidate', function() {

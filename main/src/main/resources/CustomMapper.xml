@@ -22,6 +22,7 @@
         <result property="price" column="price"/>
         <result property="companyId" column="company_id"/>
         <result property="notForSale" column="not_for_sale"/>
+        <result property="inStock" column="in_stock"/>
         <collection property="categories" resultMap="com.acme.gen.mapper.CategoryMapper.BaseResultMap"/>
     </resultMap>
 
@@ -51,22 +52,38 @@
         ]]>
     </select>
 
-    <!--<select id="getCategoryTreeItems" resultMap="categoryItemLink">-->
-        <!--<![CDATA[-->
-        <!--select c.id,c.name,c.parent_id,i.*-->
-          <!--from category c-->
-	        <!--left join category_item ci on c.id=ci.category_id-->
-	        <!--left join item i on i.id = ci.item_id-->
-	    <!--]]>-->
-    <!--</select>-->
+    <select id="getOrderedItemCou" resultType="integer">
+        <![CDATA[
+        select sum(cou) from order_item where item_id='${itemId}'
+	    ]]>
+    </select>
 
     <select id="getItemCategories" resultMap="itemCategoryLink">
         <![CDATA[
-            select i.id as item_id,i.name as item_name,i.company_id,i.article,i.description,i.price,i.not_for_sale,c.id,c.name from item i
+            select i.id as item_id,i.name as item_name,i.company_id,i.article,i.description,i.price,i.not_for_sale,i.in_stock,c.id,c.name from item i
                 right join category_item ci on ci.item_id=i.id
                 inner join category c on ci.category_id=c.id
                 order by i.date_add asc
 	    ]]>
+    </select>
+
+    <select id="getFilteredItems" resultMap="itemCategoryLink">
+        select i.id as item_id,i.name as item_name,i.company_id,i.article,i.description,i.price,i.not_for_sale,i.in_stock,c.id,c.name
+            from item i
+                right join category_item ci on ci.item_id=i.id
+                inner join category c on ci.category_id=c.id
+                    <where>
+                        <if test="name != null" >
+                            lower(i.name) like '%${name}%'
+                        </if>
+                        <if test="article != null" >
+                            and i.article like '%${article}%'
+                        </if>
+                        <if test="company != null" >
+                            and i.company_id = '${company}'
+                        </if>
+                    </where>
+                order by i.date_add asc
     </select>
 
 </mapper>

@@ -14,6 +14,7 @@
                 $scope.password = "";
 
                 $scope.isCollapsed = false;
+                $scope.showContent = false;
 
                 angular.element(document).ready(function(){
                     $('.modal-trigger').leanModal();
@@ -163,13 +164,20 @@
                         $scope.cart.cou--;
                         store.set("cart",$scope.cart);
                     }
-                }
+                };
 
                 $scope.removeFromCart = function(idx){
+                    console.log($scope);
                     var item_cou = $scope.cart.content[idx].cou;
                     $scope.cart.content.splice(idx,1);
                     $scope.cart.cou = $scope.cart.cou - item_cou;
                     store.set("cart",$scope.cart);
+
+                    console.log($scope.cart);
+                    if($scope.cart && $scope.cart.cou==0){
+                        $scope.showContent = false;
+                        console.log("NO ITEMS in CART")
+                    }
                 }
 
         }]);

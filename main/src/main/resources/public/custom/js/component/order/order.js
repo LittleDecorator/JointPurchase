@@ -8,7 +8,7 @@
     angular.module('order')
         .controller('orderController',['$scope','$state','$stateParams','dataResources',function ($scope, $state, $stateParams, dataResources) {
             //TODO: Написать сервис подсчета товаров при заказах
-            //TODO: Определиться со статусами заказа (можно ли редактироватьб и когда, или же это будет работать автоматом)
+            //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
             console.log("Enter order controller");
 
             /* array of orders*/
@@ -32,8 +32,10 @@
             } else {
                 $scope.orders = dataResources.order.query(function (data) {
                     angular.forEach(data, function (order) {
-                        var person = helpers.findInArrayById($scope.personNames, order.personId);
-                        order.personName = person.name;
+                        order.personName = order.recipientLname + " "+ order.recipientFname;
+                        if(order.recipientMname!=null && order.recipientMname.length>0){
+                            order.personName = order.personName + " "+order.recipientMname;
+                        }
                     });
                 });
             }
