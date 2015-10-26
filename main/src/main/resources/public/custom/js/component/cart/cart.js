@@ -90,7 +90,7 @@
                         }, function(error){
                             console.log("Error");
                         });
-                    
+
                     console.log($scope);
                 }
             };
