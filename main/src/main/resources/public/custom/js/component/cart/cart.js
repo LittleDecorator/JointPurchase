@@ -6,13 +6,13 @@
     'use strict';
 
     angular.module('cart')
-        .factory('cartResources',['$resource',function($resource){
+        /*.factory('cartResources',['$resource',function($resource){
             return {
                 _order: $resource('/order/:id')
             }
-        }])
+        }])*/
 
-        .controller('cartController',['$scope','$state','cartResources',function($scope,$state,cartResources){
+        .controller('cartController',['$scope','$state',function($scope,$state){
             console.log("enter cart controller");
 
             $scope.THUMB_URL = "media/image/thumb/";
@@ -37,7 +37,7 @@
 
         }])
 
-        .controller('cartCheckoutController',['$scope','cartResources','authService','loginModal','dataResources',function($scope,cartResources,authService,loginModal,dataResources){
+        .controller('cartCheckoutController',['$scope','authService','loginModal','dataResources',function($scope,authService,loginModal,dataResources){
 
             $scope.postDelivery = function(){
                 console.log("BLAAAAAA!");
@@ -59,19 +59,43 @@
                 delivery:null,
                 recipientPhone:null,
                 recipientEmail:null,
-                address:null,
+                recipientAddress:null,
                 comment:null
             };
 
-            /*$scope.createOrder = function(cart){
-                if(authService.isAuth()){
-                    cartResources._order.save({items:cart,order:$scope.info});
-                } else {
-                    loginModal();
-                }
-            };*/
+            $scope.createOrder = function(){
+                console.log($scope);
+                if(!$scope.checkout.$invalid){
 
-            $scope.save = function () {
+                    var cleanOrderItems = [];
+                    var orderPaymnet = 0;
+
+                    $scope.cart.content.forEach(function (item) {
+                        if(item.cou>0){
+                            orderPaymnet = orderPaymnet + (item.cou * item.price);
+                            cleanOrderItems.push({
+                                id:null,
+                                orderId: null,
+                                itemId: item.id,
+                                cou: item.cou
+                            })
+                        }
+                    });
+                    $scope.current.payment = orderPaymnet;
+                    $scope.current.delivery = $scope.current.delivery.value;
+                    dataResources.order.save({items:cleanOrderItems,order:$scope.current})
+                        .$promise.then(function(data){
+                            console.log("Fine");
+                            $scope.$parent.cart = {cou:0,content:[]};
+                        }, function(error){
+                            console.log("Error");
+                        });
+                    
+                    console.log($scope);
+                }
+            };
+
+            /*$scope.createOrder = function () {
                 console.log("Save button pressed");
                 var cleanOrderItems = [];
 
@@ -102,7 +126,7 @@
                 });
             };
 
-            console.log($scope);
+            console.log($scope);*/
 
         }])
 })();

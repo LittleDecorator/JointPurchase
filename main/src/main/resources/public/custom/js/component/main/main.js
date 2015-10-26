@@ -40,7 +40,13 @@
                 //add new item to cart
                 $scope.addToCart = function(item){
                     //check if item already in cart
-                    var item_in = helpers.findInArrayById($scope.cart.content,item.id);
+                    var item_in = {};
+                    if($scope.cart==null){
+                        $scope.cart = {cou:0,content:[]};
+                    }
+                    if($scope.cart.content.length>0){
+                        item_in = helpers.findInArrayById($scope.cart.content,item.id);
+                    }
                     if(helpers.isEmpty(item_in)){
                         $scope.cart.content.push(angular.extend({cou:1},item));
                     } else {
@@ -52,7 +58,7 @@
 
                 $scope.clearCart = function(){
                     store.remove('cart');
-                    $scope.cart = null;
+                    $scope.cart = {cou:0,content:[]};
                     $scope.initCart();
                     $state.reload();
                 };
@@ -66,7 +72,7 @@
                 $scope.logout = function(){
                     $cookies.remove('token');
                     store.remove('cart');
-                    $scope.cart = null;
+                    $scope.cart = {cou:0,content:[]};
                     $rootScope.currentUser = {};
                     $scope.refreshMenu();
                     $state.transitionTo("home");

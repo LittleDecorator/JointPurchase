@@ -204,7 +204,9 @@
                     console.log("in complete broad");
                     $rootScope.$broadcast('onComplete');
                     //temporary place
-                    $state.transitionTo($rootScope.oldLocation.substring(1));
+                    //$state.transitionTo($rootScope.oldLocation.substring(1));
+                    //$state.transitionTo("cart.checkout");
+                    $state.transitionTo(helpers.findRouteByUrl($rootScope.oldLocation.substring(1)));
                 },
                 onFilter: function(data){
                     console.log("in sideMenu broad");

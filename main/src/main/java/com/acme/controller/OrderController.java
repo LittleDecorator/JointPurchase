@@ -68,6 +68,8 @@ public class OrderController{
     @RequestMapping(method = RequestMethod.POST)
     public PurchaseOrder createOrUpdateOrder(@RequestBody String input) throws ParseException, IOException {
 
+        System.out.println(input);
+
         ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 

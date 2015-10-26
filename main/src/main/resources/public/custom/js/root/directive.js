@@ -250,7 +250,7 @@
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
                     ctrl.$parsers.push(function(value) {
-                        var re = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i;
+                        var re = /^(\+\d{1,2})?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/i;
                         if (re.test(value)) {
                             ctrl.$setValidity('phoneValidator', true);
                         } else {

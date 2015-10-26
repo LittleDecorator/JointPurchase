@@ -115,7 +115,8 @@
 
             $scope.save = function () {
                 console.log("Save button pressed");
-                var cleanOrderItems = [];
+                if($scope.currentOrder.items.length!=0 && !haveEmptyItems() && !$scope._order.$invalid){
+                    var cleanOrderItems = [];
 
                     $scope.currentOrder.items.forEach(function (item) {
                         if(item.cou>0){
@@ -142,6 +143,7 @@
                         $scope.currentOrder = data;
                         $scope.currentOrder.items = items;
                     });
+                }
             };
 
             //add item to order
@@ -191,7 +193,7 @@
                 angular.forEach($scope.currentOrder.items,function(item){
                     $scope.currentOrder.payment = $scope.currentOrder.payment + (item.cou * item.price);
                 })
-            };
+            }
 
             $scope.haveEmptyItems = function(){
                 var result = false;
