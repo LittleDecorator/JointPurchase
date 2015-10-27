@@ -1,39 +1,38 @@
 import com.acme.service.impl.EmailServiceImpl;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import com.acme.util.EmailBuilder;
 
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import java.util.Properties;
-import java.util.UUID;
 
 public class Mail {
 
     public static void main(String[] args) throws Exception {
-		/*String toEmail = "kobzeff.inc@mail.ru";
-		String fromEmail = "knpdeveloper@gmail.com";
-		EmailServiceImpl i = new EmailServiceImpl();
-		i.sendMail("smtp.gmail.com", "587",
-				"knpdeveloper@gmail.com", "25oct87!", fromEmail, toEmail,
-				"hello" + UUID.randomUUID().toString(), "this is my body", null);
-		System.out.println(1);*/
+		EmailServiceImpl emailService = new EmailServiceImpl();
+        Properties props = new Properties();
 
-        /*SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo("kobzeff.inc@mail.ru");
-        mailMessage.setFrom("someone@localhost");
-        mailMessage.setSubject("test");
-        mailMessage.setText("From fake smtp");
+        props.put("mail.smtp.host", "grimmstory.ru");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.port", 587);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.trust", "grimmstory.ru");
 
-        Properties mailProperties = new Properties();
-        mailProperties.put("mail.smtp.auth", true);
-        mailProperties.put("mail.smtp.starttls.enable", true);
-        mailProperties.put("mail.smtp.host", "smtp.gmail.com");
-        mailProperties.put("mail.smtp.port", 587);
-
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setJavaMailProperties(mailProperties);
-        mailSender.setUsername("knpdeveloper@gmail.com");
-        mailSender.setPassword("25oct87!");
-        mailSender.send(mailMessage);
-        System.out.println(1);*/
+        System.out.println(1);
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication("bobby", "12345678");
+                    }
+                });
+        emailService.setMailSession(session);
+        EmailBuilder builder = emailService.getBuiler();
+//        MimeMessage message = builder.setTo("knpdeveloper@gmail.com").setFrom("bobby@grimmstory.ru").setHtmlContent("TEST FOR GMAIL").setSubject("Registration confirmation").build();
+//        MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("bobby@grimmstory.ru").setHtmlContent("TEST FOR MAIL.RU").setSubject("Registration confirmation").build();
+        MimeMessage message = builder.setTo("vlapku@ya.ru").setFrom("bobby@grimmstory.ru").setHtmlContent("Test for Yandex").setSubject("Registration confirmation").build();
+        emailService.send(message);
+        System.out.println(1);
 	}
 
 }

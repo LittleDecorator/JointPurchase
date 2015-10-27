@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>purchase</artifactId>
+        <groupId>com.acme.home</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>packing</artifactId>
+    <packaging>rpm</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <name>${projectname}</name>
+                    <version>${project.version}</version>
+                    <release>1</release>
+                    <group>Application/Enterprise</group>
+                    <needarch>noarch</needarch>
+                    <prefix>/</prefix>
+                    <autoRequires>false</autoRequires>
+                    <autoProvides>false</autoProvides>
+                    <!--<requires>-->
+                        <!--<require>wildfly</require>-->
+                    <!--</requires>-->
+                    <mappings>
+                        <mapping>
+                            <directory>/opt/joint-purchase/</directory>
+                            <filemode>755</filemode>
+                            <username>${rpm.install.user}</username>
+                            <groupname>${rpm.install.group}</groupname>
+                            <sources>
+                                <source>
+                                    <location>${modules.dir}</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                    <postinstallScriptlet>
+                        <script>
+                            <![CDATA[
+                                service joint-purchase restart
+                            ]]>
+                        </script>
+                    </postinstallScriptlet>
+                    <preremoveScriptlet>
+                        <script>
+                            <![CDATA[
+                                service joint-purchase stop
+                            ]]>
+                        </script>
+                    </preremoveScriptlet>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <projectname>joint-purchase</projectname>
+        <rpm.install.user>purchase</rpm.install.user>
+        <rpm.install.group>root</rpm.install.group>
+
+        <modules.dir>${basedir}/../target/modules</modules.dir>
+        <module.name>org.apache.httpcomponents</module.name>
+        <module.path>org/apache/httpcomponents</module.path>
+        <!--<module.dir>${modules.dir}/${module.path}/${module.slot}</module.dir>-->
+    </properties>
+
+</project>

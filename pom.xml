@@ -18,6 +18,7 @@
     <modules>
         <module>model</module>
         <module>main</module>
+        <module>rpm</module>
     </modules>
 
 </project>

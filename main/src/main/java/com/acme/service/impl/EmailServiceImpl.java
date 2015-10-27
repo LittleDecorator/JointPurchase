@@ -22,4 +22,8 @@ public class EmailServiceImpl {
 	public void send(MimeMessage message) throws MessagingException {
 		Transport.send(message);
 	}
+
+	public void setMailSession(Session session){
+		this.mailSession = session;
+	}
 }
