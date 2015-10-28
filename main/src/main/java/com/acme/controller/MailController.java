@@ -1,6 +1,7 @@
 package com.acme.controller;
 
 import com.acme.service.impl.EmailServiceImpl;
+import com.acme.util.Constants;
 import com.acme.util.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +19,27 @@ public class MailController {
     @Autowired
     private EmailServiceImpl emailService;
 
-    @RequestMapping("/mail")
+    @RequestMapping("/mail/registration/confirm")
     @ResponseStatus(HttpStatus.CREATED)
-    public void send() throws MessagingException, UnsupportedEncodingException {
+    public void sendRegistrationNotification(String recipient) throws MessagingException, UnsupportedEncodingException {
+        notifySend(recipient, Constants.REGISTRATION_CONFIRM, "Registration confirmation");
+    }
 
-        String html = "<a href='http://localhost:7979/public/auth/confirm'>Confirm test user registration</a>";
+    @RequestMapping("/mail/registration/done")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void sendRegistrationDone(String recipient) throws MessagingException, UnsupportedEncodingException {
+        notifySend(recipient, Constants.REGISTRATION_DONE, "Registration confirmation");
+    }
 
-        EmailBuilder builder = emailService.getBuiler();
-        MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("purchase@auth.com").setHtmlContent(html).setSubject("Registration confirmation").build();
+    @RequestMapping("/mail/order/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void sendOrderCreate(String recipient) throws MessagingException, UnsupportedEncodingException {
+        notifySend(recipient,Constants.ORDER_CREATE,"Order confirmation");
+    }
+
+    private void notifySend(String recipient,String mailContent,String subject) throws MessagingException, UnsupportedEncodingException {
+        EmailBuilder builder = emailService.getBuilder();
+        MimeMessage message = builder.setTo(recipient).setFrom(emailService.getRobotCredential()).setHtmlContent(mailContent).setSubject(subject).build();
         emailService.send(message);
     }
 

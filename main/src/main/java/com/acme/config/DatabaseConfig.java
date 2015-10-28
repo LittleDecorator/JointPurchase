@@ -1,4 +1,4 @@
-package com.acme;
+package com.acme.config;
 
 import com.acme.handlers.Base64BytesTypeHandler;
 import com.acme.handlers.StringBooleanTypeHandler;

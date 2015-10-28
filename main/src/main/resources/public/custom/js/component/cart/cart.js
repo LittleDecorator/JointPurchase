@@ -95,38 +95,5 @@
                 }
             };
 
-            /*$scope.createOrder = function () {
-                console.log("Save button pressed");
-                var cleanOrderItems = [];
-
-                $scope.current.items.forEach(function (item) {
-                    if(item.cou>0){
-                        cleanOrderItems.push({
-                            id:null,
-                            orderId: $scope.currentOrder.id,
-                            itemId: item.id,
-                            cou: item.cou
-                        })
-                    }
-                });
-
-                var correctOrder = angular.copy($scope.currentOrder);
-                correctOrder.status = correctOrder.status.value;
-                correctOrder.delivery = correctOrder.delivery.value;
-
-                var respData = {
-                    order: correctOrder,
-                    items: cleanOrderItems
-                };
-                //TODO: try handle order after save
-                var items = angular.copy($scope.currentOrder.items);
-                dataResources.order.save(respData,function(data){
-                    $scope.currentOrder = data;
-                    $scope.currentOrder.items = items;
-                });
-            };
-
-            console.log($scope);*/
-
         }])
 })();

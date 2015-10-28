@@ -28,33 +28,38 @@ public class MailConfig {
     @Value("${mail.smtp.starttls.enable}")
     private boolean starttls;
 
-//    @Value("${mail.smtp.ssl.trust}")
-//    private boolean ssl;
-//    @Value("${mail.from}")
-//    private String from;
+    @Value("${mail.smtp.ssl.trust}")
+    private String ssl;
 
-    @Value("${mail.username}")
-    private String username;
+    @Value("${mail.robot.login}")
+    private String login;
 
-    @Value("${mail.password}")
+    @Value("${mail.robot.password}")
     private String password;
 
     @Bean
-    public Session mailSession(){
-        // Setup mail server
+    public Properties mailProperties(){
         Properties props = new Properties();
         props.put("mail.smtp.auth", auth);
         props.put("mail.smtp.starttls.enable", starttls);
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
+        return props;
+    }
 
+    @Bean
+    public Session robotMailSession(){
         // Get the default Session object.
-        Session session = Session.getInstance(props,
+        Session session = Session.getInstance(mailProperties(),
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
+                        return new PasswordAuthentication(getRobotName(), password);
                     }
                 });
         return session;
+    }
+
+    private String getRobotName(){
+        return login+"@"+host;
     }
 }

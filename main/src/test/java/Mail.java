@@ -27,7 +27,7 @@ public class Mail {
                     }
                 });
         emailService.setMailSession(session);
-        EmailBuilder builder = emailService.getBuiler();
+        EmailBuilder builder = emailService.getBuilder();
 //        MimeMessage message = builder.setTo("knpdeveloper@gmail.com").setFrom("bobby@grimmstory.ru").setHtmlContent("TEST FOR GMAIL").setSubject("Registration confirmation").build();
 //        MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("bobby@grimmstory.ru").setHtmlContent("TEST FOR MAIL.RU").setSubject("Registration confirmation").build();
         MimeMessage message = builder.setTo("vlapku@ya.ru").setFrom("bobby@grimmstory.ru").setHtmlContent("Test for Yandex").setSubject("Registration confirmation").build();

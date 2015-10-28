@@ -5,6 +5,7 @@ import com.acme.gen.mapper.ItemMapper;
 import com.acme.gen.mapper.OrderItemMapper;
 import com.acme.gen.mapper.PurchaseOrderMapper;
 import com.acme.model.domain.Node;
+import com.acme.service.AuthService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import io.jsonwebtoken.Claims;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,6 +39,11 @@ public class OrderController{
     @Autowired
     private ItemMapper itemMapper;
 
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private MailController mailController;
 
     /**
      * Get all orders
@@ -56,6 +64,13 @@ public class OrderController{
         PurchaseOrderExample example = new PurchaseOrderExample();
         example.createCriteria().andSubjectIdEqualTo(id);
         return orderMapper.selectByExample(example);
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/private")
+    public PurchaseOrder privateOrderProcess(@RequestBody String input,HttpServletRequest request) throws ParseException, IOException {
+        final Claims claims = (Claims) request.getAttribute("claims");
+        System.out.println("Claims -> "+ claims);
+        return createOrUpdateOrder(input);
     }
 
     /**

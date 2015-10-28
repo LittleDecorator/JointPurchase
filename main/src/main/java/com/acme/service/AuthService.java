@@ -11,4 +11,6 @@ public interface AuthService {
 
     boolean register(RegistrationData data);
 
+    boolean isAdmin(String username);
+
 }
