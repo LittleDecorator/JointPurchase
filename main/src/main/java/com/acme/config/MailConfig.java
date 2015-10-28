@@ -13,8 +13,8 @@ import java.util.Properties;
 @PropertySource("classpath:mail.properties")
 public class MailConfig {
 
-    @Value("${mail.protocol}")
-    private String protocol;
+//    @Value("${mail.protocol}")
+//    private String protocol;
 
     @Value("${mail.smtp.host}")
     private String host;
@@ -24,6 +24,9 @@ public class MailConfig {
 
     @Value("${mail.smtp.auth}")
     private boolean auth;
+
+    @Value("${mail.debug}")
+    private boolean debug;
 
     @Value("${mail.smtp.starttls.enable}")
     private boolean starttls;
@@ -40,17 +43,21 @@ public class MailConfig {
     @Bean
     public Properties mailProperties(){
         Properties props = new Properties();
-        props.put("mail.smtp.auth", auth);
-        props.put("mail.smtp.starttls.enable", starttls);
+        props.put("mail.debug", "true");
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
+        props.put("mail.smtp.auth", auth);
+        props.put("mail.smtp.starttls.enable", starttls);
+        props.put("mail.smtp.ssl.trust", ssl);
         return props;
     }
 
     @Bean
     public Session robotMailSession(){
+        Properties props = mailProperties();
+        System.out.println(props.stringPropertyNames());
         // Get the default Session object.
-        Session session = Session.getInstance(mailProperties(),
+        Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(getRobotName(), password);
@@ -60,6 +67,8 @@ public class MailConfig {
     }
 
     private String getRobotName(){
-        return login+"@"+host;
+        String res = login+"@"+host;
+        System.out.println(res);
+        return res;
     }
 }

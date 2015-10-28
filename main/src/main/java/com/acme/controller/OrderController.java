@@ -6,6 +6,9 @@ import com.acme.gen.mapper.OrderItemMapper;
 import com.acme.gen.mapper.PurchaseOrderMapper;
 import com.acme.model.domain.Node;
 import com.acme.service.AuthService;
+import com.acme.service.EmailService;
+import com.acme.util.Constants;
+import com.acme.util.EmailBuilder;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,8 +25,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -40,10 +47,13 @@ public class OrderController{
     private ItemMapper itemMapper;
 
     @Autowired
-    private AuthService authService;
+    private MailController mailController;
 
     @Autowired
-    private MailController mailController;
+    AuthService authService;
+
+    @Autowired
+    EmailService emailService;
 
     /**
      * Get all orders
@@ -66,11 +76,22 @@ public class OrderController{
         return orderMapper.selectByExample(example);
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/private")
-    public PurchaseOrder privateOrderProcess(@RequestBody String input,HttpServletRequest request) throws ParseException, IOException {
-        final Claims claims = (Claims) request.getAttribute("claims");
-        System.out.println("Claims -> "+ claims);
-        return createOrUpdateOrder(input);
+    @RequestMapping(method = RequestMethod.POST,value = "/personal")
+    public void privateOrderProcess(@RequestBody String input,ServletRequest servletRequest) throws ParseException, IOException {
+        System.out.println(servletRequest != null ? "NOT NULL" : "NULL");
+        System.out.println("Claims -> " + authService.getClaims(servletRequest));
+        PurchaseOrder purchaseOrder = createOrUpdateOrder(input);
+
+
+//        mailController.sendOrderCreate(purchaseOrder.getRecipientEmail());
+
+        EmailBuilder builder = emailService.getBuilder(emailService.createSession("bobby", "12345678"));
+        try{
+            MimeMessage message = builder.setTo(purchaseOrder.getRecipientEmail()).setFrom(emailService.getRobotCredential()).setHtmlContent(Constants.ORDER_CREATE).setSubject("Order test").build();
+            emailService.send(message);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

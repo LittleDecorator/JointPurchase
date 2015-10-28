@@ -115,6 +115,7 @@
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
                 image: $resource('/content/remove',{},{remove:{method:'DELETE'}}),
                 order:$resource('/order/:id'),
+                orderPrivate:$resource('/order/personal',{},{post:{method:'POST',isArray:false}}),
                 orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
                 orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
                 orderedItem: $resource('/order/:orderId/item/:itemId',{},{

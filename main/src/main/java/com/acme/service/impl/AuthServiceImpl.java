@@ -10,11 +10,17 @@ import com.acme.service.AuthService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
 import com.google.common.base.Strings;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 
 @Service
@@ -59,37 +65,60 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
+    public Claims getClaims(ServletRequest servletRequest) {
+        final HttpServletRequest request = (HttpServletRequest) servletRequest;
+        final String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Missing or invalid Authorization header.");
+            return null;
+        } else {
+            final String token = authHeader.substring(7); // The part after "Bearer "
+
+            try {
+                final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
+                System.out.println("JWT FIlter -> "+claims.toString());
+                return claims;
+            }
+            catch (final SignatureException e) {
+                System.out.println("Invalid token.");
+                return null;
+            }
+        }
+    }
+
+    @Override
     public boolean register(RegistrationData data) {
         //create subject
-        Subject subject = new Subject();
-        subject.setEmail(data.getMail());
-        subject.setFirstName(data.getFirstName());
-        subject.setLastName(data.getLastName());
-        subject.setMiddleName(data.getMiddleName());
-        subject.setPhoneNumber(data.getPhone());
-
-        subjectMapper.insertSelective(subject);
-
-        //create credential
-        Credential credential = new Credential();
-        credential.setSubjectId(subject.getId());
-        credential.setRoleId("user");
-        credential.setPassword(data.getPwd());
-        credentialMapper.insertSelective(credential);
-
-        //create temp token
-        String tmpToken = tokenService.createExpToken(credential, Long.valueOf(24*60*60*1000));
-        System.out.println(tmpToken);
-
-        //send email
-        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm test user registration</a>";
-        try{
-            MimeMessage message = emailService.getBuilder().setTo(data.getMail()).setSubject("Registration confirmation").setFrom("purchase@service.com").setHtmlContent(html).build();
-           emailService.send(message);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        }
+//        Subject subject = new Subject();
+//        subject.setEmail(data.getMail());
+//        subject.setFirstName(data.getFirstName());
+//        subject.setLastName(data.getLastName());
+//        subject.setMiddleName(data.getMiddleName());
+//        subject.setPhoneNumber(data.getPhone());
+//
+//        subjectMapper.insertSelective(subject);
+//
+//        //create credential
+//        Credential credential = new Credential();
+//        credential.setSubjectId(subject.getId());
+//        credential.setRoleId("user");
+//        credential.setPassword(data.getPwd());
+//        credentialMapper.insertSelective(credential);
+//
+//        //create temp token
+//        String tmpToken = tokenService.createExpToken(credential, Long.valueOf(24*60*60*1000));
+//        System.out.println(tmpToken);
+//
+//        //send email
+//        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm test user registration</a>";
+//        try{
+//            MimeMessage message = emailService.getBuilder().setTo(data.getMail()).setSubject("Registration confirmation").setFrom("purchase@service.com").setHtmlContent(html).build();
+//           emailService.send(message);
+//        } catch (MessagingException | UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
         return true;
     }
 }

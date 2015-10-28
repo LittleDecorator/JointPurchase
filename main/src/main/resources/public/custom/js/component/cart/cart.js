@@ -83,7 +83,7 @@
                     });
                     $scope.current.payment = orderPaymnet;
                     $scope.current.delivery = $scope.current.delivery.value;
-                    dataResources.order.save({items:cleanOrderItems,order:$scope.current})
+                    dataResources.orderPrivate.post({items:cleanOrderItems,order:$scope.current})
                         .$promise.then(function(data){
                             console.log("Fine");
                             $scope.$parent.cart = {cou:0,content:[]};

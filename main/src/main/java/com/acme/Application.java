@@ -21,7 +21,7 @@ public class Application extends WebMvcConfigurerAdapter {
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(new JwtFilter());
-        registrationBean.addUrlPatterns("/*private/*");
+        registrationBean.addUrlPatterns("/private/*");
         return registrationBean;
     }
 

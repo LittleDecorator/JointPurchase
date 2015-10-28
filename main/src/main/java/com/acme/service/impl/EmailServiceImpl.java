@@ -16,8 +16,8 @@ import java.util.Properties;
 @Service
 public class EmailServiceImpl implements EmailService{
 
-	@Autowired
-	Session robotMailSession;
+//	@Autowired
+//	Session mailSession;
 
     @Autowired
     Properties mailProperties;
@@ -27,9 +27,10 @@ public class EmailServiceImpl implements EmailService{
      *
      * @return EmailBuilder
      */
-	public EmailBuilder getBuilder(){
-		return getBuilder(robotMailSession);
-	}
+//	public EmailBuilder getBuilder(){
+//        System.out.println(robotMailSession!=null?"NOT NULL":"IS NULL");
+//		return getBuilder(robotMailSession);
+//	}
 
     /**
      * Send given message
@@ -46,9 +47,9 @@ public class EmailServiceImpl implements EmailService{
      *
      * @param session
      */
-	public void setMailSession(Session session){
-		this.robotMailSession = session;
-	}
+//	public void setMailSession(Session session){
+//		this.robotMailSession = session;
+//	}
 
     /**
      * Create and return new session for defined user
@@ -59,6 +60,7 @@ public class EmailServiceImpl implements EmailService{
      */
     @Override
     public Session createSession(String user, String pass) {
+        System.out.println(mailProperties.stringPropertyNames());
         Session session = Session.getInstance(mailProperties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
@@ -81,6 +83,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public String getRobotCredential() {
-        return Constants.ROBOT_NAME+"@"+mailProperties.getProperty("mail.smtp.host");
+        String res = Constants.ROBOT_NAME+"@"+mailProperties.getProperty("mail.smtp.host");
+        System.out.println(res);
+        return res;
     }
 }
