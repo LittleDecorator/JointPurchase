@@ -8,11 +8,13 @@ import javax.mail.internet.MimeMessage;
 
 public interface EmailService {
 
-//    public void setMailSession(Session session);
-    public Session createSession(String user,String pass);
-    public void send(MimeMessage message) throws MessagingException;
+    Session createSession(String user,String pass);
+    void send(MimeMessage message) throws MessagingException;
 //    public EmailBuilder getBuilder();
-    public EmailBuilder getBuilder(Session session);
-    public String getRobotCredential();
+    EmailBuilder getBuilder(Session session);
+    String getRobotCredential();
+
+    void sendOrderDone(String mailTo);
+    boolean sendRegistrationToken(String mailTo,String content);
 
 }

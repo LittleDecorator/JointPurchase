@@ -189,7 +189,7 @@
                     deferred.resolve(data);
                 });
                 return deferred.promise;
-            }
+            };
         }])
 
         .service('eventService',['$rootScope','$state',function($rootScope,$state){

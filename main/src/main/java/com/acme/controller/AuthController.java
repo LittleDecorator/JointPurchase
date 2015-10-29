@@ -43,6 +43,7 @@ public class AuthController {
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public boolean registration(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
+        System.out.println(input);
         return authService.register(input);
     }
 

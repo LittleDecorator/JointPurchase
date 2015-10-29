@@ -4,11 +4,11 @@
 
     <div class="input-field col s12">
         <input type="text" ng-model="uname" id="email" ng-keydown="keyPress($event.keyCode)"/>
-        <label for="email" class="">Email/Login</label>
+        <label for="email" class="control-label" style="left: 0.75rem">Email/Login</label>
     </div>
     <div class="input-field col s12">
         <input type="password" ng-model="password" id="password" ng-keydown="keyPress($event.keyCode)"/>
-        <label class="control-label" for="password">Пароль</label>
+        <label class="control-label" for="password" style="left: 0.75rem">Пароль</label>
     </div>
     <div style="float: right">
         <a ui-sref="registration" style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" >Регистрация</a>

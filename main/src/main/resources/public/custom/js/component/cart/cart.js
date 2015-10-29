@@ -6,11 +6,6 @@
     'use strict';
 
     angular.module('cart')
-        /*.factory('cartResources',['$resource',function($resource){
-            return {
-                _order: $resource('/order/:id')
-            }
-        }])*/
 
         .controller('cartController',['$scope','$state',function($scope,$state){
             console.log("enter cart controller");
@@ -22,12 +17,9 @@
 
             if($scope.cart && $scope.cart.cou==0){
                 $scope.$parent.showContent = false;
-                console.log("NO ITEMS in CART")
             } else {
-                console.log($scope);
                 $scope.$parent.showContent = true;
                 $scope.orderItemsCou = $scope.cart.cou;
-                console.log($scope.orderItemsCou);
             }
 
             //TODO: here will be check of auth
@@ -37,10 +29,10 @@
 
         }])
 
-        .controller('cartCheckoutController',['$scope','authService','loginModal','dataResources',function($scope,authService,loginModal,dataResources){
+        .controller('cartCheckoutController',['$scope','$state','authService','loginModal','dataResources',function($scope,$state,authService,loginModal,dataResources){
 
             $scope.postDelivery = function(){
-                console.log("BLAAAAAA!");
+                console.log("POst delivery method triggered!");
             };
 
             $scope.deliveries = [];
@@ -87,13 +79,30 @@
                         .$promise.then(function(data){
                             console.log("Fine");
                             $scope.$parent.cart = {cou:0,content:[]};
+                            $state.go("cart.checkout.done", {id: data});
                         }, function(error){
                             console.log("Error");
+                            console.log("Some fail happen: "+error);
+                            $state.go("home");
                         });
 
                     console.log($scope);
                 }
             };
 
+        }])
+
+        .controller('cartPurchaseDoneController',['$scope','purchase',function($scope,purchase){
+            if(purchase){
+                $scope.purchase = purchase;
+
+                var deliveryDate = 'UNKNOWN';
+
+                var begin = 'You\'re order №{0} (created at {1}) is packaging, after it done it will be delivered to {2}.\nEstimated ship date is {3}.\n';
+
+                var ifAuth = 'You can track your order in \< link to private cabinet\>. For this you need auth.';
+
+                $scope.message = String.format(begin + ifAuth,purchase.uid,purchase.dateAdd,purchase.delivery,deliveryDate);
+            }
         }])
 })();

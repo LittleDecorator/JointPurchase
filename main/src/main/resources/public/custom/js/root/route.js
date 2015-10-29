@@ -39,8 +39,27 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false,
+                    requireLogin: false
                     //base:true
+                }
+            },
+            {
+                name: 'cart.checkout.done',
+                url: '/order/done',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/OrderingDone.html',
+                        controller: 'cartPurchaseDoneController'
+                    }
+                },
+                data: {
+                    requireLogin: false
+                    //base:true
+                },
+                resolve: {
+                    purchase: function($stateParams, resolveService) {
+                        return resolveService.getOrder($stateParams.id);
+                    }
                 }
             },
             {

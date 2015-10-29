@@ -16,12 +16,8 @@ import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -90,35 +86,28 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public boolean register(RegistrationData data) {
         //create subject
-//        Subject subject = new Subject();
-//        subject.setEmail(data.getMail());
-//        subject.setFirstName(data.getFirstName());
-//        subject.setLastName(data.getLastName());
-//        subject.setMiddleName(data.getMiddleName());
-//        subject.setPhoneNumber(data.getPhone());
-//
-//        subjectMapper.insertSelective(subject);
-//
-//        //create credential
-//        Credential credential = new Credential();
-//        credential.setSubjectId(subject.getId());
-//        credential.setRoleId("user");
-//        credential.setPassword(data.getPwd());
-//        credentialMapper.insertSelective(credential);
-//
-//        //create temp token
-//        String tmpToken = tokenService.createExpToken(credential, Long.valueOf(24*60*60*1000));
-//        System.out.println(tmpToken);
-//
-//        //send email
-//        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm test user registration</a>";
-//        try{
-//            MimeMessage message = emailService.getBuilder().setTo(data.getMail()).setSubject("Registration confirmation").setFrom("purchase@service.com").setHtmlContent(html).build();
-//           emailService.send(message);
-//        } catch (MessagingException | UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-        return true;
+        Subject subject = new Subject();
+        subject.setEmail(data.getMail());
+        subject.setFirstName(data.getFirstName());
+        subject.setLastName(data.getLastName());
+        subject.setMiddleName(data.getMiddleName());
+        subject.setPhoneNumber(data.getPhone());
+
+        subjectMapper.insertSelective(subject);
+
+        //create credential
+        Credential credential = new Credential();
+        credential.setSubjectId(subject.getId());
+        credential.setRoleId("user");
+        credential.setPassword(data.getPassword());
+        credentialMapper.insertSelective(credential);
+
+        //create temp token
+        String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
+        System.out.println(tmpToken);
+
+        //send email
+        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration on GrimmStory.ru</a>";
+        return emailService.sendRegistrationToken(data.getMail(),html);
     }
 }

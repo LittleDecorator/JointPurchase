@@ -7,7 +7,7 @@ public class RegistrationData {
     String middleName;
     String phone;
     String mail;
-    String pwd;
+    String password;
 
     public String getFirstName() {
         return firstName;
@@ -49,11 +49,23 @@ public class RegistrationData {
         this.mail = mail;
     }
 
-    public String getPwd() {
-        return pwd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationData{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
