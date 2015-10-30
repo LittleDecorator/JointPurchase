@@ -1,6 +1,6 @@
 -- таблица для бинарных данных
 create table content (
-	id varchar(37) not null,
+	id varchar(128) not null,
 	content text,
 	file_name varchar(255),
 	mime varchar(25),
@@ -12,7 +12,7 @@ create table content (
 
 -- таблица компании производителя
 create table company (
-  id varchar(37) not null,
+  id varchar(128) not null,
   name varchar(50) not null,
   description varchar(255),
   address varchar(255),
@@ -29,9 +29,9 @@ create table company (
 
 -- роли
 create table role (
-  id varchar(37) not null,
+  id varchar(128) not null,
   description varchar(255),
-  parent_role_id varchar(37),
+  parent_role_id varchar(128),
   date_add timestamp default current_timestamp,
   primary key (id),
   foreign key (parent_role_id) references role on delete cascade
@@ -39,7 +39,7 @@ create table role (
 
 -- таблица покупателей
 create table subject (
-  id varchar(37) not null,
+  id varchar(128) not null,
   enabled char(1) not null default 'N' check(enabled in ('Y', 'N')),
   first_name varchar(30) not null,
   middle_name varchar(30),
@@ -54,7 +54,7 @@ create table subject (
 
 -- удостоверение покупателя
 create table credential(
-  subject_id varchar(37) not null,
+  subject_id varchar(128) not null,
   password varchar(255) not null,
   role_id varchar(37),
   date_add timestamp default current_timestamp,
@@ -87,7 +87,7 @@ create table purchase_order (
 --категории товаров (дерево которое содержит также и подкатегорию) - меню
 create table category (
    id varchar(37) not null,
-   name varchar(37) not null,
+   name varchar(128) not null,
    parent_id varchar(37),
    date_add timestamp default current_timestamp,
    PRIMARY key (id),
