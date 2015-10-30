@@ -1,5 +1,7 @@
 package com.acme.service;
 
+import com.acme.gen.domain.Credential;
+import com.acme.gen.domain.Subject;
 import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import io.jsonwebtoken.Claims;
@@ -9,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface AuthService {
 
-    boolean isEnabled(String login);
+    Subject getSubject(String login);
 
-    boolean validate(SubjectCredential subjectCredential);
+    Credential validate(SubjectCredential subjectCredential);
 
     boolean register(RegistrationData data);
 

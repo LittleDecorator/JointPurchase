@@ -1,33 +1,40 @@
-<h4>Регистрация</h4>
-<div class="table-container">
-    <div ng-form="registration" >
-        <div class="input-field">
-            <input name="fname" type="text" id="fname" class="form-control" ng-model="card.firstName" required>
-            <label class="control-label required" for="fname">Имя</label>
+<div ng-if="!isSend">
+    <h4>Регистрация</h4>
+    <div class="table-container">
+        <div ng-form="registration" >
+            <div class="input-field">
+                <input name="fname" type="text" id="fname" class="form-control" ng-model="card.firstName" required>
+                <label class="control-label required" for="fname">Имя</label>
+            </div>
+            <div class="input-field">
+                <input name="lname" type="text" id="lname" class="form-control" ng-model="card.lastName" required>
+                <label class="control-label required" for="lname">Фамилия</label>
+            </div>
+            <div class="input-field">
+                <input name="mname" type="text" id="mname" class="form-control" ng-model="card.middleName">
+                <label class="control-label" for="mname">Отчество</label>
+            </div>
+            <div class="input-field">
+                <input name="phone" type="text" id="phone" class="form-control" ng-model="card.phone">
+                <label class="control-label" for="phone">Телефон</label>
+            </div>
+            <div class="input-field">
+                <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail" required email-validate
+                       ng-class="{'invalid': registration.mail.$error.emailValidator && card.mail.length > 0, 'valid':!registration.mail.$error.emailValidator && card.mail.length > 0}">
+                <label class="control-label required" for="mail" data-error='Not valid semail'>Почта</label>
+            </div>
+            <div class="input-field">
+                <input name="password" type="password" id="password" class="form-control" ng-model="card.password" password-validate required
+                       ng-class="{'invalid': !$validation.password.valid && card.password.length>0, 'valid':$validation.password.valid}">
+                <label class="control-label required" for="password" data-error="{{$validation.password.errorText}}">Пароль</label>
+            </div>
         </div>
-        <div class="input-field">
-            <input name="lname" type="text" id="lname" class="form-control" ng-model="card.lastName" required>
-            <label class="control-label required" for="lname">Фамилия</label>
-        </div>
-        <div class="input-field">
-            <input name="mname" type="text" id="mname" class="form-control" ng-model="card.middleName">
-            <label class="control-label" for="mname">Отчество</label>
-        </div>
-        <div class="input-field">
-            <input name="phone" type="text" id="phone" class="form-control" ng-model="card.phone">
-            <label class="control-label" for="phone">Телефон</label>
-        </div>
-        <div class="input-field">
-            <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail" required email-validate
-                   ng-class="{'invalid': registration.mail.$error.emailValidator && card.mail.length > 0, 'valid':!registration.mail.$error.emailValidator && card.mail.length > 0}">
-            <label class="control-label required" for="mail" data-error='Not valid semail'>Почта</label>
-        </div>
-        <div class="input-field">
-            <input name="password" type="password" id="password" class="form-control" ng-model="card.password" password-validate required
-                   ng-class="{'invalid': !$validation.password.valid && card.password.length>0, 'valid':$validation.password.valid}">
-            <label class="control-label required" for="password" data-error="{{$validation.password.errorText}}">Пароль</label>
-        </div>
+        <a class="btn btn-default " ng-click="register()" ng-class="{'disabled':registration.$invalid}" style="margin-top: 30px">Подтвердить</a>
     </div>
-    <a class="btn btn-default " ng-click="register()" ng-class="{'disabled':registration.$invalid}" style="margin-top: 30px">Подтвердить</a>
-
+</div>
+<div ng-if="isSend" style="padding-top: 3%">
+    <div class="table-container" >
+        <p class="valign" >На указанный Вами почтовый ящик было отправленно письмо для <a style="cursor: pointer" href="{{smtpLoginPage}}">подтверждения регистрации</a></p>
+        <!--<a style="cursor: pointer" class="waves-effect waves-green btn-flat" href="{{smtpLoginPage}}">Перейти?</a>-->
+    </div>
 </div>

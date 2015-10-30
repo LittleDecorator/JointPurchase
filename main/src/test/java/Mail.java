@@ -23,12 +23,12 @@ public class Mail {
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("no-reply", "12345678");
+                        return new PasswordAuthentication("bobby", "12345678");
                     }
                 });
         EmailBuilder builder = emailService.getBuilder(session);
 //        MimeMessage message = builder.setTo("knpdeveloper@gmail.com").setFrom("bobby@grimmstory.ru").setHtmlContent("TEST FOR GMAIL").setSubject("Registration confirmation").build();
-        MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("no-reply@grimmstory.ru").setHtmlContent("TEST FOR MAIL.RU").setSubject("Registration confirmation").build();
+        MimeMessage message = builder.setTo("kobzeff.inc@mail.ru").setFrom("GrimmStory <no-reply@grimmstory.ru>").setHtmlContent("TEST FOR MAIL.RU").setSubject("Registration confirmation").build();
 //        MimeMessage message = builder.setTo("vlapku@ya.ru").setFrom("bobby@grimmstory.ru").setHtmlContent("Test for Yandex").setSubject("Registration confirmation").build();
         emailService.send(message);
         System.out.println(1);

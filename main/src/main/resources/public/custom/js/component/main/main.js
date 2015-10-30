@@ -20,8 +20,6 @@
                     $('.modal-trigger').leanModal();
                 });
 
-
-
                 $scope.initCart = function(){
                     $scope.cart = {cou:0,content:[]};
                     var c = store.get("cart");
@@ -33,7 +31,10 @@
                 //restore token
                 if($cookies.get('token')){
                     var decodedToken = jwtHelper.decodeToken($cookies.get('token'));
-                    $rootScope.currentUser.name = decodedToken.jti;
+                    //$rootScope.currentUser.name = decodedToken.jti;
+                    dataResources.customer.get({id:decodedToken.jti},function(data){
+                        $rootScope.currentUser.name = data.firstName;
+                    });
                     $rootScope.currentUser.roles = decodedToken.roles;
                 }
 
@@ -108,7 +109,11 @@
                                 var token = response.token;
                                 $cookies.put('token',token);
                                 var decodedToken = jwtHelper.decodeToken(token);
-                                $rootScope.currentUser.name = decodedToken.jti;
+                                //try get customer name
+                                dataResources.customer.get({id:decodedToken.jti},function(data){
+                                    $rootScope.currentUser.name = data.firstName;
+                                });
+
                                 $rootScope.currentUser.roles = decodedToken.roles;
                                 //set current user promises
                                 //$scope.refreshMenu();

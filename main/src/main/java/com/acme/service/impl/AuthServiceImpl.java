@@ -2,6 +2,7 @@ package com.acme.service.impl;
 
 import com.acme.gen.domain.Credential;
 import com.acme.gen.domain.Subject;
+import com.acme.gen.domain.SubjectExample;
 import com.acme.gen.mapper.CredentialMapper;
 import com.acme.gen.mapper.SubjectMapper;
 import com.acme.helper.RegistrationData;
@@ -35,24 +36,27 @@ public class AuthServiceImpl implements AuthService{
     EmailServiceImpl emailService;
 
     @Override
-    public boolean isEnabled(String login) {
-        Subject subject = subjectMapper.selectByPrimaryKey(login);
-        return subject!=null?subject.isEnabled():null;
+    public Subject getSubject(String login) {
+        SubjectExample subjectExample = new SubjectExample();
+        subjectExample.createCriteria().andEmailEqualTo(login);
+        return subjectMapper.selectByExample(subjectExample).get(0);
     }
 
     @Override
-    public boolean validate(SubjectCredential subjectCredential) {
-        if(Strings.isNullOrEmpty(subjectCredential.name) || Strings.isNullOrEmpty(subjectCredential.password)){
-            return false;
+    public Credential validate(SubjectCredential subjectCredential) {
+        if (Strings.isNullOrEmpty(subjectCredential.name) || Strings.isNullOrEmpty(subjectCredential.password)) {
+            return null;
         }
-        if(!isEnabled(subjectCredential.name)){
-            return false;
+        Subject subject = getSubject(subjectCredential.name);
+        if (!(subject != null && subject.isEnabled())) {
+            return null;
         }
-        Credential credential = credentialMapper.selectByPrimaryKey(subjectCredential.name);
-        if (credential == null) {
-            return false;
+        Credential credential = credentialMapper.selectByPrimaryKey(subject.getId());
+        if(credential != null && PasswordHashing.validatePassword(subjectCredential.password, credential.getPassword())){
+            return credential;
+        } else {
+            return null;
         }
-        return PasswordHashing.validatePassword(subjectCredential.password,credential.getPassword());
     }
 
     @Override
@@ -99,7 +103,7 @@ public class AuthServiceImpl implements AuthService{
         Credential credential = new Credential();
         credential.setSubjectId(subject.getId());
         credential.setRoleId("user");
-        credential.setPassword(data.getPassword());
+        credential.setPassword(PasswordHashing.hashPassword(data.getPassword()));
         credentialMapper.insertSelective(credential);
 
         //create temp token
@@ -107,7 +111,7 @@ public class AuthServiceImpl implements AuthService{
         System.out.println(tmpToken);
 
         //send email
-        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration on GrimmStory.ru</a>";
+        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
         return emailService.sendRegistrationToken(data.getMail(),html);
     }
 }

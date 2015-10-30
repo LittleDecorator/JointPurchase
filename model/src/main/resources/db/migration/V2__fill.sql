@@ -18,25 +18,21 @@ insert into role(id,description,parent_role_id)
 
 /* PERSON */
 insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
-        values ('test','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','N');
-insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
-        values ('guzel','Guzel', 'Kobzeva', 'Zulfarovna','+79258552096','fazylovagz@mail.ru','Moscow','Y');
-insert into subject(id,first_name,enabled)
-        values ('olga','Olga','Y');
-insert into subject(id,first_name,enabled)
-        values ('LittleDecorator','Nikolay','Y');
+        values ('4e426c7a-402b-4f63-914a-a558d65b30bf','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','N');
+insert into subject(id,first_name,last_name,phone_number,email,address,enabled)
+        values ('424991ea-031a-4383-8924-ec7694ed9a2d','Guzel', 'Kobzeva', '+79258552096','fazylovagz@mail.ru','Moscow','Y');
+insert into subject(id,first_name,last_name,email,enabled)
+        values ('587ccc2a-a912-41ab-8edf-abf8eb986b86','Nikolay','Kobzev','npkobzev@mail.ru','Y');
 
 /*CREDENTIALS*/
 --password
 insert into credential(subject_id,password,role_id)
-        values('test','56cc66bac5b167db62297f5a6ee06af3b5efce10aa8bcc6a70ea2ffc785961c7e852257a1796e4ab9fd9737928c5bbea40225564868341cf8db69e2ae599dcc8','user');
+        values('4e426c7a-402b-4f63-914a-a558d65b30bf','56cc66bac5b167db62297f5a6ee06af3b5efce10aa8bcc6a70ea2ffc785961c7e852257a1796e4ab9fd9737928c5bbea40225564868341cf8db69e2ae599dcc8','user');
 --nina21032013
 insert into credential(subject_id,password,role_id)
-        values('guzel','094de90aaea4750489a2f8c7a8cefd5a50a135cb12e4970d84586f3f1e883872640ff304b9ace30adcda5d8a2c6e92063e9875983788cd9829ca62a972465429','admin');
+        values('424991ea-031a-4383-8924-ec7694ed9a2d','094de90aaea4750489a2f8c7a8cefd5a50a135cb12e4970d84586f3f1e883872640ff304b9ace30adcda5d8a2c6e92063e9875983788cd9829ca62a972465429','admin');
 insert into credential(subject_id,password,role_id)
-        values('olga','0ef8288336b4f1da0eb2b8847b02efcc8a2ec2b0ec385768f8635a8f6a90e69b1145a961d52c01dd5e2275643f7f253b85e2042e17ca10f81423f6b5733da9ea','admin');
-insert into credential(subject_id,password,role_id)
-        values('LittleDecorator','1f9c15a7de0090c35d6693b76533819231d2adae494d70db74d3c12a9c0cdf189560c3623cbae47b2bc13a8ed0973aa47d9f94474fc706095786b3183da6ca20','admin');
+        values('587ccc2a-a912-41ab-8edf-abf8eb986b86','1f9c15a7de0090c35d6693b76533819231d2adae494d70db74d3c12a9c0cdf189560c3623cbae47b2bc13a8ed0973aa47d9f94474fc706095786b3183da6ca20','admin');
 
 /* CATEGORY */
 insert into category(id,name)

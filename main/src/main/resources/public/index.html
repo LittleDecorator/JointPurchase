@@ -70,7 +70,7 @@
                             <ul id="nav-mobile" class="right hide-on-med-and-down">
                                 <!--<li><a ui-sref="cart"><i class="fa fa-2x fa-shopping-cart"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>-->
                                 <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
-                                <li ng-if="auth.isAuth()"><a>Hello, <strong class="ng-binding">{{currentUser.name}}</strong></a></li>
+                                <li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>
                                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
                                 <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Login</a></li>
                                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>

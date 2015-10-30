@@ -25,12 +25,12 @@
                 repeat:"",
             };
 
+            $scope.isSend = false;
+
             $scope.register = function(){
-                registrationResource._register.post($scope.card);
+                $scope.isSend = registrationResource._register.post($scope.card);
+                $scope.smtpLoginPage = "http://"+($scope.card.mail.substring($scope.card.mail.indexOf('@')+1))+"/login";
             };
-
-
-            console.log($scope);
         }])
 
         .controller('registrationResultController',['$scope','$state','registrationResource','$stateParams', function($scope,$state,registrationResource,$stateParams) {

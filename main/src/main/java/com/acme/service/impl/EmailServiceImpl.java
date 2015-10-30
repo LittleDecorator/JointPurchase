@@ -72,7 +72,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public String getRobotCredential() {
-        String res = Constants.ROBOT_NAME+"@"+mailProperties.getProperty("mail.smtp.host");
+        String res = "GrimmStory <"+Constants.ROBOT_NAME+"@"+mailProperties.getProperty("mail.smtp.host")+">";
         System.out.println(res);
         return res;
     }
