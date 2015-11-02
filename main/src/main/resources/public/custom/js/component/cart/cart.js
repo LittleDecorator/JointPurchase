@@ -13,6 +13,13 @@
             $scope.THUMB_URL = "media/image/thumb/";
             $scope.ORIG_URL = "media/image/";
 
+            //get device type by width
+            if(helpers.viewport().width < 1350){
+                $scope.view = "mobile";
+            } else {
+                $scope.view = "normal";
+            }
+
             console.log($scope);
 
             if($scope.cart && $scope.cart.cou==0){
@@ -32,7 +39,7 @@
         .controller('cartCheckoutController',['$scope','$state','authService','loginModal','dataResources',function($scope,$state,authService,loginModal,dataResources){
 
             $scope.postDelivery = function(){
-                console.log("POst delivery method triggered!");
+                console.log("Post delivery method triggered!");
             };
 
             $scope.deliveries = [];

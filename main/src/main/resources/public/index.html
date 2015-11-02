@@ -84,6 +84,7 @@
                                 </li>
                             </ul>
                         </div>
+
                         <ul class="side-nav" id="mobile-demo">
 
                             <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
@@ -92,8 +93,10 @@
                             <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
                             <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
                             <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="item.detail">Акции</a></li>
+                            <li><a ui-sref="cart">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></a></li>
+                            <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()"><a style="cursor: pointer">Выход</a></li>
                             <ul class="collapsible collapsible-accordion">
-                            <li><a class="collapsible-header waves-effect waves-teal menu-up-lvl" ng-show="auth.isAuth()">Администрирование<i class="material-icons" style="float: right;margin-right: 0px">keyboard_arrow_right</i></a>
+                            <li><a class="collapsible-header waves-effect waves-teal menu-up-lvl" ng-show="auth.isAuth()">Администрирование</a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li><a ui-sref="order">Заказы</a></li>
@@ -105,8 +108,7 @@
                                 </div>
                             </li>
                                 </ul>
-                            <li><a ui-sref="cart">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></a></li>
-                            <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()"><a style="cursor: pointer">Выход</a></li>
+
                         </ul>
                     </div>
                 </div>

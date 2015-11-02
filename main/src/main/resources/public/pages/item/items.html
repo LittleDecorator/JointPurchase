@@ -36,7 +36,7 @@
 
 
     <div class="table-result">
-        <table class="table table-bordered table-hover adm-table collection">
+        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
             <thead>
             <tr>
                 <th></th>
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
             <tr id="{{item.id}}" ng-repeat="item in filteredItems" class="collection-item">
-                <td>
+                <td style="text-align: right;">
                     <input type="checkbox" class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle($index)"/>
                     <label for="{{item.id}}"></label>
                 </td>

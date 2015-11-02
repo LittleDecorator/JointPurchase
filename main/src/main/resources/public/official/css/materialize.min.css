@@ -8217,6 +8217,7 @@ input[type=text] + label:after, input[type=password] + label:after, input[type=e
     color: #9e9e9e;
     position: absolute;
     top: 0.8rem;
+    display: inherit;
     /*left: 0.75rem;*/
     font-size: 1rem;
     cursor: text;

@@ -55,6 +55,7 @@
                     }
                     $scope.cart.cou++;
                     store.set("cart",$scope.cart);
+                    Materialize.toast(item.name + ' добавлен в корзину', 2500);
                 };
 
                 $scope.clearCart = function(){

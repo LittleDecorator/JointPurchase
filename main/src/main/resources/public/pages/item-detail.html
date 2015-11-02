@@ -1,12 +1,13 @@
 <div class="table-container">
     <form role="form">
         <div class="modal-body">
-            <div class="form-group">
-                <label class="control-label">Название</label>
-                <input type="text" name="name" class="form-control" placeholder="Item name" ng-model="selected.name">
+
+            <div class="input-field">
+                <input type="text" name="name" class="form-control" ng-model="selected.name">
+                <label class="control-label" ng-class="{'active':selected.description.length>0}">Название</label>
             </div>
             <div class="form-group" id="company">
-                <label>Производитель</label>
+                <label class="control-label" ng-class="{'active':selected.company.length>0}">Производитель</label>
                 <select name="companyId" class="form-control" ng-model="selected.company" ng-options="company.name for company in companyNames track by company.id" ng-change="companyChanged()">
                     <option value="">Выберите компанию ...</option>
                 </select>
@@ -24,26 +25,29 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="control-label">Артикул</label>
-                <input type="text" name="article" class="form-control" placeholder="Item article" ng-model="selected.article">
+            <div class="input-field">
+                <input type="text" name="article" class="form-control" ng-model="selected.article">
+                <label class="control-label" ng-class="{'active':selected.article.length>0}">Артикул</label>
             </div>
-            <div class="form-group">
-                <label class="control-label">Цена (руб)</label>
-                <input type="text" name="price" class="form-control" placeholder="Item stock price" ng-model="selected.price">
+            <div class="input-field">
+                <input type="text" name="price" class="form-control" ng-model="selected.price">
+                <label class="control-label" ng-class="{'active':selected.price.length>0}">Цена (руб)</label>
             </div>
 
             <div class="form-group">
-                <div class="input-field">
-                    <textarea name="description" id="description" class="materialize-textarea" ng-model="selected.description"></textarea>
-                    <label for="description" class="active">Описание</label>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <textarea name="description" id="description" class="materialize-textarea" ng-model="selected.description"></textarea>
+                        <label for="description" ng-class="{'active':selected.description.length>0}">Описание</label>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="control-label">Кол-во в наличие</label>
-                <input type="text" name="inStock" class="form-control" placeholder="Item stock price" ng-model="selected.inStock">
+            <div class="input-field">
+                <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
+                <label class="control-label" ng-class="{'active':selected.inStock.length>0}">Кол-во в наличие</label>
             </div>
+
             <div class="form-group">
                 <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked" ng-model="selected.notForSale"/>
                 <label for="filled-in-box">Исключён из продажи</label>

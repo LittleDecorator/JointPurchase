@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService{
         System.out.println(tmpToken);
 
         //send email
-        String html = "<a href='http://localhost:7979/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
+        String html = "<a href='http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
         return emailService.sendRegistrationToken(data.getMail(),html);
     }
 }
