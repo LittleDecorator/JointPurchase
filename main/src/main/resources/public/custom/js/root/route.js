@@ -77,6 +77,20 @@ var route = {
                 }
             },
             {
+                name: 'stock',
+                url:'/stock',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/stock.html',
+                        controller: 'aboutController'
+                    }
+                },
+                data:{
+                    requireLogin: false,
+                    //base:true
+                }
+            },
+            {
                 name: 'contact',
                 url:'/contact',
                 views: {

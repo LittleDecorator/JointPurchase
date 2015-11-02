@@ -18,6 +18,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
@@ -43,6 +49,9 @@ public class OrderController{
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    DataSourceTransactionManager transactionManager;
 
     /**
      * Get all orders
@@ -81,6 +90,7 @@ public class OrderController{
      * @throws ParseException
      * @throws IOException
      */
+//    @Transactional(propagation = Propagation.REQUIRED)
     @RequestMapping(method = RequestMethod.POST)
     public PurchaseOrder createOrUpdateOrder(@RequestBody String input) throws ParseException, IOException {
 
@@ -95,24 +105,37 @@ public class OrderController{
 
         PurchaseOrder order = mapper.readValue(orderS, PurchaseOrder.class);
 
-        if(order.getId()!=null){
-            orderMapper.updateByPrimaryKeySelective(order);
-        } else {
-            order.setUid(System.currentTimeMillis());
-            orderMapper.insertSelective(order);
+        //try use transaction here
+        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+        transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        TransactionStatus status = transactionManager.getTransaction(transactionDefinition);
+        System.out.println(status);
+        try{
+            if(order.getId()!=null){
+                orderMapper.updateByPrimaryKeySelective(order);
+            } else {
+                order.setUid(System.currentTimeMillis());
+                orderMapper.insertSelective(order);
+            }
+
+            JSONArray itemsArray = (JSONArray) main.get("items");
+            List<OrderItem> orderItems = mapper.readValue(itemsArray.toJSONString(), new TypeReference<List<OrderItem>>(){});
+            //delete old links
+            OrderItemExample deleteExample = new OrderItemExample();
+            deleteExample.createCriteria().andOrderIdEqualTo(order.getId());
+            orderItemMapper.deleteByExample(deleteExample);
+            //insert new links
+            for(OrderItem orderItem : orderItems){
+                orderItem.setOrderId(order.getId());
+                orderItemMapper.insertSelective(orderItem);
+            }
+        } catch (Exception e){
+            transactionManager.rollback(status);
         }
 
-        JSONArray itemsArray = (JSONArray) main.get("items");
-        List<OrderItem> orderItems = mapper.readValue(itemsArray.toJSONString(), new TypeReference<List<OrderItem>>(){});
-        //delete old links
-        OrderItemExample deleteExample = new OrderItemExample();
-        deleteExample.createCriteria().andOrderIdEqualTo(order.getId());
-        orderItemMapper.deleteByExample(deleteExample);
-        //insert new links
-        for(OrderItem orderItem : orderItems){
-            orderItem.setOrderId(order.getId());
-            orderItemMapper.insertSelective(orderItem);
-        }
+        transactionManager.commit(status);
+
         return order;
     }
 

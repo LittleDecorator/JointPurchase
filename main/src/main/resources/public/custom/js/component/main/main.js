@@ -16,6 +16,12 @@
                 $scope.isCollapsed = false;
                 $scope.showContent = false;
 
+                if(helpers.viewport().width < 1350){
+                    $scope.view = "mobile";
+                } else {
+                    $scope.view = "normal";
+                }
+
                 angular.element(document).ready(function(){
                     $('.modal-trigger').leanModal();
                 });
@@ -136,10 +142,10 @@
                 dataResources.categoryMenu.get(function(data){
                     $scope.nodes= data;
 
-                    $(".button-collapse").sideNav();
+                    //$(".button-collapse").sideNav();
 
                     /* на всякий случай */
-                    $(".collapsible").collapsible();
+                    //$(".collapsible").collapsible();
                 });
 
                 $scope.filterProduct = function(node){
@@ -147,8 +153,9 @@
                 };
 
                 $timeout(function() {
+                    $(".button-collapse").sideNav();
                     $(".collapsible").collapsible();
-                }, 300);
+                }, 800);
 
                 console.log($scope);
 
