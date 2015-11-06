@@ -29,7 +29,7 @@ public class Application extends WebMvcConfigurerAdapter {
     public ServletRegistrationBean publicServlet(){
         ServletRegistrationBean registrationBean = new ServletRegistrationBean();
         registrationBean.setServlet(new PublicServlet());
-        registrationBean.addUrlMappings("/public/auth/confirm");
+        registrationBean.addUrlMappings("/public/auth/*");
         return registrationBean;
     }
 

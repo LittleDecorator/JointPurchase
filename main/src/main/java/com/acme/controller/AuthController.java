@@ -1,12 +1,14 @@
 package com.acme.controller;
 
 import com.acme.gen.domain.Credential;
+import com.acme.gen.domain.Subject;
 import com.acme.gen.mapper.CredentialMapper;
 import com.acme.helper.LoginResponse;
 import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.service.AuthService;
 import com.acme.service.TokenService;
+import com.acme.util.PasswordHashing;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,9 +44,24 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public boolean registration(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
+    public boolean registrationConfirm(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
         System.out.println(input);
         return authService.register(input);
+    }
+
+    @RequestMapping(value = "/restore",method = RequestMethod.POST)
+    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
+        System.out.println(login);
+        return authService.restore(login);
+    }
+
+    @RequestMapping(value = "/change",method = RequestMethod.POST)
+    public LoginResponse changePassword(@RequestBody SubjectCredential subjectCredential) throws ServletException, ParseException, UnsupportedEncodingException {
+        Subject subject = authService.getSubject(subjectCredential.name);
+        Credential credential = credentialMapper.selectByPrimaryKey(subject.getId());
+        credential.setPassword(PasswordHashing.hashPassword(subjectCredential.password));
+        credentialMapper.updateByPrimaryKeySelective(credential);
+        return new LoginResponse(tokenService.createToken(credential));
     }
 
 }

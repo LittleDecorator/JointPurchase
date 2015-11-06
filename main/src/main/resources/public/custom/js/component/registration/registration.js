@@ -22,7 +22,7 @@
                 phone:"",
                 mail:"",
                 password:"",
-                repeat:"",
+                repeat:""
             };
 
             $scope.isSend = false;

@@ -1,10 +1,11 @@
 <ul id="dropdown1" class="dropdown-content">
     <li><a ui-sref="order">Заказы</a></li>
     <li><a ui-sref="person">Клиенты</a></li>
-    <!--<li><a ui-sref="category">Категории</a></li>-->
     <li><a ui-sref="item">Товар</a></li>
     <li><a ui-sref="company">Поставщики</a></li>
     <li><a ui-sref="category">Категории</a></li>
+    <li><a>Настройки</a></li>
+    <li><a>Почта</a></li>
 </ul>
 
 <nav class="white">
@@ -17,14 +18,12 @@
 
             <div class="menu-adbeus-container">
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <!--<li><a ui-sref="cart"><i class="fa fa-2x fa-shopping-cart"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>-->
                     <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
                     <li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>
-                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
                     <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Login</a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
-                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Контакты</a></li>-->
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom"><a>Как связаться</a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown1">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
@@ -35,9 +34,9 @@
             </div>
 
             <ul class="side-nav" id="mobile-demo">
-                <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ng-click="login()">Login</a></li>-->
                 <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Login</a></li>
                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="product">Каталог</a></li>
+                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a>Личный кабинет</a></li>
                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>
                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>
                 <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>

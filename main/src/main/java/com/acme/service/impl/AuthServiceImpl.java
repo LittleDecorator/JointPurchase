@@ -1,6 +1,7 @@
 package com.acme.service.impl;
 
 import com.acme.gen.domain.Credential;
+import com.acme.gen.domain.CredentialExample;
 import com.acme.gen.domain.Subject;
 import com.acme.gen.domain.SubjectExample;
 import com.acme.gen.mapper.CredentialMapper;
@@ -113,5 +114,21 @@ public class AuthServiceImpl implements AuthService{
         //send email
         String html = "<a href='http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
         return emailService.sendRegistrationToken(data.getMail(),html);
+    }
+
+    @Override
+    public String restore(String login) {
+        Subject subject = subjectMapper.selectByPrimaryKey(login);
+        if(subject!=null){
+            String tmpToken = tokenService.createExpToken(credentialMapper.selectByPrimaryKey(login), (long) (24 * 60 * 60 * 1000));
+            System.out.println(tmpToken);
+
+            //send email
+            String html = "<a href='http://grimmstory.ru/public/auth/restore?jwt="+tmpToken+"'>Change password</a>";
+            emailService.sendRegistrationToken(subject.getEmail(),html);
+            return subject.getEmail();
+        } else {
+            return null;
+        }
     }
 }

@@ -2,7 +2,8 @@ package com.acme.config;
 
 public interface Settings {
 
-    String appMainPage="http://localhost:7979/#/";
+    String appMainPage="http://grimmstory.ru/#/";
     String registrationResultPage=appMainPage+"registration/result";
+    String restorePage=appMainPage+"restore";
 
 }

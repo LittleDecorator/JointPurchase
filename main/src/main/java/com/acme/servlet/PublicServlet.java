@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -60,27 +61,38 @@ public class PublicServlet extends HttpServlet {
             return;
         }
 
-        try{
+        try {
             final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
-            String subjectId = claims.getId();
-            if(subjectMapper!=null){
-                Subject subject = subjectMapper.selectByPrimaryKey(subjectId);
-                if(subject == null){
-                    res.sendRedirect(Settings.registrationResultPage+"?confirmed=false");
-                    return;
-                }
-                if(subject.isEnabled()){
-                    //if user already valid then go to main page (no login)
-                    res.sendRedirect(Settings.appMainPage);
+
+            if(claims.getExpiration().after(new Date())){
+
+                /* check if it pass change */
+                if(req.getPathInfo().contains("restore")){
+                    res.sendRedirect(Settings.restorePage);
                 } else {
-                    subject.setEnabled(true);
-                    subjectMapper.updateByPrimaryKeySelective(subject);
-                    res.sendRedirect(Settings.registrationResultPage + "?confirmed=true");
+                    /* registration */
+                    String subjectId = claims.getId();
+                    if (subjectMapper != null) {
+                        Subject subject = subjectMapper.selectByPrimaryKey(subjectId);
+                        if (subject == null) {
+                            res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
+                            return;
+                        }
+                        if (subject.isEnabled()) {
+                            //if user already valid then go to main page (no login)
+                            res.sendRedirect(Settings.appMainPage);
+                        } else {
+                            subject.setEnabled(true);
+                            subjectMapper.updateByPrimaryKeySelective(subject);
+                            res.sendRedirect(Settings.registrationResultPage + "?confirmed=true");
+                        }
+                    }
                 }
             }
-        } catch (ExpiredJwtException e){
-            res.sendRedirect(Settings.registrationResultPage+"?confirmed=false");
+        } catch (ExpiredJwtException e) {
+            res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
         }
+
     }
 
     @Override

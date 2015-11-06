@@ -119,6 +119,34 @@ var route = {
                 }
             },
             {
+                name:'remember',
+                url:'/remember',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/remember.html',
+                        controller: 'rememberController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                    //base:true
+                }
+            },
+            {
+                name:'restore',
+                url:'/restore',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/remember.html',
+                        controller: 'restoreController'
+                    }
+                },
+                data: {
+                    requireLogin: false
+                    //base:true
+                }
+            },
+            {
                 name:'registration.result',
                 url:'/result?confirmed',
                 views: {
