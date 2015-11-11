@@ -14,18 +14,38 @@
             }
         }])
 
-        .controller('rememberController',['$scope','$state','authResource', function($scope,$state,authResource){
+        .controller('rememberController',['$scope','authResource','$rootScope', function($scope,authResource,$rootScope){
+            console.log("in rememberController");
+            $scope.remember = {
+                remail:null,
+                flag:"remember",
+                msg:"На Ваш почтовый ящик была отправленна ссылка для изменения пароля!",
+                isSend:false
+            };
 
-            $scope.flag="remember";
-            $scope.login = null;
-            $scope.msg = "На Ваш почтовый ящик была отправленна ссылка для изменения пароля!";
-            $scope.isSend = false;
+            $scope.tryAgain = function(){
+                $scope.remember.isSend = false;
+                $scope.remember.isError = false;
+                $scope.remember.remail = null;
+            };
 
-            $scope.remember = function(){
-                $rootScope.hidenLoginValue = authResource._restore.post($scope.login);
+            $scope.send = function(){
+                authResource._restore.post({data:$scope.remember.remail},
+                    function(){
+                        $scope.remember.isSend = true;
+                        $rootScope.hidenLoginValue = $scope.remember.remail;
+                    }, function(){
+                        $scope.remember.msg = "Указанный почтовый ящик не зарегестрирован";
+                        $scope.remember.isError = true;
+                    }
+                );
+
+                /*$rootScope.hidenLoginValue = authResource._restore.post($scope.login);
                 if($rootScope.hidenLoginValue!=null){
                     $scope.isSend = true;
-                }
+                } else {
+                    $scope.msg = "Указанный почтовый ящик не зарегестрирован";
+                }*/
             };
         }])
 

@@ -9,6 +9,8 @@ import com.acme.helper.SubjectCredential;
 import com.acme.service.AuthService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,9 +52,14 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/restore",method = RequestMethod.POST)
-    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
+//    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
+    public void restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
         System.out.println(login);
-        return authService.restore(login);
+        JSONParser parser = new JSONParser();
+        String elogin = ((JSONObject)parser.parse(login)).get("data").toString();
+        System.out.println(elogin);
+//        return authService.restore(elogin);
+        authService.restore(elogin);
     }
 
     @RequestMapping(value = "/change",method = RequestMethod.POST)

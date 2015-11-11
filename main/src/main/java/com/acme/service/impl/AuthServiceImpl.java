@@ -1,7 +1,7 @@
 package com.acme.service.impl;
 
+import com.acme.exception.InvalidRequestException;
 import com.acme.gen.domain.Credential;
-import com.acme.gen.domain.CredentialExample;
 import com.acme.gen.domain.Subject;
 import com.acme.gen.domain.SubjectExample;
 import com.acme.gen.mapper.CredentialMapper;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -40,7 +41,13 @@ public class AuthServiceImpl implements AuthService{
     public Subject getSubject(String login) {
         SubjectExample subjectExample = new SubjectExample();
         subjectExample.createCriteria().andEmailEqualTo(login);
-        return subjectMapper.selectByExample(subjectExample).get(0);
+        List<Subject> subjects = subjectMapper.selectByExample(subjectExample);
+        if(subjects.size()>0){
+            return subjects.get(0);
+        } else {
+            return null;
+        }
+
     }
 
     @Override
@@ -117,18 +124,23 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String restore(String login) {
-        Subject subject = subjectMapper.selectByPrimaryKey(login);
+    public void restore(String login) {
+        //TODO: Need update exception handler. Add custom error intarface and different implementations for all situations
+        System.out.println("In restore");
+        Subject subject = getSubject(login);
         if(subject!=null){
-            String tmpToken = tokenService.createExpToken(credentialMapper.selectByPrimaryKey(login), (long) (24 * 60 * 60 * 1000));
+            System.out.println(subject.getEmail()+" "+subject.getFirstName());
+            String tmpToken = tokenService.createExpToken(credentialMapper.selectByPrimaryKey(subject.getId()), (long) (24 * 60 * 60 * 1000));
             System.out.println(tmpToken);
 
             //send email
             String html = "<a href='http://grimmstory.ru/public/auth/restore?jwt="+tmpToken+"'>Change password</a>";
             emailService.sendRegistrationToken(subject.getEmail(),html);
-            return subject.getEmail();
+//            return subject.getEmail();
         } else {
-            return null;
+            System.out.println("Subject not found");
+            throw new InvalidRequestException("Subject not found", login);
+//            return null;
         }
     }
 }

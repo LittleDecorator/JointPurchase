@@ -7,7 +7,6 @@ import com.acme.helper.SubjectCredential;
 import io.jsonwebtoken.Claims;
 
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 public interface AuthService {
 
@@ -21,5 +20,6 @@ public interface AuthService {
 
     Claims getClaims(ServletRequest servletRequest);
 
-    String restore(String login);
+//    String restore(String login);
+    void restore(String login);
 }

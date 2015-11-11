@@ -2,33 +2,34 @@
     <!--Registration via icon-->
     <h4>Восстановление пароля</h4>
 
-    <div ng-if="flag='remember'">
-        <div ng-if="!isSend">
+    <div ng-if="remember.flag='remember'">
+        <div ng-if="!remember.isSend && !remember.isError">
             <div class="input-field col s12">
-                <input type="text" ng-model="login" id="email"/>
+                <input type="text" ng-model="remember.remail" id="email"/>
                 <label for="email" class="control-label" style="left: 0.75rem">Email</label>
             </div>
             <div style="float: right">
-                <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="remember()">Отправить</a>
+                <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="send()">Отправить</a>
             </div>
         </div>
 
-        <div ng-if="isSend">
-            <p>{{ msg }}</p>
+        <div ng-if="!remember.isSend && remember.isError">
+            <p>{{ remember.msg }}</p>
+            <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="tryAgain()">Еще раз</a>
         </div>
 
     </div>
 
-    <div ng-if="flag!='remember'">
+    <div ng-if="remember.flag!='remember'">
 
-        <div ng-if="!msg">
+        <div ng-if="!remember.msg">
             <div class="input-field col s12">
                 <input type="password" ng-model="password" id="password" />
                 <label class="control-label" for="password" style="left: 0.75rem">Пароль</label>
             </div>
             <div class="input-field col s12">
-                <input type="password" ng-model="password" id="password_conf" />
-                <label class="control-label" for="password" style="left: 0.75rem">Повторите пароль</label>
+                <input type="password" ng-model="passwordConf" id="password_conf" />
+                <label class="control-label" for="password_conf" style="left: 0.75rem">Повторите пароль</label>
             </div>
             <div style="float: right">
                 <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="change()">Изменить</a>
