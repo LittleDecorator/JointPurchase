@@ -122,7 +122,7 @@
                     delete: {method:'DELETE'},
                     update: {method:'POST'}
                 }),
-
+                contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
                 customer: $resource('/customer/:id'),
                 //customerByCompanyId: $resource('/customer/company/:id',{},{get : { method: 'GET', isArray : true }}),
 

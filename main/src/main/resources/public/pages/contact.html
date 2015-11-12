@@ -1,6 +1,25 @@
-<!-- contact.html -->
-<div class="jumbotron text-center">
-    <h1>Contact Page</h1>
+<div class="modal-content center" style="width: 60%; margin: 0 auto; margin-top: 150px">
+    <div class="table-container">
+    <div ng-form="_callback">
+        <div class="input-field">
+            <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
+                   ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
+            <label for="phone" class="control-label" data-error='Not valid phone'>Телефон</label>
+        </div>
 
-    <p>{{ message }}</p>
+        <div class="form-group">
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
+                    <label for="message">Сообщение</label>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="send()">Подтвердить</a>
+</div>
+
 </div>
