@@ -1,0 +1,89 @@
+<div>
+
+    <div>
+        <h4 class="example_head">Почта:</h4>
+    </div>
+
+    <div class="col s12 search">
+        <ul class="tabs" style="width: 100%;">
+            <li class="tab col s3" ><a href="#inbox">Входящие</a></li>
+            <li class="tab col s3"><a href="#send">Исходящие</a></li>
+        </ul>
+    </div>
+
+    <div id="inbox" class="col s12" ng-controller="inboxController">
+
+        <div class="item_result">
+            <div class="table-result">
+                <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Адрес</th>
+                        <th>Тема</th>
+                        <th>Дата</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="{{email.id}}" ng-repeat="email in inbox" class="collection-item">
+                        <td style="text-align: right;">
+                            <!--<input type="checkbox" class="filled-in" ng-change="forSaleToggle($index)"/>-->
+                            <input type="checkbox" class="filled-in"/>
+                            <label for="{{email.id}}"></label>
+                        </td>
+                        <td class="center-align">{{email.from}}</td>
+                        <td class="center-align">{{email.subject}}</td>
+                        <td class="center-align">{{email.date}}</td>
+                        <td class="center-align"><i class="small" ng-class="{'mdi-action-markunread-mailbox':email.isNew,'mdi-content-drafts':!email.isNew}"></i></td>
+                        <td class="right-align" style="text-align: center">
+                            <a class="btn-small waves-effect waves-light btn">Открыть</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="send" class="col s12" ng-controller="sendController">
+
+        <div class="item_result">
+            <div class="table-result">
+                <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Адрес</th>
+                        <th>Тема</th>
+                        <th>Дата</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="{{semail.id}}" ng-repeat="semail in send" class="collection-item">
+                        <td style="text-align: right;">
+                            <input type="checkbox" class="filled-in"/>
+                            <label for="{{semail.id}}"></label>
+                        </td>
+                        <td class="center-align">{{semail.to}}</td>
+                        <td class="center-align">{{semail.subject}}</td>
+                        <td class="center-align">{{semail.date}}</td>
+                        <td class="right-align">
+                            <a class="waves-effect waves-light btn" >Открыть</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3">
+            <i class="large mdi-action-delete"></i>
+        </a>
+    </div>
+
+</div>

@@ -155,6 +155,7 @@
                 $timeout(function() {
                     $(".button-collapse").sideNav();
                     $(".collapsible").collapsible();
+                    $('.dropdown-button').dropdown();
                 }, 800);
 
                 console.log($scope);

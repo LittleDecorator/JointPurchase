@@ -51,57 +51,34 @@
                 item: $resource('/item/:id'),
                 //itemClss:$resource('/item/clss',{},{get:{method:'GET',isArray:true}}),
                 filterByType:$resource('/item/filter/type',{},{
-                    filter:{
-                        method:'POST',
-                        isArray:true
-                    }
+                    filter:{method:'POST',isArray:true}
                 }),
                 filterByCompany:$resource('/item/filter/company',{},{
-                    filter:{
-                        method:'GET',
-                        isArray:true
-                    }
+                    filter:{method:'GET',isArray:true}
                 }),
+
+                inboxMail:$resource('/mail/inbox',{},{get:{method:'GET',isArray:true}}),
+                sendMail:$resource('/mail/send',{},{get:{method:'GET',isArray:true}}),
+                //mail: $resource("/mail/:id"),
 
                 categoryItems: $resource('/category/items/:categoryId',{},{ get : {method:'GET',isArray:true}}),
 
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
                 typeMap:$resource('category/type/map',{},{
-                    get:{
-                        method:'GET',
-                        isArray:true
-                    }
+                    get:{method:'GET',isArray:true}
                 }),
                 categoryTree: $resource("/category/tree",{},{
-                    get:{
-                        method:'GET',
-                        isArray:true
-                    },
-                    post:{
-                        method:'POST',
-                        isArray:false
-                    }
+                    get:{method:'GET',isArray:true},
+                    post:{method:'POST',isArray:false}
                 }),
                 categoryTypes:$resource("/category/types/:id",{},{
-                    get:{
-                        method:'GET',
-                        isArray:true
-                    },
-                    update:{
-                        method:'POST',
-                        isArray : false
-                    },
-                    delete:{
-                        method:'DELETE',
-                        isArray:false
-                    }
+                    get:{method:'GET',isArray:true},
+                    update:{method:'POST',isArray : false},
+                    delete:{method:'DELETE',isArray:false}
                 }),
                 categoryMenu:$resource("/category/side/menu",{},{
-                    get:{
-                        method:'GET',
-                        isArray:true
-                    }
+                    get:{method:'GET',isArray:true}
                 }),
 
                 itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
@@ -138,10 +115,7 @@
                     toggle:{method:'PUT',isArray:false}
                 }),
                 notForSale:$resource('item/set/sale',{},{
-                    toggle:{
-                        method:'POST',
-                        isArray:false
-                    }
+                    toggle:{method:'POST',isArray:false}
                 }),
                 orderStatus:$resource('clss/order/status',{},{
                     get:{method:'GET',isArray:true}

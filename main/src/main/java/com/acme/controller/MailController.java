@@ -1,30 +1,31 @@
-//package com.acme.controller;
-//
-//import com.acme.service.impl.EmailServiceImpl;
-//import com.acme.util.Constants;
-//import com.acme.util.EmailBuilder;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.ResponseStatus;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import javax.mail.MessagingException;
-//import javax.mail.internet.MimeMessage;
-//import java.io.UnsupportedEncodingException;
-//
-//@RestController
-//public class MailController {
-//
-//    @Autowired
-//    private EmailServiceImpl emailService;
-//
-//    @RequestMapping("/mail/registration/confirm")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void sendRegistrationNotification(String recipient){
-//        notifySend(recipient, Constants.REGISTRATION_CONFIRM, "Registration confirmation");
-//    }
-//
+package com.acme.controller;
+
+import com.acme.model.domain.Email;
+import com.acme.service.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.mail.MessagingException;
+import java.util.List;
+
+@RestController
+@RequestMapping("/mail")
+public class MailController {
+
+    @Autowired
+    private EmailService emailService;
+
+    @RequestMapping("/inbox")
+    public List<Email> receivedEmail() throws MessagingException {
+        return emailService.getInboxEmail();
+    }
+
+    @RequestMapping("/send")
+    public List<Email> sendEMail() throws MessagingException {
+        return emailService.getSendEmail();
+    }
+
 //    @RequestMapping("/mail/registration/done")
 //    @ResponseStatus(HttpStatus.CREATED)
 //    public void sendRegistrationDone(String recipient){
@@ -47,5 +48,5 @@
 //        }
 //
 //    }
-//
-//}
+
+}

@@ -32,6 +32,8 @@
         </dependency>
 
 
+
+
         <!-- MODEL -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -98,6 +100,11 @@
             <artifactId>subethasmtp</artifactId>
             <version>3.1.7</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
 
         <!--<dependency>
             <groupId>com.icegreen</groupId>
@@ -113,6 +120,8 @@
             <artifactId>dynamicreports-core</artifactId>
             <version>4.0.0</version>
         </dependency>
+
+
 
     </dependencies>
 

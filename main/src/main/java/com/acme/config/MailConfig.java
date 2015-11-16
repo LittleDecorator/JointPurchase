@@ -40,6 +40,9 @@ public class MailConfig {
     @Value("${mail.robot.password}")
     private String password;
 
+    @Value("${mail.store.protocol}")
+    private String store;
+
     @Bean
     public Properties mailProperties(){
         Properties props = new Properties();
@@ -49,6 +52,7 @@ public class MailConfig {
         props.put("mail.smtp.auth", auth);
         props.put("mail.smtp.starttls.enable", starttls);
         props.put("mail.smtp.ssl.trust", ssl);
+        props.put("mail.store.protocol", store);
         return props;
     }
 

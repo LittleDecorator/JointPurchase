@@ -77,6 +77,20 @@ var route = {
                 }
             },
             {
+                name: 'email',
+                url:'/email',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/email.html',
+                        controller: 'emailController'
+                    }
+                },
+                data:{
+                    requireLogin: false,
+                    //base:true
+                }
+            },
+            {
                 name: 'stock',
                 url:'/stock',
                 views: {

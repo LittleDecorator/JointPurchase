@@ -1,64 +1,80 @@
 package com.acme.service.impl;
 
 import com.acme.service.SmsService;
+import com.acme.sms.CredentialKey;
+import com.acme.sms.SMSAccount;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Service
 public class SmsServiceImpl implements SmsService {
 
-    private final String USER_AGENT = "Mozilla/5.0";
+    private static final String SEND_URL = "http://safexi.ru/api.php?action=send";
+    private static final String CODE_URL = "http://safexi.ru/api.php?action=code_sms";
+    private static final String STATUS_URL = "http://safexi.ru/api.php?action=status";
 
     @Override
-    public void sendCallback(){
+    public void sendCallback(SMSAccount account, String from, String to, String text){
         System.out.println("Testing 1 - Send Http GET request");
         try {
-            send();
+            send(account, from, to, text);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void send() throws Exception{
-        String url = "http://safexi.ru/api.php?action=send&login=knpdeveloper@gmail.com&pass=25oct87!&number=79263959143&name=BLAAA&mess=Just+a+test+sms";
+    private void send(SMSAccount account, String from, String to, String text) throws Exception{
 
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        con.setRequestProperty("User-Agent", USER_AGENT);
-
-        //name
-//        con.addRequestProperty("login","knpdeveloper@gmail.com");
-//        con.addRequestProperty("pass","25oct87!");
-//        con.addRequestProperty("number","79263959143");
-//        con.addRequestProperty("name","GrimmStory");
-//        con.addRequestProperty("mess","Just a test sms");
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        URI uri = null;
+        try {
+            URIBuilder b = new URIBuilder(SEND_URL)
+                    .setParameter("login", account.get(CredentialKey.EMAIL))
+                    .setParameter("pass", account.get(CredentialKey.PASSWORD))
+                    .setParameter("mess", text)
+                    .setParameter("number", to)
+                    .setParameter("name", from);
+            uri = b.build();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
         }
-        in.close();
+        final String result = execute(uri);
 
         //print result
-        System.out.println(response.toString());
+        System.out.println(result);
     }
 
+    private String execute(HttpClient httpClient, URI uri) throws IOException {
+        System.out.println("\nSending 'GET' request to URL : " + uri);
+        final HttpGet get = new HttpGet(uri);
+        return httpClient.execute(get, new BasicResponseHandler());
+    }
 
+    private String execute(URI uri) throws IOException {
+        HttpClient httpClient = HttpClientBuilder
+                .create()
+                .setConnectionManager(ConnectionManagerHolder.connectionManager)
+                .build();
+        return execute(httpClient, uri);
+    }
+
+    private static class ConnectionManagerHolder {
+        private static final HttpClientConnectionManager connectionManager = init();
+
+        private static HttpClientConnectionManager init() {
+            PoolingHttpClientConnectionManager ccm = new PoolingHttpClientConnectionManager();
+            ccm.setMaxTotal(10);
+            return ccm;
+        }
+    }
 
 }

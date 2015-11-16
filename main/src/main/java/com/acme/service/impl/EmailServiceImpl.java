@@ -1,18 +1,16 @@
 package com.acme.service.impl;
 
+import com.acme.model.domain.Email;
 import com.acme.service.EmailService;
 import com.acme.util.Constants;
 import com.acme.util.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.util.Properties;
+import java.util.*;
 
 @Service
 public class EmailServiceImpl implements EmailService{
@@ -98,5 +96,65 @@ public class EmailServiceImpl implements EmailService{
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Email> getInboxEmail() throws MessagingException {
+        List<Email> emails = null;
+        MimeMessage msg;
+        Email email;
+
+        Store store = createSession("bobby", "12345678").getStore("pop3");
+        store.connect("80.78.247.250", null, null);
+        Folder inbox = store.getFolder("INBOX");
+
+        inbox.open(Folder.READ_ONLY);
+        int cou = inbox.getMessageCount();
+        if(cou>0){
+            emails = new ArrayList<>();
+            for(int i=1;i<=cou;i++){
+                msg = (MimeMessage) inbox.getMessage(i);
+                email = new Email();
+
+                String subFrom = Arrays.toString(msg.getFrom());
+                subFrom = subFrom.substring(subFrom.indexOf('<')+1,subFrom.length()-2);
+                email.setId(msg.getMessageID());
+                email.setFrom(subFrom);
+                email.setDate(msg.getSentDate());
+                email.setIsNew(msg.isSet(Flags.Flag.RECENT));
+                email.setSubject(msg.getSubject());
+                emails.add(email);
+            }
+        }
+        System.out.println(emails);
+        return emails;
+    }
+
+    @Override
+    public List<Email> getSendEmail() throws MessagingException {
+        List<Email> emails = null;
+        MimeMessage msg;
+        Email email;
+
+        Store store = createSession("bobby", "12345678").getStore("pop3");
+        store.connect("80.78.247.250", null, null);
+        Folder inbox = store.getFolder("SEND");
+
+        inbox.open(Folder.READ_ONLY);
+        int cou = inbox.getMessageCount();
+        if(cou>0){
+            emails = new ArrayList<>();
+            for(int i=1;i<=cou;i++){
+                msg = (MimeMessage) inbox.getMessage(i);
+                email = new Email();
+                email.setId(msg.getMessageID());
+                email.setTo(Arrays.asList(msg.getRecipients(Message.RecipientType.TO)).toString());
+                email.setDate(msg.getSentDate());
+                email.setSubject(msg.getSubject());
+                emails.add(email);
+            }
+        }
+        System.out.println(emails);
+        return emails;
     }
 }

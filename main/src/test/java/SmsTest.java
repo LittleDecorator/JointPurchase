@@ -20,10 +20,11 @@ public class SmsTest {
 
     private void sendGet() throws Exception {
 
-        String url = "http://safexi.ru/api.php?action=send&login=knpdeveloper@gmail.com&pass=25oct87!&number=79263959143&name=BLAAA&mess=Just+a+test+sms";
+        String url = "http://safexi.ru/api.php?action=send&login=knpdeveloper@gmail.com&pass=25oct87!&number=79263959143&name=Testing&mess=Say+hello";
+//        String url = "http://safexi.ru/api.php?action=send&login=test&pass=111111&number=79263959143&name=safexi&mess=Текст Вашего сообщения";
 //        String url = "http://safexi.ru/api.php?action=code_sms&login=knpdeveloper@gmail.com&pass=25oct87!";
 //        String url = "http://safexi.ru/api.php?action=status&code=565682639";
-
+        System.out.println("Testing 2 - URL prepared");
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -46,7 +47,7 @@ public class SmsTest {
 
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);

@@ -1,10 +1,13 @@
 package com.acme.service;
 
+import com.acme.model.domain.Email;
 import com.acme.util.EmailBuilder;
 
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 public interface EmailService {
 
@@ -16,5 +19,8 @@ public interface EmailService {
 
     void sendOrderDone(String mailTo);
     boolean sendRegistrationToken(String mailTo,String content);
+
+    List<Email> getInboxEmail() throws MessagingException;
+    List<Email> getSendEmail() throws MessagingException;
 
 }
