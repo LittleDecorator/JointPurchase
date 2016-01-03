@@ -5400,7 +5400,7 @@ nav .input-field label.active {
     font-weight: 700; }
 
 a {
-    text-decoration: none; }
+    text-decoration: none!important; }
 
 html {
     line-height: 1.5;
@@ -8188,7 +8188,9 @@ h1, h2, h3, h4, h5, h6 {
 nav a {
     -webkit-font-smoothing: antialiased; }
 nav ul li:hover, nav ul li.active {
-    background-color: #ea454b; }
+    /*background-color: #ea454b;*/
+    /*background-color: #846c63;*/
+}
 
 .header {
     color: #ee6e73;
@@ -8829,3 +8831,23 @@ body.parallax-demo footer {
         width: 80%!important;
     }
 }*/
+
+
+.breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+.breadcrumb > li {
+    display: inline-block;
+}
+.breadcrumb > li + li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+.breadcrumb > .active {
+    color: #777;
+}

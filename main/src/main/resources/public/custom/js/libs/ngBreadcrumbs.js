@@ -1,61 +1,13 @@
-(function () {
-    'use strict';
-
-    angular.module('ngBreadcrumbs', [])
+(function(){
+    angular.module('ngBreadcrumbs',[]);
 })();
 
-/*(function () {
-    'use strict';
-    angular.module('ngBreadcrumbs').controller('BreadcrumbsController', function ($scope, $state, $stateParams) {
-            console.log("init breadcrumbs controller");
-
-
-
-            var getName = function (state) {
-                console.log("in getName");
-                return state.data.displayName || state.self.name;
-            };
-
-            var isCurrent = function(state){
-                console.log("bla in current");
-                return $state.$current.name === state.self.name;
-            };
-
-            var setNavigationState = function () {
-                console.log("set navigation state");
-                console.log($scope);
-                console.log($state);
-                $scope.$navigationState = {
-                    currentState: $state.$current,
-                    params: $stateParams,
-
-                    getDisplayName: function (state) {
-                        console.log(state);
-                        return defaultResolver(state);
-                    },
-
-                    isCurrent: function (state) {
-                        return isCurrent(state);
-                    }
-                };
-                console.log($scope);
-            };
-
-            $scope.$on('$stateChangeSuccess', function () {
-                console.log("state changed");
-                setNavigationState();
-            });
-
-            setNavigationState();
-
-        }
-    );
-})();*/
-
 (function () {
 
     'use strict';
-    angular.module('ngBreadcrumbs').directive('breadcrumbs', function ($interpolate, $state) {
+    angular.module('ngBreadcrumbs')
+
+        .directive('breadcrumbs', function ($interpolate, $state) {
         return {
             restrict: 'E',
             templateUrl:'pages/template/breadcrumbs.html',

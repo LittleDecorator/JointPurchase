@@ -198,5 +198,9 @@
                 $scope.mainImage = id;
             };
 
+            $scope.showGallery = function () {
+                $state.go("product.detail.gallery", {id: $scope.item.id});
+            };
+
         }]);
 })();

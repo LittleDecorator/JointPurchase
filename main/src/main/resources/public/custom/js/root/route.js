@@ -184,7 +184,7 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: '{{product.name}}',
+                    displayName: '{{product.name}}',
                     requireLogin: false,
                     //base:false
                 },
@@ -204,7 +204,7 @@ var route = {
                     }
                 },
                 data:{
-                    //displayName: 'Продукция',
+                    displayName: 'Каталог',
                     requireLogin: false,
                     //base:true
                 }
@@ -220,7 +220,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    //displayName: '{{order.name}}',
+                    displayName: '{{order.name}}',
                     //base:false
                 },
                 resolve: {
@@ -239,7 +239,7 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Заказы',
+                    displayName: 'Заказы',
                     requireLogin: true,
                     //base:true
                 },
@@ -260,7 +260,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    //displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
+                    displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
                     //base:false
                 },
                 resolve: {
@@ -279,7 +279,7 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Клиенты',
+                    displayName: 'Клиенты',
                     requireLogin: true,
                     //base:true
                 },
@@ -300,7 +300,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    //displayName:'{{ company.name }}',
+                    displayName:'{{ company.name }}',
                     //base:false
                 },
                 resolve: {
@@ -319,7 +319,7 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Поставщики',
+                    displayName: 'Поставщики',
                     requireLogin: true,
                     //base:true
                 },
@@ -339,7 +339,7 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Товар',
+                    displayName: 'Товар',
                     requireLogin: true,
                     //base:true
                 },
@@ -359,7 +359,8 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: true
+                    requireLogin: true,
+                    displayName: '{{item.name}}'
                 },
                 resolve: {
                     item: function($stateParams, resolveService) {
@@ -368,8 +369,8 @@ var route = {
                 }
             },
             {
-                name:'item.gallery',
-                url:'/:itemId/gallery',
+                name:'item.detail.gallery',
+                url:'/:id/gallery',
                 views: {
                     'main@': {
                         templateUrl : 'pages/item/gallery.html',
@@ -378,6 +379,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
+                    displayName: 'Изображения',
                     //base:false
                 }
             },
@@ -391,24 +393,11 @@ var route = {
                     }
                 },
                 data: {
-                    //displayName: 'Поставщики',
+                    displayName: 'Категории',
                     requireLogin: true
                     //base:true
                 }
             },
-            /*{
-                name: 'guides',
-                url: '/guides',
-                views: {
-                    'main@': {
-                        templateUrl: 'pages/guides.html',
-                        controller:'guideController'
-                    }
-                },
-                data: {
-                    requireLogin: false
-                }
-            },*/
             {
                 name: 'login',
                 url: '/login',
@@ -419,7 +408,8 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false
+                    requireLogin: false,
+                    displayName: false
                 }
             }
         ]

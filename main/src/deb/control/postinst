@@ -1,0 +1,18 @@
+#!/bin/sh
+
+NAME=${project.final.name}
+#GROUP=${deb.group.name}
+#USER=${deb.user.name}
+#LOG_DIR=${deb.log.path}
+#LOG_INFO=${deb.log.path}/${deb.log.out.name}
+#LOG_ERROR=${deb.log.path}/${deb.log.err.name}
+
+# create logs dir
+#if [ ! -d "${LOG_DIR}" ]; then
+#    echo "Creating app log dir '${LOG_DIR}' ..."
+#    mkdir -p ${LOG_DIR} && touch ${LOG_INFO} && touch ${LOG_ERROR}
+#    chown -R ${USER}:${GROUP} ${LOG_DIR}
+#    chmod -R 755 ${LOG_DIR}
+#fi
+
+update-rc.d ${NAME} defaults

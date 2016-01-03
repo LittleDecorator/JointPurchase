@@ -140,7 +140,7 @@
 
             $scope.showGallery = function (id) {
                 $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-                $state.go("item.gallery", {itemId: id});
+                $state.go("item.detail.gallery", {itemId: id});
             };
 
             //изъятие\включение в продажу
@@ -154,7 +154,7 @@
 
         }])
 
-        .controller('itemDetailController',['$scope','item','dataResources','categoryClssModal','eventService', function ($scope, item, dataResources,categoryClssModal,eventService){
+        .controller('itemDetailController',['$scope','$state','item','dataResources','categoryClssModal','eventService', function ($scope, $state, item, dataResources,categoryClssModal,eventService){
 
             console.log("itemDetailController");
 
@@ -254,6 +254,10 @@
                         angular.element(elem).removeClass('inactive');
                     }
                 }
+            };
+
+            $scope.showGallery = function () {
+                $state.go("item.detail.gallery", {id: item.id});
             };
 
             //$scope.typeChanged = function(){

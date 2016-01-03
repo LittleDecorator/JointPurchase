@@ -1,6 +1,6 @@
 (function(){
     angular.module('purchase', ['ngCookies','ui.router', 'ui.bootstrap','angularBootstrapNavTree' ,'ngResource', 'angularFileUpload', 'angular-jwt',
-        'purchase.controllers','purchase.directives','purchase.factories','purchase.filters','purchase.services'/*,'ui.materialize'*/]);
+        'purchase.controllers','purchase.directives','purchase.factories','purchase.filters','purchase.services','ngBreadcrumbs']);
 })();
 
 (function() {

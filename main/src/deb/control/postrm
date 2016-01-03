@@ -1,0 +1,18 @@
+#!/bin/sh
+
+USER=${deb.user.name}
+GROUP=${deb.group.name}
+LOG_DIR=${deb.log.path}
+NAME=${USER}
+
+if [ "$1" = "remove" ] ; then
+    echo "Removing user '${USER}' ..."
+    deluser ${USER}
+#    Don't need remove GROUP explicitly, because GROUP we'll be deleted when no users in it
+#    echo "Removing group '${GROUP}' ..."
+#    groupdel ${GROUP}
+    echo "Removing app log dir '${LOG_DIR}' ..."
+    rm -rf ${LOG_DIR}
+    # remove from startup
+    update-rc.d -f ${NAME} remove
+fi

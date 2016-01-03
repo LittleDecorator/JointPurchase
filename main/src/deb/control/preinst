@@ -1,0 +1,26 @@
+#!/bin/sh
+
+GROUP=${deb.group.name}
+USER=${deb.user.name}
+LOG_DIR=${deb.log.path}
+LOG_INFO=${deb.log.path}/${deb.log.out.name}
+LOG_ERROR=${deb.log.path}/${deb.log.err.name}
+
+# check group
+if [ -z `getent group ${GROUP}` ]; then
+    echo "Creating group '${GROUP}' ..."
+    /usr/sbin/groupadd -r ${GROUP}
+fi
+
+# check user
+if ! id -u "${USER}" >/dev/null 2>&1; then
+    echo "Creating user '${USER}' ..."
+    /usr/sbin/useradd -g ${GROUP} -r -s /bin/false -M ${USER}
+fi
+
+# create logs dir (need on start)
+if [ ! -d "${LOG_DIR}" ]; then
+    echo "Creating app log dir '${LOG_DIR}' ..."
+    mkdir -p ${LOG_DIR} && touch ${LOG_INFO} && touch ${LOG_ERROR}
+    chown -R ${USER}:${GROUP} ${LOG_DIR}
+fi
