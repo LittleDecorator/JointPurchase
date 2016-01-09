@@ -110,7 +110,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/contact.html',
-                        controller: 'contactController'
+                        //controller: 'contactController'
+                        controller: 'wrapperController'
                     }
                 },
                 data: {
@@ -220,7 +221,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{order.name}}',
+                    displayName: '{{order.uid}}',
                     //base:false
                 },
                 resolve: {
@@ -370,7 +371,7 @@ var route = {
             },
             {
                 name:'item.detail.gallery',
-                url:'/:id/gallery',
+                url:'/gallery',
                 views: {
                     'main@': {
                         templateUrl : 'pages/item/gallery.html',

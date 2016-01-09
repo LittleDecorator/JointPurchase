@@ -459,6 +459,17 @@ public class ItemController{
         itemMapper.updateByPrimaryKeySelective(item);
     }
 
+    @RequestMapping(method = RequestMethod.POST,value = "search")
+    public List<Item> searchItem(@RequestBody String input) throws ParseException {
+        System.out.println(input);
+        JSONParser parser=new JSONParser();
+        JSONObject main = (JSONObject) parser.parse(input);
 
+        String criteria = main.get("criteria").toString();
+
+        List<Item> result = customMapper.searchItems(criteria);
+        System.out.println(result);
+        return result;
+    }
 }
 

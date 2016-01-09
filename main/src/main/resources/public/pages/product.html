@@ -29,9 +29,13 @@
     </a>
 </div>
 
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-    <a class="btn-floating btn-large blue lighten-3">
+<div class="fixed-action-btn sb-search search-wrapper card" style="bottom: 45px; right: 24px;" id="sb-search">
+    <input id="search" class="sb-search-input" placeholder="Enter your search term..." type="search" ng-model="criteria" name="search" id="search" style="right: 24px;" ng-keydown="keyPress($event.keyCode)">
+    <div class="sb-search-result collection" ng-if="searchResult.length>0">
+        <a ng-repeat="result in searchResult" ng-click="itemView(result.id)" class="collection-item" style="cursor: pointer">{{result.name}}</a>
+    </div>
+    <a class="sb-icon-search btn-floating btn-large blue lighten-3 " ng-click="search()">
         <i class="large mdi-action-search"></i>
     </a>
-    <input type="text" name="s" class="search">
+
 </div>

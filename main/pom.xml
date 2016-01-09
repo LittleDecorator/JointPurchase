@@ -186,13 +186,16 @@
                             <charset>UTF-8</charset>
                             <webappSourceDir>${basedir}/src/main/resources/</webappSourceDir>
                             <cssSourceDir>public/custom/css</cssSourceDir>
-                            <jsSourceDir>public/custom/js</jsSourceDir>
+                            <!--<jsSourceDir>public/custom/js</jsSourceDir>-->
                             <cssSourceIncludes>
                                 <cssSourceInclude>**</cssSourceInclude>
                             </cssSourceIncludes>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>**</jsSourceInclude>
-                            </jsSourceIncludes>
+                            <!--<jsSourceIncludes>-->
+                                <!--<jsSourceInclude>**</jsSourceInclude>-->
+                            <!--</jsSourceIncludes>-->
+                            <!--<jsSourceExcludes>-->
+                                <!--<jsSourceExclude>ngBreadcrumbs.js</jsSourceExclude>-->
+                            <!--</jsSourceExcludes>-->
                             <jsEngine>CLOSURE</jsEngine>
                             <closureLanguage>ECMASCRIPT5</closureLanguage>
                             <closureAngularPass>true</closureAngularPass>
@@ -206,47 +209,36 @@
             </plugin>
 
             <!-- DEB PLUGIN -->
-            <plugin>
-                <artifactId>jdeb</artifactId>
-                <groupId>org.vafer</groupId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>jdeb</goal>
-                        </goals>
+            <!--<plugin>-->
+                <!--<artifactId>jdeb</artifactId>-->
+                <!--<groupId>org.vafer</groupId>-->
+                <!--<version>1.4</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>install</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>jdeb</goal>-->
+                        <!--</goals>-->
 
-                        <configuration>
-                            <verbose>true</verbose>
-                            <deb>${project.build.directory}/${project.final.name}.deb</deb>
-                            <controlDir>${build.directory}/control</controlDir>
-                            <dataSet>
-
-                                <data>
-                                    <src>${project.build.directory}/${project.final.name}.jar</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${deb.lib.path}</prefix>
-                                        <user>${deb.user.name}</user>
-                                        <group>${deb.group.name}</group>
-                                    </mapper>
-                                </data>
-
-                                <data>
-                                    <src>${project.build.outputDirectory}/${project.final.name}.properties</src>
-                                    <type>file</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>${deb.config.path}</prefix>
-                                        <user>${deb.user.name}</user>
-                                        <group>${deb.group.name}</group>
-                                    </mapper>
-                                </data>
+                        <!--<configuration>-->
+                            <!--<verbose>true</verbose>-->
+                            <!--<deb>${project.build.directory}/${project.final.name}.deb</deb>-->
+                            <!--<controlDir>${build.directory}/control</controlDir>-->
+                            <!--<dataSet>-->
 
                                 <!--<data>-->
-                                    <!--<src>${project.build.outputDirectory}/logback.xml</src>-->
+                                    <!--<src>${project.build.directory}/${project.final.name}.jar</src>-->
+                                    <!--<type>file</type>-->
+                                    <!--<mapper>-->
+                                        <!--<type>perm</type>-->
+                                        <!--<prefix>${deb.lib.path}</prefix>-->
+                                        <!--<user>${deb.user.name}</user>-->
+                                        <!--<group>${deb.group.name}</group>-->
+                                    <!--</mapper>-->
+                                <!--</data>-->
+
+                                <!--<data>-->
+                                    <!--<src>${project.build.outputDirectory}/${project.final.name}.properties</src>-->
                                     <!--<type>file</type>-->
                                     <!--<mapper>-->
                                         <!--<type>perm</type>-->
@@ -256,57 +248,68 @@
                                     <!--</mapper>-->
                                 <!--</data>-->
 
-                                <data>
-                                    <src>${build.directory}/init.d</src>
-                                    <type>directory</type>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <prefix>/etc/init.d</prefix>
-                                        <user>${deb.user.name}</user>
-                                        <group>${deb.group.name}</group>
-                                        <filemode>755</filemode>
-                                    </mapper>
-                                </data>
+                                <!--&lt;!&ndash;<data>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<src>${project.build.outputDirectory}/logback.xml</src>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<type>file</type>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<mapper>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<type>perm</type>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<prefix>${deb.config.path}</prefix>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<user>${deb.user.name}</user>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<group>${deb.group.name}</group>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</mapper>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</data>&ndash;&gt;-->
 
-                                <data>
-                                    <type>template</type>
-                                    <paths>
-                                        <path>${deb.config.path}</path>
-                                        <path>${deb.lib.path}</path>
-                                        <!--<path>${deb.log.path}</path>-->
-                                    </paths>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <user>${deb.user.name}</user>
-                                        <group>${deb.group.name}</group>
-                                    </mapper>
-                                </data>
+                                <!--<data>-->
+                                    <!--<src>${build.directory}/init.d</src>-->
+                                    <!--<type>directory</type>-->
+                                    <!--<mapper>-->
+                                        <!--<type>perm</type>-->
+                                        <!--<prefix>/etc/init.d</prefix>-->
+                                        <!--<user>${deb.user.name}</user>-->
+                                        <!--<group>${deb.group.name}</group>-->
+                                        <!--<filemode>755</filemode>-->
+                                    <!--</mapper>-->
+                                <!--</data>-->
 
-                            </dataSet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+                                <!--<data>-->
+                                    <!--<type>template</type>-->
+                                    <!--<paths>-->
+                                        <!--<path>${deb.config.path}</path>-->
+                                        <!--<path>${deb.lib.path}</path>-->
+                                        <!--&lt;!&ndash;<path>${deb.log.path}</path>&ndash;&gt;-->
+                                    <!--</paths>-->
+                                    <!--<mapper>-->
+                                        <!--<type>perm</type>-->
+                                        <!--<user>${deb.user.name}</user>-->
+                                        <!--<group>${deb.group.name}</group>-->
+                                    <!--</mapper>-->
+                                <!--</data>-->
+
+                            <!--</dataSet>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
 
-        <resources>
-            <resource>
-                <directory>${project.resource.path}</directory>
-                <filtering>true</filtering>
-            </resource>
+        <!--<resources>-->
+            <!--&lt;!&ndash;<resource>-->
+                <!--<directory>${project.resource.path}</directory>-->
+                <!--<filtering>true</filtering>-->
+            <!--</resource>&ndash;&gt;-->
 
-            <resource>
-                <directory>${basedir}/src/deb/control</directory>
-                <filtering>true</filtering>
-                <targetPath>${build.directory}/control</targetPath>
-            </resource>
+            <!--<resource>-->
+                <!--<directory>${basedir}/src/deb/control</directory>-->
+                <!--<filtering>true</filtering>-->
+                <!--<targetPath>${build.directory}/control</targetPath>-->
+            <!--</resource>-->
 
-            <resource>
-                <directory>${basedir}/src/deb/init.d</directory>
-                <filtering>true</filtering>
-                <targetPath>${build.directory}/init.d</targetPath>
-            </resource>
-        </resources>
+            <!--<resource>-->
+                <!--<directory>${basedir}/src/deb/init.d</directory>-->
+                <!--<filtering>true</filtering>-->
+                <!--<targetPath>${build.directory}/init.d</targetPath>-->
+            <!--</resource>-->
+        <!--</resources>-->
 
         <finalName>purchase</finalName>
     </build>

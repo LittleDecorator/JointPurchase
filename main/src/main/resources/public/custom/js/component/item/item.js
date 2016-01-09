@@ -140,7 +140,7 @@
 
             $scope.showGallery = function (id) {
                 $scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-                $state.go("item.detail.gallery", {itemId: id});
+                $state.go("item.detail.gallery", {id: id});
             };
 
             //изъятие\включение в продажу
@@ -247,7 +247,7 @@
 
             $scope.companyChanged = function(){
                 var elem = $('#company .select-wrapper');
-                if($scope.filter.selectedCompany == null || $scope.selected.company == null){
+                if(($scope.filter && $scope.filter.selectedCompany == null) || $scope.selected.company == null){
                     angular.element(elem).addClass('inactive');
                 } else {
                     if(angular.element(elem).hasClass('inactive')){

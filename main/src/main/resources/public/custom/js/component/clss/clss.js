@@ -28,6 +28,7 @@
             $scope.select = function(){
                 var data = [];
                 angular.forEach($scope.categories,function(elem){
+                    console.log(elem);
                     if(elem.selected){
                         data.push(elem);
                         return true;
@@ -35,7 +36,8 @@
                         return false;
                     }
                 });
-                eventService.onClssSelected(data);
+                console.log(data);
+                eventService.onCategoryClssSelected(data);
             };
 
             function wasSelected(id){
@@ -74,6 +76,7 @@
             $scope.select = function(){
                 var data = [];
                 angular.forEach($scope.items,function(elem){
+                    console.log(elem);
                     if(elem.selected){
                         data.push(elem);
                         return true;
@@ -81,6 +84,7 @@
                         return false;
                     }
                 });
+                console.log(data);
                 eventService.onItemClssSelected(data);
             };
 

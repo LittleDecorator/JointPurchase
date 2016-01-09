@@ -86,4 +86,15 @@
                 order by i.date_add asc
     </select>
 
+    <select id="searchItems" resultType="com.acme.gen.domain.Item">
+        select *
+        from item i
+        <where>
+            lower(i.name) like '%${criteria}%'
+            or i.article like '%${criteria}%'
+            or i.description = '%${criteria}%'
+        </where>
+        order by i.date_add asc
+    </select>
+
 </mapper>

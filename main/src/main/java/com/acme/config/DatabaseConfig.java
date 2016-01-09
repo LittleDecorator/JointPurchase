@@ -5,6 +5,8 @@ import com.acme.handlers.StringBooleanTypeHandler;
 import com.acme.handlers.StringUUIDTypeHandler;
 import com.acme.interceptors.UUIDGeneratorInterceptor;
 import com.acme.model.mapper.CustomMapper;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -31,8 +33,21 @@ public class DatabaseConfig {
     @Primary
     @ConfigurationProperties(prefix="datasource.primary")
     public DataSource dataSource(){
-        return DataSourceBuilder.create().driverClassName("org.h2.Driver").url("jdbc:h2:file:./target/h2/gen/db").username("sa").build();
-//        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("postgres").password("postgres").build();
+//        HikariConfig config = new HikariConfig();
+//        config.setMinimumIdle(3);
+//        config.setConnectionTestQuery("SELECT 1");
+//        config.setMaximumPoolSize(50);
+////        config.setDriverClassName("org.h2.Driver");
+//        config.setDriverClassName("org.postgresql.Driver");
+////        config.setJdbcUrl("jdbc:h2:file:./target/h2/gen/db");
+//        config.setJdbcUrl("jdbc:postgresql://localhost:5432/purchase");
+////        config.setUsername("sa");
+//        config.setUsername("postgres");
+//        config.setPassword("postgres");
+//
+//        return new HikariDataSource(config);
+//        return DataSourceBuilder.create().driverClassName("org.h2.Driver").url("jdbc:h2:file:./target/h2/gen/db").username("sa").build();
+        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("postgres").password("postgres").build();
         //on work db
 //        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("kobzev").password("postgres").build();
     }

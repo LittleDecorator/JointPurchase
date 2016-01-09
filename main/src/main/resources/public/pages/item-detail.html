@@ -31,7 +31,7 @@
             </div>
             <div class="input-field">
                 <input type="text" name="price" class="form-control" ng-model="selected.price">
-                <label class="control-label" ng-class="{'active':selected.price.length>0}">Цена (руб)</label>
+                <label class="control-label" ng-class="{'active':selected.price.toString().length>0}">Цена (руб)</label>
             </div>
 
             <div class="form-group">
@@ -45,7 +45,7 @@
 
             <div class="input-field">
                 <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
-                <label class="control-label" ng-class="{'active':selected.inStock.length>0}">Кол-во в наличие</label>
+                <label class="control-label" ng-class="{'active':selected.inStock.toString().length>0}">Кол-во в наличие</label>
             </div>
 
             <div class="form-group">

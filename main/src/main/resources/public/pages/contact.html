@@ -1,25 +1,45 @@
-<div class="modal-content center" style="width: 60%; margin: 0 auto; margin-top: 150px">
-    <div class="table-container">
-    <div ng-form="_callback">
-        <div class="input-field">
-            <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
-                   ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
-            <label for="phone" class="control-label" data-error='Not valid phone'>Телефон</label>
-        </div>
-
-        <div class="form-group">
-            <div class="row">
-                <div class="input-field col s12">
-                    <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
-                    <label for="message">Сообщение</label>
-                </div>
-            </div>
-        </div>
-
-
+<div class="col s12 search">
+    <div class="col s12">
+        <ul class="tabs" style="width: 100%;">
+            <li class="tab col s3" ><a class="active" href="#contact" >Как связаться</a></li>
+            <li class="tab col s3"><a href="#address" ng-click="initMap()">Где забрать</a></li>
+        </ul>
     </div>
 
-    <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="send()">Подтвердить</a>
-</div>
+    <div id="contact" class="col s12" ng-controller="contactController">
+        <div class="modal-content center" style="width: 60%; margin: 0 auto; margin-top: 150px">
+            <div class="table-container">
+                <div ng-form="_callback">
+                    <div class="input-field">
+                        <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
+                                ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
+                        <label for="phone" class="control-label" data-error='Not valid phone'>Телефон</label>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
+                                <label for="message">Сообщение</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="send()">Подтвердить</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="address" class="col s12" ng-controller="addressController">
+        <!--<a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="load()">Загрузить</a>-->
+        <div class="center" style="margin: 0 auto; margin-top: 50px;">
+            <h5 style="text-align: left;">Пункт самовывоза:</h5>
+            <div class="table-container">
+                <div id="map" style="height: 800px"></div>
+            </div>
+        </div>
+    </div>
 
 </div>

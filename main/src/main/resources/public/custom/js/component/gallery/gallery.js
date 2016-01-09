@@ -17,8 +17,8 @@
                 var mCou=0;
 
                 /* init section */
-                if ($stateParams.itemId) {
-                    $scope.images = dataResources.itemImage.get({itemId: $stateParams.itemId});
+                if ($stateParams.id) {
+                    $scope.images = dataResources.itemImage.get({itemId: $stateParams.id});
                     $scope.images.$promise.then(function (result) {
 
                         $scope.images = result;
@@ -62,14 +62,14 @@
                     var idx = $scope.images.indexOf(currImage);
                     $scope.images.splice(idx, 1);
                     //remove from DB
-                    dataResources.image.remove({contentId:id,itemId:$stateParams.itemId});
+                    dataResources.image.remove({contentId:id,itemId:$stateParams.id});
                     //find new main if delete one
                     if(currImage.main && $scope.images.length>0){
                         currImage = $scope.images[0];
                         currImage.main = true;
                         currImage.show = true;
                         $('.hiden-option:first > i:first').addClass("main")
-                        var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.itemId};
+                        var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
                         dataResources.galleryMain.toggle(itemContent);
                     }
                 };
@@ -95,7 +95,7 @@
                         currImage.show = true;
                     }
                     console.log(currImage);
-                    var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.itemId};
+                    var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
                     console.log(itemContent);
                     dataResources.galleryMain.toggle(itemContent);
                 };
@@ -109,7 +109,7 @@
                         $($event.currentTarget).removeClass("show")
                     }
                     console.log(currImage);
-                    var itemContent = {contentId:currImage.id,show:currImage.show,itemId:$stateParams.itemId};
+                    var itemContent = {contentId:currImage.id,show:currImage.show,itemId:$stateParams.id};
                     console.log(itemContent);
                     dataResources.galleryShow.toggle(itemContent);
                 };
@@ -123,7 +123,7 @@
                         formData.append("file" + idx, item._file);
                     });
 
-                    formData.append("itemId", $stateParams.itemId);
+                    formData.append("itemId", $stateParams.id);
 
                     dataResources.itemContent.upload(formData, function(data){
                         angular.forEach(data, function (image) {

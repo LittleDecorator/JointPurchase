@@ -90,7 +90,7 @@ public class OrderController{
      * @throws ParseException
      * @throws IOException
      */
-//    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     @RequestMapping(method = RequestMethod.POST)
     public PurchaseOrder createOrUpdateOrder(@RequestBody String input) throws ParseException, IOException {
 
@@ -106,12 +106,14 @@ public class OrderController{
         PurchaseOrder order = mapper.readValue(orderS, PurchaseOrder.class);
 
         //try use transaction here
-        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+//        DefaultTransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
+//        transactionDefinition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+//        transactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
-        TransactionStatus status = transactionManager.getTransaction(transactionDefinition);
-        System.out.println(status);
-        try{
+//        transactionManager.setNestedTransactionAllowed(true);
+//        TransactionStatus status = transactionManager.getTransaction(transactionDefinition);
+//        System.out.println(status.isCompleted());
+//        try{
             if(order.getId()!=null){
                 orderMapper.updateByPrimaryKeySelective(order);
             } else {
@@ -130,11 +132,11 @@ public class OrderController{
                 orderItem.setOrderId(order.getId());
                 orderItemMapper.insertSelective(orderItem);
             }
-        } catch (Exception e){
-            transactionManager.rollback(status);
-        }
+//        } catch (Exception e){
+//            transactionManager.rollback(status);
+//        }
 
-        transactionManager.commit(status);
+//        transactionManager.commit(status);
 
         return order;
     }

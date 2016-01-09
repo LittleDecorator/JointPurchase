@@ -11,6 +11,8 @@
 
             $scope.data = [];
 
+            $scope.searchResult = [];
+
             dataResources.categoryTree.get(function(content){
                 $scope.data.push(content);
             });
@@ -26,6 +28,7 @@
             $scope.maxPage = 5;
             $scope.itemsPerPage = 20;
             $scope.totalItems = null;
+            $scope.criteria=null;
 
             //get all items
             dataResources.previewItems.get(function (data) {
@@ -73,29 +76,55 @@
                 $scope.filteredItems = $scope.items.slice(begin, end);
             };
 
+            /* transition to item view */
             $scope.itemView = function(id){
                 console.log("itemView");
                 $state.go("product.detail", {itemId: id});
+                console.log("transition failed");
             };
 
-        $scope.filterByCategory = function(categoryId){
-            console.log(categoryId);
-            dataResources.previewItems.filter({categoryId:categoryId},function(data){
-                console.log(data);
-                $scope.items = [];
-                angular.forEach(data, function (item) {
-                    $scope.items.push(item);
-                });
-                //get total items cou, for pagination
-                $scope.totalItems = $scope.items.length;
+            /* search items */
+            $scope.search = function(){
+                if($scope.criteria && $scope.criteria.length>0){
+                    $scope.searchResult = [];
+                    dataResources.searchItem.search({criteria:$scope.criteria},function(data){
+                        console.log(data);
+                        angular.forEach(data, function (item) {
+                            $scope.searchResult.push(item);
+                        });
+                    })
+                }
+                console.log($scope.searchResult);
+            };
 
-                //listener for some scope variables
-                $scope.$watch('currPage + itemsPerPage', function () {
-                    $scope.subList();
-                });
-            })
-        };
+            /* start search by enter press */
+            $scope.keyPress = function(keyCode) {
+                console.log("keyPress");
+                if (keyCode == 13){
+                    $scope.search();
+                }
+            };
 
+            /* filter items by category */
+            $scope.filterByCategory = function(categoryId){
+                console.log(categoryId);
+                dataResources.previewItems.filter({categoryId:categoryId},function(data){
+                    console.log(data);
+                    $scope.items = [];
+                    angular.forEach(data, function (item) {
+                        $scope.items.push(item);
+                    });
+                    //get total items cou, for pagination
+                    $scope.totalItems = $scope.items.length;
+
+                    //listener for some scope variables
+                    $scope.$watch('currPage + itemsPerPage', function () {
+                        $scope.subList();
+                    });
+                })
+            };
+
+            /* something for filter */
             $scope.$on('onFilter',function() {
                 var node = eventService.data;
                 console.log(node);
@@ -147,11 +176,16 @@
                 }
             });
 
-           $timeout(function() {
+            /* load page timeout */
+            $timeout(function() {
                 console.log("DONE!");
                 $(".collapsible").collapsible();
+
+                new UISearch( document.getElementById( 'sb-search' ) );
+
             }, 300);
 
+            /* show\hide side panel */
             $scope.toggleCategory = function(){
                 //show side menu
                 var side = $('.slide-outt');
@@ -163,7 +197,7 @@
 
             }
 
-    }])
+        }])
 
         .controller('detailController',['$scope','$state','product',function ($scope, $state, product) {
             console.log("enter detail controller");
@@ -201,6 +235,9 @@
             $scope.showGallery = function () {
                 $state.go("product.detail.gallery", {id: $scope.item.id});
             };
+
+
+
 
         }]);
 })();

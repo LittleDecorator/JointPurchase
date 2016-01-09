@@ -184,6 +184,7 @@
             };
 
             this.getProduct = function(itemId){
+                console.log("get product");
                 var deferred = $q.defer();
                 dataResources.itemDetail.get({id: itemId},function(data){
                     deferred.resolve(data);

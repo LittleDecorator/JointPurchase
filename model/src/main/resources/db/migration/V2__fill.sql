@@ -23,6 +23,8 @@ insert into subject(id,first_name,last_name,phone_number,email,address,enabled)
         values ('424991ea-031a-4383-8924-ec7694ed9a2d','Guzel', 'Kobzeva', '+79258552096','fazylovagz@mail.ru','Moscow','Y');
 insert into subject(id,first_name,last_name,email,enabled)
         values ('587ccc2a-a912-41ab-8edf-abf8eb986b86','Nikolay','Kobzev','npkobzev@mail.ru','Y');
+insert into subject(id,first_name,last_name,email,enabled)
+        values ('9d5443a0-9b7d-4ceb-9ce4-b792c63b0a6d','Olga','Yaremchishin','chudodrevo@mail.ru','Y');
 
 /*CREDENTIALS*/
 --password
@@ -31,8 +33,12 @@ insert into credential(subject_id,password,role_id)
 --nina21032013
 insert into credential(subject_id,password,role_id)
         values('424991ea-031a-4383-8924-ec7694ed9a2d','094de90aaea4750489a2f8c7a8cefd5a50a135cb12e4970d84586f3f1e883872640ff304b9ace30adcda5d8a2c6e92063e9875983788cd9829ca62a972465429','admin');
+--25oct87!
 insert into credential(subject_id,password,role_id)
         values('587ccc2a-a912-41ab-8edf-abf8eb986b86','1f9c15a7de0090c35d6693b76533819231d2adae494d70db74d3c12a9c0cdf189560c3623cbae47b2bc13a8ed0973aa47d9f94474fc706095786b3183da6ca20','admin');
+--123QWE
+insert into credential(subject_id,password,role_id)
+        values('9d5443a0-9b7d-4ceb-9ce4-b792c63b0a6d','c04a2d154984e3eecc9f9fa612106ed851e14a9af7bcfdd18abc2a7ae0807b4289898bb6d7f119b0306d361573531e82938d317c795cad3a61a9c774ec5b421b','admin');
 
 /* CATEGORY */
 insert into category(id,name)

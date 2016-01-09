@@ -314,3 +314,8 @@ div.collection a.active{
     font-size: 10px;
     padding: 0!important;
 }
+
+/* Type-head */
+.twitter-typeahead > .tt-input {
+    border: none;
+}

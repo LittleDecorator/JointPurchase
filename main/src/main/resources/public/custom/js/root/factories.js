@@ -48,6 +48,8 @@
                     }
                 }),
 
+                searchItem:$resource('/item/search/',{},{search :{method:'POST',isArray:true}}),
+
                 item: $resource('/item/:id'),
                 //itemClss:$resource('/item/clss',{},{get:{method:'GET',isArray:true}}),
                 filterByType:$resource('/item/filter/type',{},{
