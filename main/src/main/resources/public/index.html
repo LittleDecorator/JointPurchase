@@ -14,13 +14,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" rel="stylesheet" >
     <!--<link href="official/bower_components/materialize/dist/css/materialize.min.css" rel="stylesheet" >-->
 
-    <link rel="stylesheet" href="custom/css/main.css">
-    <link rel="stylesheet" href="custom/css/side.css">
-    <link rel="stylesheet" href="custom/css/styles.css">
-    <link rel="stylesheet" href="custom/css/test.css">
-    <link rel="stylesheet" href="custom/css/search.css">
-
-    <!--<link rel="stylesheet" href="official/fontello/css/fontello.css">-->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/side.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/test.css">
+    <link rel="stylesheet" href="css/search.css">
 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -33,7 +31,7 @@
 
 </head>
 
-<body ng-app="purchase" ng-controller="mainController" class="home blog">
+<body ng-app="purchase" ng-controller="mainController" class="home blog" bn-document-click="handleClick($event)">
 
     <!-- HEADER AND NAVBAR -->
     <header>
@@ -41,25 +39,51 @@
         <div class="navbar-fixed" ng-include="'pages/template/navMainMenu.html'"></div>
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
     </header>
+    <main style="height:100%; width:100%; overflow:hidden">
+        <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></breadcrumbs>
 
-    <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></breadcrumbs>
+        <!-- MAIN CONTENT AND INJECTED VIEWS -->
+        <div class="main container">
+            <div ui-view="main"></div>
+        </div>
+    </main>
 
-    <!-- MAIN CONTENT AND INJECTED VIEWS -->
-    <div class="main container">
-        <div ui-view="main"></div>
-    </div>
-
+    <footer class="page-footer" style="background-color: #b5cac9 !important; font-family: Ubuntu Condensed; letter-spacing: 0.5pt;">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Footer Content</h5>
+                    <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2014 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+        </div>
+    </footer>
     <!--  Scripts-->
-    <script src="official/jquery-2.1.3.min.js"></script>
+    <script src="official/jquery-2.2.0.min.js"></script>
+    <script src="official/angular/angular.min.js"></script>
+    <script src="official/ng-infinite-scroll.min.js"></script>
 
-    <script src="official/angular/angular.js"></script>
-
-    <script src="official/angular/angular-cookies.js" ></script>
-    <script src="official/angular/angular-ui-router.js"></script>
-    <script src="official/angular/angular-resource.js" ></script>
-    <script src="official/angular/angular-file-upload.js" ></script>
-    <script src="official/angular/angular-animate.js"></script>
-    <script src="official/angular/auth0-angular.js"></script>
+    <script src="official/angular/angular-cookies.min.js" ></script>
+    <script src="official/angular/angular-ui-router.min.js"></script>
+    <script src="official/angular/angular-resource.min.js" ></script>
+    <script src="official/angular/angular-file-upload.min.js" ></script>
+    <script src="official/angular/angular-animate.min.js"></script>
+    <script src="official/angular/auth0-angular.min.js"></script>
 
     <script src="official/bootstrap/bootstrap.min.js"></script>
     <script src="official/nav-tree/abn-tree.js"></script>
@@ -71,52 +95,49 @@
     <!--materialize-->
     <script src="official/materialize.js"></script>
     <script src="official/materialize-tags/materialize-tags.js"></script>
-    <script src="official/typeahead.js"></script>
 
     <!--AUTH-->
-    <script src="official/auth0/auth0.js"></script>
-    <script src="official/auth0/angular-storage.js"></script>
-    <script src="official/auth0/angular-jwt.js"></script>
+    <script src="official/auth0/auth0.min.js"></script>
+    <script src="official/auth0/angular-storage.min.js"></script>
+    <script src="official/auth0/angular-jwt.min.js"></script>
 
     <!--SOME HELP JS-->
-    <script src="custom/js/libs/ngBreadcrumbs.js"></script>
-    <script src="custom/js/libs/side.js"></script>
-    <script src="custom/js/libs/helpers.js"></script>
+    <script src="js/libs/ngBreadcrumbs.js"></script>
+    <script src="js/libs/side.js"></script>
+    <script src="js/libs/helpers.js"></script>
 
-    <!--<script src="custom/js/libs/search.js"></script>-->
-    <script src="custom/js/libs/classie.js"></script>
-    <script src="custom/js/libs/uisearch.js"></script>
+    <script src="js/libs/classie.js"></script>
+    <!--<script src="js/libs/uisearch.js"></script>-->
 
 
-    <script src="custom/js/root/route.js"></script>
-    <script src="custom/js/menu.js"></script>
-    <script src="custom/js/app.js"></script>
-    <script src="custom/js/root/factories.js"></script>
-    <script src="custom/js/root/services.js"></script>
-    <script src="custom/js/root/controllers.js"></script>
-    <script src="custom/js/root/directive.js"></script>
-    <script src="custom/js/root/filter.js"></script>
+    <script src="js/routes.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/factories.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/directive.js"></script>
+    <script src="js/filter.js"></script>
 
-    <script src="custom/js/component/about/about.js"></script>
-    <script src="custom/js/component/cart/cart.js"></script>
-    <script src="custom/js/component/company/company.js"></script>
-    <script src="custom/js/component/contact/contact.js"></script>
-    <script src="custom/js/component/gallery/gallery.js"></script>
-    <script src="custom/js/component/home/home.js"></script>
-    <script src="custom/js/component/item/item.js"></script>
-    <script src="custom/js/component/main/main.js"></script>
-    <script src="custom/js/component/order/order.js"></script>
-    <script src="custom/js/component/person/person.js"></script>
-    <script src="custom/js/component/product/product.js"></script>
-    <script src="custom/js/component/registration/registration.js"></script>
-    <script src="custom/js/component/loader/loader.js"></script>
-    <script src="custom/js/component/login/login.js"></script>
-    <script src="custom/js/component/category/category.js"></script>
-    <script src="custom/js/component/clss/clss.js"></script>
-    <script src="custom/js/component/remember/remember.js"></script>
-    <script src="custom/js/component/email/email.js"></script>
-    <script src="custom/js/component/address/address.js"></script>
-
+    <script src="js/component/about/about.js"></script>
+    <script src="js/component/cart/cart.js"></script>
+    <script src="js/component/company/company.js"></script>
+    <script src="js/component/contact/contact.js"></script>
+    <script src="js/component/gallery/gallery.js"></script>
+    <script src="js/component/home/home.js"></script>
+    <script src="js/component/item/item.js"></script>
+    <script src="js/component/main/main.js"></script>
+    <script src="js/component/order/order.js"></script>
+    <script src="js/component/person/person.js"></script>
+    <script src="js/component/product/product.js"></script>
+    <script src="js/component/registration/registration.js"></script>
+    <script src="js/component/loader/loader.js"></script>
+    <script src="js/component/login/login.js"></script>
+    <script src="js/component/category/category.js"></script>
+    <script src="js/component/clss/clss.js"></script>
+    <script src="js/component/remember/remember.js"></script>
+    <script src="js/component/email/email.js"></script>
+    <script src="js/component/address/address.js"></script>
 
 </body>
 </html>

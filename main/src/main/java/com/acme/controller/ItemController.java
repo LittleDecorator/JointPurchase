@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.filters.ProductFilter;
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.*;
 //import com.acme.model.mapper.CustomMapper;
@@ -221,53 +222,58 @@ public class ItemController{
         return customMapper.getFilteredItems(name,article,company);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/preview")
-    public JSONArray getPreviewItems() throws Exception {
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
-        ItemContentExample itemContentExample;
-
-        // get base64 default image if no orig image linked with item
-        ContentExample example = new ContentExample();
-        example.createCriteria().andIsDefaultEqualTo(true);
-        Content defContent = contentMapper.selectByExample(example).get(0);
-
-        String noImage = Constants.PREVIEW_URL+defContent.getId();
-
-        ItemExample itemExample = new ItemExample();
-        itemExample.createCriteria().andNotForSaleEqualTo(false);
-
-        List<Item> items = itemMapper.selectByExample(itemExample);
-        for(Item item : items){
-            jsonObject = new JSONObject();
-
-            //check orig image
-            itemContentExample = new ItemContentExample();
-            itemContentExample.createCriteria().andItemIdEqualTo(item.getId()).andShowEqualTo(true);
-            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
-            if(itemContents.size()>0){
-                //take main image
-                Iterator<ItemContent> iterator = itemContents.iterator();
-                while(iterator.hasNext()){
-                    ItemContent itemContent = iterator.next();
-                    if(itemContent.isMain()){
-                        String contentId = itemContent.getContentId();
-                        jsonObject.put("url", Constants.ORIG_URL+contentId);
-                        break;
-                    }
-                }
-            } else {
-                //else default image
-                jsonObject.put("url",noImage);
-            }
-            jsonObject.put("description",item.getDescription());
-            jsonObject.put("price",item.getPrice());
-            jsonObject.put("name",item.getName());
-            jsonObject.put("id",item.getId());
-            jsonArray.add(jsonObject);
-        }
-        return jsonArray;
-    }
+    /* loading products list */
+//    @RequestMapping(method = RequestMethod.GET, value = "/preview")
+//    public JSONArray getPreviewItems() throws Exception {
+//
+//        JSONArray jsonArray = new JSONArray();
+//        JSONObject jsonObject;
+//        ItemContentExample itemContentExample;
+//
+//        // get base64 default image if no orig image linked with item
+//        ContentExample example = new ContentExample();
+//        example.createCriteria().andIsDefaultEqualTo(true);
+//        Content defContent = contentMapper.selectByExample(example).get(0);
+//
+//        String noImage = Constants.PREVIEW_URL+defContent.getId();
+//
+//        ItemExample itemExample = new ItemExample();
+//
+//        itemExample.createCriteria().andNotForSaleEqualTo(false);
+//        itemExample.setOrderByClause("id limit 2 offset 2");
+//
+//        List<Item> items = itemMapper.selectByExample(itemExample);
+//        for(Item item : items){
+//            jsonObject = new JSONObject();
+//
+//            //check orig image
+//            itemContentExample = new ItemContentExample();
+//            itemContentExample.createCriteria().andItemIdEqualTo(item.getId()).andShowEqualTo(true);
+//            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
+//
+//            if(itemContents.size()>0){
+//                //take main image
+//                Iterator<ItemContent> iterator = itemContents.iterator();
+//                while(iterator.hasNext()){
+//                    ItemContent itemContent = iterator.next();
+//                    if(itemContent.isMain()){
+//                        String contentId = itemContent.getContentId();
+//                        jsonObject.put("url", Constants.ORIG_URL+contentId);
+//                        break;
+//                    }
+//                }
+//            } else {
+//                //else default image
+//                jsonObject.put("url",noImage);
+//            }
+//            jsonObject.put("description",item.getDescription());
+//            jsonObject.put("price",item.getPrice());
+//            jsonObject.put("name",item.getName());
+//            jsonObject.put("id",item.getId());
+//            jsonArray.add(jsonObject);
+//        }
+//        return jsonArray;
+//    }
 
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
     public JSONObject getItemDetail(@PathVariable("id") String itemId) throws Exception {
@@ -309,9 +315,7 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/preview")
-    public JSONArray getCategoriesPreviewItems(@RequestBody String input) throws Exception {
-        JSONParser parser=new JSONParser();
-        String categoryId = ((JSONObject) parser.parse(input)).get("categoryId").toString();
+    public JSONArray getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
         //TODO: find all categories in tree from specific node
 
         JSONArray jsonArray = new JSONArray();
@@ -326,6 +330,7 @@ public class ItemController{
         String noImage = Constants.PREVIEW_URL+defContent.getId();
 
         ItemExample itemExample = new ItemExample();
+        itemExample.setOrderByClause("id limit "+filter.getLimit()+" offset "+filter.getOffset());
         //TODO: use this category list down here
 //        itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
 

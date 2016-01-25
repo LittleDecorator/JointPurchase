@@ -30,8 +30,7 @@ import java.util.List;
 public class DatabaseConfig {
 
     @Bean
-    @Primary
-    @ConfigurationProperties(prefix="datasource.primary")
+    @ConfigurationProperties(prefix="db.pg")
     public DataSource dataSource(){
 //        HikariConfig config = new HikariConfig();
 //        config.setMinimumIdle(3);
@@ -47,9 +46,10 @@ public class DatabaseConfig {
 //
 //        return new HikariDataSource(config);
 //        return DataSourceBuilder.create().driverClassName("org.h2.Driver").url("jdbc:h2:file:./target/h2/gen/db").username("sa").build();
-        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("postgres").password("postgres").build();
+//        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("postgres").password("postgres").build();
         //on work db
 //        return DataSourceBuilder.create().driverClassName("org.postgresql.Driver").url("jdbc:postgresql://localhost:5432/purchase").username("kobzev").password("postgres").build();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean

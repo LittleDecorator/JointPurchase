@@ -239,7 +239,9 @@ public class CategoryController {
             node.setIsCompany(true);
             rootCompany.getNodes().add(node);
         }
+        System.out.println(nodes.size());
         nodes.add(rootCompany);
+        System.out.println(nodes.size());
         return nodes;
     }
 
