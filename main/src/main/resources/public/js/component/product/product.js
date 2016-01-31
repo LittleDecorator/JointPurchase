@@ -36,7 +36,9 @@
                         $scope.prop.stopLoad = true;
                     }
                     angular.forEach(data, function (item) {
-                        $scope.items.push(item);
+                        item.item.url = item.imageUrl;
+                        console.log(item);
+                        $scope.items.push(item.item);
                     });
                     filter.portion++;
                     console.log($scope.items);

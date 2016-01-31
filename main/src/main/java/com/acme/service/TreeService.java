@@ -34,7 +34,7 @@ public class TreeService {
             }
         }
         //удаляем корни из списка
-        nodes.retainAll(categoryRoots);
+        nodes.removeAll(categoryRoots);
 
         //конвертируем в nodes
         roots = Lists.newArrayList(Lists.transform(categoryRoots, new Function<Category, Node>() {
@@ -46,33 +46,42 @@ public class TreeService {
         }));
 
         //Итерируемся по оставшимся
-//        for (Iterator<Category> iterator = nodes.iterator(); iterator.hasNext();) {
-//            Category category = iterator.next();
-//            //ищем родителя в корнях
-//            for(Node node: roots){
-//                Node res = findNode(node, category.getParentId());
-//                if(res!=null){
-//                    res.getNodes().add(category2Node(category));
-//                    iterator.remove();
-//                }
-//            }
-//        }
-//        if(nodes.size()>0){
-//            lookUp(nodes);
-//        }
-    }
+        while(nodes.size()>0){
+            for (Iterator<Category> iterator = nodes.iterator(); iterator.hasNext();) {
+                Category category = iterator.next();
 
-    private Node findNode(Node node, String id){
-        Node res = null;
-        if(node!=null && !node.getId().contentEquals(id)){
-            if(node.haveChildren()){
-                for(Node child : node.getNodes()){
-                    res = findNode(child,id);
-                    if(res!=null) break;
+                //ищем родителя в корнях
+                for(Node node: roots) {
+                    boolean res = findNode(node, category);
+                    if (res) {
+                        iterator.remove();
+                    }
                 }
             }
-        } else {
-            res = node;
+            System.out.println("Left in list -> "+ nodes.size());
+        }
+    }
+
+    private boolean findNode(Node node, Category category){
+        System.out.println(node);
+        boolean res = false;
+        if(node!=null){
+            System.out.println(category.getId());
+            System.out.println(category.getParentId());
+            System.out.println(category.getName());
+            if(!node.getId().contentEquals(category.getParentId())){
+                if(node.haveChildren()){
+                    for(Node child : node.getNodes()){
+                        res = findNode(child,category);
+                        if(res){
+                            break;
+                        }
+                    }
+                }
+            } else {
+                node.getNodes().add(category2Node(category));
+                res = true;
+            }
         }
         return res;
     }

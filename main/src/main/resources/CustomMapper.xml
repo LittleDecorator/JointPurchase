@@ -14,6 +14,14 @@
         <!--<collection property="items" resultMap="com.acme.gen.mapper.ItemMapper.BaseResultMap"/>-->
     <!--</resultMap>-->
 
+
+
+    <resultMap id="ProductResultMap" type="com.acme.model.domain.Product" >
+        <id property="item.id" column="id"/>
+        <result property="contentId" column="content_id" />
+        <collection property="item" javaType="com.acme.gen.domain.Item" resultMap="com.acme.gen.mapper.ItemMapper.BaseResultMap" />
+    </resultMap>
+
     <resultMap id="itemCategoryLink" type="com.acme.model.domain.ItemCategoryLink">
         <result property="id" column="item_id"/>
         <result property="name" column="item_name"/>
@@ -96,5 +104,26 @@
         </where>
         order by i.date_add asc
     </select>
+    
+    <select id="getItemsByFilter" resultMap="ProductResultMap" parameterType="com.acme.model.filters.ProductFilter">
+        select t.* from (
+                  select i.*,c.id as content_id
+                    from item i
+                        inner join item_content ic on i.id=ic.item_id
+                        inner join content c on ic.content_id=c.id
+                    where ic.main='Y' and ic.show='Y'
+              union all
+                  select i.*,c.id
+                    from item i, content c
+                   where c.is_default='Y' and not exists (select item_id from item_content ic where ic.item_id=i.id)) t
+        order by t.name
+        <if test="limit != null">
+            limit ${limit}
+        </if>
+        <if test="offset != null">
+            offset ${offset}
+        </if>
+    </select>
+
 
 </mapper>

@@ -1,15 +1,15 @@
 package com.acme.controller;
 
-import com.acme.filters.ProductFilter;
+import com.acme.model.filters.ProductFilter;
 import com.acme.gen.domain.*;
 import com.acme.gen.mapper.*;
 //import com.acme.model.mapper.CustomMapper;
 import com.acme.model.domain.ItemCategoryLink;
+import com.acme.model.domain.Product;
 import com.acme.model.mapper.CustomMapper;
 import com.acme.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.*;
 
 @RestController
@@ -315,48 +314,12 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/preview")
-    public JSONArray getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
-        //TODO: find all categories in tree from specific node
-
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
-        ItemContentExample itemContentExample;
-
-        // get base64 default image if no orig image linked with item
-        ContentExample example = new ContentExample();
-        example.createCriteria().andIsDefaultEqualTo(true);
-        Content defContent = contentMapper.selectByExample(example).get(0);
-
-        String noImage = Constants.PREVIEW_URL+defContent.getId();
-
-        ItemExample itemExample = new ItemExample();
-        itemExample.setOrderByClause("id limit "+filter.getLimit()+" offset "+filter.getOffset());
-        //TODO: use this category list down here
-//        itemExample.createCriteria().andCategoryIdIn(customMapper.getSubCategoryLeafs(categoryId));
-
-        List<Item> items = itemMapper.selectByExample(itemExample);
-        for(Item item : items){
-            jsonObject = new JSONObject();
-
-            //check orig image
-            itemContentExample = new ItemContentExample();
-            itemContentExample.createCriteria().andItemIdEqualTo(item.getId());
-            List<ItemContent> itemContents = itemContentMapper.selectByExample(itemContentExample);
-            if(itemContents.size()>0){
-                //just take first image
-                String contentId = itemContents.get(0).getContentId();
-                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
-            } else {
-                //else default image
-                jsonObject.put("url",noImage);
-            }
-            jsonObject.put("description",item.getDescription());
-            jsonObject.put("price",item.getPrice());
-            jsonObject.put("name",item.getName());
-            jsonObject.put("id",item.getId());
-            jsonArray.add(jsonObject);
+    public List<Product> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
+        List<Product> list = customMapper.getItemsByFilter(filter);
+        for(Product product : list){
+            product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
         }
-        return jsonArray;
+        return list;
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/filter/type")

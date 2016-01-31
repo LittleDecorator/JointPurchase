@@ -1,8 +1,10 @@
-package com.acme.filters;
+package com.acme.model.filters;
 
 public class ProductFilter {
 
+    String itemId;
     String catagoryId;
+    String companyId;
     Integer limit;
     Integer offset;
 
@@ -28,5 +30,21 @@ public class ProductFilter {
 
     public void setOffset(Integer offset) {
         this.offset = offset;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 }

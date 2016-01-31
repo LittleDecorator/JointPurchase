@@ -154,7 +154,7 @@
 
                 $timeout(function() {
                     $(".button-collapse").sideNav();
-                    //$(".collapsible").collapsible();
+                    $(".collapsible").collapsible();
                     $('.dropdown-button').dropdown();
                 }, 800);
 
