@@ -31,6 +31,10 @@ public class CategoryRepository {
         return jdbcTemplate.query(Queue.CATEGORY_FIND_ALL, categoryMapper);
     }
 
+    public List<Map<String,Object>> getRootsAsMap(){
+        return jdbcTemplate.queryForList(Queue.CATEGORY_FIND_ALL_ROOTS);
+    }
+
     public Category getByID(String id){
         return jdbcTemplate.queryForObject(Queue.CATEGORY_FIND_BY_ID, categoryMapper, id);
     }

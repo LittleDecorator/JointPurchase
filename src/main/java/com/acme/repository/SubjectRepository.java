@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Repository
@@ -195,7 +196,7 @@ public class SubjectRepository {
     private RowMapper<Subject> subjectMapper = (rs,num) -> {
         Subject subject = new Subject();
         subject.setId(rs.getString("id"));
-        subject.setEnabled(rs.getBoolean("enabled"));
+        subject.setEnabled(Objects.equals(rs.getString("enabled"), "Y"));
         subject.setFirstName(rs.getString("first_name"));
         subject.setMiddleName(rs.getString("middle_name"));
         subject.setLastName(rs.getString("last_name"));

@@ -2583,7 +2583,8 @@ ul.staggered-list li {
     }
 }
 
-@media only screen and (min-width: 601px) {
+/*@media only screen and (min-width: 601px) {*/
+@media only screen and (min-width: 1350px) {
     .hide-on-med-and-up {
         display: none !important;
     }
@@ -2623,7 +2624,8 @@ ul.staggered-list li {
     }
 }
 
-@media only screen and (min-width: 601px) {
+/*@media only screen and (min-width: 601px) {*/
+@media only screen and (min-width: 1351px) {
     .show-on-medium-and-up {
         display: initial !important;
     }
@@ -6422,7 +6424,8 @@ span.badge.new:after {
     width: 90%
 }
 
-@media only screen and (min-width: 601px) {
+/*@media only screen and (min-width: 601px) {*/
+@media only screen and (min-width: 1350px) {
     .container {
         width: 85%
     }
@@ -6585,7 +6588,8 @@ span.badge.new:after {
     margin-left: 100%
 }
 
-@media only screen and (min-width: 601px) {
+/*@media only screen and (min-width: 601px) {*/
+@media only screen and (min-width: 1350px) {
     .row .col.m1 {
         width: 8.33333%;
         margin-left: 0
@@ -6969,7 +6973,8 @@ nav .input-field label.active {
     position: fixed
 }
 
-@media only screen and (min-width: 601px) {
+/*@media only screen and (min-width: 601px) {*/
+@media only screen and (min-width: 1350px) {
     nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
         height: 64px;
         line-height: 64px
@@ -7409,7 +7414,8 @@ small {
 }
 
 /*@media only screen and (min-width: 601px) and (max-width: 992px) {*/
-@media only screen and (min-width: 601px) and (max-width: 992px) and (max-width: 1350px){
+/*@media only screen and (min-width: 601px) and (max-width: 992px) and (max-width: 1350px){*/
+@media only screen and (min-width: 601px) and (max-width: 1350px){
     #toast-container {
         min-width: 30%;
         left: 5%;

@@ -1,0 +1,34 @@
+<div style="padding-top: 20px;">
+    <div class="section">
+        <div class="row">
+            <div class="col l12">
+                <h3>{{item.name}}</h3>
+                <div class="col l8 s12">
+                    <img width="700" ng-src="{{ORIG_URL+mainImage}}" class="responsive-img z-depth-3 wp-post-image materialboxed" style="cursor: pointer;margin: auto"/>
+                    <div class="section" ng-if="item.media.length>1">
+                        <div class="row">
+                            <div class="col l11 s12" style="width: 85.66667%!important;margin-left: 0">
+                                <div ng-repeat="img in item.media" class="left" ng-click="show(img)">
+
+                                    <!--<img class="responsive-img z-depth-3 wp-post-image materialboxed" ng-src="{{THUMB_URL+img}}">-->
+                                    <img width=100 height="100" class="responsive-img z-depth-3 wp-post-image materialboxed" ng-src="{{ORIG_URL+img}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col l4 s12">
+                    <div class="card-panel alcaramel">
+                        <h6>Опиcание</h6>
+                        <hr>
+                        <p style="margin: 0px">{{item.description}}</p>
+                        <hr>
+                        <b>Цена: </b>{{item.price}} руб
+                        <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="addToCart(item)">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

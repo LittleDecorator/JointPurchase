@@ -49,7 +49,7 @@ public class ItemRepository {
 
     public List<Item> getBySearch(String criteria){
         Map<String,Object> namedParameters = Maps.newHashMap();
-        namedParameters.put("criteria", criteria);
+        namedParameters.put("criteria", "%"+criteria+"%");
         return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_SEARCH,namedParameters,itemMapper);
     }
 

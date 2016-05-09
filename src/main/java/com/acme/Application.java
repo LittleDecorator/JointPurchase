@@ -6,15 +6,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Locale;
 
-@ComponentScan
+@ComponentScan("com.acme")
 @Configurable
+@EnableCaching
+@EnableScheduling
 @SpringBootApplication
+@EnableTransactionManagement(proxyTargetClass=true)
+@PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 
     @Bean

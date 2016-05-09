@@ -1,7 +1,7 @@
 package com.acme.repository;
 
 import com.acme.config.Queue;
-import com.acme.filter.ProductFilter;
+import com.acme.model.filter.ProductFilter;
 import com.acme.model.Item;
 import com.acme.model.Product;
 import com.google.common.base.Strings;

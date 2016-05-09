@@ -4,6 +4,7 @@ public interface Queue {
 
     String CATEGORY_NAME_MAP = "SELECT id, name FROM public.category";
     String CATEGORY_FIND_ALL = "SELECT * FROM public.category";
+    String CATEGORY_FIND_ALL_ROOTS = "SELECT id, name FROM public.category WHERE parent_id is NULL";
     String CATEGORY_FIND_BY_ID = "SELECT * FROM public.category WHERE id = ? ";
     String CATEGORY_FIND_BY_ID_LIST = "SELECT * FROM public.category WHERE id in (:ids) ";
     String CATEGORY_UPDATE_BY_ID = "UPDATE public.category set name = ?, parent_id = ?, date_add = ? WHERE id = ? ";
@@ -19,11 +20,11 @@ public interface Queue {
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
     String ITEM_FIND_BY_SEARCH = "SELECT * FROM public.item i " +
-            "WHERE lower(i.name) LIKE '%:criteria%' OR i.article LIKE '%:criteria%' OR i.description = '%:criteria%' " +
+            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
             "ORDER BY i.date_add ASC";
     String ITEM_FIND_BY_ID = "SELECT * FROM public.item WHERE id = ?";
     String ITEM_FIND_BY_ID_LIST = "SELECT * FROM public.item WHERE id in (:idList)";
-    String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.item WHERE company_id = ? AND not_for_sale = false";
+    String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.item WHERE company_id = ? AND not_for_sale = 'N'";
     String ITEM_BY_COMPANY_ID = "SELECT * FROM public.item WHERE company_id = ? ";
     String ITEM_DELETE_BY_ID = "DELETE FROM public.item WHERE id = ? ";
 
@@ -33,7 +34,7 @@ public interface Queue {
     String COMPANY_INSERT = "INSERT INTO public.company (id, name, description, address, email, phone, url, bik, inn, ks, rs, date_add) " +
             "values (:id, :name, :description, :address, :email, :phone, :url, :bik, :inn, :ks, :rs, :dateAdd)";
 
-    String CREDENTIAL_FIND_BY_ID = "SELECT * FROM public.credential where id = ? ";
+    String CREDENTIAL_FIND_BY_ID = "SELECT * FROM public.credential where subject_id = ? ";
     String CREDENTIAL_UPDATE_BY_ID = "UPDATE public.credential SET password = ?, role_id = ?, date_add = ? WHERE subject_id = ? ";
     String CREDENTIAL_INSERT = "INSERT INTO public.credential (subject_id, password, role_id, date_Add) " +
             " values (:subjectId, :password, :roleId, :dateAdd)";
@@ -77,7 +78,7 @@ public interface Queue {
     String PURCHASE_ORDER_DELETE_BY_SUBJECT_ID = "DELETE FROM public.purchase_order WHERE subject_id = ?";
     String PURCHASE_ORDER_FIND_BY_SUBJECT_ID = "SELECT * FROM public.purchase_order WHERE subject_id = ? ";
 
-    String ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS = "SELECT i.id as item_id, i.name as item_name, i.company_id, i.article, i.description, i.price, i.not_for_sale, i.in_stock, c.id, c.name " +
+    String ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS = "SELECT i.id , i.name , i.company_id, i.article, i.description, i.price, i.not_for_sale, i.in_stock, c.id as category_id, c.name as category_name " +
             "FROM item i " +
             "RIGHT JOIN category_item ci ON ci.item_id=i.id " +
             "INNER JOIN category c ON ci.category_id=c.id " +

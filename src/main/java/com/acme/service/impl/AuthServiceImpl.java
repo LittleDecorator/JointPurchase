@@ -38,12 +38,6 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public Subject getSubject(String login) {
         return subjectRepository.getByEmail(login);
-//        if(subjects.size()>0){
-//            return subjects.get(0);
-//        } else {
-//            return null;
-//        }
-
     }
 
     @Override

@@ -52,17 +52,13 @@ public class TreeServiceImpl implements TreeService {
                     }
                 }
             }
-            System.out.println("Left in list -> "+ nodes.size());
+//            System.out.println("Left in list -> "+ nodes.size());
         }
     }
 
     private boolean findNode(Node node, Category category){
-        System.out.println(node);
         boolean res = false;
         if(node!=null){
-            System.out.println(category.getId());
-            System.out.println(category.getParentId());
-            System.out.println(category.getName());
             if(!node.getId().contentEquals(category.getParentId())){
                 if(node.haveChildren()){
                     for(Node child : node.getNodes()){
@@ -74,6 +70,7 @@ public class TreeServiceImpl implements TreeService {
                 }
             } else {
                 node.getNodes().add(category2Node(category));
+                node.setNoLeaf(true);
                 res = true;
             }
         }

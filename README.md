@@ -2,6 +2,6 @@
 Simple web-store
 
 - Server side - Spring-boot
-- ORM - myBatis
+- ORM - jdbcTemplate
 - DB - H2/Postgresql
 - Client - AngularJS + MaterializeCss

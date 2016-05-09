@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.0.RELEASE</version>
+        <version>1.3.3.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -27,6 +27,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- CACHE -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!--AOP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
         <!-- APACHE -->
@@ -65,7 +83,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0-rc3</version>
+            <version>19.0</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -75,26 +93,39 @@
 
         <!-- LOGGING -->
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>1.1.3</version>
         </dependency>
+
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.12</version>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>2.7.8</version>
         </dependency>
 
         <!-- DATABASE -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.190</version>
+            <version>1.4.191</version>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>9.4.1208.jre7</version>
         </dependency>
 
     </dependencies>
@@ -124,24 +155,314 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skip>${it.skip}</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <addResources>true</addResources>
+                    <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</jvmArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${project.final.name}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>${project.resource.path}</directory>
+                <excludes>
+                    <exclude>public/custom/font/**</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+
+            <resource>
+                <directory>${project.resource.path}/public/custom/font</directory>
+                <filtering>false</filtering>
+                <targetPath>${project.build.directory}/classes/public/custom/font</targetPath>
+            </resource>
+
+            <resource>
+                <directory>${basedir}/src/deb/control</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/control</targetPath>
+            </resource>
+
+            <resource>
+                <directory>${basedir}/src/deb/init.d</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/init.d</targetPath>
+            </resource>
+        </resources>
     </build>
 
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/logback.xml</exclude>
+                                <exclude>**/logrotate.conf</exclude>
+                                <exclude>**/application.properties</exclude>
+                                <exclude>**/application.vmoptions</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.6</version>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}</directory>
+                                            <includes>
+                                                <include>package.json</include>
+                                                <include>Gruntfile.js</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                    <nonFilteredFileExtensions>
+                                        <nonFilteredFileExtension>css</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                                    </nonFilteredFileExtensions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.0</version>
+
+                        <configuration>
+                            <installDirectory>target</installDirectory>
+                            <workingDirectory>target</workingDirectory>
+                        </configuration>
+
+                        <executions>
+                            <!-- install node and npm -->
+                            <execution>
+                                <id>install node and npm</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>v5.9.1</nodeVersion>
+                                    <npmVersion>3.8.6</npmVersion>
+                                </configuration>
+                            </execution>
+
+                            <!-- running npm -->
+                            <execution>
+                                <id>npm install</id>
+                                <phase>prepare-package</phase>
+                                <!--<phase>generate-resources</phase>-->
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>install</arguments>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>grunt build</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>grunt</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>--no-color</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.vafer</groupId>
+                        <artifactId>jdeb</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jdeb</goal>
+                                </goals>
+
+                                <configuration>
+                                    <verbose>true</verbose>
+                                    <deb>${project.build.directory}/${project.final.name}.deb</deb>
+                                    <controlDir>${project.build.directory}/control</controlDir>
+                                    <dataSet>
+
+                                        <!-- app .jar itself -->
+                                        <data>
+                                            <src>${project.build.directory}/${project.final.name}.jar</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.lib.path}</prefix>
+                                                <user>${deb.user.name}</user>
+                                                <group>${deb.group.name}</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- security policy -->
+                                        <data>
+                                            <src>${project.basedir}/src/policy</src>
+                                            <type>directory</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.jce.path}</prefix>
+                                                <user>root</user>
+                                                <group>rsdoot</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- app config -->
+                                        <data>
+                                            <src>${project.build.outputDirectory}/application.properties</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.config.path}</prefix>
+                                                <user>${deb.user.name}</user>
+                                                <group>${deb.group.name}</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- rmi option -->
+                                        <data>
+                                            <src>${project.build.outputDirectory}/application.vmoptions</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.config.path}</prefix>
+                                                <user>${deb.user.name}</user>
+                                                <group>${deb.group.name}</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- app logging config -->
+                                        <data>
+                                            <src>${project.build.outputDirectory}/logback.xml</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.config.path}</prefix>
+                                                <user>${deb.user.name}</user>
+                                                <group>${deb.group.name}</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- logrotate -->
+                                        <data>
+                                            <src>${project.build.outputDirectory}/logrotate.conf</src>
+                                            <dst>${project.final.name}</dst>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.rotate.path}</prefix>
+                                                <user>root</user>
+                                                <group>rsdoot</group>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- app run script -->
+                                        <data>
+                                            <src>${project.build.directory}/init.d/run.sh</src>
+                                            <type>file</type>
+                                            <mapper>
+                                                <type>perm</type>
+                                                <prefix>${deb.lib.path}</prefix>
+                                                <user>${deb.user.name}</user>
+                                                <group>${deb.group.name}</group>
+                                                <filemode>755</filemode>
+                                            </mapper>
+                                        </data>
+
+                                        <!-- symlink to run script -->
+                                        <data>
+                                            <type>link</type>
+                                            <symlink>true</symlink>
+                                            <linkName>${deb.run.path}/${project.final.name}</linkName>
+                                            <linkTarget>${deb.lib.path}/run.sh</linkTarget>
+                                        </data>
+
+                                    </dataSet>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
+
     <properties>
-        <project.final.name>purchase</project.final.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.resource.path>${project.basedir}/src/main/resources</project.resource.path>
+
+        <project.final.name>${project.artifactId}</project.final.name>
 
         <project.resource.path>${project.basedir}/src/main/resources</project.resource.path>
 
-        <deb.lib.path>var/lib/${project.final.name}</deb.lib.path>
-        <deb.log.path>var/log/${project.final.name}</deb.log.path>
-        <deb.config.path>etc/${project.final.name}</deb.config.path>
+        <deb.lib.path>/var/lib/${project.final.name}</deb.lib.path>
+        <deb.jce.path>${deb.lib.path}/security</deb.jce.path>
+        <deb.log.path>/var/log/${project.final.name}</deb.log.path>
+        <deb.config.path>/etc/${project.final.name}</deb.config.path>
+        <deb.rotate.path>/etc/logrotate.d</deb.rotate.path>
+        <deb.run.path>/etc/init.d</deb.run.path>
 
         <deb.log.out.name>out.log</deb.log.out.name>
         <deb.log.err.name>error.log</deb.log.err.name>
 
         <deb.user.name>${project.final.name}</deb.user.name>
         <deb.group.name>${project.final.name}</deb.group.name>
+
+        <it.skip>true</it.skip>
     </properties>
 </project>

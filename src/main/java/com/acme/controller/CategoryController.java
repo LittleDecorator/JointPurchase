@@ -51,6 +51,11 @@ public class CategoryController {
         return categoryRepository.getNameMap();
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/map/roots")
+    public List<Map<String, Object>> getCategoryRootMap() {
+        return categoryRepository.getRootsAsMap();
+    }
+
     /**
      * Get all categories as tree
      * @return list of nodes, which just category representation

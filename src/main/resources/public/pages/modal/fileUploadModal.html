@@ -1,0 +1,38 @@
+<div>
+    <div class="card-content" >
+
+        <div class="card-title">
+            <div class="row valign-wrapper">
+                <div class="col s12">
+                    <a class="waves-effect waves-teal"  ng-click="closeThisDialog()" style="border-radius: 50%;width: 50px;height: 50px;line-height: 51px;padding: 0;float: right;">
+                        <i class="material-icons right" style="text-align: center;line-height: 55.5px;width: inherit;font-size: 30px;color: #846C63;">clear</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-panel" >
+        <div ng-repeat="item in uploader.queue">
+            <div class="row" style="margin-bottom: 0">
+                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }" class="col s3">
+                    <canvas width="150" height="100"></canvas>
+                </div>
+
+                <div class="col s5">
+                    <strong>{{ item.file.name }}</strong>
+                </div>
+                <div class="col s2">
+                    <span ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</span>
+                </div>
+                <div class="col s2 valign-wrapper">
+                    <a style="cursor: pointer" class="valign waves-effect waves-green btn" ng-click="removeFromQueue(item)" >Удалить</a>
+                </div>
+            </div>
+            <div class="divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div style="text-align: right">
+        <a style="cursor: pointer;" class="btn btn-default" ng-click="add()">Добавить</a>
+        <a style="cursor: pointer;" class="btn btn-default" ng-click="upload()">Загрузить</a>
+    </div>
+</div>

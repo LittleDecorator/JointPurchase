@@ -1,6 +1,7 @@
 package com.acme.controller;
 
-import com.acme.filter.ProductFilter;
+import com.acme.model.filter.ItemFilter;
+import com.acme.model.filter.ProductFilter;
 import com.acme.model.*;
 import com.acme.repository.*;
 import com.acme.util.Constants;
@@ -177,19 +178,14 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/filter")
-    public List<ItemCategoryLink> filter(@RequestBody String input) throws ParseException, IOException {
-//        System.out.println(input);
-        JSONParser parser=new JSONParser();
-        JSONObject main = (JSONObject) parser.parse(input);
-//        System.out.println(main);
-
-        String name = Strings.emptyToNull(main.get("name").toString().toLowerCase());
-        System.out.println(name);
-        String company = Strings.emptyToNull(main.get("company").toString());
-        System.out.println(company);
-        String article = Strings.emptyToNull(main.get("article").toString());
-        System.out.println(article);
-        return itemCategoryLinkRepository.getFilteredItems(name,article,company);
+    public List<ItemCategoryLink> filter(@RequestBody(required = false) ItemFilter filter) throws ParseException, IOException {
+        List<ItemCategoryLink> result;
+        if(filter == null ){
+            result = itemCategoryLinkRepository.getGetAll();
+        } else {
+            result = itemCategoryLinkRepository.getFilteredItems(filter.getName(),filter.getArticle(),filter.getCompanyId());
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")

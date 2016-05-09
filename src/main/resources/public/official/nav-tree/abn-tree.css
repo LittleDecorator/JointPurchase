@@ -95,10 +95,36 @@ ul.nav.nav-list li.active{
     background-color: #ddd;
 }
 
-ul.nav.abn-tree .level-1 .indented {
+ul.nav.abn-tree .level-1 .indented{
     position: relative;
     left: 0px;
 }
+
+ul.abn-tree li.abn-tree-row a {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    line-height: 26px;
+    padding: 0;
+    text-align: center;
+}
+
+.level-1 {
+    left: 0px;
+}
+
+.level-2{
+    left: 20px;
+}
+
+.level-3{
+    left: 40px;
+}
+
+.level-4{
+    left: 60px;
+}
+
 ul.nav.abn-tree .level-2 .indented {
     position: relative;
     left: 20px;
@@ -132,10 +158,18 @@ ul.nav.nav-list.abn-tree .level-9 .indented {
     left: 160px;
 }
 
-li >a > i,li >a > span{
+li > a > i, li > a > span{
     color:#846C63!important;
 }
 
-li i.isLeaf~span{
+li > span.leaf{
     color:#88AAA9!important;
+}
+
+/*------------------------------*/
+
+.row.tree_icon {
+    width: 26px;
+    line-height: 26px;
+    position: relative;
 }

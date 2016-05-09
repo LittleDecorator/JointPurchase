@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class ItemCategoryLinkRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    NamedParameterJdbcTemplate parameterJdbcTemplate;
+
     public List<ItemCategoryLink> getGetAll(){
         return jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_ITEM_CATEGORIES,itemCategoryLinkMapper);
     }
@@ -29,13 +33,13 @@ public class ItemCategoryLinkRepository {
         Map<String,Object> namedParameters = Maps.newHashMap();
 
         if(!Strings.isNullOrEmpty(name)){
-            clause.add(" lower(i.name) like '%:name%' ");
-            namedParameters.put("name",name);
+            clause.add(" lower(i.name) like :name ");
+            namedParameters.put("name","%"+name+"%");
         }
 
         if(!Strings.isNullOrEmpty(article)){
-            clause.add(" i.article like '%:article%' ");
-            namedParameters.put("article",article);
+            clause.add(" i.article like :article ");
+            namedParameters.put("article","%"+article+"%");
         }
 
         if(!Strings.isNullOrEmpty(company)){
@@ -49,7 +53,7 @@ public class ItemCategoryLinkRepository {
                 String firstPart = Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS.substring(0,pos);
                 String secondPart = Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS.substring(pos);
                 String queue = firstPart + " WHERE " + String.join(" AND ",clause) + secondPart;
-                result = jdbcTemplate.query(queue,itemCategoryLinkMapper);
+                result = parameterJdbcTemplate.query(queue,namedParameters,itemCategoryLinkMapper);
             }
         } else {
             result = jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS,itemCategoryLinkMapper);
