@@ -98,8 +98,8 @@ public class ItemContentRepository {
         namedParameters.put("id", itemContent.getId());
         namedParameters.put("itemId", itemContent.getItemId());
         namedParameters.put("contentId", itemContent.getContentId());
-        namedParameters.put("show", itemContent.isShow());
-        namedParameters.put("main", itemContent.isMain());
+        namedParameters.put("show", itemContent.isShow()?'Y':'N');
+        namedParameters.put("main", itemContent.isMain()?'Y':'N');
         namedParameters.put("dateAdd", itemContent.getDateAdd());
         int result = parameterJdbcTemplate.update(Queue.ITEM_CONTENT_INSERT,namedParameters);
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;

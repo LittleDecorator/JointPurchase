@@ -36,16 +36,16 @@ public class ContentRepository {
         jdbcTemplate.update(Queue.CONTENT_DELETE_BY_ID,id);
     }
 
-    public boolean insert(Content content){
+    public boolean insert(Content content) throws IOException {
         content.setId(UUID.randomUUID().toString());
         Map<String,Object> namedParameters = Maps.newHashMap();
         namedParameters.put("id", content.getId());
         namedParameters.put("fileName", content.getFileName());
         namedParameters.put("mime", content.getMime());
         namedParameters.put("type", content.getType());
-        namedParameters.put("isDefault", content.isIsDefault());
+        namedParameters.put("isDefault", content.isIsDefault()?'Y':'N');
         namedParameters.put("dateAdd", content.getDateAdd());
-        namedParameters.put("content", content.getContent());
+        namedParameters.put("content", Base64BytesSerializer.serialize(content.getContent()));
         int result = parameterJdbcTemplate.update(Queue.CONTENT_INSERT,namedParameters);
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }

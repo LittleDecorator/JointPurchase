@@ -57,7 +57,7 @@ public interface Queue {
     String CONTENT_FIND_DEFAULT = "SELECT * FROM public.content WHERE is_default = 'Y' ";
     String CONTENT_FIND_BY_ID = "SELECT * FROM public.content WHERE id = ?";
     String CONTENT_INSERT = "INSERT INTO public.content (id, file_name, mime, type, is_default, date_add, content) " +
-            " values (:id, :fileName, :mime, :type, : isDefault, :dateAdd, :content) ";
+            " values (:id, :fileName, :mime, :type, :isDefault, :dateAdd, :content) ";
     String CONTENT_DELETE_BY_ID = "DELETE FROM public.content where id = ? ";
 
     String ITEM_CATEGORY_LINK_FIND_ITEM_CATEGORIES = "SELECT i.id as item_id,i.name as item_name,i.company_id,i.article,i.description,i.price,i.not_for_sale,i.in_stock,c.id,c.name " +

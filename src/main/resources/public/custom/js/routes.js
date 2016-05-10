@@ -345,6 +345,7 @@ var route = {
             },
             {
                 name:'item.detail',
+                parent:'item',
                 url:'/:id',
                 views: {
                     'main@': {
@@ -354,7 +355,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{resolved.item.name}}'
+                    displayName: '{{resolved[0].name}}'
                 },
                 resolve: {
                     resolved: function($stateParams, resolveService) {
@@ -364,6 +365,7 @@ var route = {
             },
             {
                 name:'item.detail.gallery',
+                parent:'item.detail',
                 url:'/gallery',
                 views: {
                     'main@': {

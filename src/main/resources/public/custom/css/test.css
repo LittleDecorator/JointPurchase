@@ -33,9 +33,9 @@
 .hiden-option > i.main,.hiden-option > i.show{
     opacity: .9!important;
     display: inline-block!important;
-    color: #88AAA9!important;
-    background: rgb(0, 0, 0);
-    background: rgba(0, 0, 0, 0.45);
+    /*color: #88AAA9!important;*/
+    /*background: rgb(0, 0, 0);*/
+    /*background: rgba(0, 0, 0, 0.45);*/
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 
@@ -47,12 +47,10 @@
 }
 
 div.hiden-option > i.material-icons{
-    font-size: 35px;
-    opacity: 0;
+    opacity: .2;
 }
 
 div.hiden-option > i.material-icons:hover{
-    font-size: 35px;
     color: #88AAA9;
     opacity: .9;
 
@@ -62,30 +60,25 @@ div.hiden-option > i.material-icons:hover{
 
 .hiden-option:hover > i.material-icons{
     opacity: .9;
-
-    background: rgb(0, 0, 0);
-    background: rgba(0, 0, 0, 0);
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 
-    -webkit-transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -ms-transition: opacity 1s ease-in-out;
-    -o-transition: opacity 1s ease-in-out;
-    transition: opacity 1s ease-in-out;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -ms-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
 }
 
 .hiden-option:hover{
     opacity: .9;
     color: #FFF2F2!important;
-    background: rgb(0, 0, 0);
-    background: rgba(0, 0, 0, 0.45);
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 
-    -webkit-transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -ms-transition: opacity 1s ease-in-out;
-    -o-transition: opacity 1s ease-in-out;
-    transition: opacity 1s ease-in-out;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -ms-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
 }

@@ -12,6 +12,7 @@
 
                 var uploader = $scope.uploader = new FileUploader();
                 var dialog;
+                var mCou=0;
                 $scope.images = [];
 
                 /* callback on file select */
@@ -31,33 +32,33 @@
                 };
 
                 /* init section */
-                // if ($stateParams.id) {
-                //     $scope.images = dataResources.itemImage.get({itemId: $stateParams.id});
-                //     $scope.images.$promise.then(function (result) {
-                //
-                //         $scope.images = result;
-                //         $scope.images.some(function(elem){
-                //             if(elem.main) {
-                //                 mCou++;
-                //                 return true;
-                //             } else {
-                //                 return false;
-                //             }
-                //         });
-                //         $timeout(function(){
-                //             if($scope.images.length>0 && mCou==0){
-                //                 $scope.images[0].main = true;
-                //                 $scope.images[0].show = true;
-                //             }
-                //
-                //             $('.materialboxed').materialbox();
-                //         },100);
-                //     });
-                // } else {
-                //     $scope.images = dataResources.itemImage.get();
-                // }
+                if ($stateParams.id) {
+                    $scope.images = dataResources.itemImage.get({itemId: $stateParams.id});
+                    $scope.images.$promise.then(function (result) {
 
-                // $scope.currentImage = {};
+                        $scope.images = result;
+                        $scope.images.some(function(elem){
+                            if(elem.main) {
+                                mCou++;
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                        $timeout(function(){
+                            if($scope.images.length>0 && mCou==0){
+                                $scope.images[0].main = true;
+                                $scope.images[0].show = true;
+                            }
+
+                            $('.materialboxed').materialbox();
+                        },100);
+                    });
+                } else {
+                    $scope.images = dataResources.itemImage.get();
+                }
+
+                $scope.currentImage = {};
 
                 $scope.deleteImage = function(id){
                     var currImage = helpers.findInArrayById($scope.images, id);

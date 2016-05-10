@@ -164,32 +164,46 @@
             console.log("in resolver");
             
             this.getItemDetail = function(id){
-                var data = {};
-                var deferred = $q.defer();
-                if(id){
-                    dataResources.item.get({id:id},function(item){
-                        data.item = item;
-                    });
-                }
 
-                dataResources.categoryMap.get(function(res) {
-                    var categories = [];
-                    angular.forEach(res, function (category) {
-                        categories.push({id:category.id,name:category.name});
-                    });
-                    data.categories = categories;
-                });
+                var getItemPromise = function() {
+                    var deferred = $q.defer();
+                    if(id){
+                        dataResources.item.get({id:id},function(item){
+                            console.log(item);
+                            deferred.resolve(item);
+                        });
+                    } else {
+                        deferred.resolve({});
+                    }
+                    return deferred.promise;
+                };
 
-                dataResources.companyMap.get(function(res){
-                    var companies = [];
-                    angular.forEach(res, function (comp) {
-                        companies.push(comp);
+                var getCategoryPromise = function() {
+                    var deferred = $q.defer();
+                    dataResources.categoryMap.get(function(res) {
+                        var categories = [];
+                        angular.forEach(res, function (category) {
+                            categories.push({id:category.id,name:category.name});
+                        });
+                        console.log(categories);
+                        deferred.resolve(categories);
                     });
-                    data.companies = companies;
-                });
-                
-                deferred.resolve(data);
-                return deferred.promise;
+                    return deferred.promise;
+                };
+
+                var getCompanyPromise = function() {
+                    var deferred = $q.defer();
+                    dataResources.companyMap.get(function(res){
+                        var companies = [];
+                        angular.forEach(res, function (comp) {
+                            companies.push(comp);
+                        });
+                        console.log(companies);
+                        deferred.resolve(companies);
+                    });
+                    return deferred.promise;
+                };
+                return $q.all([getItemPromise(),getCategoryPromise(),getCompanyPromise()]);
             };
 
             this.getCategoryTreeData = function(){

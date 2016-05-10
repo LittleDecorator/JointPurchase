@@ -1,14 +1,33 @@
 <div style="padding-top: 20px">
 
+    <!--<div class="row" style="padding-top: 20px" ng-if="images.length>0">-->
+        <!--<div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">-->
+            <!--<div style="position: relative">-->
+                <!--<div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px; position: absolute; bottom: 5px; z-index: 500">-->
+                    <!--<i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)" style="cursor: pointer;">{{image.main?'star':'star_border'}}</i>-->
+                    <!--<i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;">done</i>-->
+                    <!--<i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;">clear</i>-->
+                <!--</div>-->
+                <!--<img ng-src="{{image.url}}" id="{{image.id}}" class="responsive-img z-depth-3 wp-post-image materialboxed"/>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
     <div class="row" style="padding-top: 20px" ng-if="images.length>0">
-        <div class="col s12 m4" ng-repeat="image in images" style="width: 25%!important;">
-            <div style="position: relative">
-                <div class="card-title hiden-option"  style="height: 25%; width: 100%;padding: 10px; position: absolute; bottom: 5px; z-index: 500">
-                    <i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)" style="cursor: pointer;">{{image.main?'star':'star_border'}}</i>
-                    <i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;">done</i>
-                    <i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;">clear</i>
+        <div style="display: flex; flex-wrap: wrap; margin: -2px -2px 24px;"  >
+            <div cols="1" rows="1" style="position: relative; display: block; height: 250px; overflow: hidden;width: 280px; margin: 10px;" ng-repeat="image in images">
+                <img ng-src="{{image.url}}" id="{{image.id}}" style="height: 100%; transform: translateX(-50%); position: relative; left: 50%;">
+                <div style="position: absolute; left: 0px; right: 0px; bottom: 0px; height: 68px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.4);"><div style="flex-grow: 1; margin-left: 16px; margin-right: 0px; color: rgb(255, 255, 255); overflow: hidden;"><div style="font-size: 16px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Breakfast</div>
+                    <div style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                        <span>by <b>jill111</b></span>
+                    </div>
                 </div>
-                <img ng-src="{{image.url}}" id="{{image.id}}" class="responsive-img z-depth-3 wp-post-image materialboxed"/>
+                    <div style="order: 1;">
+                        <div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)" style="cursor: pointer;color: white">{{image.main?'star':'star_border'}}</i></div>
+                        <div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;color: white">done</i></div>
+                        <div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;color: white">clear</i></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -110,15 +110,18 @@
 
             console.log(resolved);
 
-            if(resolved){
-                $scope.selected = angular.copy(resolved.item);
-                $scope.companyNames =  resolved.companies;
-                $scope.categories = resolved.categories;
-                if(!$scope.selected.inStock){
-                    $scope.selected.inStock = 0;
-                }
-            } else {
-                $scope.selected = {company:{},type:{}};
+            $scope.selected = resolved[0]
+            $scope.categories = [];
+            angular.forEach(resolved[1], function (category) {
+                $scope.categories.push({id:category.id,name:category.name});
+            });
+            $scope.companyNames = [];
+            angular.forEach(resolved[2], function (company) {
+                $scope.companyNames.push(company);
+            });
+
+            if(!$scope.selected.inStock){
+                $scope.selected.inStock = 0;
             }
 
             $scope.showClss = function(){
