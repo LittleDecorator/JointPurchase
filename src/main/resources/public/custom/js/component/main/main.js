@@ -81,12 +81,13 @@
 
                 //явный logout через меню
                 $scope.logout = function(){
-                    dataResources.authLogout.post().$promise.then(function(data){
-                        /* clear all data */
+                    /*dataResources.authLogout.post().$promise.then(function(data){
+                        /!* clear all data *!/
                         clearCookieInfo();
-                        /* go to main page */
-                        $state.transitionTo("home");
-                    });
+                        /!* go to main page *!/
+                        // $state.transitionTo("home");
+                    });*/
+                    clearCookieInfo();
                 };
 
                 //обновление меню после login/logout
@@ -148,6 +149,7 @@
                 //init and restore cart content
                 $scope.initCart();
 
+                //slider content (for now left only root's)
                 dataResources.categoryMenu.get(function(data){
                     $scope.nodes= data;
                 });

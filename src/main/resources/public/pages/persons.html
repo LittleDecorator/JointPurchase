@@ -1,7 +1,8 @@
 <div style="padding-top: 20px;">
-    <!--<button class="btn btn-primary" ng-click="addPerson()">Добавить покупателя</button>-->
     <h3 class="example_head">Покупатели:</h3>
-    <div class="table-result">
+
+    <div class="table-result hide-on-small-only">
+
         <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
             <thead>
             <tr>
@@ -25,6 +26,27 @@
             </tbody>
         </table>
     </div>
+
+        <md-list class="hide-on-med-and-up">
+            <div class="card-panel" ng-repeat="customer in customers">
+                <md-list-item class="md-3-line">
+                    <md-icon style="font-size: 55px;">portrait</md-icon>
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{::customer.lastName}} {{::customer.firstName}} {{::customer.middleName}}</h3>
+                        <h4>{{::customer.phoneNumber}}</h4>
+                        <p>{{::customer.email}}</p>
+                    </div>
+                    <md-menu style="  margin-top: 15px;">
+                        <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item><md-button ng-click="editPerson(customer.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                            <md-menu-item><md-button ng-click="deletePerson(customer.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                            <md-menu-item><md-button ng-click="showOrders(customer.id)"><md-icon>shopping_cart</md-icon>Заказы</md-button></md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </md-list-item>
+            </div>
+        </md-list>
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a class="btn-floating btn-large blue lighten-3" ng-click="addPerson()">

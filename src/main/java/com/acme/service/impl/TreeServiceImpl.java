@@ -77,7 +77,7 @@ public class TreeServiceImpl implements TreeService {
         return res;
     }
 
-    private Node category2Node(Category category){
+    public Node category2Node(Category category){
         return new Node(category.getId(),category.getName(),category.getParentId());
     }
 }

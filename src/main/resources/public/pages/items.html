@@ -1,74 +1,131 @@
 <div class="filter-item">
 
-        <div class="row">
-            <div class="input-field col s2">
-                <input id="name" type="text" name="name" ng-model="filter.name">
-                <label for="name">Название</label>
-            </div>
-            <div class="input-field col s2">
-                <input id="article" type="text" name="article" ng-model="filter.article">
-                <label for="article">Артикул</label>
-            </div>
+    <div class="row">
+        <div class="input-field col s6">
+            <input id="name" type="text" name="name" ng-model="filter.name">
+            <label for="name">Название</label>
+        </div>
+        <div class="input-field col s6">
+            <input id="article" type="text" name="article" ng-model="filter.article">
+            <label for="article">Артикул</label>
+        </div>
 
-            <div class="input-field col s3" id="company">
-                <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.selectedCompany" ng-change="companyChanged()">
-                    <option value="">Выберите компанию ...</option>
-                </select>
-            </div>
+        <div class="input-field col s12" id="company">
+            <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.selectedCompany" ng-change="companyChanged()">
+                <option value="">Выберите компанию ...</option>
+            </select>
+        </div>
 
             <!--<div class="input-field col s3" id="category">-->
                 <!--<select  name="category" ng-options="category.name for category in categoryTypes track by category.id" ng-model="filter.selectedCategory" ng-change="categoryChanged()">-->
                     <!--<option value="">Выберите Категорию ...</option>-->
                 <!--</select>-->
             <!--</div>-->
-
+        <div class="col s12">
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
             <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
         </div>
 
-<div class="item_result">
-    <div>
-        <h4 class="example_head">Товары:</h4>
     </div>
 
-
-    <div class="table-result">
+    <div class="item_result">
+        <div>
+            <h4 class="example_head">Товары:</h4>
+        </div>
 
         <div class="list" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='{{infiniteDistance}}' infinite-scroll-container="'#table-wrapper'">
 
-        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Название</th>
-                <th>Производитель</th>
-                <th>Артикул</th>
-                <th>Цена</th>
-                <th>В наличии</th>
-                <th>Заказано</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad">
-                <td style="text-align: right;">
-                    <input type="checkbox" class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)"/>
-                    <label for="{{::item.id}}"></label>
-                </td>
-                <td class="center-align">{{::item.name}}</td>
-                <td class="center-align">{{::item.companyName}}</td>
-                <td class="center-align">{{::item.article}}</td>
-                <td class="center-align">{{::item.price}} руб</td>
-                <td class="center-align">{{::item.inStock|asZero}}</td>
-                <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
-                <td class="right-align">
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id,$index)"><i class="fa fa-times"></i></a>
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><i class="fa fa-camera"></i></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <div class="table-result hide-on-small-only">
+
+                <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Название</th>
+                            <th>Производитель</th>
+                            <th>Артикул</th>
+                            <th>Цена</th>
+                            <th>В наличии</th>
+                            <th>Заказано</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad">
+                            <td style="text-align: right;">
+                                <input type="checkbox" class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)"/>
+                                <label for="{{::item.id}}"></label>
+                            </td>
+                            <td class="center-align">{{::item.name}}</td>
+                            <td class="center-align">{{::item.companyName}}</td>
+                            <td class="center-align">{{::item.article}}</td>
+                            <td class="center-align">{{::item.price}} руб</td>
+                            <td class="center-align">{{::item.inStock|asZero}}</td>
+                            <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
+                            <td class="right-align">
+                                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><i class="fa fa-pencil"></i></a>
+                                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id,$index)"><i class="fa fa-times"></i></a>
+                                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><i class="fa fa-camera"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <md-list class="hide-on-med-and-up">
+                <div class="card" ng-repeat="item in items">
+                    <div class="card-content" style="padding: 15px!important;" >
+                        <span class="card-title text-darken-4" style="color: #846C63; line-height: 50px;font-size: 20px;height: 50px;" layout="row">
+                            <span flex="80" style="font-size: 1.2rem">{{::item.name}}</span>
+                            <div flex></div>
+                            <md-menu flex="nogrow" style="padding: 0">
+                                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item><md-button ng-click="editItem(item.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="deleteItem(item.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="showGallery(item.id)"><md-icon>photo</md-icon>Галерея</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </span>
+                        <div class="card-panel">
+                            <md-list-item class="md-3-line" style="padding: 0">
+                                <div class="md-list-item-text" layout="column">
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <input id="_company" type="text" name="company" value="{{::item.companyName}}">
+                                            <label for="_company" class="active">Производитель</label>
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <input id="_article" type="text" name="article" value="{{::item.article}}">
+                                            <label for="_article" class="active">Артикул</label>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input id="_price" type="text" name="price" value="{{::item.price}}">
+                                            <label for="_price" class="active">Цена</label>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input id="_stock" type="text" name="stock" value="{{::item.inStock|asZero}}">
+                                            <label for="_stock" class="active">В наличии</label>
+                                        </div>
+                                        <div class="input-field col s4">
+                                            <input id="_order" type="text" name="order" value="{{::item.inOrder|asZero}}">
+                                            <label for="_order" class="active">Заказано</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-list-item>
+                            <div flex-xs>
+                                <md-checkbox ng-model="item.notForSale" ng-change="forSaleToggle(item)">Исключить из продажи</md-checkbox>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </md-list>
+
+        </div>
+
     </div>
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
@@ -77,5 +134,4 @@
         </a>
     </div>
 
-</div>
 </div>

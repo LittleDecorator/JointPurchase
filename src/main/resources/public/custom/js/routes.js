@@ -249,14 +249,13 @@ var route = {
                 url:'/:id',
                 views: {
                     'main@': {
-                        templateUrl : 'pages/person-detail.html',
+                        templateUrl : 'pages/card/personCard.html',
                         controller: 'personController'
                     }
                 },
                 data: {
                     requireLogin: true,
                     displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
-                    //base:false
                 },
                 resolve: {
                     person: function($stateParams, resolveService) {

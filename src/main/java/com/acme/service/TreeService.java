@@ -9,4 +9,6 @@ public interface TreeService {
 
     List<Node> generateCategoryTree(List<Category> list);
 
+    Node category2Node(Category category);
+
 }

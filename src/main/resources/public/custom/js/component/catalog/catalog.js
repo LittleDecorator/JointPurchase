@@ -168,15 +168,15 @@
             }, 10);
 
             /* show\hide side panel */
-            $scope.toggleFilter = function(){
-                //show side menu
-                var side = $('.slide-outt');
-                if(side.hasClass('slide-inn')){
-                    side.removeClass('slide-inn')
-                } else {
-                    side.addClass('slide-inn');
-                }
-            };
+            // $scope.toggleFilter = function(){
+            //     //show side menu
+            //     var side = $('.slide-outt');
+            //     if(side.hasClass('slide-inn')){
+            //         side.removeClass('slide-inn')
+            //     } else {
+            //         side.addClass('slide-inn');
+            //     }
+            // };
 
             $scope.toggleMobileFilter = function(){
                 console.log("toggleMobileFilter")

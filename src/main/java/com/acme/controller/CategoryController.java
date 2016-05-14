@@ -7,11 +7,13 @@ import com.acme.repository.CategoryRepository;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ItemRepository;
 import com.acme.service.TreeService;
+import com.acme.service.impl.TreeServiceImpl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -63,7 +65,17 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
         public List<Node> getCategoryTree(){
         List<Category> list = categoryRepository.getAll();
-        return treeService.generateCategoryTree(list);
+        /* old version with full tree */
+//        return treeService.generateCategoryTree(list);
+
+        /* for now try to use only roots */
+        List<Node> roots = Lists.newArrayList();
+        for(Category category : list){
+            if(Strings.isNullOrEmpty(category.getParentId())){
+                roots.add(treeService.category2Node(category));
+            }
+        }
+        return roots;
     }
 
     /**
@@ -188,27 +200,34 @@ public class CategoryController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/side/menu")
     public List<Node> getSideMenuContent(){
+        Node node;
+        List<Node> sideMenu = Lists.newArrayList();
+
+        //create root category node
+        Node categoryRootNode = new Node();
+        categoryRootNode.setTitle("Категории");
+        categoryRootNode.setIsCompany(false);
+
         //fill with categories
-        List<Node> nodes = getCategoryTree();
-        //add companies
+        categoryRootNode.setNodes(getCategoryTree());
 
         //create root company node
-        Node rootCompany = new Node();
-        rootCompany.setTitle("Производители");
-        rootCompany.setIsCompany(true);
+        Node companyRootNode = new Node();
+        companyRootNode.setTitle("Производители");
+        companyRootNode.setIsCompany(true);
+
         //add child companies
-        Node node;
         for(Company company : companyRepository.getAll()){
             node = new Node();
             node.setTitle(company.getName());
             node.setId(company.getId());
             node.setIsCompany(true);
-            rootCompany.getNodes().add(node);
+            companyRootNode.getNodes().add(node);
         }
-        System.out.println(nodes.size());
-        nodes.add(rootCompany);
-        System.out.println(nodes.size());
-        return nodes;
+
+        sideMenu.add(categoryRootNode);
+        sideMenu.add(companyRootNode);
+        return sideMenu;
     }
 
 }

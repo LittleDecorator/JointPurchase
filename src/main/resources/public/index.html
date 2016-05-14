@@ -7,8 +7,10 @@
 
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
     <link href="official/materialize-tags/materialize-tags.css" rel="stylesheet" >
-    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css" rel="stylesheet" >-->
-    <link href="official/css/materialize.min.css" rel="stylesheet" >
+    <!--<link href="official/css/materialize.min.css" rel="stylesheet" >-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css">
+
 
     <link rel="stylesheet" href="official/css/ngDialog-theme-default.css">
     <link rel="stylesheet" href="official/css/ngDialog-theme-wide.css">
@@ -37,10 +39,10 @@
     <!-- HEADER AND NAVBAR -->
     <header>
         <div class="navbar-fixed" ng-include="'pages/template/navMainMenu.html'"></div>
-        <div ng-include="'pages/template/sideMenuNew.html'"></div>
+        <div ng-include="'pages/template/sideMenuNew.html'" ng-if="newLocation=='/catalog'"></div>
     </header>
 
-    <main style="width:100%; overflow:hidden">
+    <main style="width:100%; overflow:hidden;background-color: rgb(246, 244, 241)">
         <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></breadcrumbs>
 
         <!-- MAIN CONTENT AND INJECTED VIEWS -->
@@ -92,8 +94,11 @@
     <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=basic"></script>
 
     <!--materialize-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
     <script src="official/materialize-tags/materialize-tags.js"></script>
 
     <!--AUTH-->
@@ -107,7 +112,6 @@
     <script src="custom/js/libs/helpers.js"></script>
 
     <script src="custom/js/libs/classie.js"></script>
-
 
     <script src="custom/js/routes.js"></script>
     <script src="custom/js/menu.js"></script>
