@@ -6,12 +6,23 @@
     'use strict';
 
     angular.module('main')
-        .controller('mainController',['$scope','$rootScope','$state','authService','dataResources','jwtHelper','store','eventService','$timeout',
-            function ($scope,$rootScope, $state, authService, dataResources,jwtHelper, store,eventService,$timeout) {
+        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout',
+            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout) {
                 console.log("Enter main controller");
 
                 $scope.uname = "";
                 $scope.password = "";
+
+                $scope.width = $window.innerWidth;
+
+                angular.element($window).bind('resize', function(){
+
+                    $scope.width = $window.innerWidth;
+
+                    // manuall $digest required as resize event
+                    // is outside of angular
+                    $scope.$digest();
+                });
 
                 $scope.isCollapsed = false;
                 $scope.showContent = false;

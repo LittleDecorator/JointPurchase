@@ -45,8 +45,12 @@
     <main style="width:100%; overflow:hidden;background-color: rgb(246, 244, 241)">
         <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></breadcrumbs>
 
+
         <!-- MAIN CONTENT AND INJECTED VIEWS -->
+        {{mobile}}
+        {{width}}
         <div class="main container">
+
             <div ui-view="main"></div>
         </div>
     </main>

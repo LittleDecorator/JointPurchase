@@ -15,8 +15,8 @@
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>
 
-            <div class="menu-adbeus-container hide-on-med-and-down">
-                <ul id="nav-mobile" class="right">
+            <div class="menu-adbeus-container">
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
                     <li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Личный кабинет</a></li>

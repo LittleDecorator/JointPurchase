@@ -169,7 +169,16 @@
 
             /* изменение ширины модального окна */
             $timeout(function(){
-                $('.ngdialog-content').css('width','50%');
+                var curWidth = $(window).width();
+                console.log(curWidth);
+                if(curWidth > 601){
+                    $('.ngdialog-content').css('width','80%');
+                } else if(curWidth > 961){
+                    $('.ngdialog-content').css('width','50%');
+                } else {
+                    /* set size for mobile devices */
+                    $('.ngdialog-content').css('width','90%');
+                }
             },10);
 
 
