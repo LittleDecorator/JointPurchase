@@ -32,4 +32,14 @@
 
             };
         })
+
+        .filter('nvl', function() {
+            return function (value, param) {
+                if (value) {
+                    return value;
+                } else {
+                    return param;
+                }
+            }
+        })
 })();

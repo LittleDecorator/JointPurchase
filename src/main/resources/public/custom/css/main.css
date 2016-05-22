@@ -460,3 +460,10 @@ nav .brand-logo-lpad {
     transform: rotateY(0deg);
     opacity: 1;
 }
+
+.btn-floating.btn-x-small {
+    width: 45.5px;
+    height: 45.5px;
+    line-height: 45.5px;
+    font-size: 1.6rem;
+}

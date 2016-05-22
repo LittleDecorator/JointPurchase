@@ -1,15 +1,15 @@
-<div id="test1" class="col s12">
-    <div style="padding-top: 20px;">
-        <div class="section">
+<div>
+    <div>
+        <div class="section" ng-if="width>600">
             <div class="row">
                     <div class="col s12 m9 l4">
                         <div style="width:90%;background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
-                            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="2" initial-selection="Granny Smith"></abn-tree>
+                            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>
                         </div>
                     </div>
 
                     <div class="col m3 l8 ">
-                        <div class="toc-wrapper" style="top: 64px;">
+                        <div class="toc-wrapper">
                             <div>
                                 <div class="form-group">
                                     <label for="selectedCategory" class="control-label">Выбранная категории</label>
@@ -65,16 +65,26 @@
 
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 105px; right: 24px;">
-        <a class="btn-floating btn-large blue lighten-3" ng-click="showClss()">
+    <div class="section" ng-if="width<601" style="padding-bottom: 2rem">
+        <div style="background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
+            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>
+        </div>
+
+    </div>
+
+
+    <!-- FOR MOBILE ONLY -->
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;" ng-if="width<601">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="createCategory()">
             <i class="large mdi-content-add"></i>
         </a>
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;" ng-if="width>600">
         <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
             <i class="large mdi-content-save"></i>
         </a>
     </div>
+
 
 </div>

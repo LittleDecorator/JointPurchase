@@ -2,10 +2,12 @@ package com.acme.controller;
 
 import com.acme.exception.PersistException;
 import com.acme.model.*;
+import com.acme.model.dto.CategoryTransfer;
 import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CategoryRepository;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ItemRepository;
+import com.acme.service.CategoryService;
 import com.acme.service.TreeService;
 import com.acme.service.impl.TreeServiceImpl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -20,10 +22,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/category")
@@ -44,18 +50,86 @@ public class CategoryController {
     @Autowired
     CompanyRepository companyRepository;
 
-    /**
-     *
-     * @return all categories as map
-     */
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @RequestMapping(method = RequestMethod.POST)
+    public void createCategory(@RequestBody CategoryTransfer transfer){
+        if(transfer!=null){
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            try{
+                Category category = new Category();
+                category.setName(transfer.getName());
+                category.setParentId(transfer.getParentId());
+                categoryRepository.insert(category);
+                if(!transfer.getItems().isEmpty()){
+                    List<CategoryItem> categoryItems = categoryService.createCategoryItemList(category.getId(),transfer.getItems());
+                    categoryItemRepository.insertBulk(categoryItems);
+                }
+                transactionManager.commit(status);
+            } catch (Exception ex){
+                transactionManager.rollback(status);
+            }
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public void updateCategory(@RequestBody CategoryTransfer transfer){
+        System.out.println(transfer);
+        if(transfer!=null) {
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            try{
+                Category category = categoryRepository.getByID(transfer.getId());
+                category.setParentId(transfer.getParentId());
+                category.setName(transfer.getName());
+                categoryRepository.update(category);
+
+                categoryItemRepository.deleteByCategoryAndExcludedItemIdList(category.getId(), transfer.getItems());
+                transfer.getItems().removeAll(categoryItemRepository.getByCategoryId(category.getId()).stream().map(CategoryItem::getItemId).collect(Collectors.toList()));
+
+                List<CategoryItem> categoryItems = categoryService.createCategoryItemList(category.getId(),transfer.getItems());
+                categoryItemRepository.insertBulk(categoryItems);
+                transactionManager.commit(status);
+            } catch (Exception ex){
+                System.out.println(ex);
+                transactionManager.rollback(status);
+            }
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public void deleteCategory(@PathVariable("id") String id){
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try{
+            categoryItemRepository.deleteByCategoryId(id);
+            categoryRepository.delete(id);
+            transactionManager.commit(status);
+        } catch (Exception e){
+            transactionManager.rollback(status);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public Category getCategory(@PathVariable(value = "id") String id){
+        return categoryRepository.getByID(id);
+    }
+
     @RequestMapping(method = RequestMethod.GET,value = "/map")
     public List<Map<String, Object>> getCategoryMap() {
-        return categoryRepository.getNameMap();
+        return categoryRepository.getFullMap();
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/map/roots")
     public List<Map<String, Object>> getCategoryRootMap() {
         return categoryRepository.getRootsAsMap();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/sub")
+    public List<Category> getSubCategories(@PathVariable(value = "id") String parentId){
+        return categoryRepository.getByParentID(parentId);
     }
 
     /**
@@ -65,17 +139,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET,value = "/tree")
         public List<Node> getCategoryTree(){
         List<Category> list = categoryRepository.getAll();
-        /* old version with full tree */
-//        return treeService.generateCategoryTree(list);
-
-        /* for now try to use only roots */
-        List<Node> roots = Lists.newArrayList();
-        for(Category category : list){
-            if(Strings.isNullOrEmpty(category.getParentId())){
-                roots.add(treeService.category2Node(category));
-            }
-        }
-        return roots;
+        return treeService.generateCategoryTree(list);
     }
 
     /**
@@ -108,9 +172,7 @@ public class CategoryController {
                 category.setName(node.getTitle());
                 category.setId(node.getId());
                 category.setParentId(node.getParentId());
-                if(!categoryRepository.insert(category)){
-                    throw new PersistException(String.format(" Can't insert new Category -> %s", category.toString()));
-                }
+                categoryRepository.insert(category);
                 for(Item item : node.getItems()){
                     //link with type
                     categoryItem = new CategoryItem();
@@ -180,7 +242,7 @@ public class CategoryController {
      * @param categoryId
      * @return JSONArray
      */
-    @RequestMapping(method = RequestMethod.GET,value = "/items/{id}")
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
     public JSONArray getCategoryItems(@PathVariable("id") String categoryId){
         List<String> list = Lists.transform(categoryItemRepository.getByCategoryId(categoryId), CategoryItem::getItemId);
 

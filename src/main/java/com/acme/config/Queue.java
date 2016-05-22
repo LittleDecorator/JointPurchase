@@ -6,16 +6,19 @@ public interface Queue {
     String CATEGORY_FIND_ALL = "SELECT * FROM public.category";
     String CATEGORY_FIND_ALL_ROOTS = "SELECT id, name FROM public.category WHERE parent_id is NULL";
     String CATEGORY_FIND_BY_ID = "SELECT * FROM public.category WHERE id = ? ";
+    String CATEGORY_FIND_BY_PARENT_ID = "SELECT * FROM public.category WHERE parent_id = ? ";
     String CATEGORY_FIND_BY_ID_LIST = "SELECT * FROM public.category WHERE id in (:ids) ";
     String CATEGORY_UPDATE_BY_ID = "UPDATE public.category set name = ?, parent_id = ?, date_add = ? WHERE id = ? ";
     String CATEGORY_INSERT = "INSERT INTO public.category(id, name, parent_id, date_add) values(?,?,?,?)";
-    String CATEGORY_DELETE = "DELETE FROM public.category WHERE id = ? ";
+    String CATEGORY_DELETE = "DELETE FROM public.category WHERE id = ? OR parent_id = ?";
 
     String CATEGORY_ITEM_INSERT = "INSERT INTO public.category_item (id, category_id, item_id, date_add) values (?, ?, ?, ?) ";
     String CATEGORY_ITEM_FIND_BY_CATEGORY_ID = "SELECT * FROM public.category_item WHERE category_id = ? ";
     String CATEGORY_ITEM_FIND_BY_ITEM_ID = "SELECT * FROM public.category_item WHERE item_id = ? ";
     String CATEGORY_ITEM_DELETE_BY_ITEM_ID = "DELETE FROM public.category_item WHERE item_id = ?";
     String CATEGORY_ITEM_DELETE_BY_ITEM_LIST = "DELETE FROM public.category_item WHERE item_id in (:itemIdList)";
+    String CATEGORY_ITEM_DELETE_BY_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE item_id not in (:itemIdList)";
+    String CATEGORY_ITEM_DELETE_BY_CATEGORY_AND_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE category_id = :categoryId and item_id not in (:itemIdList)";
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_ID = "DELETE FROM public.category_item WHERE category_id = ?";
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";

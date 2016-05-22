@@ -93,6 +93,7 @@
             /* show gallery for specific item */
             $scope.showGallery = function (id) {
                 //$scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
+                console.log(id);
                 $state.go("item.detail.gallery", {id: id});
             };
 

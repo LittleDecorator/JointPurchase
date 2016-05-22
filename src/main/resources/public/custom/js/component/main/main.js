@@ -14,11 +14,11 @@
                 $scope.password = "";
 
                 $scope.width = $window.innerWidth;
-
+                
                 angular.element($window).bind('resize', function(){
-
+                
                     $scope.width = $window.innerWidth;
-
+                
                     // manuall $digest required as resize event
                     // is outside of angular
                     $scope.$digest();

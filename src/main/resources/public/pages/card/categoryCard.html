@@ -1,0 +1,65 @@
+<div class="input-field">
+    <select id="category" name="category" ng-model="data.parentCategory">
+        <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
+    </select>
+    <label for="category" style="left: 0">Родительская категория</label>
+</div>
+
+<div class="form-group">
+    <label for="selectedCategory" class="control-label">Выбранная категории</label>
+    <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
+</div>
+
+<div style="margin-top: 20px;">
+    <h5>Связанные товары:</h5>
+
+    <!--<div item-swipe on-remove="removeItem($index)" ng-repeat="item in data.categoryItems" ng-if="data.categoryItems && data.categoryItems.length>0">-->
+        <!--<div class="card-panel">-->
+            <!--<div class="row" style="margin-bottom: 0">-->
+                <!--<span class="col s3">{{::item.article}}</span>-->
+                <!--<span class="col">{{::item.name}}</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+
+    <div class="table-result" ng-if="data.categoryItems && data.categoryItems.length>0" style="margin-top: 5px;">
+        <table class="bordered table-result">
+            <tbody>
+            <tr ng-repeat="item in data.categoryItems" class="row" ng-class="{'no-bottom-border':$last}">
+                <td class="col s3 non-float">{{item.article}}</td>
+                <td class="col non-float">{{item.name}}</td>
+                <td class="col s1 non-float" style="text-align: right">
+                    <div style="cursor: pointer" ng-click="removeItem($index)">
+                        <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-result" ng-if="(!data.categoryItems || data.categoryItems.length==0)" style="margin-top: 5px;" >
+        <span >Ни одного товара не связано с выбранной категорией</span>
+    </div>
+
+</div>
+
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-x-small blue lighten-3" ng-click="delete()">
+        <i class="large mdi-content-clear"></i>
+    </a>
+</div>
+
+
+<div class="fixed-action-btn" style="bottom: 115px; right: 24px;">
+    <a class="btn-floating btn-x-small blue lighten-3" ng-click="save()">
+        <i class="large mdi-content-save"></i>
+    </a>
+</div>
+
+<div class="fixed-action-btn" style="bottom: 185px; right: 24px;">
+    <a class="btn-floating btn-x-small blue lighten-3" ng-click="showItemModal()">
+        <i class="large mdi-action-open-in-new"></i>
+    </a>
+</div>

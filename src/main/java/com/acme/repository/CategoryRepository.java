@@ -1,6 +1,7 @@
 package com.acme.repository;
 
 import com.acme.config.Queue;
+import com.acme.exception.PersistException;
 import com.acme.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +24,7 @@ public class CategoryRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
-    public List<Map<String,Object>> getNameMap(){
+    public List<Map<String,Object>> getFullMap(){
         return jdbcTemplate.queryForList(Queue.CATEGORY_NAME_MAP);
     }
 
@@ -39,24 +40,32 @@ public class CategoryRepository {
         return jdbcTemplate.queryForObject(Queue.CATEGORY_FIND_BY_ID, categoryMapper, id);
     }
 
+    public List<Category> getByParentID(String id){
+        return jdbcTemplate.query(Queue.CATEGORY_FIND_BY_PARENT_ID, categoryMapper, id);
+    }
+
     public List<Category> getByIdList(List<String> idList){
         SqlParameterSource namedParameters = new MapSqlParameterSource("ids", idList);
         return parameterJdbcTemplate.query(Queue.CATEGORY_FIND_BY_ID_LIST,namedParameters,categoryMapper);
     }
 
-    public boolean update(Category category){
+    public void update(Category category) throws PersistException {
         int result = jdbcTemplate.update(Queue.CATEGORY_UPDATE_BY_ID,category.getName(),category.getParentId(), category.getDateAdd(), category.getId());
-        return result == 1 ? Boolean.TRUE : Boolean.FALSE;
+        if(result != 1){
+            throw new PersistException(String.format(" Can't update Category -> %s", category.toString()));
+        }
     }
 
-    public boolean insert(Category category){
+    public void insert(Category category) throws PersistException {
         category.setId(UUID.randomUUID().toString());
         int result = jdbcTemplate.update(Queue.CATEGORY_INSERT, category.getId(),category.getName(),category.getParentId(),category.getDateAdd());
-        return result == 1 ? Boolean.TRUE : Boolean.FALSE;
+        if(result != 1){
+            throw new PersistException(String.format(" Can't insert new Category -> %s", category.toString()));
+        };
     }
 
     public boolean delete(String id){
-        int result = jdbcTemplate.update(Queue.CATEGORY_DELETE,id);
+        int result = jdbcTemplate.update(Queue.CATEGORY_DELETE,id,id);
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 

@@ -389,10 +389,40 @@ var route = {
                 resolve:{
                     categoryNodes: function($stateParams, resolveService) {
                         return resolveService.getCategoryTreeData();
+                    },
+                    categories: function($stateParams, resolveService){
+                        return resolveService.getCategoryMap();
                     }
                 },
                 data: {
                     displayName: 'Категории',
+                    requireLogin: true
+
+                }
+            },
+            {
+                name: 'category.card',
+                url:'/category/:id',
+                parent:'category',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/card/categoryCard.html',
+                        controller: 'categoryCardController'
+                    }
+                },
+                resolve:{
+                    rootCategories: function($stateParams, resolveService){
+                        return resolveService.getCategoryMap();
+                    },
+                    category: function($stateParams, resolveService){
+                        return resolveService.getCategory($stateParams.id);
+                    },
+                    categoryItems: function(resolveService,$stateParams){
+                        return resolveService.getCategoryItems($stateParams.id)
+                    }
+                },
+                data: {
+                    displayName: '{{category.name|nvl:"Создание"}}',
                     requireLogin: true
 
                 }

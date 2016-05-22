@@ -1,5 +1,5 @@
 (function(){
-    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'angularBootstrapNavTree', 'ngResource', 'angularFileUpload', 'angular-jwt',
+    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial','ngTouch', 'angularBootstrapNavTree', 'ngResource', 'angularFileUpload', 'angular-jwt',
         'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators']);
 })();
 
@@ -29,22 +29,22 @@
             $rootScope.$on('$locationChangeSuccess', function (event, toState, toParams) {
 
                 //hide side menu filter
-                var slider = $('.slide-outt');
-                if(slider.hasClass('slide-inn')){
-                    slider.removeClass('slide-inn');
-                    $('.button-collapse').sideNav('hide');
-                }
+                // var slider = $('.slide-outt');
+                // if(slider.hasClass('slide-inn')){
+                //     slider.removeClass('slide-inn');
+                //     $('.button-collapse').sideNav('hide');
+                // }
 
                 /* emulate click outside of mobile-menu */
-                $("#sidenav-overlay").trigger("click");
+                // $("#sidenav-overlay").trigger("click");
 
                 $rootScope.actualLocation = $location.$$url;
 
-                $timeout(function() {
-                    if(dialog){
-                        dialog.close();
-                    }
-                },1000);
+                // $timeout(function() {
+                //     if(dialog){
+                //         dialog.close();
+                //     }
+                // },1000);
             });
 
             /* if token expired or not login then move to mane page and clear all data */
@@ -63,12 +63,12 @@
                     if(fromState.name!=toState.parent){
                         localStorage.removeItem(fromState.name);
                     }
-                    if(( toState.name!='login' && toState.name!='home')){
-                        dialog = modal({templateUrl:"pages/template/spinner.html",controller:null,closeByEscape:false});
-                        $timeout(function(){
-                            $('.ngdialog-content').css('width','30%');
-                        },100);
-                    }
+                    // if(( toState.name!='login' && toState.name!='home')){
+                    //     dialog = modal({templateUrl:"pages/template/spinner.html",controller:null,closeByEscape:false});
+                    //     $timeout(function(){
+                    //         $('.ngdialog-content').css('width','30%');
+                    //     },100);
+                    // }
                 }
             });
 

@@ -61,7 +61,11 @@
 
                 searchItem:$resource('/item/search/',{},{search :{method:'POST',isArray:true}}),
 
-                item: $resource('/item/:id'),
+                item: $resource('/item/:id',{},{
+                    all:{method:'GET',isArray:true},
+                    get:{method:'GET',isArray:false}
+                }),
+                
                 filterByType:$resource('/item/filter/type',{},{
                     filter:{method:'POST',isArray:true}
                 }),
@@ -72,7 +76,7 @@
                 inboxMail:$resource('/mail/inbox',{},{get:{method:'GET',isArray:true}}),
                 sendMail:$resource('/mail/send',{},{get:{method:'GET',isArray:true}}),
 
-                categoryItems: $resource('/category/items/:categoryId',{},{ get : {method:'GET',isArray:true}}),
+                categoryItems: $resource('/category/:id/items',{},{ get : {method:'GET',isArray:true}}),
 
                 companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
@@ -94,6 +98,16 @@
                 categoryRootMap:$resource("/category/map/roots",{},{
                     get:{method:'GET',isArray:true}
                 }),
+                categorySubList:$resource("/category/:id/sub",{},{
+                    get:{method:'GET',isArray:true}
+                }),
+                category:$resource("/category/:id",{},{
+                    get:{method:'GET',isArray:false},
+                    post:{method:'POST',isArray:false},
+                    put:{method:'PUT',isArray:false},
+                    delete:{method:'DELETE',isArray:false}
+                }),
+                
 
                 itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
                 itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),

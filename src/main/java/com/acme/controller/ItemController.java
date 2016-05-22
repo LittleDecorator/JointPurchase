@@ -61,25 +61,26 @@ public class ItemController{
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public JSONArray getItems() throws JsonProcessingException, ParseException {
-        List<ItemCategoryLink> links = itemCategoryLinkRepository.getGetAll();
-        if(links!=null && links.size()>0){
-            JSONParser parser = new JSONParser();
-            ObjectMapper mapper = new ObjectMapper();
-            JSONArray array = (JSONArray) parser.parse(mapper.writeValueAsString(links));
-            int arrSize = array.size();
-            JSONObject object;
-            for(int i=0;i<arrSize;i++){
-                object = (JSONObject) array.get(i);
-                //can return NULL
-                Integer val = customRepository.getOrderedItemCou((String) object.get("id"));
-                object.put("inOrder", val!=null? val :0);
-                array.set(i, object);
-            }
-            return array;
-        } else {
-            return null;
-        }
+    public List<Item> getItems() throws JsonProcessingException, ParseException {
+        return itemRepository.getAll();
+//        List<ItemCategoryLink> links = itemCategoryLinkRepository.getGetAll();
+//        if(links!=null && links.size()>0){
+//            JSONParser parser = new JSONParser();
+//            ObjectMapper mapper = new ObjectMapper();
+//            JSONArray array = (JSONArray) parser.parse(mapper.writeValueAsString(links));
+//            int arrSize = array.size();
+//            JSONObject object;
+//            for(int i=0;i<arrSize;i++){
+//                object = (JSONObject) array.get(i);
+//                //can return NULL
+//                Integer val = customRepository.getOrderedItemCou((String) object.get("id"));
+//                object.put("inOrder", val!=null? val :0);
+//                array.set(i, object);
+//            }
+//            return array;
+//        } else {
+//            return null;
+//        }
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")

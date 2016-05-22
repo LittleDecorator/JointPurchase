@@ -54,29 +54,25 @@
 
         }])
 
-        .controller('itemClssController',['$scope','dataResources','eventService','$modalInstance',function($scope,dataResources,eventService,$modalInstance){
-            console.log("itemClssController");
+        .controller('itemClssController',['$scope','dataResources','resolved',function($scope,dataResources,resolved){
 
             $scope.items = [];
 
-            dataResources.item.query(function(result){
-                var good;
+            dataResources.item.all().$promise.then(function(result){
                 angular.forEach(result, function (item) {
-                    if(wasSelected(item.id)){
-                        good = true;
-                    } else {
-                        good = false;
-                    }
-                    var obj = {id:item.id,name:item.name,selected:good,article:item.article,price:item.price};
-                    $scope.items.push(obj);
-                    console.log($scope.items);
+                    item.selected=false;
+                    $scope.items.push(item);
                 });
+                if(resolved){
+                    console.log("resolved present")
+                    console.log(resolved);
+                    findSelected($scope.items);
+                }
             });
 
             $scope.select = function(){
                 var data = [];
                 angular.forEach($scope.items,function(elem){
-                    console.log(elem);
                     if(elem.selected){
                         data.push(elem);
                         return true;
@@ -84,21 +80,19 @@
                         return false;
                     }
                 });
-                console.log(data);
-                eventService.onItemClssSelected(data);
+                $scope.closeThisDialog(data);
             };
-
-            function wasSelected(id){
-                var res;
-                $modalInstance.params.some(function(elem){
-                    console.log(elem);
-                    if(elem.id == id){
-                        return res=true;
-                    } else {
-                        return res=false;
+            
+            function findSelected(array){
+                var selected = resolved.map(function(item){
+                    return resolved['id'];
+                });
+                
+                angular.forEach(array, function(item){
+                    if(selected.includes(item.id)){
+                        item.selected = true;
                     }
                 });
-                return res;
             }
         }])
 

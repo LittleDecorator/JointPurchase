@@ -5,6 +5,7 @@ import com.acme.model.CategoryItem;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,6 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +35,25 @@ public class CategoryItemRepository {
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 
+    public void insertBulk(List<CategoryItem> categoryItems){
+        jdbcTemplate.batchUpdate(Queue.CATEGORY_ITEM_INSERT,
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        CategoryItem categoryItem = categoryItems.get(i);
+                        ps.setString(1, UUID.randomUUID().toString());
+                        ps.setString(2, categoryItem.getCategoryId());
+                        ps.setString(3, categoryItem.getItemId());
+                        ps.setDate(4, null);
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return categoryItems.size();
+                    }
+                });
+    }
+
     public List<CategoryItem> getByItemId(String itemId){
         return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_ITEM_ID,categoryItemMapper,itemId);
     }
@@ -47,6 +70,20 @@ public class CategoryItemRepository {
     public boolean deleteByItemIdList(List<String> itemIdList){
         SqlParameterSource namedParameters = new MapSqlParameterSource("itemIdList", itemIdList);
         int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_ITEM_LIST,namedParameters);
+        return result == 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+
+    public boolean deleteByExcludeItemIdList(List<String> itemIdList){
+        SqlParameterSource namedParameters = new MapSqlParameterSource("itemIdList", itemIdList);
+        int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_EXCLUDE_ITEM_LIST,namedParameters);
+        return result == 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+
+    public boolean deleteByCategoryAndExcludedItemIdList(String categoryId, List<String> itemIdList){
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("itemIdList", itemIdList);
+        parameters.addValue("categoryId", categoryId);
+        int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_CATEGORY_AND_EXCLUDE_ITEM_LIST,parameters);
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 

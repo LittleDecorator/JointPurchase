@@ -164,12 +164,11 @@
             console.log("in resolver");
             
             this.getItemDetail = function(id){
-
+                console.log("Get Item Detail");
                 var getItemPromise = function() {
                     var deferred = $q.defer();
                     if(id){
                         dataResources.item.get({id:id},function(item){
-                            console.log(item);
                             deferred.resolve(item);
                         });
                     } else {
@@ -204,15 +203,6 @@
                     return deferred.promise;
                 };
                 return $q.all([getItemPromise(),getCategoryPromise(),getCompanyPromise()]);
-            };
-
-            this.getCategoryTreeData = function(){
-                var deferred = $q.defer();
-                dataResources.categoryTree.get().$promise.then(function(data){
-                    console.log(data);
-                    deferred.resolve(data);
-                });
-                return deferred.promise;
             };
 
             this.getPerson = function(id){
@@ -257,6 +247,48 @@
                     deferred.resolve(res);
                 });
                 return deferred.promise;
+            };
+
+            this.getCategoryTreeData = function(){
+                var deferred = $q.defer();
+                dataResources.categoryTree.get().$promise.then(function(data){
+                    console.log(data);
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
+
+            this.getCategoryMap = function(){
+                var deferred = $q.defer();
+                dataResources.categoryRootMap.get(function(res){
+                    deferred.resolve(res);
+                });
+                return deferred.promise;
+            };
+
+            this.getCategory = function(id){
+                if(id){
+                    var deferred = $q.defer();
+                    dataResources.category.get({id:id},function(res){
+                        deferred.resolve(res);
+                    });
+                    return deferred.promise;
+                } else {
+                    return null;
+                }
+            };
+            
+            this.getCategoryItems = function(id){
+                if(id){
+                    var deferred = $q.defer();
+                    dataResources.categoryItems.get({id:id},function(res){
+                        deferred.resolve(res);
+                    });
+                    return deferred.promise;
+                } else {
+                    return null;
+                }
+
             };
 
             this.getProduct = function(itemId){
