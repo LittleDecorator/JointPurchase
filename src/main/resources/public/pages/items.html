@@ -11,7 +11,7 @@
         </div>
 
         <div class="input-field col s12" id="company">
-            <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.selectedCompany" ng-change="companyChanged()">
+            <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.companyId">
                 <option value="">Выберите компанию ...</option>
             </select>
         </div>

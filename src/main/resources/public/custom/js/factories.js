@@ -63,7 +63,9 @@
 
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},
-                    get:{method:'GET',isArray:false}
+                    get:{method:'GET',isArray:false},
+                    post:{method:'POST',isArray:false},
+                    put:{method:'PUT',isArray:false}
                 }),
                 
                 filterByType:$resource('/item/filter/type',{},{

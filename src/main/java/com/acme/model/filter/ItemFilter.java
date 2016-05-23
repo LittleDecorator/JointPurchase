@@ -5,6 +5,9 @@ public class ItemFilter {
     String name;
     String companyId;
     String article;
+    int limit;
+    int offset;
+    String categoryId;
 
     public String getName() {
         return name;
@@ -28,6 +31,30 @@ public class ItemFilter {
 
     public void setArticle(String article) {
         this.article = article;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

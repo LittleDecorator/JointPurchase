@@ -10,7 +10,7 @@
             $scope.companyNames = companies;
             $scope.items = [];
 
-            $scope.filter = {name:null, article:null, selectedCompany:null, selectedCategory:null, limit:30, offset:0};
+            $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
             $scope.confirmedFilter = angular.copy($scope.filter);
 
             var busy = false;
@@ -126,7 +126,13 @@
             };
             
             $scope.showCategoryModal = function(){
-                var dialog = modal({templateUrl:"pages/modal/categoryModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"categoryClssController",data:$scope.selected.categories});
+                var selected = [];
+                if($scope.selected.categories.length > 0){
+                    selected = $scope.selected.categories.map(function(category){
+                        return category['id'];
+                    })
+                }
+                var dialog = modal({templateUrl:"pages/modal/categoryModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"categoryClssController",data:selected});
                 dialog.closePromise.then(function(output) {
                     if(output.value && output.value != '$escape'){
                         $scope.selected.categories = output.value;
@@ -136,15 +142,28 @@
 
             //modal button save listener
             $scope.save = function () {
-                //$scope.selected.companyId = $scope.selected.company.id;
-                //dataResources.item.save($scope.selected, function (data){
-                //    $scope.selected = data;
-                //    elt.materialtags('removeAll');
-                //    angular.forEach(eventService.data,function(cat){
-                //        elt.materialtags('add', { "value": cat.id , "text": cat.name});
-                //        $scope.selected.categories.push(cat);
-                //    });
-                //});
+                var categories = $scope.selected.categories.map(function(category){
+                    return category['id'];
+                });
+
+                var dto = {
+                    item: $scope.selected,
+                    categories: categories
+                };
+
+                if($scope.selected.id){
+                    dataResources.item.put(dto).$promise.then(function(data){
+                        Materialize.toast('Item UPDATE success',3000);
+                    }, function(error){
+                        Materialize.toast('Item UPDATE failed',3000);
+                    })
+                } else {
+                    dataResources.item.post(dto).$promise.then(function(data){
+                        Materialize.toast('Item CREATE success',3000);
+                    }, function(error){
+                        Materialize.toast('Item CREATE failed',3000);
+                    })
+                }
             };
 
             $scope.showGallery = function () {

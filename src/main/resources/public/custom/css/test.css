@@ -99,3 +99,8 @@ div:focus, i:focus, a:focus {
 [type="checkbox"] + label:before{
     margin-left: 5px;
 }
+
+
+.ngdialog-content .nav [type="checkbox"].filled-in:checked + label:before {
+    left: -4px
+}

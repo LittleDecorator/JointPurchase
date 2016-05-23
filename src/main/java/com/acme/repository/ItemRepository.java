@@ -2,7 +2,6 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.Item;
-import com.acme.model.PurchaseOrder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +58,10 @@ public class ItemRepository {
     }
 
     public boolean updateSelectiveById(Item item){
-        Map<String,Object> namedParameters = Maps.newHashMap();
-
-        String queue = updateSelective(item,namedParameters);
-        int res = parameterJdbcTemplate.update(queue + " WHERE id = "+ item.getId(), namedParameters);
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        String queue = updateSelective(item,parameters);
+        parameters.addValue("id",item.getId());
+        int res = parameterJdbcTemplate.update(queue + " WHERE id = :id", parameters);
         return res == 1;
     }
 
@@ -132,53 +131,53 @@ public class ItemRepository {
         return result;
     }
 
-    private String updateSelective(Item item, Map<String,Object> namedParameters){
-        StringBuilder querySB = new StringBuilder("update ITEM set");
+    private String updateSelective(Item item, MapSqlParameterSource namedParameters){
+        List<String> querySB = Lists.newArrayList();
 
-        if(item.getId() != null){
-            querySB.append(" ID = :id ");
-            namedParameters.put("id", item.getId());
-        }
+//        if(item.getId() != null){
+//            querySB.add(" ID = :id ");
+//            namedParameters.put("id", item.getId());
+//        }
 
         if(item.getName() != null){
-            querySB.append(" NAME = :name ");
-            namedParameters.put("name",item.getName());
+            querySB.add(" NAME = :name ");
+            namedParameters.addValue("name", item.getName());
         }
 
         if(item.getCompanyId() != null){
-            querySB.append(" COMPANY_ID = :companyId ");
-            namedParameters.put("companyId",item.getCompanyId());
+            querySB.add(" COMPANY_ID = :companyId ");
+            namedParameters.addValue("companyId", item.getCompanyId());
         }
 
         if(item.getArticle() != null){
-            querySB.append(" ARTICLE = :article ");
-            namedParameters.put("article",item.getArticle());
+            querySB.add(" ARTICLE = :article ");
+            namedParameters.addValue("article", item.getArticle());
         }
 
         if(item.getDescription() != null){
-            querySB.append(" DESCRIPTION = :description ");
-            namedParameters.put("description",item.getDescription());
+            querySB.add(" DESCRIPTION = :description ");
+            namedParameters.addValue("description", item.getDescription());
         }
 
         if(item.getPrice() != null){
-            querySB.append(" PRICE = :price ");
-            namedParameters.put("price",item.getPrice());
+            querySB.add(" PRICE = :price ");
+            namedParameters.addValue("price", item.getPrice());
         }
 
-        querySB.append(" NOT_FOR_SALE = :forSale ");
-        namedParameters.put("forSale",item.isNotForSale());
+        querySB.add(" NOT_FOR_SALE = :forSale ");
+        namedParameters.addValue("forSale", item.isNotForSale()?'Y':'N');
 
         if(item.getInStock() != null){
-            querySB.append(" IN_STOCK = :inStock ");
-            namedParameters.put("inStock",item.getInStock());
+            querySB.add(" IN_STOCK = :inStock ");
+            namedParameters.addValue("inStock", item.getInStock());
         }
 
         if(item.getDateAdd() != null){
-            querySB.append(" DATE_ADD = :dateAdd ");
-            namedParameters.put("dateAdd",item.getDateAdd());
+            querySB.add(" DATE_ADD = :dateAdd ");
+            namedParameters.addValue("dateAdd", item.getDateAdd());
         }
 
-        return querySB.toString();
+        return "update ITEM set " + String.join(",",querySB);
     }
 
     private RowMapper<Item> itemMapper = (rs,num) -> {

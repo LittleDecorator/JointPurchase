@@ -114,6 +114,7 @@ public class ItemController{
 
     @RequestMapping(method = RequestMethod.PUT)
     public void updateItem(@RequestBody ItemTransfer transfer){
+        System.out.println(transfer);
         if (transfer != null) {
             System.out.println(transfer);
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -125,7 +126,7 @@ public class ItemController{
                 categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex) {
-                System.out.println(Arrays.toString(ex.getStackTrace()));
+                System.out.println(ex);
                 transactionManager.rollback(status);
             }
         }

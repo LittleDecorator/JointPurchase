@@ -9,31 +9,33 @@
         .controller('categoryClssController',['$scope','dataResources','resolved',function($scope,dataResources,resolved){
 
             $scope.categories = [];
-            console.log(resolved);
             $scope.tree = {};
 
             dataResources.categoryTree.get().$promise.then(function(data){
                 angular.forEach(data, function(node){
-                    node.checked = false;
+                    check(node);
                     if(node.nodes.length>0){
                         angular.forEach(node.nodes, function(child){
-                            child.checked = false;
+                            check(child);
                         });
+                        var siblings = node.nodes.map(function(child){
+                            return child['checked']
+                        });
+                        if(siblings.indexOf(false)==-1){
+                            node.checked = true;
+                        }
                     }
                     $scope.categories.push(node);
                 });
-                //$scope.categories = data;
-            });
 
-            // dataResources.categoryMap.get().$promise.then(function(result){
-            //     angular.forEach(result, function (category) {
-            //         var obj = {id:category.id,name:category.name,selected:false};
-            //         $scope.categories.push(obj);
-            //     });
-            //     if(resolved){
-            //         findSelected($scope.categories);
-            //     }
-            // });
+                function check(node){
+                    if(resolved.indexOf(node.id)!=-1){
+                        node.checked = true;
+                    } else {
+                        node.checked = false;
+                    }
+                }
+            });
 
             $scope.treeHandler = function(branch) {
                 branch.checked = !branch.checked;
@@ -63,35 +65,28 @@
                 branch.selected = false;
             };
 
-            $scope.toggleHandler = function(branch){
-                console.log(branch);
-            };
-
             $scope.select = function(){
                 var data = [];
-                angular.forEach($scope.categories,function(elem){
-                    if(elem.selected){
-                        data.push(elem);
-                        return true;
+                angular.forEach($scope.categories, function(node){
+                    if(node.nodes.length>0){
+                        angular.forEach(node.nodes, function(child){
+                            add(child);
+                        });
                     } else {
-                        return false;
+                        add(node);
                     }
+                    $scope.categories.push(node);
                 });
                 $scope.closeThisDialog(data);
+
+                function add(node){
+                    if(node.checked){
+                        data.push({id:node.id,name:node.title})
+                    }
+                }
             };
 
-            function findSelected(array){
-                var selected = resolved.map(function(category){
-                    return category['id'];
-                });
-                if(selected){
-                    angular.forEach(array, function(category){
-                        if(selected.indexOf(category.id)!=-1){
-                            category.selected = true;
-                        }
-                    });
-                }
-            }
+
 
         }])
 
