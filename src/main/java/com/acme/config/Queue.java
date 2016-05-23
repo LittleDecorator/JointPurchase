@@ -17,8 +17,8 @@ public interface Queue {
     String CATEGORY_ITEM_FIND_BY_ITEM_ID = "SELECT * FROM public.category_item WHERE item_id = ? ";
     String CATEGORY_ITEM_DELETE_BY_ITEM_ID = "DELETE FROM public.category_item WHERE item_id = ?";
     String CATEGORY_ITEM_DELETE_BY_ITEM_LIST = "DELETE FROM public.category_item WHERE item_id in (:itemIdList)";
-    String CATEGORY_ITEM_DELETE_BY_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE item_id not in (:itemIdList)";
-    String CATEGORY_ITEM_DELETE_BY_CATEGORY_AND_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE category_id = :categoryId and item_id not in (:itemIdList)";
+    String CATEGORY_ITEM_DELETE_BY_ITEM_AND_EXCLUDE_CATEGORY_LIST = "DELETE FROM public.category_item WHERE item_id = :itemId AND category_id NOT IN (:categoryIdList)";
+    String CATEGORY_ITEM_DELETE_BY_CATEGORY_AND_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE category_id = :categoryId AND item_id NOT IN (:itemIdList)";
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_ID = "DELETE FROM public.category_item WHERE category_id = ?";
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
@@ -55,6 +55,7 @@ public interface Queue {
     String ITEM_CONTENT_INSERT = "INSERT INTO public.item_content (id, item_id, content_id, show, main, date_add) " +
             " values (:id, :itemId, :contentId, :show, :main, :dateAdd) ";
     String ITEM_CONTENT_FIND_BY_ITEM_ID = "SELECT * FROM public.item_content WHERE item_id = ? ORDER BY date_add ASC";
+    String ITEM_CONTENT_FIND_MAIN = "SELECT * FROM public.item_content WHERE main = 'Y' ORDER BY date_add ASC";
     String ITEM_CONTENT_DELETE_BY_ITEM_ID_AND_CONTENT_ID = "DELETE FROM public.item_content WHERE item_id = ? AND content_id = ? ";
 
     String CONTENT_FIND_DEFAULT = "SELECT * FROM public.content WHERE is_default = 'Y' ";

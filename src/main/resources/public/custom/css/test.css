@@ -82,3 +82,20 @@ div.hiden-option > i.material-icons:hover{
     -o-transition: opacity .5s ease-in-out;
     transition: opacity .5s ease-in-out;
 }
+
+.ngdialog-content{
+    height: 95%;
+}
+
+.ngdialog-content .card-panel{
+    height: 90%;
+    overflow: auto;
+}
+
+div:focus, i:focus, a:focus {
+    outline: none;
+}
+
+[type="checkbox"] + label:before{
+    margin-left: 5px;
+}

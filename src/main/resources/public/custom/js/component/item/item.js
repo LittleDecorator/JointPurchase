@@ -92,8 +92,6 @@
 
             /* show gallery for specific item */
             $scope.showGallery = function (id) {
-                //$scope.currentItem = helpers.findInArrayById($scope.filteredItems, id);
-                console.log(id);
                 $state.go("item.detail.gallery", {id: id});
             };
 
@@ -107,11 +105,9 @@
             },10);
         }])
 
-        .controller('itemDetailController',['$scope','$state','resolved','dataResources','categoryClssModal','eventService','$timeout', function ($scope, $state, resolved, dataResources,categoryClssModal,eventService,$timeout){
+        .controller('itemDetailController',['$scope','$state','resolved','dataResources','modal','$timeout', function ($scope, $state, resolved, dataResources,modal,$timeout){
 
-            console.log(resolved);
-
-            $scope.selected = resolved[0]
+            $scope.selected = resolved[0];
             $scope.categories = [];
             angular.forEach(resolved[1], function (category) {
                 $scope.categories.push({id:category.id,name:category.name});
@@ -124,9 +120,18 @@
             if(!$scope.selected.inStock){
                 $scope.selected.inStock = 0;
             }
-
-            $scope.showClss = function(){
-                //$scope.modal = categoryClssModal( elt.materialtags('items'));
+            
+            $scope.removeCategory = function(idx){
+                $scope.selected.categories.splice(idx,1);
+            };
+            
+            $scope.showCategoryModal = function(){
+                var dialog = modal({templateUrl:"pages/modal/categoryModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"categoryClssController",data:$scope.selected.categories});
+                dialog.closePromise.then(function(output) {
+                    if(output.value && output.value != '$escape'){
+                        $scope.selected.categories = output.value;
+                    }
+                });
             };
 
             //modal button save listener
@@ -140,26 +145,6 @@
                 //        $scope.selected.categories.push(cat);
                 //    });
                 //});
-            };
-
-            $scope.$on('onCategoryClssSelected',function(){
-                //$scope.selected.categories = [];
-                //elt.materialtags('removeAll');
-                //angular.forEach(eventService.data,function(cat){
-                //    elt.materialtags('add', { "value": cat.id , "text": cat.name});
-                //    $scope.selected.categories.push(cat);
-                //});
-            });
-
-            $scope.companyChanged = function(){
-                var elem = $('#company .select-wrapper');
-                if(($scope.filter && $scope.filter.selectedCompany == null) || $scope.selected.company == null){
-                    angular.element(elem).addClass('inactive');
-                } else {
-                    if(angular.element(elem).hasClass('inactive')){
-                        angular.element(elem).removeClass('inactive');
-                    }
-                }
             };
 
             $scope.showGallery = function () {

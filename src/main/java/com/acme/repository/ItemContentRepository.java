@@ -25,6 +25,10 @@ public class ItemContentRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
+    public List<ItemContent> getMain (){
+        return jdbcTemplate.query(Queue.ITEM_CONTENT_FIND_MAIN, itemContentMapper);
+    }
+
     public int countByItemId(String itemId){
         return jdbcTemplate.queryForObject(Queue.ITEM_CONTENT_COUNT_BY_ITEM_ID, new Object[]{itemId}, Integer.class);
     }

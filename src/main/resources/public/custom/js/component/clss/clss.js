@@ -6,29 +6,28 @@
     'use strict';
 
     angular.module('clss')
-        .controller('categoryClssController',['$scope','dataResources','eventService','$modalInstance',function($scope,dataResources,eventService,$modalInstance){
-
-            console.log("categoryClssController");
+        .controller('categoryClssController',['$scope','dataResources','resolved',function($scope,dataResources,resolved){
 
             $scope.categories = [];
+            console.log(resolved);
 
-            dataResources.categoryMap.get(function(result){
-                var good;
-                angular.forEach(result, function (comp) {
-                    if(wasSelected(comp.id)){
-                        good = true;
-                    } else {
-                        good = false;
-                    }
-                    var obj = {id:comp.id,name:comp.name,selected:good};
-                    $scope.categories.push(obj);
-                });
+            dataResources.categoryTree.get().$promise.then(function(data){
+                $scope.categories = data;
             });
+
+            // dataResources.categoryMap.get().$promise.then(function(result){
+            //     angular.forEach(result, function (category) {
+            //         var obj = {id:category.id,name:category.name,selected:false};
+            //         $scope.categories.push(obj);
+            //     });
+            //     if(resolved){
+            //         findSelected($scope.categories);
+            //     }
+            // });
 
             $scope.select = function(){
                 var data = [];
                 angular.forEach($scope.categories,function(elem){
-                    console.log(elem);
                     if(elem.selected){
                         data.push(elem);
                         return true;
@@ -36,20 +35,20 @@
                         return false;
                     }
                 });
-                console.log(data);
-                eventService.onCategoryClssSelected(data);
+                $scope.closeThisDialog(data);
             };
 
-            function wasSelected(id){
-                var res;
-                $modalInstance.params.some(function(elem){
-                    if(elem.value == id){
-                        return res=true;
-                    } else {
-                        return res=false;
-                    }
+            function findSelected(array){
+                var selected = resolved.map(function(category){
+                    return category['id'];
                 });
-                return res;
+                if(selected){
+                    angular.forEach(array, function(category){
+                        if(selected.indexOf(category.id)!=-1){
+                            category.selected = true;
+                        }
+                    });
+                }
             }
 
         }])
@@ -64,8 +63,6 @@
                     $scope.items.push(item);
                 });
                 if(resolved){
-                    console.log("resolved present")
-                    console.log(resolved);
                     findSelected($scope.items);
                 }
             });
@@ -85,14 +82,15 @@
             
             function findSelected(array){
                 var selected = resolved.map(function(item){
-                    return resolved['id'];
+                    return item['id'];
                 });
-                
-                angular.forEach(array, function(item){
-                    if(selected.includes(item.id)){
-                        item.selected = true;
-                    }
-                });
+                if(selected){
+                    angular.forEach(array, function(item){
+                        if(selected.indexOf(item.id)!=-1){
+                            item.selected = true;
+                        }
+                    });
+                }
             }
         }])
 

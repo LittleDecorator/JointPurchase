@@ -62,11 +62,12 @@ public class CategoryController {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try{
                 Category category = new Category();
+                category.setId(UUID.randomUUID().toString());
                 category.setName(transfer.getName());
                 category.setParentId(transfer.getParentId());
                 categoryRepository.insert(category);
                 if(!transfer.getItems().isEmpty()){
-                    List<CategoryItem> categoryItems = categoryService.createCategoryItemList(category.getId(),transfer.getItems());
+                    List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
                     categoryItemRepository.insertBulk(categoryItems);
                 }
                 transactionManager.commit(status);
@@ -90,7 +91,7 @@ public class CategoryController {
                 categoryItemRepository.deleteByCategoryAndExcludedItemIdList(category.getId(), transfer.getItems());
                 transfer.getItems().removeAll(categoryItemRepository.getByCategoryId(category.getId()).stream().map(CategoryItem::getItemId).collect(Collectors.toList()));
 
-                List<CategoryItem> categoryItems = categoryService.createCategoryItemList(category.getId(),transfer.getItems());
+                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
                 categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex){

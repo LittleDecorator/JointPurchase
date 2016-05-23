@@ -8248,13 +8248,13 @@ ul.side-nav.fixed li.logo:hover {
 ul.side-nav.fixed {
     overflow: hidden; }
 ul.side-nav.fixed li {
-    line-height: 44px; }
+    line-height: 35px; }
 ul.side-nav.fixed li:hover, ul.side-nav.fixed li.active {
     background-color: rgba(0, 0, 0, 0.05); }
 ul.side-nav.fixed li a {
     font-size: 14px;
-    line-height: 44px;
-    height: 44px; }
+    line-height: 35px;
+    height: 35px; }
 ul.side-nav.fixed ul.collapsible-accordion {
     background-color: #FFF; }
 ul.side-nav.fixed:hover {

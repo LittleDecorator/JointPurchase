@@ -1,30 +1,29 @@
 package com.acme.controller;
 
+import com.acme.model.dto.ItemMediaTransfer;
+import com.acme.model.dto.ItemTransfer;
+import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.ItemFilter;
 import com.acme.model.filter.ProductFilter;
 import com.acme.model.*;
 import com.acme.repository.*;
+import com.acme.service.CategoryService;
+import com.acme.service.ItemService;
 import com.acme.util.Constants;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/item")
@@ -57,6 +56,15 @@ public class ItemController{
     @Autowired
     CustomRepository customRepository;
 
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    ItemService itemService;
+
     /**
      * Get all items
      **/
@@ -81,6 +89,46 @@ public class ItemController{
 //        } else {
 //            return null;
 //        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String addItem(@RequestBody ItemTransfer transfer) throws ParseException, IOException {
+        String itemId = null;
+        if (transfer != null) {
+            System.out.println(transfer);
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            try {
+                itemId = UUID.randomUUID().toString();
+                transfer.getItem().setId(itemId);
+                itemRepository.insertSelective(transfer.getItem());
+                /* add new linked categories */
+                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(transfer.getItem().getId(), transfer.getCategories()));
+                transactionManager.commit(status);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                transactionManager.rollback(status);
+            }
+        }
+        return itemId;
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public void updateItem(@RequestBody ItemTransfer transfer){
+        if (transfer != null) {
+            System.out.println(transfer);
+            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+            try {
+                itemRepository.updateSelectiveById(transfer.getItem());
+                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(transfer.getItem().getId(), transfer.getCategories());
+                transfer.getCategories().removeAll(categoryItemRepository.getByItemId(transfer.getItem().getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
+                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(transfer.getItem().getId(),transfer.getCategories());
+                categoryItemRepository.insertBulk(categoryItems);
+                transactionManager.commit(status);
+            } catch (Exception ex) {
+                System.out.println(Arrays.toString(ex.getStackTrace()));
+                transactionManager.rollback(status);
+            }
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
@@ -120,66 +168,23 @@ public class ItemController{
         return list;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ItemCategoryLink addGood(@RequestBody String input) throws ParseException, IOException {
 
-        ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-
-        JSONParser parser=new JSONParser();
-        JSONObject main = (JSONObject) parser.parse(input);
-
-        String itemStr = main.toString();
-        System.out.println(itemStr);
-
-        Item item = mapper.readValue(itemStr,Item.class);
-        System.out.println(item);
-
-        JSONArray array = (JSONArray)main.get("categories");
-        List<String> list = Lists.newArrayList();
-        for (int i = 0; i < array.size(); i++) {
-            JSONObject jsonobject = (JSONObject)array.get(i);
-            list.add(jsonobject.get("id").toString());
-        }
-        System.out.println(list);
-
-        /* update item object */
-        if(item.getId()!=null){
-            itemRepository.updateSelectiveById(item);
-        } else {
-            itemRepository.insertSelective(item);
-        }
-
-        /* update or create link with categories */
-
-        /* collect and remove old one */
-        categoryItemRepository.deleteByItemId(item.getId());
-        /* add new */
-        CategoryItem categoryItem;
-        for(String categoryId : list){
-            categoryItem = new CategoryItem();
-            categoryItem.setItemId(item.getId());
-            categoryItem.setCategoryId(categoryId);
-            categoryItemRepository.insertSelective(categoryItem);
-        }
-        /* return linked item */
-        ItemCategoryLink link = new ItemCategoryLink(item);
-        link.setCategories(categoryRepository.getByIdList(list));
-
-        return link;
-    }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
-    public boolean deleteGood(@PathVariable("id") String id) {
-        //delete item in orders
-        orderItemRepository.deleteByItemId(id);
-        //delete item itself
-        itemRepository.deleteById(id);
-        return true;
+    public void deleteItem(@PathVariable("id") String id) {
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try{
+            orderItemRepository.deleteByItemId(id);
+            itemRepository.deleteById(id);
+            transactionManager.commit(status);
+        } catch (Exception ex){
+            System.out.println(ex);
+            transactionManager.rollback(status);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/filter")
-    public List<ItemCategoryLink> filter(@RequestBody(required = false) ItemFilter filter) throws ParseException, IOException {
+    public List<ItemCategoryLink> getByFilter(@RequestBody ItemFilter filter) throws ParseException, IOException {
         List<ItemCategoryLink> result;
         if(filter == null ){
             result = itemCategoryLinkRepository.getGetAll();
@@ -190,34 +195,9 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
-    public JSONObject getItemDetail(@PathVariable("id") String itemId) throws Exception {
-        JSONObject jsonObject;
-
-        // get base64 default image if no orig image linked with item
-        Content content = contentRepository.getDefault().get(0);
+    public ItemMediaTransfer getItemDetail(@PathVariable("id") String itemId) throws Exception {
         Item item = itemRepository.getById(itemId);
-
-        jsonObject = new JSONObject();
-
-        //check orig image
-        List<ItemContent> itemContents = itemContentRepository.getShowedByItemId(itemId);
-
-        JSONArray jsonArray = new JSONArray();
-        if(itemContents.size()>0){
-            //take all image
-            for(ItemContent itemContent : itemContents){
-                jsonArray.add(itemContent.getContentId());
-            }
-        } else {
-            //else default image
-            jsonArray.add(content.getId());
-        }
-        jsonObject.put("description", item.getDescription());
-        jsonObject.put("price", item.getPrice());
-        jsonObject.put("name",item.getName());
-        jsonObject.put("id", item.getId());
-        jsonObject.put("media",jsonArray);
-        return jsonObject;
+        return itemService.getItemMediaTransfers(item);
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/preview")
@@ -229,79 +209,17 @@ public class ItemController{
         return list;
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/filter/type")
-    public JSONArray filterByTypes(@RequestBody String input) throws IOException {
-        ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
-        List<String> types = mapper.readValue(input, new TypeReference<List<String>>() {
-        });
+    @RequestMapping(method = RequestMethod.POST,value = "/filter/{categoryId}")
+    public List<ItemUrlTransfer> filterByCategory(@PathVariable("categoryId") String categoryId) throws IOException {
+        //TODO: write sql for search by category and it's sub-category
         List<Item> itemList = itemRepository.getAll();
-
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
-
-        // get base64 default image if no orig image linked with item
-        Content defContent = contentRepository.getDefault().get(0);
-
-        String noImage = Constants.PREVIEW_URL+defContent.getId();
-
-        for(Item item : itemList){
-            jsonObject = new JSONObject();
-
-            //check orig image
-            List<ItemContent> itemContents = itemContentRepository.getByItemId(item.getId());
-            if(itemContents.size()>0){
-                //just take first image
-                String contentId = itemContents.get(0).getContentId();
-//                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
-                jsonObject.put("url", Constants.ORIG_URL+contentId);
-            } else {
-                //else default image
-                jsonObject.put("url",noImage);
-            }
-            jsonObject.put("description",item.getDescription());
-            jsonObject.put("price",item.getPrice());
-            jsonObject.put("name",item.getName());
-            jsonObject.put("id",item.getId());
-            jsonArray.add(jsonObject);
-        }
-        return jsonArray;
+        return itemService.getItemUrlTransfers(itemList);
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/filter/company")
-    public JSONArray filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
-        System.out.println(companyId);
+    public List<ItemUrlTransfer> filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
         List<Item> itemList = itemRepository.getByCompanyForSale(companyId);
-
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject;
-
-        // get base64 default image if no orig image linked with item
-        Content defContent = contentRepository.getDefault().get(0);
-
-        String noImage = Constants.PREVIEW_URL+defContent.getId();
-
-        for(Item item : itemList){
-            jsonObject = new JSONObject();
-
-            //check orig image
-            List<ItemContent> itemContents = itemContentRepository.getByItemId(item.getId());
-            if(itemContents.size()>0){
-                //just take first image
-                String contentId = itemContents.get(0).getContentId();
-//                jsonObject.put("url", Constants.PREVIEW_URL+contentId);
-                jsonObject.put("url", Constants.ORIG_URL+contentId);
-            } else {
-                //else default image
-                jsonObject.put("url",noImage);
-            }
-            jsonObject.put("description",item.getDescription());
-            jsonObject.put("price",item.getPrice());
-            jsonObject.put("name",item.getName());
-            jsonObject.put("id",item.getId());
-            jsonArray.add(jsonObject);
-        }
-        return jsonArray;
+        return itemService.getItemUrlTransfers(itemList);
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/set/sale")
@@ -319,17 +237,17 @@ public class ItemController{
         itemRepository.updateSelectiveById(item);
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "search")
-    public List<Item> searchItem(@RequestBody String input) throws ParseException {
-        System.out.println(input);
-        JSONParser parser=new JSONParser();
-        JSONObject main = (JSONObject) parser.parse(input);
-
-        String criteria = main.get("criteria").toString();
-
-        List<Item> result = itemRepository.getBySearch(criteria);
-        System.out.println(result);
-        return result;
-    }
+//    @RequestMapping(method = RequestMethod.POST,value = "search")
+//    public List<Item> searchItem(@RequestBody String input) throws ParseException {
+//        System.out.println(input);
+//        JSONParser parser=new JSONParser();
+//        JSONObject main = (JSONObject) parser.parse(input);
+//
+//        String criteria = main.get("criteria").toString();
+//
+//        List<Item> result = itemRepository.getBySearch(criteria);
+//        System.out.println(result);
+//        return result;
+//    }
 }
 

@@ -8,7 +8,14 @@
             return {
                 restrict: 'E',
                 //template: "<ul class=\"nav nav-list nav-pills nav-stacked abn-tree\">\n  <li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\" ng-click=\"user_clicks_branch(row.branch)\">\n   <a class=\"waves-effect waves-light \" style=\"border-radius: 50%;width: 28px;height: 28px;line-height: 26px;\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\">\n   <i ng-class=\"row.tree_icon\" ng-click=\"toggleBranch(row.branch)\" class=\"tree-icon\" style=\"width: 28px;line-height: 28px;\"> </i>\n  </a>\n    <span class=\"indented tree-label\" ng-class=\"{'leaf':!row.branch.noLeaf} \">{{ row.title}}</span>\n </li>\n</ul>",
-                templateUrl: "official/nav-tree/abn-tree.tpl.html",
+                // templateUrl: "official/nav-tree/abn-tree.tpl.html",
+                templateUrl: function(tElement, tAttrs) {
+                    var tpl = "official/nav-tree/abn-tree.tpl.html";
+                    if(tAttrs.templateUrl && tAttrs.templateUrl.length > 0){
+                        tpl = tAttrs.templateUrl;
+                    }
+                    return tpl;
+                },
                 replace: true,
                 scope: {
                     treeData: '=',

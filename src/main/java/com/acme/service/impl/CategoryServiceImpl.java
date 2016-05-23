@@ -24,16 +24,24 @@ public class CategoryServiceImpl implements CategoryService{
     CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryItem> createCategoryItemList(String categoryId, List<String> itemIdList) {
-        CategoryItem categoryItem;
+    public List<CategoryItem> createCategoryItemList4Category(String categoryId, List<String> itemIdList) {
         List<CategoryItem> categoryItems = Lists.newArrayList();
-        for (String itemId : itemIdList){
-            categoryItem = new CategoryItem();
-            categoryItem.setCategoryId(categoryId);
-            categoryItem.setItemId(itemId);
-            categoryItems.add(categoryItem);
-        }
+        categoryItems.addAll(itemIdList.stream().map(itemId -> create(itemId, categoryId)).collect(Collectors.toList()));
         return categoryItems;
+    }
+
+    @Override
+    public List<CategoryItem> createCategoryItemList4Item(String itemId, List<String> categoryIdList) {
+        List<CategoryItem> categoryItems = Lists.newArrayList();
+        categoryItems.addAll(categoryIdList.stream().map(categoryId -> create(itemId, categoryId)).collect(Collectors.toList()));
+        return categoryItems;
+    }
+
+    private CategoryItem create(String itemId, String categoryId){
+        CategoryItem categoryItem = new CategoryItem();
+        categoryItem.setCategoryId(categoryId);
+        categoryItem.setItemId(itemId);
+        return categoryItem;
     }
 
     @Override

@@ -257,10 +257,8 @@
         $scope.showItemModal = function(){
             var dialog = modal({templateUrl:"pages/modal/itemModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"itemClssController",data:$scope.data.categoryItems});
             dialog.closePromise.then(function(output) {
-                console.log(output);
-                if(output.value != '$escape'){
+                if(output.value && output.value != '$escape'){
                     $scope.data.categoryItems = output.value;
-                    console.log($scope.data.categoryItems)
                 }
             });
         };

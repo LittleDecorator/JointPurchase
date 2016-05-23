@@ -1,6 +1,6 @@
-<div>
+<div style="height: 90%;">
     <!--<div class="card-content" style="height: calc(100% - 112px)!important; top: 56px!important;">-->
-    <div class="card-content">
+    <div class="card-content" style="height: 90%;">
         <div class="card-title">
             <div class="row valign-wrapper" style="margin-bottom: 0">
                 <div class="col s12">
@@ -12,15 +12,17 @@
                 </div>
             </div>
         </div>
-        <div class="card-panel" >
-            <ul class="collection">
-                <li class="collection-item dismissable" ng-repeat="item in items">
-                    <div>
-                        <input type="checkbox" id="{{item.id}}" ng-model="item.selected"/>
-                        <label for="{{item.id}}">{{item.name}}</label>
-                    </div>
-                </li>
-            </ul>
+        <div class="card-panel" style="padding: 0 15px;">
+            <table class="table table-bordered collection" style="border: medium none;">
+                <tbody>
+                <tr ng-repeat="item in items" class="collection-item">
+                    <td style="padding: 7px 0;">
+                        <input type="checkbox" id="{{::item.id}}" ng-model="item.selected"/>
+                        <label for="{{::item.id}}">{{item.name}}</label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div style="text-align: right">
             <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeThisDialog()">Отмена</a>

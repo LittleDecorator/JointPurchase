@@ -67,15 +67,22 @@ public class CategoryItemRepository {
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
+    public boolean deleteByItemId(String itemId){
+        int result = jdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_ITEM_ID,itemId);
+        return result == 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+
     public boolean deleteByItemIdList(List<String> itemIdList){
         SqlParameterSource namedParameters = new MapSqlParameterSource("itemIdList", itemIdList);
         int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_ITEM_LIST,namedParameters);
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
-    public boolean deleteByExcludeItemIdList(List<String> itemIdList){
-        SqlParameterSource namedParameters = new MapSqlParameterSource("itemIdList", itemIdList);
-        int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_EXCLUDE_ITEM_LIST,namedParameters);
+    public boolean deleteByItemAndExcludedCategoryIdList(String itemId, List<String> categoryIdList){
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("categoryIdList", categoryIdList);
+        parameters.addValue("itemId", itemId);
+        int result = parameterJdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_ITEM_AND_EXCLUDE_CATEGORY_LIST,parameters);
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
@@ -87,10 +94,7 @@ public class CategoryItemRepository {
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
-    public boolean deleteByItemId(String itemId){
-        int result = jdbcTemplate.update(Queue.CATEGORY_ITEM_DELETE_BY_ITEM_ID,itemId);
-        return result == 0 ? Boolean.FALSE : Boolean.TRUE;
-    }
+
 
     public boolean insertSelective(CategoryItem categoryItem){
         Boolean result = Boolean.FALSE;
