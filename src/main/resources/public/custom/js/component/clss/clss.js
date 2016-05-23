@@ -10,9 +10,19 @@
 
             $scope.categories = [];
             console.log(resolved);
+            $scope.tree = {};
 
             dataResources.categoryTree.get().$promise.then(function(data){
-                $scope.categories = data;
+                angular.forEach(data, function(node){
+                    node.checked = false;
+                    if(node.nodes.length>0){
+                        angular.forEach(node.nodes, function(child){
+                            child.checked = false;
+                        });
+                    }
+                    $scope.categories.push(node);
+                });
+                //$scope.categories = data;
             });
 
             // dataResources.categoryMap.get().$promise.then(function(result){
@@ -24,6 +34,38 @@
             //         findSelected($scope.categories);
             //     }
             // });
+
+            $scope.treeHandler = function(branch) {
+                branch.checked = !branch.checked;
+                if(branch.nodes.length>0){
+                    angular.forEach(branch.nodes, function(child){
+                        child.checked = branch.checked
+                    })
+                }
+                var parent = $scope.tree.get_parent_branch(branch);
+                var siblings = $scope.tree.get_siblings(branch).map(function(child){
+                    return child['checked']
+                });
+
+                if(parent){
+                    if(parent.checked && !branch.checked){
+                        parent.checked = !parent.checked
+                    }
+
+                    if(!parent.checked && branch.checked){
+                        if(siblings.indexOf(false)==-1){
+                            parent.checked = !parent.checked;
+                        }
+                    }
+                }
+
+                /* need for reselect */
+                branch.selected = false;
+            };
+
+            $scope.toggleHandler = function(branch){
+                console.log(branch);
+            };
 
             $scope.select = function(){
                 var data = [];

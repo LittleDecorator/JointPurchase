@@ -1,4 +1,4 @@
-package migration;
+package db.migration;
 
 import com.acme.handlers.Base64BytesSerializer;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
@@ -12,10 +12,8 @@ public class V3__Content implements SpringJdbcMigration {
 
     @Override
     public void migrate(JdbcTemplate jdbcTemplate) {
-
         try {
             insert_def_content(jdbcTemplate, new ClassPathResource("no_image_available.png"));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,6 +23,7 @@ public class V3__Content implements SpringJdbcMigration {
     private void insert_def_content(JdbcTemplate jdbcTemplate, Resource resource) throws IOException {
         String contentId = java.util.UUID.randomUUID().toString();
         String fileName = resource.getFilename();
+        System.out.println("fileName -> "+fileName);
         String type = fileName.substring(fileName.indexOf(".")+1);
         String mime = "image/"+type;
 

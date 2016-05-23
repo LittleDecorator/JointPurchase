@@ -92,7 +92,7 @@
                             selected_branch = null;
                             return;
                         }
-                        if (branch !== selected_branch) {
+                        if (branch !== selected_branch || !branch.selected) {
                             if (selected_branch != null) {
                                 selected_branch.selected = false;
                             }
@@ -116,7 +116,7 @@
                     };
 
                     scope.user_clicks_branch = function(branch) {
-                        if (branch !== selected_branch) {
+                        if (branch !== selected_branch || !branch.selected) {
                             return select_branch(branch);
                         }
                     };

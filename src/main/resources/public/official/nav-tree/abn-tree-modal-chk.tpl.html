@@ -6,8 +6,8 @@
             <i ng-class="row.tree_icon" ng-click="toggleBranch(row.branch)" class="tree-icon" style="width: 28px;line-height: 28px;"></i>
         </a>
         <div style="width: 100%;" ng-click="user_clicks_branch(row.branch)">
-            <input type="checkbox" id="{{::row.id}}" ng-model="row.selected"/>
-            <label for="{{::row.id}}" class="indented tree-label" ng-class="{'leaf':!row.branch.noLeaf}" style="padding-left: 30px;">{{::row.title}}</label>
+            <input type="checkbox" id="{{::row.id}}" ng-model="row.branch.checked"/>
+            <label for="{{::row.id}}" class="indented tree-label" ng-class="{'leaf':!row.branch.noLeaf}" style="padding-left: 30px;">{{::row.title}}({{row.branch.checked}})</label>
         </div>
     </li>
 </ul>
