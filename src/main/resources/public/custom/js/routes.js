@@ -247,19 +247,23 @@ var route = {
             {
                 name: 'person.detail',
                 url:'/:id',
+                parent: 'person',
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/personCard.html',
-                        controller: 'personController'
+                        controller: 'personDetailController'
                     }
                 },
                 data: {
-                    requireLogin: true,
                     displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
+                    requireLogin: true
                 },
                 resolve: {
                     person: function($stateParams, resolveService) {
                         return resolveService.getPerson($stateParams.id);
+                    },
+                    companies: function($stateParams, resolveService) {
+                        return resolveService.getCompanyMap();
                     }
                 }
             },
@@ -274,13 +278,7 @@ var route = {
                 },
                 data: {
                     displayName: 'Клиенты',
-                    requireLogin: true,
-                    //base:true
-                },
-                resolve: {
-                    person: function() {
-                        return null;
-                    }
+                    requireLogin: true
                 }
             },
             {

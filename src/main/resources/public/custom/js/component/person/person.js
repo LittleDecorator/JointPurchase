@@ -6,25 +6,11 @@
     'use strict';
 
     angular.module('person')
-        .controller('personController',['$scope','$state','person','dataResources', function ($scope, $state, person, dataResources) {
-            console.log("Enter person controller");
+        .controller('personController',['$scope','$state','dataResources', function ($scope, $state, dataResources) {
             //TODO: делать неактивным кнопку показа заказов клиента, если их нет
             //TODO: возможно стоит показывать в таблице кол-во заказов
 
-            $scope.current = {};
-            $scope.companyNames = dataResources.companyMap.get();
-            $scope.selectedCompany = {};
-            if(person){
-                $scope.current = person;
-                if ($scope.current.companyId != null) {
-                    $scope.selectedCompany = helpers.findInArrayById($scope.companyNames, $scope.current.companyId);
-                    $scope.current.isEmployer = true;
-                } else {
-                    $scope.current.isEmployer = false;
-                }
-            } else {
-                $scope.customers = dataResources.customer.query();
-            }
+            $scope.customers = dataResources.customer.query();
 
             $scope.editPerson = function (id) {
                 $state.transitionTo("person.detail",{id:id});
@@ -53,5 +39,17 @@
                 dataResources.customer.save($scope.current);
             };
 
-        }]);
+        }])
+
+        .controller('personDetailController',['$scope','$state','dataResources','person','companies', function ($scope, $state, dataResources, person, companies) {
+            $scope.person = {};
+            $scope.companies = companies;
+            $scope.companies.unshift({id:null,name:'Выберите компанию'});
+
+            if(person){
+                $scope.person = person;
+                $scope.person.isEmployer = ($scope.person.companyId != null);
+            }
+
+        }])
 })();
