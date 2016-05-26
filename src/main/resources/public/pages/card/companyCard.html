@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="table-container" ng-if="width > 600">
     <form role="form">
         <div class="modal-body">
             <div class="form-group">
@@ -37,6 +37,45 @@
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
+            <i class="large mdi-content-save"></i>
+        </a>
+    </div>
+</div>
+
+<!-- SMALL -->
+<div ng-if="width < 601" style="padding-bottom: 20px">
+    <div class="input-field">
+        <input id="name" type="text" name="name" class="form-control" ng-model="company.name">
+        <label for="name" ng-class="{'active':company.name.length>0}">Название</label>
+    </div>
+
+    <div class="input-field">
+        <input id="description" type="text" name="description" class="form-control" ng-model="company.description">
+        <label for="description" ng-class="{'active':company.description.length>0}">Описание</label>
+    </div>
+
+    <div class="input-field">
+        <input id="url" type="text" name="url" class="form-control" ng-model="company.url">
+        <label for="url" ng-class="{'active':company.url.length>0}">Сайт</label>
+    </div>
+
+    <div class="input-field">
+        <input id="address" type="text" name="address" class="form-control" ng-model="company.address">
+        <label for="address" ng-class="{'active':company.address.length>0}">Адрес</label>
+    </div>
+
+    <div class="input-field">
+        <input id="email" type="text" name="email" class="form-control" ng-model="company.email">
+        <label for="email" ng-class="{'active':company.email.length>0}">Почта</label>
+    </div>
+
+    <div class="input-field">
+        <input id="phone" type="text" name="phone" class="form-control" ng-model="company.phone">
+        <label for="phone" ng-class="{'active':company.phone.length>0}">Телефон</label>
+    </div>
+
+    <div class="fixed-action-btn " style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-x-small blue lighten-3" ng-click="save()">
             <i class="large mdi-content-save"></i>
         </a>
     </div>

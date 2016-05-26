@@ -116,6 +116,7 @@
             angular.forEach(resolved[2], function (company) {
                 $scope.companyNames.push(company);
             });
+            $scope.companyNames.unshift({id:null,name:"Выберите производителя ..."});
 
             if(!$scope.selected.inStock){
                 $scope.selected.inStock = 0;

@@ -208,15 +208,16 @@ var route = {
             {
                 name: 'order.detail',
                 url: '/:id',
+                parent:'order',
                 views: {
                     'main@': {
-                        templateUrl : 'pages/order-detail.html',
+                        templateUrl : 'pages/card/orderCard.html',
                         controller: 'orderDetailController'
                     }
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{order.uid}}',
+                    displayName: '{{order.uid|nvl:"Создание"}}',
                 },
                 resolve: {
                     order: function($stateParams, resolveService) {
@@ -281,26 +282,7 @@ var route = {
                     requireLogin: true
                 }
             },
-            {
-                name: 'company.detail',
-                url:'/:id',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/company-detail.html',
-                        controller: 'companyController'
-                    }
-                },
-                data: {
-                    requireLogin: true,
-                    displayName:'{{ company.name }}',
-                    //base:false
-                },
-                resolve: {
-                    company: function($stateParams, resolveService) {
-                        return resolveService.getCompany($stateParams.id);
-                    }
-                }
-            },
+
             {
                 name: 'company',
                 url:'/company',
@@ -312,15 +294,30 @@ var route = {
                 },
                 data: {
                     displayName: 'Поставщики',
+                    requireLogin: true
+                }
+            },
+            {
+                name: 'company.detail',
+                url:'/:id',
+                parent:'company',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/card/companyCard.html',
+                        controller: 'companyDetailController'
+                    }
+                },
+                data: {
                     requireLogin: true,
-                    //base:true
+                    displayName: '{{company.name|nvl:"Создание"}}'
                 },
                 resolve: {
-                    company: function() {
-                        return null;
+                    company: function($stateParams, resolveService) {
+                        return resolveService.getCompany($stateParams.id);
                     }
                 }
             },
+
             {
                 name:'item',
                 url:'/item?:companyId:orderId',
@@ -352,7 +349,7 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{resolved[0].name}}'
+                    displayName: '{{resolved[0].name|nvl:"Создание"}}'
                 },
                 resolve: {
                     resolved: function($stateParams, resolveService) {

@@ -21,7 +21,7 @@
 
             return {
                 restrict: 'A',
-                template: '<canvas/>',
+                //template: '<canvas/>',
                 link: function(scope, element, attributes) {
                     if (!helper.support) return;
 
@@ -31,6 +31,7 @@
                     if (!helper.isImage(params.file)) return;
 
                     var canvas = element.find('canvas');
+                    console.log(canvas);
                     var reader = new FileReader();
 
                     reader.onload = onLoadFile;
@@ -43,14 +44,31 @@
                     }
 
                     function onLoadImage() {
-                        var width = params.width || this.width / this.height * params.height;
-                        var height = params.height || this.height / this.width * params.width;
+                        console.log(this.width);
+                        console.log(this.height);
+                        var width = this.width;
+                        var height = this.height;
+                        if(params.width && params.height){
+                            console.log('with params!');
+                            width = params.width || this.width / this.height * params.height;
+                            height = params.height || this.height / this.width * params.width;
+                        }
                         canvas.attr({ width: width, height: height });
                         canvas[0].getContext('2d').drawImage(this, 0, 0, width, height);
                     }
                 }
             };
         }])
+
+        .directive('imgTitle',function(){
+            return{
+                restrict: 'E',
+                templateUrl:'pages/template/imageTitle.html',
+                link: function (scope, el, attrs) {
+                    el.replaceWith(el.children());
+                }
+            }
+        })
 
         // .directive('syncFocusWith', function($timeout, $rootScope) {
         //     return {

@@ -10,6 +10,8 @@
             function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
                 console.log("Enter gallery controller");
 
+                $( '.swipebox' ).swipebox();
+
                 var uploader = $scope.uploader = new FileUploader();
                 var dialog;
                 var mCou=0;

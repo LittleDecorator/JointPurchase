@@ -1,6 +1,5 @@
-<div style="padding-top: 20px;">
-    <!--<i class="file-pdf-o" ng-click="">Export to PDF</i>-->
-    <!--<button class="btn btn-primary" ng-click="addCompany()">Добавить компанию</button>-->
+<!---->
+<div style="padding-top: 20px;" ng-if="width>600">
     <h3 class="example_head">Компании:</h3>
     <div class="table-result">
         <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
@@ -26,6 +25,33 @@
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a class="btn-floating btn-large blue lighten-3" ng-click="addCompany()">
+            <i class="large mdi-content-add"></i>
+        </a>
+    </div>
+</div>
+
+<!-- FOR SMALL ONLY -->
+<div ng-if="width < 601">
+    <md-list class="hide-on-med-and-up">
+        <div class="card-panel" ng-repeat="company in companies" style="padding: 5px 10px">
+            <md-list-item class="md-3-line">
+                <div class="md-list-item-text" layout="column">
+                    <h3>{{::company.name}}</h3>
+                    <p>{{::company.description}}</p>
+                </div>
+                <md-menu>
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item><md-button ng-click="edit(company.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="delete(company.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-list-item>
+        </div>
+    </md-list>
+
+    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-x-small blue lighten-3" ng-click="addCompany()">
             <i class="large mdi-content-add"></i>
         </a>
     </div>

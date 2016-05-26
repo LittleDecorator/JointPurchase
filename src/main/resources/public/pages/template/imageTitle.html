@@ -1,0 +1,39 @@
+<!--<div style="position: absolute; left: 0px; right: 0px; bottom: 0px; display: flex; align-items: center; background: rgba(0, 0, 0, 0.4);">-->
+    <!--<div style="flex-grow: 1; margin-left: 16px; margin-right: 0px; color: rgb(255, 255, 255); overflow: hidden;">-->
+        <!--<div style="font-size: 16px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">ItemName</div>-->
+        <!--<div style="font-size: 12px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">-->
+            <!--<span>maybe date add</span>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div style="order: 1;">-->
+        <!--<div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)" style="cursor: pointer;color: white">{{image.main?'star':'star_border'}}</i></div>-->
+        <!--<div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)" style="cursor: pointer;color: white">done</i></div>-->
+        <!--<div class="hiden-option" style="display: inline-block;padding: 5px;"><i class="material-icons" ng-click="deleteImage(image.id)" style="cursor: pointer;color: white">clear</i></div>-->
+    <!--</div>-->
+<!--</div>-->
+
+
+<div class="title">
+    <div>
+        <div class="titleHead">ItemName</div>
+        <div class="titleSubHead"><span>maybe date add</span></div>
+    </div>
+    <div style="order: 1;">
+        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)">{{image.main?'star':'star_border'}}</i></div>
+        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)">done</i></div>
+        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-click="deleteImage(image.id)">clear</i></div>
+    </div>
+</div>
+
+
+<!--<div class="titleBox">-->
+    <!--<div>-->
+        <!--<div class="titleHead">ItemName</div>-->
+        <!--<div class="titleSubHead"><span>maybe date add</span></div>-->
+    <!--</div>-->
+    <!--<div style="order: 1;">-->
+        <!--<div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'main':image.main}" ng-click="toggleMain(image.id)">{{image.main?'star':'star_border'}}</i></div>-->
+        <!--<div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'show':image.show}" ng-click="toggleShow($event,image.id)">done</i></div>-->
+        <!--<div class="hiden-option titleIconPanel"><i class="material-icons" ng-click="deleteImage(image.id)">clear</i></div>-->
+    <!--</div>-->
+<!--</div>-->

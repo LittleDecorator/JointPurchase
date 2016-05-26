@@ -57,20 +57,17 @@
             };
 
         }])
-        .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','itemClssModal','eventService',function ($scope, $state, order,$stateParams, dataResources,$timeout,itemClssModal,eventService){
+        .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','modal',function ($scope, $state, order,$stateParams, dataResources,$timeout,modal){
 
             $scope.stats = [];
             $scope.deliveries = [];
             var time = new Date().getTime();
-            $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time};
+            $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time,delivery:null};
             $scope.isNewOrder = true;
 
             if (order) {
-                console.log(order);
                 $scope.currentOrder = angular.copy(order);
-
                 $scope.currentOrder.items = [];
-
 
                 dataResources.orderItems.get({id: order.id}, function (data) {
                     angular.forEach(data, function (orderItem) {
@@ -84,34 +81,35 @@
             }
             $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
 
-
             // Status
             dataResources.orderStatus.get(function(data){
                 angular.forEach(data,function(stat){
                     $scope.stats.push(stat);
                 });
-
-                if (order) {
-                    $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, order.status);
-                } else {
-                    $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
-                    $('#status').prop( "disabled", true );
-                }
+                $scope.stats.unshift({id:null,value:"Укажите статус заказа ..."});
+                console.log($scope.stats);
+                //if (order) {
+                //    $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, order.status);
+                //} else {
+                //    $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
+                //    $('#status').prop( "disabled", true );
+                //}
             });
 
             dataResources.orderDelivery.get(function(data){
                 angular.forEach(data,function(del){
                     $scope.deliveries.push(del);
                 });
-
-                if (order) {
-                    $scope.currentOrder.delivery = helpers.findInArrayByValue($scope.deliveries, order.delivery);
-                } else {
-                    $scope.currentOrder.delivery = helpers.findInArrayById($scope.deliveries, 0);
-                }
+                $scope.deliveries.unshift({id:null,value:"Укажите тип доставки ..."});
+                console.log($scope.deliveries);
+                //if (order) {
+                //    $scope.currentOrder.delivery = helpers.findInArrayByValue($scope.deliveries, order.delivery);
+                //} else {
+                //    $scope.currentOrder.delivery = helpers.findInArrayById($scope.deliveries, 0);
+                //}
             });
 
-
+            console.log($scope.currentOrder);
 
             $scope.save = function () {
                 console.log("Save button pressed");
@@ -148,7 +146,16 @@
 
             //add item to order
             $scope.addItemsInOrder = function () {
-                $scope.modal = itemClssModal($scope.currentOrder.items);
+                var dialog = modal({templateUrl:"pages/modal/itemModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"itemClssController",data:$scope.currentOrder.items});
+                dialog.closePromise.then(function(output) {
+                    if(output.value && output.value != '$escape'){
+                        $scope.currentOrder.items = output.value;
+                        angular.forEach($scope.currentOrder.items, function (item) {
+                            item.cou = 1;
+                        });
+                        recalculatePayment();
+                    }
+                });
             };
 
             //remove item from order
@@ -157,20 +164,20 @@
                 recalculatePayment();
             };
 
-            $scope.$on('onItemClssSelected',function() {
-                var oldItems = $scope.currentOrder.items;
-                $scope.currentOrder.items = [];
-                var currItem;
-                angular.forEach(eventService.data, function (item) {
-                    currItem = helpers.findInArrayById(oldItems,item.id);
-                    if(helpers.isEmpty(currItem)){
-                        currItem = item;
-                        currItem.cou = 1;
-                    }
-                    $scope.currentOrder.items.push(currItem)
-                });
-                recalculatePayment();
-            });
+            //$scope.$on('onItemClssSelected',function() {
+            //    var oldItems = $scope.currentOrder.items;
+            //    $scope.currentOrder.items = [];
+            //    var currItem;
+            //    angular.forEach(eventService.data, function (item) {
+            //        currItem = helpers.findInArrayById(oldItems,item.id);
+            //        if(helpers.isEmpty(currItem)){
+            //            currItem = item;
+            //            currItem.cou = 1;
+            //        }
+            //        $scope.currentOrder.items.push(currItem)
+            //    });
+            //    recalculatePayment();
+            //});
 
             //increment item cou in order
             $scope.incrementCou = function (idx) {
@@ -220,6 +227,11 @@
             };*/
 
             console.log($scope);
+
+            $timeout(function(){
+                // $('.toc-wrapper').pushpin({ offset: 100});
+                $('select').material_select();
+            },10);
 
         }])
 

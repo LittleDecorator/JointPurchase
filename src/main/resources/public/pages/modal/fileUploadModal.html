@@ -2,7 +2,7 @@
     <div class="card-content" >
 
         <div class="card-title">
-            <div class="row valign-wrapper">
+            <div class="row valign-wrapper" style="margin-bottom: 0;">
                 <div class="col s12">
                     <a class="btn-flat" ng-click="closeThisDialog()" style="float: right; padding: 0; font-size: 1.2rem;">Закрыть</a>
                 </div>
@@ -11,13 +11,16 @@
     </div>
 
     <!-- FOR PC (TABLET LANDSCAPE)-->
-    <div class="card-panel hide-on-med-and-down">
+    <div class="card-panel" ng-if="width > 1024">
         <div ng-repeat="item in uploader.queue">
             <div class="row" style="margin-bottom: 0">
-                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }" class="col s3">
-                    <canvas width="150" height="100"></canvas>
+                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file }" class="col s3">
+                    <div class="box" style="padding-bottom: 70%;width: 100%;">
+                        <div class="boxInner">
+                            <canvas style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;border:none;margin: 0;box-shadow: none;background-color: #fff;"></canvas>
+                        </div>
+                    </div>
                 </div>
-
                 <div class="col s5">
                     <strong>{{ item.file.name|limitTo:40}} ...</strong>
                 </div>
@@ -33,11 +36,15 @@
     </div>
 
     <!-- FOR TABLET (PORTRAIT)-->
-    <div class="card-panel hide-on-large-only hide-on-small-only" style="padding: 5px">
+    <div class="card-panel" style="padding: 5px" ng-if="600 < width && width < 1025">
         <div ng-repeat="item in uploader.queue">
             <md-list-item class="md-3-line row" style="padding: 5px 0; margin-bottom: 0;">
-                <div ng-thumb="{ file: item._file, height: 100 }" class="col s4">
-                    <canvas width="150" height="100"></canvas>
+                <div ng-thumb="{ file: item._file }" class="col s4">
+                    <div class="box" style="padding-bottom: 70%;width: 100%;">
+                        <div class="boxInner">
+                            <canvas style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;border:none;margin: 0;box-shadow: none;background-color: #fff;"></canvas>
+                        </div>
+                    </div>
                 </div>
                 <div class="md-list-item-text" layout="column" style="margin-top: 0;">
                     <h3>Название: {{ item.file.name|limitTo:20}} ...</h3>
@@ -52,7 +59,7 @@
     </div>
 
     <!-- FOR MOBILE (PORTRAIT)-->
-    <div class="card-panel hide-on-med-and-up" style="padding: 0; background-color: transparent; box-shadow: none;">
+    <div class="card-panel" style="padding: 0; background-color: transparent; box-shadow: none;" ng-if="width < 601">
 
         <div class="card" ng-repeat="item in uploader.queue">
             <div class="card-content" style="padding: 15px!important;" >
@@ -65,13 +72,15 @@
                 <div class="card-panel" style="padding: 5px;">
                     <md-list-item class="md-3-line" style="padding: 0">
                         <div class="md-list-item-text" layout="column">
-                            <div class="row" style="margin-bottom: 0;">
-                                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }" class="col s12">
-                                    <canvas width="150" height="100"></canvas>
+                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file }">
+                                <div class="box">
+                                    <div class="boxInner">
+                                        <canvas style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;border:none;margin: 0;box-shadow: none;background-color: #fff;"></canvas>
+                                    </div>
                                 </div>
-                                <div class="col s12">
-                                    <span ng-show="uploader.isHTML5" nowrap>Размер: {{ item.file.size/1024/1024|number:2 }} MB</span>
-                                </div>
+                            </div>
+                            <div>
+                                <span ng-show="uploader.isHTML5" nowrap>Размер: {{ item.file.size/1024/1024|number:2 }} MB</span>
                             </div>
                         </div>
                     </md-list-item>
@@ -81,6 +90,7 @@
         </div>
     </div>
     <div style="text-align: right">
+        <a style="cursor: pointer;" class="btn-flat" ng-click="closeThisDialog()">Отмена</a>
         <a style="cursor: pointer;" class="btn btn-default" ng-click="add()">Добавить</a>
         <a style="cursor: pointer;" class="btn btn-default" ng-click="upload()">Загрузить</a>
     </div>
