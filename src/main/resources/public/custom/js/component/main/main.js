@@ -219,6 +219,10 @@
                         eventService.onSearchHide();
                     }
                 };
+                
+                $scope.goto =function(name){
+                    $state.go(name);
+                }
 
         }]);
 
