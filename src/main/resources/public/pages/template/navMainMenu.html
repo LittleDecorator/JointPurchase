@@ -31,26 +31,58 @@
                 </ul>
             </div>
 
-            <ul class="side-nav show-on-medium-and-down" id="mobile-demo">
-                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Личный кабинет</a></li>
-                <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="catalog">Каталог</a></li>
+            <!-- width style must be dynamic (check ngStyle) -->
+            <ul class="side-nav show-on-medium-and-down" id="mobile-demo" style="width: 165px">
+                <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()" style="padding: 0;">-->
+                    <!--<a style="cursor: pointer;line-height: 3rem; height: 3rem;margin: 0; padding: 0;" ui-sref="login" >Личный кабинет</a></li>-->
+                <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" style="padding: 0;">-->
+                    <!--<a ui-sref="catalog" style="line-height: 3rem; height: 3rem;padding: 0;">Каталог</a></li>-->
+                <!--<li style="padding: 0;">-->
+                <md-menu-item style="width: 100%;">
+                    <md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="auth.isAuth()">
+                        <md-icon style="margin: 0 16px;">account_circle</md-icon>
+                        <span style="color: #676565;">{{currentUser.name}}</span>
+                    </md-button>
+                    <md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="!auth.isAuth()">
+                        <md-icon style="margin: 0 16px;">vpn_key</md-icon>
+                        <span style="color: #676565;">Вход</span>
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item><md-button><md-icon>bookmark_border</md-icon><span style="color: #676565;">Каталог</span></md-button></md-menu-item>
+
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>bookmark_border</md-icon><span style="color: #676565;">Заказы</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>accessibility</md-icon><span style="color: #676565;">Клиенты</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>bookmark_border</md-icon><span style="color: #676565;">Товар</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>bookmark_border</md-icon><span style="color: #676565;">Поставщики</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>bookmark_border</md-icon><span style="color: #676565;">Категории</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span style="color: #676565;">Почта</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span style="color: #676565;">Настройки</span></md-button></md-menu-item>
+                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>exit_to_app</md-icon><span style="color: #676565;">Выход</span></md-button></md-menu-item>
+
+
+                <md-menu-item><md-button style="border-top: 1px solid #ddd;""><md-icon>shopping_cart</md-icon><span style="color: #676565;">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></span></md-button></md-menu-item>
+                <!--</li>-->
                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a>Личный кабинет</a></li>-->
                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>-->
                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>-->
                 <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>-->
+
                 <!--<li><a ui-sref="cart">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></a></li>-->
-                <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()"><a style="cursor: pointer">Выход</a></li>
+
+                <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()" style="padding: 0;">-->
+                    <!--<a style="cursor: pointer;line-height: 3rem; height: 3rem;padding: 0;">Выход</a></li>-->
                 <!--<ul class="collapsible collapsible-accordion">-->
-                    <!--<li><a class="collapsible-header waves-effect waves-teal menu-up-lvl" ng-show="auth.isAuth()">Администрирование</a>-->
+
+                    <!--<li><a class="collapsible-header waves-effect waves-teal menu-up-lvl" ng-show="auth.isAuth()" style="line-height: 3rem;margin: 0; padding: 0;">Администрирование</a>-->
                         <!--<div class="collapsible-body">-->
                             <!--<ul>-->
-                                <!--<li><a ui-sref="order">Заказы</a></li>-->
-                                <!--<li><a ui-sref="person">Клиенты</a></li>-->
-                                <!--<li><a ui-sref="item">Товар</a></li>-->
-                                <!--<li><a ui-sref="company">Поставщики</a></li>-->
-                                <!--<li><a ui-sref="category">Категории</a></li>-->
-                                <!--<li><a>Настройки</a></li>-->
-                                <!--<li><a ui-sref="email">Почта</a></li>-->
+                                <!--<li><a ui-sref="order" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Заказы</a></li>-->
+                                <!--&lt;!&ndash;<li><a ui-sref="person" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Клиенты</a></li>&ndash;&gt;-->
+                                <!--<li><a ui-sref="item" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Товар</a></li>-->
+                                <!--<li><a ui-sref="company" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Поставщики</a></li>-->
+                                <!--<li><a ui-sref="category" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Категории</a></li>-->
+                                <!--<li><a style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Настройки</a></li>-->
+                                <!--<li><a ui-sref="email" style="line-height: 3rem; height: 3rem;margin: 0; padding: 0;">Почта</a></li>-->
                             <!--</ul>-->
                         <!--</div>-->
                     <!--</li>-->
