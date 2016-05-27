@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="custom/css/side.css">
     <link rel="stylesheet" href="custom/css/styles.css">
     <link rel="stylesheet" href="custom/css/test.css">
+    <link rel="stylesheet" href="custom/css/spinner.css">
 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -38,12 +39,21 @@
     <main style="width:100%; background-color: rgb(246, 244, 241)">
         <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy" template-url="pages/template/breadcrumbs.html"></breadcrumbs>
 
-
         <!-- MAIN CONTENT AND INJECTED VIEWS -->
         <div class="main container" style="margin-top: 25px;">
             <div ui-view="main"></div>
         </div>
     </main>
+
+
+    <!--<div id="loader-wrapper">-->
+        <!--<div id="loader"></div>-->
+        <!--<div class="loader-section section-left"></div>-->
+        <!--<div class="loader-section section-right"></div>-->
+    <!--</div>-->
+    <div id="spinner" class="spinner-wrapper">
+        <div id="loader"></div>
+    </div>
 
     <!--<footer class="page-footer" style="background-color: #b5cac9 !important; font-family: Ubuntu Condensed; letter-spacing: 0.5pt;bottom: 0;  position: absolute;  width: 100%;">-->
         <!--<div class="container">-->

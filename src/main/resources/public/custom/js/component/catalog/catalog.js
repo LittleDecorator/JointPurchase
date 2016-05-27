@@ -215,6 +215,7 @@
             }
 
             $scope.show = function(id){
+                console.log($scope.mainImage);
                 var keepGoing = true;
                 var res = null;
 
@@ -227,6 +228,7 @@
                     }
                 });
                 $scope.mainImage = id;
+                console.log($scope.mainImage);
             };
 
             $scope.showGallery = function () {

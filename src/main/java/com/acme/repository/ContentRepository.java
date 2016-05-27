@@ -5,6 +5,8 @@ import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Content;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Repository
+@CacheConfig(cacheNames = "content")
 public class ContentRepository {
 
     @Autowired
@@ -24,6 +27,7 @@ public class ContentRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
+    @Cacheable
     public Content getById(String id){
         return jdbcTemplate.queryForObject(Queue.CONTENT_FIND_BY_ID,contentMapper,id);
     }
