@@ -7,7 +7,9 @@
                 <div class="col l8 s12">
                     <div class="box" style="width: 100%; padding-bottom: 65%;">
                         <div class="boxInner">
-                            <img ng-src="{{ORIG_URL+mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
+                            <a ng-href="{{ORIG_URL+mainImage}}" class="swipebox" title="Some Title">
+                                <img ng-src="{{ORIG_URL+mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
+                            </a>
                         </div>
                     </div>
                     <div ng-if="item.media.length>1">

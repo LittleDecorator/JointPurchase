@@ -1,16 +1,7 @@
 <ol class="breadcrumb" ng-if="breadcrumbs.length>1">
-    <!-- here for phone portrait font must be font-size: 12px; -->
-    <li ng-repeat="crumb in breadcrumbs"
-        ng-class="{ active: $last }">
+
+    <li ng-repeat="crumb in breadcrumbs" ng-class="{ active: $last }">
         <a ui-sref="{{ crumb.route }}" ng-if="!$last">{{ crumb.displayName }}&nbsp;</a>
         <span ng-show="$last">{{crumb.displayName }}</span>
     </li>
 </ol>
-
-<!--<nav ng-if="breadcrumbs.length>1" style="background-color: #f5f5f5;">-->
-    <!--<div class="nav-wrapper">-->
-        <!--<div class="col s12" style="padding: 0 15px;">-->
-            <!--<a ui-sref="{{ crumb.route }}" class="breadcrumb" ng-repeat="crumb in breadcrumbs" ng-class="{ active: $last }">{{::crumb.displayName }}</a>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</nav>-->

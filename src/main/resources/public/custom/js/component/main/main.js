@@ -179,6 +179,7 @@
                     $(".button-collapse").sideNav();
                     $(".collapsible").collapsible();
                     $('.dropdown-button').dropdown();
+                    $('.swipebox').swipebox();
                 }, 100);
 
                 //TEMPORARY ADD HERE
