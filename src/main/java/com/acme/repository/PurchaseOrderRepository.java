@@ -1,21 +1,18 @@
 package com.acme.repository;
 
 import com.acme.config.Queue;
-import com.acme.model.ItemContent;
 import com.acme.model.PurchaseOrder;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Repository
 public class PurchaseOrderRepository {
@@ -27,11 +24,11 @@ public class PurchaseOrderRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<PurchaseOrder> getAll(){
-        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_ALL,purchaseOrderMapper);
+        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_ALL, Mappers.purchaseOrderMapper);
     }
 
     public PurchaseOrder getById(String id){
-        return jdbcTemplate.queryForObject(Queue.PURCHASE_ORDER_FIND_BY_ID, purchaseOrderMapper, id);
+        return jdbcTemplate.queryForObject(Queue.PURCHASE_ORDER_FIND_BY_ID, Mappers.purchaseOrderMapper, id);
     }
 
     public boolean deleteById(String id){
@@ -45,7 +42,7 @@ public class PurchaseOrderRepository {
     }
 
     public List<PurchaseOrder> getBySubjectId(String subjectId){
-        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_BY_SUBJECT_ID,purchaseOrderMapper,subjectId);
+        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_BY_SUBJECT_ID, Mappers.purchaseOrderMapper,subjectId);
     }
 
     public boolean insertSelective(PurchaseOrder order){
@@ -239,27 +236,6 @@ public class PurchaseOrderRepository {
 
         return querySB.toString();
     }
-
-
-    private RowMapper<PurchaseOrder> purchaseOrderMapper = (rs,num) -> {
-        PurchaseOrder order = new PurchaseOrder();
-        order.setId(rs.getString("id"));
-        order.setSubjectId(rs.getString("subject_id"));
-        order.setUid(rs.getLong("uid"));
-        order.setRecipientFname(rs.getString("RECIPIENT_FNAME"));
-        order.setRecipientMname(rs.getString("RECIPIENT_MNAME"));
-        order.setRecipientLname(rs.getString("RECIPIENT_LNAME"));
-        order.setRecipientPhone(rs.getString("RECIPIENT_PHONE"));
-        order.setRecipientEmail(rs.getString("RECIPIENT_EMAIL"));
-        order.setRecipientAddress(rs.getString("RECIPIENT_ADDRESS"));
-        order.setCloseOrderDate(rs.getDate("CLOSE_ORDER_DATE"));
-        order.setComment(rs.getString("COMMENT"));
-        order.setStatus(rs.getString("STATUS"));
-        order.setDelivery(rs.getString("DELIVERY"));
-        order.setPayment(rs.getBigDecimal("PAYMENT"));
-        order.setDateAdd(rs.getDate("date_add"));
-        return order;
-    };
 
 
 }

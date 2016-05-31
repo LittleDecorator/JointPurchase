@@ -100,7 +100,7 @@ insert into category(id,name,parent_id)
         values ('74e92d18-007e-4896-96b3-0d11c21279cb','Домики и мебель','4e09566a-73a4-4274-8681-fafa52e6fa9b');
 
 insert into category(id,name)
-        values ('0e7b3010-74cd-4f93-acd5-ecc883737828','Фигурки для сюжетных и ролевых игр');
+        values ('0e7b3010-74cd-4f93-acd5-ecc883737828','Фигурки для ролевых игр');
 insert into category(id,name,parent_id)
         values ('f1d3d600-3206-40e8-89bd-48f0ad58f4b0','Животные и птицы','0e7b3010-74cd-4f93-acd5-ecc883737828');
 insert into category(id,name,parent_id)
@@ -157,34 +157,3 @@ insert into category_item(id,category_id,item_id)
 --sms account
 -- insert into email(id,username,password) values('d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
 -- insert into sms(id,service_name,email_id,credential_login,credential_password) values('1f3eb80b-8357-4f64-955e-15d4f7fba30a','sms24x7.ru','d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
-
---only one row settings
--- insert into settings(id) values(1);
--- update settings set
--- 		clipper_id='29fe5837-9060-4503-9593-28db9520cb01',
--- 		clipper_xpath_wait='//html[@clipped=''1'']',
--- 		clipper_jquery_url='http://localhost:8080/pub/rest/pub/jquery.js'
--- 	where id = 1;
--- update settings set
--- 		builder_host='192.168.10.188',
--- 		builder_ssh_port=22,
--- 		builder_ssh_login='ugl',
--- 		builder_ssh_password='123'
--- 	where id = 1;
--- update settings set
--- 		builder_cmd_run='"C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.Cmd" & C:\zagr\builder\run.bat',
---  		builder_exe='C:\zagr\ncrypt\Debug\out\stub.exe',
---  		builder_build_command = 'C:\zagr\builder\builder.py -r -s C:\zagr\thief\',
---  		builder_encrypt_command = 'C:\zagr\ncrypt\Debug\builder.exe -i C:\zagr\thief\Rls\injector.exe -m 5 -r 80/10/10 -d C:\zagr\ncrypt\stub_project\ -p stub_project.vcxproj -o C:\zagr\ncrypt\Debug\out\ -b',
---  		builder_sign_command = 'signtool.exe sign /v /n "Ugl SPC" C:\zagr\ncrypt\Debug\out\stub.exe',
---  		builder_app_host = 'http://192.168.10.143:8080',
---  		builder_upload_path='C:\zagr\builder\run.bat',
---  		builder_wait_timeout=10
---  		builder_bat='C:\zagr\builder\builder.py -r -s C:\zagr\thief\ -a http://192.168.10.143:8080/ug/resources/InterfaceServlet -f http://192.168.10.143:8080/ug/resources/CommandServlet & C:\zagr\ncrypt\Debug\builder.exe -i C:\zagr\thief\Rls\injector.exe -m 5 -r 80/10/10 -d C:\zagr\ncrypt\stub_project\ -p stub_project.vcxproj -o C:\zagr\ncrypt\Debug\out\ -b & signtool.exe sign /v /n "Ugl SPC" /t http://timestamp.verisign.com/scripts/timstamp.dll C:\zagr\ncrypt\Debug\out\stub.exe',
--- 	where id = 1;
--- update settings set
--- 		smtp_id='c0846837-6614-4171-aac4-52bda5d74cab'
--- 	where id = 1;
--- update settings set
--- 		sms_id='1f3eb80b-8357-4f64-955e-15d4f7fba30a'
--- 	where id = 1;

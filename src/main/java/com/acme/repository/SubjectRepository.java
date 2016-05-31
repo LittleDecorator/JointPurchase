@@ -1,19 +1,17 @@
 package com.acme.repository;
 
 import com.acme.config.Queue;
-import com.acme.model.Item;
 import com.acme.model.Subject;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 @Repository
@@ -26,15 +24,15 @@ public class SubjectRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<Subject> getAll(){
-        return jdbcTemplate.query(Queue.SUBJECT_FIND_ALL, subjectMapper);
+        return jdbcTemplate.query(Queue.SUBJECT_FIND_ALL, Mappers.subjectMapper);
     }
 
     public Subject getByEmail(String login){
-        return jdbcTemplate.queryForObject(Queue.SUBJECT_FIND_BY_EMAIL, subjectMapper, login);
+        return jdbcTemplate.queryForObject(Queue.SUBJECT_FIND_BY_EMAIL, Mappers.subjectMapper, login);
     }
 
     public Subject getById(String id){
-        return jdbcTemplate.queryForObject(Queue.SUBJECT_FIND_BY_ID,subjectMapper,id);
+        return jdbcTemplate.queryForObject(Queue.SUBJECT_FIND_BY_ID, Mappers.subjectMapper,id);
     }
 
     public boolean deleteById(String id){
@@ -192,20 +190,5 @@ public class SubjectRepository {
         int result = parameterJdbcTemplate.update(Queue.SUBJECT_INSERT,namedParameters);
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
-
-    private RowMapper<Subject> subjectMapper = (rs,num) -> {
-        Subject subject = new Subject();
-        subject.setId(rs.getString("id"));
-        subject.setEnabled(Objects.equals(rs.getString("enabled"), "Y"));
-        subject.setFirstName(rs.getString("first_name"));
-        subject.setMiddleName(rs.getString("middle_name"));
-        subject.setLastName(rs.getString("last_name"));
-        subject.setPhoneNumber(rs.getString("phone_number"));
-        subject.setEmail(rs.getString("email"));
-        subject.setAddress(rs.getString("address"));
-        subject.setPhoneNumber(rs.getString("post_address"));
-        subject.setDateAdd(rs.getDate("date_add"));
-        return subject;
-    };
 
 }

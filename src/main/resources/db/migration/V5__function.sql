@@ -1,0 +1,12 @@
+-- CREATE OR REPLACE FUNCTION get_item_categories_multiple() RETURNS SETOF refcursor AS $$
+--     DECLARE
+--       items refcursor;           -- Declare cursor variables
+--       categories refcursor;
+--     BEGIN
+--       OPEN ref1 FOR SELECT city, state FROM cities WHERE state = 'CA';   -- Open the first cursor
+--       RETURN NEXT ref1;                                                                              -- Return the cursor to the caller
+--
+--       OPEN ref2 FOR SELECT city, state FROM cities WHERE state = 'TX';   -- Open the second cursor
+--       RETURN NEXT ref2;                                                                              -- Return the cursor to the caller
+--     END;
+--     $$ LANGUAGE plpgsql;

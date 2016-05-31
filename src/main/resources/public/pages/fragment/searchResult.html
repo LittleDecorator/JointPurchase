@@ -1,0 +1,27 @@
+<div>
+    <h5>Результаты поиска для: <span style="font-size: 1.8rem">{{::searchFilter.criteria}}</span></h5>
+
+    <md-content ng-if="searchResult.length > 0">
+        <section ng-repeat="result in searchResult">
+            <md-list class="row" flex style="margin: 0">
+                <md-subheader class="md-no-sticky">найденно в категории: <span style="font-size: 1.5rem">{{::result.category}}</span></md-subheader>
+                <md-list-item class="md-2-line md-clickable col s12 m6 l4" ng-repeat="row in result.rows">
+                    <md-button class="md-no-style md-button md-ink-ripple" ng-click="itemView(row.item.id)">
+                        <div class="md-list-item-inner">
+                            <img ng-src="{{::row.content}}" class="md-avatar" alt="{{::row.item.name}}">
+                            <div class="md-list-item-text">
+                                <h3>{{::row.item.name}}</h3>
+                                <p>{{::row.item.description|limitTo:50}}...</p>
+                            </div>
+                        </div>
+                    </md-button>
+                </md-list-item>
+            </md-list>
+        </section>
+    </md-content>
+
+    <div class="table-result" ng-if="images.length==0">
+        <span style="margin-right: 2%">Ничего не найдено :(</span>
+    </div>
+
+</div>

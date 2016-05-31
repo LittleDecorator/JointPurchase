@@ -2,18 +2,17 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.CategoryItem;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -55,11 +54,11 @@ public class CategoryItemRepository {
     }
 
     public List<CategoryItem> getByItemId(String itemId){
-        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_ITEM_ID,categoryItemMapper,itemId);
+        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_ITEM_ID,Mappers.categoryItemMapper,itemId);
     }
 
     public List<CategoryItem> getByCategoryId(String categoryId){
-        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_CATEGORY_ID,categoryItemMapper,categoryId);
+        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_CATEGORY_ID, Mappers.categoryItemMapper,categoryId);
     }
 
     public boolean deleteByCategoryId(String categoryID){
@@ -133,14 +132,5 @@ public class CategoryItemRepository {
 
         return result;
     }
-
-    private RowMapper<CategoryItem> categoryItemMapper = (rs,num) -> {
-        CategoryItem categoryItem = new CategoryItem();
-        categoryItem.setId(rs.getString("id"));
-        categoryItem.setCategoryId(rs.getString("category_id"));
-        categoryItem.setItemId(rs.getString("item_id"));
-        categoryItem.setDateAdd(rs.getDate("date_add"));
-        return categoryItem;
-    };
 
 }

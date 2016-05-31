@@ -3,9 +3,9 @@ package com.acme.repository;
 import com.acme.config.Queue;
 import com.acme.exception.PersistException;
 import com.acme.model.Category;
+import com.acme.repository.mapper.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -29,7 +29,7 @@ public class CategoryRepository {
     }
 
     public List<Category> getAll(){
-        return jdbcTemplate.query(Queue.CATEGORY_FIND_ALL, categoryMapper);
+        return jdbcTemplate.query(Queue.CATEGORY_FIND_ALL, Mappers.categoryMapper);
     }
 
     public List<Map<String,Object>> getRootsAsMap(){
@@ -37,16 +37,16 @@ public class CategoryRepository {
     }
 
     public Category getByID(String id){
-        return jdbcTemplate.queryForObject(Queue.CATEGORY_FIND_BY_ID, categoryMapper, id);
+        return jdbcTemplate.queryForObject(Queue.CATEGORY_FIND_BY_ID, Mappers.categoryMapper, id);
     }
 
     public List<Category> getByParentID(String id){
-        return jdbcTemplate.query(Queue.CATEGORY_FIND_BY_PARENT_ID, categoryMapper, id);
+        return jdbcTemplate.query(Queue.CATEGORY_FIND_BY_PARENT_ID, Mappers.categoryMapper, id);
     }
 
     public List<Category> getByIdList(List<String> idList){
         SqlParameterSource namedParameters = new MapSqlParameterSource("ids", idList);
-        return parameterJdbcTemplate.query(Queue.CATEGORY_FIND_BY_ID_LIST,namedParameters,categoryMapper);
+        return parameterJdbcTemplate.query(Queue.CATEGORY_FIND_BY_ID_LIST,namedParameters, Mappers.categoryMapper);
     }
 
     public void update(Category category) throws PersistException {
@@ -69,12 +69,5 @@ public class CategoryRepository {
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private RowMapper<Category> categoryMapper = (rs,num) -> {
-        Category category = new Category();
-        category.setId(rs.getString("id"));
-        category.setName(rs.getString("name"));
-        category.setDateAdd(rs.getTimestamp("date_add"));
-        category.setParentId(rs.getString("parent_id"));
-        return category;
-    };
+
 }

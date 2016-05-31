@@ -8802,7 +8802,8 @@ body.parallax-demo footer {
     -webkit-transition: left .1s;
     -o-transition: left .1s;
     transition: left .1s;
-    width: 275px!important;
+    /*width: 275px!important;*/
+    width: 220px!important;
     height:100%;
     /*background-color:#2a3542;*/
     /*position: absolute;*/
@@ -8816,7 +8817,9 @@ body.parallax-demo footer {
     -o-transition: left 1s;
     transition: left 1s;
 
-    left: -280px!important;
+    /*left: -280px!important;*/
+    left: 300px;
+    transform: translateX(105%);
 
     z-index: 850!important;
 }
@@ -8841,7 +8844,7 @@ body.parallax-demo footer {
 
 @media only screen and (min-width: 993px) {
     .container {
-        width: 80%!important;
+        width: 70%!important;
     }
 }
 

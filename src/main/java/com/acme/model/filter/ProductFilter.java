@@ -3,17 +3,33 @@ package com.acme.model.filter;
 public class ProductFilter {
 
     String itemId;
-    String catagoryId;
-    String companyId;
+    String category;
+    String company;
     Integer limit;
     Integer offset;
 
-    public String getCatagoryId() {
-        return catagoryId;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setCatagoryId(String catagoryId) {
-        this.catagoryId = catagoryId;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public Integer getLimit() {
@@ -32,19 +48,14 @@ public class ProductFilter {
         this.offset = offset;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    @Override
+    public String toString() {
+        return "ProductFilter{" +
+                "itemId='" + itemId + '\'' +
+                ", category='" + category + '\'' +
+                ", company='" + company + '\'' +
+                ", limit=" + limit +
+                ", offset=" + offset +
+                '}';
     }
 }

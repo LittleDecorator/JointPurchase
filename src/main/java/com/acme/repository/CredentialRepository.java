@@ -2,10 +2,10 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.Credential;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +21,7 @@ public class CredentialRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public Credential getById(String id){
-        return jdbcTemplate.queryForObject(Queue.CREDENTIAL_FIND_BY_ID,credentialMapper,id);
+        return jdbcTemplate.queryForObject(Queue.CREDENTIAL_FIND_BY_ID, Mappers.credentialMapper,id);
     }
 
     public boolean update(Credential credential){
@@ -39,23 +39,6 @@ public class CredentialRepository {
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private RowMapper<Credential> credentialMapper = (rs,num) -> {
-        Credential credential = new Credential();
-        credential.setSubjectId(rs.getString("subject_id"));
-        credential.setPassword(rs.getString("password"));
-        credential.setRoleId(rs.getString("role_id"));
-        credential.setDateAdd(rs.getDate("date_add"));
-        return credential;
-    };
 
-
-    /*
-    *
-    * subject_id character varying(128) NOT NULL,
-  password character varying(255) NOT NULL,
-  role_id character varying(37),
-  date_add timestamp without time zone DEFAULT now()
-    *
-    * */
 
 }

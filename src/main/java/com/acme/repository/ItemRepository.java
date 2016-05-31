@@ -2,11 +2,12 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.Item;
+import com.acme.model.dto.ItemSearchResult;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -26,30 +27,38 @@ public class ItemRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<Item> getAll(){
-        return jdbcTemplate.query(Queue.ITEM_FIND_ALL,itemMapper);
+        return jdbcTemplate.query(Queue.ITEM_FIND_ALL,Mappers.itemMapper);
     }
 
     public List<Item> getByCompanyForSale(String companyId){
-        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_FOR_SALE,itemMapper,companyId);
+        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_FOR_SALE,Mappers.itemMapper,companyId);
     }
 
     public List<Item> getByCompanyId(String companyId){
-        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_ID,itemMapper,companyId);
+        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_ID,Mappers.itemMapper,companyId);
+    }
+
+    public List<Item> getByCategoryId(String categoryId){
+        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_ID,Mappers.itemMapper,categoryId);
+    }
+
+    public List<Item> getByCategoryForSale(String categoryId){
+        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_FOR_SALE,Mappers.itemMapper,categoryId);
     }
 
     public Item getById(String id){
-        return jdbcTemplate.queryForObject(Queue.ITEM_FIND_BY_ID, itemMapper, id);
+        return jdbcTemplate.queryForObject(Queue.ITEM_FIND_BY_ID, Mappers.itemMapper, id);
     }
 
     public List<Item> getByIdList(List<String> ids){
         SqlParameterSource parameterSource = new MapSqlParameterSource("idList",ids);
-        return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_ID_LIST, parameterSource, itemMapper);
+        return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_ID_LIST, parameterSource, Mappers.itemMapper);
     }
 
-    public List<Item> getBySearch(String criteria){
+    public List<ItemSearchResult> getBySearch(String criteria){
         Map<String,Object> namedParameters = Maps.newHashMap();
         namedParameters.put("criteria", "%"+criteria+"%");
-        return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_SEARCH,namedParameters,itemMapper);
+        return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_SEARCH,namedParameters, Mappers.itemSearchMapper);
     }
 
     public boolean deleteById(String id){
@@ -179,19 +188,5 @@ public class ItemRepository {
 
         return "update ITEM set " + String.join(",",querySB);
     }
-
-    private RowMapper<Item> itemMapper = (rs,num) -> {
-        Item item = new Item();
-        item.setId(rs.getString("id"));
-        item.setName(rs.getString("name"));
-        item.setCompanyId(rs.getString("company_id"));
-        item.setArticle(rs.getString("article"));
-        item.setDescription(rs.getString("description"));
-        item.setPrice(rs.getBigDecimal("price"));
-        item.setNotForSale(rs.getBoolean("not_for_sale"));
-        item.setInStock(rs.getInt("in_stock"));
-        item.setDateAdd(rs.getDate("date_add"));
-        return item;
-    };
 
 }

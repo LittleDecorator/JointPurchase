@@ -1,15 +1,25 @@
-<ul id="side-mobile" class="side-nav fixed sidebart slide-outt slide-inn">
-    <li ng-class="{'no-padding':menu.nodes.length>0}" ng-repeat="menu in nodes" >
-        <a ng-if="menu.nodes.length==0" class="waves-effect waves-teal menu-up-lvl" style="padding: 0">{{menu.title}}</a>
+<!--<ul id="side-mobile" class="side-nav fixed sidebart slide-outt">-->
+    <!--<li ng-class="{'no-padding':menu.nodes.length>0}" ng-repeat="menu in nodes" >-->
+        <!--<a ng-if="menu.nodes.length==0" class="waves-effect waves-teal menu-up-lvl" style="padding: 0">{{menu.title}}</a>-->
 
-        <ul class="collapsible collapsible-accordion" ng-if="menu.nodes.length>0">
-            <li><a class="waves-effect waves-teal menu-up-lvl" style="padding: 0;margin: 0 1rem;font-size: 20px">{{menu.title}}:</a>
-                <div style="background-color: #fff;">
-                    <ul>
-                        <li ng-repeat="menu in menu.nodes" style="cursor: pointer" ng-click="filterProduct(menu)"><a style="padding: 0;margin: 0 1rem 0 2rem;">{{menu.title}}</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </li>
-</ul>
+        <!--<ul class="collapsible collapsible-accordion" ng-if="menu.nodes.length>0">-->
+            <!--<li><a class="waves-effect waves-teal menu-up-lvl" style="padding: 0;margin: 0 1rem;font-size: 20px">{{menu.title}}:</a>-->
+                <!--<div style="background-color: #fff;">-->
+                    <!--<ul>-->
+                        <!--<li ng-repeat="menu in menu.nodes" style="cursor: pointer" ng-click="filterProduct(menu)"><a style="padding: 0;margin: 0 1rem 0 2rem;">{{menu.title}}</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</li>-->
+<!--</ul>-->
+
+
+<md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" style="overflow: hidden;">
+    <md-content layout-padding>
+        <div ng-repeat="menu in nodes">
+            <h2 class="menu-heading md-subhead" style="margin: 0;color: #846C63!important;font-size: 20px;"> {{::menu.title}} </h2>
+            <md-menu-item ng-repeat="menu in menu.nodes"><md-button ng-click="filterProduct(menu)"><span style="color: #676565;">{{::menu.title}}</span></md-button></md-menu-item>
+        </div>
+    </md-content>
+</md-sidenav>

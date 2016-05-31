@@ -2,11 +2,10 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.ItemContent;
-import com.google.common.base.Strings;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +25,7 @@ public class ItemContentRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<ItemContent> getMain (){
-        return jdbcTemplate.query(Queue.ITEM_CONTENT_FIND_MAIN, itemContentMapper);
+        return jdbcTemplate.query(Queue.ITEM_CONTENT_FIND_MAIN, Mappers.itemContentMapper);
     }
 
     public int countByItemId(String itemId){
@@ -34,11 +33,11 @@ public class ItemContentRepository {
     }
 
     public List<ItemContent> getByItemId (String itemId){
-        return jdbcTemplate.query(Queue.ITEM_CONTENT_FIND_BY_ITEM_ID, itemContentMapper, itemId);
+        return jdbcTemplate.query(Queue.ITEM_CONTENT_FIND_BY_ITEM_ID, Mappers.itemContentMapper, itemId);
     }
 
     public List<ItemContent> getShowedByItemId (String itemId){
-        return jdbcTemplate.query(Queue.ITEM_CONTENT_SHOW_BY_ITEM, itemContentMapper, itemId);
+        return jdbcTemplate.query(Queue.ITEM_CONTENT_SHOW_BY_ITEM, Mappers.itemContentMapper, itemId);
     }
 
     public boolean deleteByContentIdAndItemId(String contentId,String itemId){
@@ -109,27 +108,4 @@ public class ItemContentRepository {
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private RowMapper<ItemContent> itemContentMapper = (rs, num) -> {
-        ItemContent itemContent = new ItemContent();
-        itemContent.setId(rs.getString("id"));
-        itemContent.setItemId(rs.getString("item_id"));
-        itemContent.setContentId(rs.getString("content_id"));
-        itemContent.setShow(rs.getBoolean("show"));
-        itemContent.setMain(rs.getBoolean("main"));
-        itemContent.setDateAdd(rs.getDate("date_add"));
-        return itemContent;
-    };
-
-
-    /*
-    *
-    * id character varying(37) NOT NULL,
-  item_id character varying(37) NOT NULL,
-  content_id character varying(37) NOT NULL,
-  show character(1) NOT NULL DEFAULT 'N'::bpchar,
-  main character(1) NOT NULL DEFAULT 'N'::bpchar,
-  date_add timestamp without time zone DEFAULT now(),
-    *
-    *
-    * */
 }

@@ -16,6 +16,7 @@
 
             var busy = false;
             var portion = 0;
+            $scope.showResults = false;
             $scope.stopLoad=false;
             $scope.allDataLoaded = false;
             $scope.infiniteDistance = 2;
@@ -107,6 +108,16 @@
             $scope.$on('onFilter',function() {
                 var node = eventService.data;
                 console.log(node);
+                if(node.company){
+                    $scope.searchFilter.company = node.id;
+                    $scope.searchFilter.category = null;
+                } else {
+                    $scope.searchFilter.company = null;
+                    $scope.searchFilter.category = node.id;
+                }
+                console.log($scope.searchFilter);
+                $scope.stopLoad = false;
+                $scope.loadData(true);
                 // if(node==null || helpers.isEmptyObject(node)){
                 //     dataResources.previewItems.get(function (data) {
                 //         $scope.items = [];
@@ -168,18 +179,18 @@
             }, 10);
 
             /* show\hide side panel */
-            // $scope.toggleFilter = function(){
-            //     //show side menu
-            //     var side = $('.slide-outt');
-            //     if(side.hasClass('slide-inn')){
-            //         side.removeClass('slide-inn')
-            //     } else {
-            //         side.addClass('slide-inn');
-            //     }
-            // };
+             $scope.toggleFilter = function(){
+                 //show side menu
+                 var side = $('.slide-outt');
+                 if(side.hasClass('slide-inn')){
+                     side.removeClass('slide-inn')
+                 } else {
+                     side.addClass('slide-inn');
+                 }
+             };
 
             $scope.toggleMobileFilter = function(){
-                console.log("toggleMobileFilter")
+                console.log("toggleMobileFilter");
                 //show side menu
                 var side = $('.slide-outt');
                 if(side.hasClass('slide-inn')){
@@ -196,8 +207,32 @@
                 portion = 0;
                 $scope.stopLoad = false;
                 $scope.loadData(true);
-            }
+            };
 
+            $scope.search = function(){
+                if(!$scope.searchFilter.criteria){
+                    $('#search').focus();
+                } else {
+                    console.log("click search");
+                    dataResources.searchItem.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
+                        console.log(data);
+                        $scope.searchResult = data;
+                        $scope.showResults = true;
+
+                    });
+                }
+            };
+
+            $scope.keyPress = function(keyCode) {
+                if (keyCode == 13){
+                    $scope.search();
+                }
+            };
+
+            $scope.clear = function(){
+                $scope.searchFilter.criteria = null;
+                $scope.showResults = false;
+            }
         }])
 
         .controller('catalogCardController',['$scope','$state','product',function ($scope, $state, product) {

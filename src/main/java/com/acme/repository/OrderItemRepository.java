@@ -2,11 +2,11 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.OrderItem;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class OrderItemRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<OrderItem> getByOrderId(String orderId){
-        return jdbcTemplate.query(Queue.ORDER_ITEM_FIND_BY_ORDER_ID,orderItemMapper,orderId);
+        return jdbcTemplate.query(Queue.ORDER_ITEM_FIND_BY_ORDER_ID, Mappers.orderItemMapper,orderId);
     }
 
     public boolean deleteByItemId(String itemId){
@@ -80,16 +80,5 @@ public class OrderItemRepository {
 
         return result;
     }
-
-
-    private RowMapper<OrderItem> orderItemMapper = (rs,num) -> {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setId(rs.getString("id"));
-        orderItem.setCou(rs.getInt("cou"));
-        orderItem.setItemId(rs.getString("item_id"));
-        orderItem.setOrderId(rs.getString("order_id"));
-        orderItem.setDateAdd(rs.getDate("date_add"));
-        return orderItem;
-    };
 
 }

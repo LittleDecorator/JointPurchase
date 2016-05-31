@@ -59,7 +59,7 @@
                     }
                 }),
 
-                searchItem:$resource('/item/search/',{},{search :{method:'POST',isArray:true}}),
+                searchItem:$resource('/item/search/',{},{get :{method:'GET',isArray:true}}),
 
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},
@@ -68,10 +68,13 @@
                     put:{method:'PUT',isArray:false}
                 }),
                 
-                filterByType:$resource('/item/filter/type',{},{
-                    filter:{method:'POST',isArray:true}
-                }),
+                //filterByType:$resource('/item/filter/type',{},{
+                //    filter:{method:'POST',isArray:true}
+                //}),
                 filterByCompany:$resource('/item/filter/company',{},{
+                    filter:{method:'GET',isArray:true}
+                }),
+                filterByCategory:$resource('/item/filter/category',{},{
                     filter:{method:'GET',isArray:true}
                 }),
 

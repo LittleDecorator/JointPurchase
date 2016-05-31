@@ -2,12 +2,12 @@ package com.acme.repository;
 
 import com.acme.config.Queue;
 import com.acme.model.ItemCategoryLink;
+import com.acme.repository.mapper.Mappers;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class ItemCategoryLinkRepository {
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
     public List<ItemCategoryLink> getGetAll(){
-        return jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_ITEM_CATEGORIES,itemCategoryLinkMapper);
+        return jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_ITEM_CATEGORIES, Mappers.itemCategoryLinkMapper);
     }
 
     public List<ItemCategoryLink> getFilteredItems(String name, String article, String company){
@@ -53,27 +53,12 @@ public class ItemCategoryLinkRepository {
                 String firstPart = Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS.substring(0,pos);
                 String secondPart = Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS.substring(pos);
                 String queue = firstPart + " WHERE " + String.join(" AND ",clause) + secondPart;
-                result = parameterJdbcTemplate.query(queue,namedParameters,itemCategoryLinkMapper);
+                result = parameterJdbcTemplate.query(queue,namedParameters, Mappers.itemCategoryLinkMapper);
             }
         } else {
-            result = jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS,itemCategoryLinkMapper);
+            result = jdbcTemplate.query(Queue.ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS, Mappers.itemCategoryLinkMapper);
         }
         return result;
     }
 
-    private RowMapper<ItemCategoryLink> itemCategoryLinkMapper = (rs,num) -> {
-        ItemCategoryLink link = new ItemCategoryLink();
-        link.setId(rs.getString("id"));
-        link.setArticle(rs.getString("article"));
-        link.setName(rs.getString("name"));
-        link.setInStock(rs.getInt("in_stock"));
-        link.setNotForSale(rs.getBoolean("not_for_sale"));
-        link.setPrice(rs.getBigDecimal("price"));
-        link.setDescription(rs.getString("description"));
-        link.setCompanyId(rs.getString("company_id"));
-//        link.setDateAdd();
-        return link;
-    };
-
-    //select i.id as item_id,i.name as item_name,i.company_id,i.article,i.description,i.price,i.not_for_sale,i.in_stock,c.id,c.name from item i
 }

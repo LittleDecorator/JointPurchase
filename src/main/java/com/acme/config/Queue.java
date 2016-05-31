@@ -22,13 +22,29 @@ public interface Queue {
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_ID = "DELETE FROM public.category_item WHERE category_id = ?";
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
-    String ITEM_FIND_BY_SEARCH = "SELECT * FROM public.item i " +
+    String ITEM_FIND_BY_SEARCH = "SELECT i.*, ic.content_id, ci.category_id FROM public.item i " +
+            "left outer join public.item_content ic on (i.id = ic.item_id and ic.main='Y') " +
+            "inner join public.category_item ci on i.id = ci.item_id " +
             "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
             "ORDER BY i.date_add ASC";
+//    String ITEM_FIND_BY_SEARCH = "SELECT * FROM public.item i " +
+//            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
+//            "ORDER BY i.date_add ASC";
     String ITEM_FIND_BY_ID = "SELECT * FROM public.item WHERE id = ?";
     String ITEM_FIND_BY_ID_LIST = "SELECT * FROM public.item WHERE id in (:idList)";
     String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.item WHERE company_id = ? AND not_for_sale = 'N'";
     String ITEM_BY_COMPANY_ID = "SELECT * FROM public.item WHERE company_id = ? ";
+    String ITEM_BY_CATEGORY_ID = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? ";
+    String ITEM_BY_CATEGORY_FOR_SALE = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? AND i.not_for_sale = 'N' ";
+    String ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE = "SELECT i.*, c.name FROM public.item i " +
+            " INNER JOIN public.category_item ci ON i.id = ci.item_id " +
+            " INNER JOIN public.category c ON ci.category_id = c.id " +
+            " WHERE c.id IN (" +
+            "   WITH RECURSIVE temp1 ( id,parent_id ) AS ( " +
+            "   SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = :parentId " +
+            "   union " +
+            "   SELECT c2.id, c2.parent_id FROM public.category c2 INNER JOIN temp1 ON ( temp1.id = c2.parent_id)) " +
+            "   SELECT id FROM temp1 LIMIT 100) AND i.not_for_sale = 'N' ";
     String ITEM_DELETE_BY_ID = "DELETE FROM public.item WHERE id = ? ";
 
     String COMPANY_FIND_ALL = " SELECT * FROM public.company";

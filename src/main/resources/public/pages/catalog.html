@@ -2,17 +2,19 @@
 <nav style="margin-top: 20px;">
     <div class="nav-wrapper" style="background-color: #86A8A8!important;">
             <div class="input-field row">
-                <input id="search" type="search" class="col s12">
-                <label for="search"><i class="material-icons">search</i></label>
-                <i class="material-icons">close</i>
+                <input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">
+                <label for="search"><i class="material-icons" ng-click="search()">search</i></label>
+                <i class="material-icons" ng-click="clear()">close</i>
             </div>
     </div>
 </nav>
 
-<div class="section" style="margin-top: 20px;">
+<div ng-include="'pages/fragment/searchResult.html'" ng-if="showResults"></div>
+
+<div class="section" style="margin-top: 20px;" ng-if="!showResults">
 
     <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="stopLoad">
-        <div class="col s12 m3" ng-repeat="item in items">
+        <div class="col s12 m6 l4" ng-repeat="item in items">
             <div class="card">
                 <div class="card-image waves-effect waves-block waves-light">
                     <img ng-src="{{item.url}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
@@ -32,12 +34,14 @@
 
 <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
     <!-- Убрал управление слайдером для ПК версии -->
-    <!--<a class="btn-floating btn-large blue lighten-3 hide-on-med-and-down" ng-click="toggleFilter()">-->
-        <!--<i class="large mdi-navigation-more-vert"></i>-->
-    <!--</a>-->
-    <a class="btn-floating btn-x-small blue lighten-3 hide-on-med-and-up" ng-click="toggleMobileFilter()">
+    <!--<a class="btn-floating btn-large blue lighten-3" ng-click="toggleFilter()" ng-if="width > 600">-->
+    <!--<a class="btn-floating btn-large blue lighten-3" ng-click="toggleFilter()">-->
+    <a class="btn-floating btn-large blue lighten-3" ng-click="toggleLeft()">
         <i class="large mdi-navigation-more-vert"></i>
     </a>
+    <!--<a class="btn-floating btn-x-small blue lighten-3" ng-click="toggleMobileFilter()" ng-if="width < 601">-->
+        <!--<i class="large mdi-navigation-more-vert"></i>-->
+    <!--</a>-->
 </div>
 
 <!--<div class="fixed-action-btn sb-search search-wrapper" style="bottom: 45px; right: 24px;" id="sb-search" ng-class="{'sb-search-open':prop.searchInputOpen}">-->
@@ -51,17 +55,32 @@
 <!--</div>-->
 
 <!-- Bottom modal -->
-<div id="mobile-filter" class="modal bottom-sheet modal-fixed-footer">
-    <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);  border-radius: 0 0 2px 2px;  height: 56px;  width: 100%;  padding: 10px; background-color: transparent">
-        <h4>Категории:</h4>
-    </div>
-    <div class="modal-content" style="padding: 0 24px;">
-        <div class="collection" style="border:none;">
-            <div class="row">
-                <div class="col s12" ng-repeat="category in categoryFilter">
-                    <a class="collection-item" style="color: #919191!important;background-color: transparent; cursor: pointer" ng-click="applyCategory(category)"><i class="material-icons left">cloud</i>{{::category.name}}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div id="mobile-filter" class="modal bottom-sheet modal-fixed-footer">-->
+    <!--<div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);  border-radius: 0 0 2px 2px;  height: 56px;  width: 100%;  padding: 10px; background-color: transparent">-->
+        <!--<h4>Категории:</h4>-->
+    <!--</div>-->
+    <!--<div class="modal-content" style="padding: 0 24px;">-->
+        <!--<div class="collection" style="border:none;">-->
+            <!--<div class="row">-->
+                <!--<div class="col s12" ng-repeat="category in categoryFilter">-->
+                    <!--<a class="collection-item" style="color: #919191!important;background-color: transparent; cursor: pointer" ng-click="applyCategory(category)"><i class="material-icons left">cloud</i>{{::category.name}}</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+
+<!--<div>-->
+    <!--<md-button ng-click="toggleLeft()"-->
+               <!--class="md-primary" hide-gt-md>-->
+        <!--Toggle left-->
+    <!--</md-button>-->
+<!--</div>-->
+<!--<div>-->
+    <!--<md-button ng-click="toggleRight()"-->
+               <!--ng-hide="isOpenRight()"-->
+               <!--class="md-primary">-->
+        <!--Toggle right-->
+    <!--</md-button>-->
+<!--</div>-->

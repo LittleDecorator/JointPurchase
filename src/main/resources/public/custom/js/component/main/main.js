@@ -6,8 +6,8 @@
     'use strict';
 
     angular.module('main')
-        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout',
-            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout) {
+        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout','$mdSidenav','$log',
+            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log) {
                 console.log("Enter main controller");
 
                 $scope.uname = "";
@@ -172,11 +172,12 @@
 
                 /* handle event in side menu .Broadcast event */
                 $scope.filterProduct = function(node){
+                    $mdSidenav('left').close();
                     eventService.onFilter(node);
                 };
 
                 $timeout(function() {
-                    $(".button-collapse").sideNav();
+                    //$(".button-collapse").sideNav();
                     $(".collapsible").collapsible();
                     $('.dropdown-button').dropdown();
                     $('.swipebox').swipebox();
@@ -223,8 +224,38 @@
                 
                 $scope.goto =function(name){
                     $state.go(name);
-                }
+                };
 
-        }]);
+
+/*========================== SIDE NAV ============================*/
+                //TODO: move all this to directive
+                $scope.toggleLeft = buildDelayedToggler('left');
+
+                function debounce(func, wait, context) {
+                    var timer;
+                    return function debounced() {
+                        var context = $scope,
+                            args = Array.prototype.slice.call(arguments);
+                        $timeout.cancel(timer);
+                        timer = $timeout(function() {
+                            timer = undefined;
+                            func.apply(context, args);
+                        }, wait || 10);
+                    };
+                }
+                ///**
+                // * Build handler to open/close a SideNav; when animation finishes
+                // * report completion in console
+                // */
+                function buildDelayedToggler(navID) {
+                    return debounce(function() {
+                        $mdSidenav(navID)
+                            .toggle()
+                            .then(function () {
+                                $log.debug("toggle " + navID + " is done");
+                            });
+                    }, 200);
+                }
+        }])
 
 })();
