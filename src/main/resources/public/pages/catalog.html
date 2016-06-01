@@ -1,4 +1,4 @@
-
+<!-- SEARCH INPUT -->
 <nav style="margin-top: 20px;">
     <div class="nav-wrapper" style="background-color: #86A8A8!important;">
             <div class="input-field row">
@@ -9,11 +9,19 @@
     </div>
 </nav>
 
+<!-- SEARCH RESULT -->
 <div ng-include="'pages/fragment/searchResult.html'" ng-if="showResults"></div>
 
+<!-- SIMPLE FILTER. DEPEND ON SIDE NAV SELECTION -->
+<div class="row" ng-if="showSideFilter">
+    <h5>Фильтр:</h5>
+    <div class="chip" ng-repeat="filter in sideFilters" style="margin: 3px;">{{::filter.name}}<i class="material-icons" ng-click="removeFilterElem($index)">close</i></div>
+</div>
+
+<!-- CONTENT WITH ITEMS -->
 <div class="section" style="margin-top: 20px;" ng-if="!showResults">
 
-    <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="stopLoad">
+    <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='1' infinite-scroll-disabled="stopLoad">
         <div class="col s12 m6 l4" ng-repeat="item in items">
             <div class="card">
                 <div class="card-image waves-effect waves-block waves-light">
@@ -39,48 +47,4 @@
     <a class="btn-floating btn-large blue lighten-3" ng-click="toggleLeft()">
         <i class="large mdi-navigation-more-vert"></i>
     </a>
-    <!--<a class="btn-floating btn-x-small blue lighten-3" ng-click="toggleMobileFilter()" ng-if="width < 601">-->
-        <!--<i class="large mdi-navigation-more-vert"></i>-->
-    <!--</a>-->
 </div>
-
-<!--<div class="fixed-action-btn sb-search search-wrapper" style="bottom: 45px; right: 24px;" id="sb-search" ng-class="{'sb-search-open':prop.searchInputOpen}">-->
-    <!--<input id="search" class="sb-search-input" type="search" ng-model="searchCriteria" style="right: 24px;padding-left: 10px;" ng-model-options="{ debounce: 3000 }" ng-change="search()">-->
-    <!--<div class="sb-search-result collection" ng-if="searchResult.length>0 && prop.searchInputOpen">-->
-        <!--<a ng-repeat="result in searchResult" ng-click="itemView(result.id)" class="collection-item" style="cursor: pointer">{{result.name}}</a>-->
-    <!--</div>-->
-    <!--<a class="sb-icon-search btn-floating btn-large blue lighten-3 " ng-click="search()">-->
-        <!--<i class="large mdi-action-search"></i>-->
-    <!--</a>-->
-<!--</div>-->
-
-<!-- Bottom modal -->
-<!--<div id="mobile-filter" class="modal bottom-sheet modal-fixed-footer">-->
-    <!--<div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.1);  border-radius: 0 0 2px 2px;  height: 56px;  width: 100%;  padding: 10px; background-color: transparent">-->
-        <!--<h4>Категории:</h4>-->
-    <!--</div>-->
-    <!--<div class="modal-content" style="padding: 0 24px;">-->
-        <!--<div class="collection" style="border:none;">-->
-            <!--<div class="row">-->
-                <!--<div class="col s12" ng-repeat="category in categoryFilter">-->
-                    <!--<a class="collection-item" style="color: #919191!important;background-color: transparent; cursor: pointer" ng-click="applyCategory(category)"><i class="material-icons left">cloud</i>{{::category.name}}</a>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-
-
-<!--<div>-->
-    <!--<md-button ng-click="toggleLeft()"-->
-               <!--class="md-primary" hide-gt-md>-->
-        <!--Toggle left-->
-    <!--</md-button>-->
-<!--</div>-->
-<!--<div>-->
-    <!--<md-button ng-click="toggleRight()"-->
-               <!--ng-hide="isOpenRight()"-->
-               <!--class="md-primary">-->
-        <!--Toggle right-->
-    <!--</md-button>-->
-<!--</div>-->

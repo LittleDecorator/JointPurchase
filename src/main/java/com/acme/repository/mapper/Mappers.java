@@ -121,7 +121,7 @@ public class Mappers {
         item.setDateAdd(rs.getDate("date_add"));
 
         product.setItem(item);
-
+        System.out.println(product);
         return product;
     };
 

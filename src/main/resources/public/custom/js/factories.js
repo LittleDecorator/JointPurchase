@@ -136,7 +136,7 @@
                 customer: $resource('/customer/:id'),
 
                 previewItems: $resource('/item/preview',{},{
-                    filter:{method:'POST',isArray:true}
+                    filter:{method:'POST',isArray:false}
                 }),
 
                 galleryShow: $resource('content/set/show',{},{

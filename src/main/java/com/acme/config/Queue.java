@@ -36,15 +36,11 @@ public interface Queue {
     String ITEM_BY_COMPANY_ID = "SELECT * FROM public.item WHERE company_id = ? ";
     String ITEM_BY_CATEGORY_ID = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? ";
     String ITEM_BY_CATEGORY_FOR_SALE = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? AND i.not_for_sale = 'N' ";
-    String ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE = "SELECT i.*, c.name FROM public.item i " +
-            " INNER JOIN public.category_item ci ON i.id = ci.item_id " +
-            " INNER JOIN public.category c ON ci.category_id = c.id " +
-            " WHERE c.id IN (" +
-            "   WITH RECURSIVE temp1 ( id,parent_id ) AS ( " +
-            "   SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = :parentId " +
+    String ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE = " WITH RECURSIVE temp1 ( id, parent_id ) AS ( " +
+            "   SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = ? " +
             "   union " +
             "   SELECT c2.id, c2.parent_id FROM public.category c2 INNER JOIN temp1 ON ( temp1.id = c2.parent_id)) " +
-            "   SELECT id FROM temp1 LIMIT 100) AND i.not_for_sale = 'N' ";
+            "   SELECT id FROM temp1 ";
     String ITEM_DELETE_BY_ID = "DELETE FROM public.item WHERE id = ? ";
 
     String COMPANY_FIND_ALL = " SELECT * FROM public.company";
@@ -104,14 +100,11 @@ public interface Queue {
             "INNER JOIN category c ON ci.category_id=c.id " +
             "ORDER BY i.date_add asc ";
 
-    String CUSTOM_FIND_ITEMS_BY_FILTER = "select t.* from ( " +
-            "select i.*,c.id as content_id from item i " +
-            "inner join item_content ic on i.id=ic.item_id " +
-            "inner join content c on ic.content_id=c.id " +
-            "where ic.main='Y' and ic.show='Y' " +
-            "union all " +
-            "select i.*,c.id from item i, content c " +
-            "where c.is_default='Y' and not exists (select item_id from item_content ic where ic.item_id=i.id)) t " +
-            "order by t.name ";
+    String CUSTOM_FIND_ITEMS = "SELECT i.*, ct.name, c.id as content_id FROM public.item i " +
+            " INNER JOIN public.category_item ci ON i.id = ci.item_id " +
+            " INNER JOIN public.category ct ON ci.category_id = ct.id " +
+            " LEFT OUTER JOIN public.item_content ic ON i.id=ic.item_id " +
+            " LEFT OUTER JOIN public.content c ON ( ic.content_id = c.id AND ic.main = 'Y' AND ic.show = 'Y' )" +
+            " WHERE i.not_for_sale = 'N'";
 
 }

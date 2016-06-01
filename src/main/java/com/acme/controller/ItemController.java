@@ -11,6 +11,7 @@ import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.acme.util.Constants;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.json.simple.JSONObject;
@@ -204,13 +205,33 @@ public class ItemController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/preview")
-    public List<Product> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
-        System.out.println(filter);
-        List<Product> list = customRepository.getItemsByFilter(filter);
-        for(Product product : list){
-            product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
+    public Map<String,Object> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
+        List<Category> categoryList = null;
+        List<String> categorIds = null;
+
+        if(!Strings.isNullOrEmpty(filter.getCategory())){
+            categorIds = customRepository.getCategoriesMapByParentId(filter.getCategory());
+            System.out.println(categorIds);
+            categoryList = categoryRepository.getByIdList(categorIds);
+            System.out.println(categoryList);
         }
-        return list;
+
+        List<Product> list = customRepository.getItemsByFilter(filter,categorIds);
+
+        Content defContent = contentRepository.getDefault().get(0);
+        for(Product product : list){
+            if(Strings.isNullOrEmpty(product.getContentId())){
+                product.setContentId(defContent.getId());
+                product.setImageUrl(Constants.PREVIEW_URL+defContent.getId());
+            } else {
+                product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
+            }
+        }
+
+        Map<String,Object> result = Maps.newHashMap();
+        result.put("items",list);
+        result.put("filter",categoryList);
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/filter/category")

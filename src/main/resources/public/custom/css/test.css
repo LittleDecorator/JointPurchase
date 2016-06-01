@@ -92,7 +92,7 @@ div.hiden-option > i.material-icons:hover{
     overflow: auto;
 }
 
-div:focus, i:focus, a:focus {
+div:focus, i:focus, a:focus , button:focus{
     outline: none;
 }
 
@@ -344,4 +344,13 @@ md-sidenav md-menu-item , md-sidenav .md-button {
 md-sidenav .md-button span {
     font-size: 14px;
     color: #88AAA9!important;
+}
+
+md-menu-item > button.md-button:focus{
+    background-color: rgba(158, 158, 158, 0.0196078);
+}
+
+.toast {
+    display: block;
+    background-color: slategrey;
 }

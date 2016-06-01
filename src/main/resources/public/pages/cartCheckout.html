@@ -16,17 +16,20 @@
             </div>
         </div>
 
-        <div class="input-field">
-            <input type="text" id="email" name="email" class="form-control" ng-model="current.recipientEmail" required email-validate
-                   ng-class="{'invalid': (checkout.$error.emailValidator && current.recipientEmail.length>0),'valid':(!checkout.$error.emailValidator && current.recipientEmail.length>0)}">
-            <label class="control-label required" for="email" data-error='Not valid email'>Email</label>
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <input type="text" id="email" name="email" class="form-control" ng-model="current.recipientEmail" required email-validate
+                       ng-class="{'invalid': (checkout.$error.emailValidator && current.recipientEmail.length>0),'valid':(!checkout.$error.emailValidator && current.recipientEmail.length>0)}">
+                <label class="control-label required" for="email" data-error='Not valid email'>Email</label>
+            </div>
+
+            <div class="input-field col s12 m6">
+                <input type="text" id="phone" class="form-control" ng-model="current.recipientPhone" phone-validate
+                       ng-class="{'invalid': (checkout.$error.phoneValidator && current.recipientPhone.length>0),'valid':(!checkout.$error.phoneValidator && current.recipientPhone.length>0)}">
+                <label class="control-label required" for="phone">Телефон</label>
+            </div>
         </div>
 
-        <div class="input-field">
-            <input type="text" id="phone" class="form-control" ng-model="current.recipientPhone" phone-validate
-                   ng-class="{'invalid': (checkout.$error.phoneValidator && current.recipientPhone.length>0),'valid':(!checkout.$error.phoneValidator && current.recipientPhone.length>0)}">
-            <label class="control-label required" for="phone">Телефон</label>
-        </div>
         <div class="input-field">
             <input type="text" id="address" class="form-control" ng-model="current.recipientAddress" required>
             <label class="control-label required" for="address">Адрес</label>

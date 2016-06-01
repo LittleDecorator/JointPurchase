@@ -26,7 +26,7 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    //base:true
+                    displayName: 'Корзина'
                 }
             },
             {
@@ -39,8 +39,8 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false
-                    //base:true
+                    requireLogin: false,
+                    displayName: 'Детали заказа'
                 }
             },
             {

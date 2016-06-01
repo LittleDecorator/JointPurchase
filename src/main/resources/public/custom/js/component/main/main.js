@@ -67,7 +67,7 @@
                     }
                     $scope.cart.cou++;
                     store.set("cart",$scope.cart);
-                    Materialize.toast(item.name + ' добавлен в корзину', 2500);
+                    Materialize.toast(item.name + ' добавлен в корзину', 3500);
                 };
 
                 $scope.clearCart = function(){
@@ -177,7 +177,7 @@
                 };
 
                 $timeout(function() {
-                    //$(".button-collapse").sideNav();
+                    $(".button-collapse").sideNav();
                     $(".collapsible").collapsible();
                     $('.dropdown-button').dropdown();
                     $('.swipebox').swipebox();
@@ -185,7 +185,7 @@
 
                 //TEMPORARY ADD HERE
                 $scope.itemView = function(id){
-                    $state.go("product.detail", {itemId: id});
+                    $state.go("catalog.detail", {itemId: id});
                 };
 
                 //increment item cou in order

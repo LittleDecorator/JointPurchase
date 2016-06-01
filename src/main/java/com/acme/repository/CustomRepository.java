@@ -4,12 +4,11 @@ import com.acme.config.Queue;
 import com.acme.model.Product;
 import com.acme.model.filter.ProductFilter;
 import com.acme.repository.mapper.Mappers;
-import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +19,9 @@ public class CustomRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    NamedParameterJdbcTemplate parameterJdbcTemplate;
+
     public Integer getOrderedItemCou(String itemId){
         try {
             return jdbcTemplate.queryForObject(Queue.ITEM_GET_ORDERED_COU,Integer.class,itemId);
@@ -28,40 +30,27 @@ public class CustomRepository {
         }
     }
 
-    public List<Product> getItemsByFilter(ProductFilter productFilter){
-        System.out.println(productFilter.toString());
-        StringBuilder sb = new StringBuilder();
-        if(productFilter.getLimit()!=null){
-            sb.append(" limit " + productFilter.getLimit());
-        }
-
-        if(productFilter.getOffset()!=null){
-            sb.append(" offset " +productFilter.getOffset());
-        }
-
-        String queue = sb.toString();
-        /*if(!Strings.isNullOrEmpty(queue)){
-            queue = Queue.CUSTOM_FIND_ITEMS_BY_FILTER + queue;
-        } else {
-            queue = Queue.CUSTOM_FIND_ITEMS_BY_FILTER;
-        }*/
-
-        System.out.println(productFilter.getCategory());
-
-        if(!Strings.isNullOrEmpty(productFilter.getCategory())){
-            SqlParameterSource parameter = new MapSqlParameterSource("parentId",productFilter.getCategory());
-            queue = Queue.ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE + queue;
-            return jdbcTemplate.query(queue, Mappers.productMapper, parameter);
-        } else {
-            queue = Queue.CUSTOM_FIND_ITEMS_BY_FILTER;
-        }
-        return jdbcTemplate.query(queue, Mappers.productMapper);
+    public List<String> getCategoriesMapByParentId(String parentId){
+        System.out.println(parentId);
+        return jdbcTemplate.queryForList(Queue.ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE, String.class, parentId);
     }
 
+    public List<Product> getItemsByFilter(ProductFilter productFilter, List<String> categorties){
+        System.out.println(productFilter.toString());
 
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("limit", productFilter.getLimit());
+        parameters.addValue("offset", productFilter.getOffset());
+        parameters.addValue("categoryIds", categorties);
 
+        String queue = Queue.CUSTOM_FIND_ITEMS;
 
+        if(categorties != null && !categorties.isEmpty()){
+            queue += " AND ct.id IN ( :categoryIds )";
+        }
 
-
+        queue += " limit :limit offset :offset";
+        return parameterJdbcTemplate.query(queue, parameters, Mappers.productMapper);
+    }
 
 }
