@@ -1,8 +1,7 @@
 package com.acme.servlet;
 
-import com.acme.config.Settings;
+import com.acme.constant.Settings;
 import com.acme.model.Subject;
-import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.TokenService;
 import com.google.common.base.Strings;

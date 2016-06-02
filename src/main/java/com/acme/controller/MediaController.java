@@ -2,8 +2,8 @@ package com.acme.controller;
 
 import com.acme.model.Content;
 import com.acme.repository.ContentRepository;
-import com.acme.util.ImageCropper;
-import com.acme.util.ImageUtils;
+import com.acme.service.CropperService;
+import com.acme.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +14,8 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Iterator;
+import java.awt.image.BufferedImage;
 
 @RestController
 @RequestMapping(value = "/media")
@@ -25,62 +24,76 @@ public class MediaController {
     @Autowired
     ContentRepository contentRepository;
 
+    @Autowired
+    CropperService cropperService;
+
+    @Autowired
+    ImageService imageService;
+
     @RequestMapping(method = RequestMethod.GET,value = "/image/preview/{contentId}")
     public void getImageForPreview(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        long start = System.currentTimeMillis();
         Content content = contentRepository.getById(contentId);
+        System.out.println("Take in preview after get content: " + (System.currentTimeMillis() - start) + "ms");
         response.setContentType(content.getMime());
-        ImageIO.write(ImageCropper.cropForPreview(content.getContent()), content.getType(), response.getOutputStream());
+        BufferedImage image = cropperService.cropForPreview(content.getContent());
+        System.out.println("Take in preview after crop: " + (System.currentTimeMillis() - start) + "ms");
+        ImageIO.write(image, content.getType(), response.getOutputStream());
+        System.out.println("Take in preview after crop and write: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/image/view/{contentId}")
     public void getImageForView(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        long start = System.currentTimeMillis();
         Content content = contentRepository.getById(contentId);
+        System.out.println("Take in view after get content: " + (System.currentTimeMillis() - start) + "ms");
         response.setContentType(content.getMime());
-        ImageIO.write(ImageCropper.cropForView(content.getContent()), content.getType(), response.getOutputStream());
+        BufferedImage image = cropperService.cropForView(content.getContent());
+        System.out.println("Take in view after crop: " + (System.currentTimeMillis() - start) + "ms");
+        ImageIO.write(image, content.getType(), response.getOutputStream());
+        System.out.println("Take in view after crop and write: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/image/thumb/{contentId}")
     public void getImageForThumb(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        long start = System.currentTimeMillis();
         Content content = contentRepository.getById(contentId);
+        System.out.println("Take in thumb after get content: " + (System.currentTimeMillis() - start) + "ms");
         response.setContentType(content.getMime());
-        ImageIO.write(ImageCropper.cropForThumb(content.getContent()), content.getType(), response.getOutputStream());
+        BufferedImage image = cropperService.cropForThumb(content.getContent());
+        System.out.println("Take in thumb after crop: " + (System.currentTimeMillis() - start) + "ms");
+        ImageIO.write(image, content.getType(), response.getOutputStream());
+        System.out.println("Take in thumb after crop and write: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/image/gallery/{contentId}")
     public void getImageForGallery(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        long start = System.currentTimeMillis();
         Content content = contentRepository.getById(contentId);
+        System.out.println("Take in gallery after get content: " + (System.currentTimeMillis() - start) + "ms");
         response.setContentType(content.getMime());
-        ImageIO.write(ImageCropper.cropForGallery(content.getContent()), content.getType(), response.getOutputStream());
+        BufferedImage image = cropperService.cropForGallery(content.getContent());
+        System.out.println("Take in gallery after crop: " + (System.currentTimeMillis() - start) + "ms");
+        ImageIO.write(image, content.getType(), response.getOutputStream());
+        System.out.println("Take in gallery after crop and write: " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/image/{contentId}")
     public void getImageForOrig(@PathVariable(value = "contentId") String contentId, HttpServletResponse response) throws Exception {
+        long start = System.currentTimeMillis();
         Content content = contentRepository.getById(contentId);
+        System.out.println("Take in raw after get content: " + (System.currentTimeMillis() - start) + "ms");
+        BufferedImage image = imageService.getImage(content.getContent());
+        System.out.println("Take in raw after getImage: " + (System.currentTimeMillis() - start) + "ms");
         response.setContentType(content.getMime());
-//        ImageIO.write(ImageUtils.getImage(content.getContent()), content.getType(),response.getOutputStream());
-
-        float quality = 0.5f;
 
         // get all image writers for JPG format
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(content.getType());
-
-        if (!writers.hasNext())
-            throw new IllegalStateException("No writers found");
-
-        ImageWriter writer = writers.next();
-        ImageOutputStream ios = ImageIO.createImageOutputStream(response.getOutputStream());
-        writer.setOutput(ios);
-
-        ImageWriteParam param = writer.getDefaultWriteParam();
-
-        // compress to a given quality
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(quality);
-
-        // appends a complete image stream containing a single image and
-        //associated stream and image metadata and thumbnails to the output
-        writer.write(null, new IIOImage(ImageUtils.getImage(content.getContent()), null, null), param);
+        ImageWriter writer = imageService.getWriter(content.getType());
+        ImageWriteParam param = imageService.getDefaultWriterParam(writer);
+        writer.setOutput(ImageIO.createImageOutputStream(response.getOutputStream()));
+        writer.write(null, new IIOImage(image, null, null), param);
         writer.dispose();
+        System.out.println("Take in raw after getImage and write: " + (System.currentTimeMillis() - start) + "ms");
     }
 
 }

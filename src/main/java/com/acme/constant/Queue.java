@@ -1,4 +1,4 @@
-package com.acme.config;
+package com.acme.constant;
 
 public interface Queue {
 

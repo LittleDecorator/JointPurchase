@@ -4,7 +4,7 @@ import com.acme.model.Content;
 import com.acme.model.ItemContent;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
-import com.acme.util.Constants;
+import com.acme.constant.Constants;
 import com.google.common.collect.Maps;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

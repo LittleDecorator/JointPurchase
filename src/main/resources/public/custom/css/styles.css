@@ -309,10 +309,10 @@ div.collection a.active{
 }
 
 .btn-small{
-    width: 80px;
-    line-height: 2.5!important;
-    height: 25px!important;
-    font-size: 10px;
+    width: 65px;
+    line-height: 1.5!important;
+    height: 45px!important;
+    font-size: 20px;
     padding: 0!important;
 }
 

@@ -2,7 +2,7 @@ package com.acme.service.impl;
 
 import com.acme.model.Email;
 import com.acme.service.EmailService;
-import com.acme.util.Constants;
+import com.acme.constant.Constants;
 import com.acme.util.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

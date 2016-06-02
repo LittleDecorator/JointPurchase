@@ -1,6 +1,6 @@
 package com.acme.repository;
 
-import com.acme.config.Queue;
+import com.acme.constant.Queue;
 import com.acme.model.Product;
 import com.acme.model.filter.ProductFilter;
 import com.acme.repository.mapper.Mappers;

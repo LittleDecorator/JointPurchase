@@ -1,6 +1,6 @@
 package com.acme.repository;
 
-import com.acme.config.Queue;
+import com.acme.constant.Queue;
 import com.acme.exception.PersistException;
 import com.acme.model.Category;
 import com.acme.repository.mapper.Mappers;

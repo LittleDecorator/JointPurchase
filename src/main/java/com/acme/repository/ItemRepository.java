@@ -1,6 +1,6 @@
 package com.acme.repository;
 
-import com.acme.config.Queue;
+import com.acme.constant.Queue;
 import com.acme.model.Item;
 import com.acme.model.dto.ItemSearchResult;
 import com.acme.repository.mapper.Mappers;

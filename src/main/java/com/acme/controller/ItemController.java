@@ -10,7 +10,7 @@ import com.acme.model.filter.ProductFilter;
 import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
-import com.acme.util.Constants;
+import com.acme.constant.Constants;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -218,7 +218,7 @@ public class ItemController{
 
         List<Product> list = customRepository.getItemsByFilter(filter,categorIds);
 
-        Content defContent = contentRepository.getDefault().get(0);
+        Content defContent = contentRepository.getDefault();
         for(Product product : list){
             if(Strings.isNullOrEmpty(product.getContentId())){
                 product.setContentId(defContent.getId());
@@ -265,7 +265,7 @@ public class ItemController{
     public List<Map<String,Object>> searchItem(@RequestParam(value = "criteria",name = "criteria") String criteria) throws ParseException {
         List<ItemSearchResult> searchResults = itemRepository.getBySearch(criteria);
         Map<String,Category> categories = categoryRepository.getAll().stream().collect(Collectors.toMap(Category::getId, Function.<Category>identity()));
-        Content defContent = contentRepository.getDefault().get(0);
+        Content defContent = contentRepository.getDefault();
         List result = Lists.newArrayList();
 
         Map<String,Object> raw = Maps.newHashMap();
