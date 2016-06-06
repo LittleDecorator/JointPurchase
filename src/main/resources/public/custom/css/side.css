@@ -5901,7 +5901,9 @@ button.btn-floating {
     height: 54px;
     line-height: 56px; }
 .btn-large i {
-    font-size: 1.6rem; }
+    /*font-size: 1.6rem; */
+    font-size: 2.1rem;
+}
 
 .btn-block {
     display: block; }

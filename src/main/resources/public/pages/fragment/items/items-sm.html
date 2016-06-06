@@ -1,0 +1,51 @@
+<md-list>
+    <div class="card" ng-repeat="item in items">
+        <div class="card-content" style="padding: 15px!important;" >
+                        <span class="card-title text-darken-4" style="color: #846C63; line-height: 50px;font-size: 20px;height: 50px;" layout="row">
+                            <span flex="80" style="font-size: 1.2rem">{{::item.name}}</span>
+                            <div flex></div>
+                            <md-menu flex="nogrow" style="padding: 0">
+                                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item><md-button ng-click="editItem(item.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="deleteItem(item.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="showGallery(item.id)"><md-icon>photo</md-icon>Галерея</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </span>
+            <div class="card-panel">
+                <md-list-item class="md-3-line" style="padding: 0">
+                    <div class="md-list-item-text" layout="column">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="_company" type="text" name="company" value="{{::item.companyName}}">
+                                <label for="_company" class="active">Производитель</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="_article" type="text" name="article" value="{{::item.article}}">
+                                <label for="_article" class="active">Артикул</label>
+                            </div>
+                            <div class="input-field col s4">
+                                <input id="_price" type="text" name="price" value="{{::item.price}}">
+                                <label for="_price" class="active">Цена</label>
+                            </div>
+                            <div class="input-field col s4">
+                                <input id="_stock" type="text" name="stock" value="{{::item.inStock|asZero}}">
+                                <label for="_stock" class="active">В наличии</label>
+                            </div>
+                            <div class="input-field col s4">
+                                <input id="_order" type="text" name="order" value="{{::item.inOrder|asZero}}">
+                                <label for="_order" class="active">Заказано</label>
+                            </div>
+                        </div>
+                    </div>
+                </md-list-item>
+                <div flex-xs>
+                    <md-checkbox ng-model="item.notForSale" ng-change="forSaleToggle(item)">Исключить из продажи</md-checkbox>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</md-list>

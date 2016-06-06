@@ -11,20 +11,36 @@
                 console.log("Enter gallery controller");
 
                 var uploader = $scope.uploader = new FileUploader();
-                var dialog;
+                //var dialog;
                 var mCou=0;
                 $scope.images = [];
 
-                /* callback on file select */
-                uploader.onAfterAddingAll = function (addedFileItems) {
-                    if(!dialog){
-                        dialog = fileUploadModal({itemId:$stateParams.id},$scope);
-                        dialog.closePromise.then(function(output) {
+                //загрузка файлов
+                $scope.upload = function () {
+                    //var items = $scope.uploader.getNotUploadedItems();
+                    var items = uploader.getNotUploadedItems();
+                    var formData = new FormData();
+
+                    angular.forEach(items, function (item, idx) {
+                        formData.append("file" + idx, item._file);
+                    });
+
+                    //formData.append("itemId", resolved.itemId);
+                    formData.append("itemId", $stateParams.id);
+
+                    dataResources.itemContent.upload(formData, function(data){
+                        angular.forEach(data, function (image) {
+                            $scope.images.push(image);
+                            //$scope.uploader.clearQueue();
+                            //$scope.closeThisDialog();
                             uploader.clearQueue();
-                            dialog = null;
-                            return true;
                         });
-                    }
+                    });
+                };
+
+                /* callback on file select */
+                uploader.onAfterAddingAll = function () {
+                    $scope.upload();
                 };
 
                 $scope.add = function(){
@@ -128,59 +144,4 @@
 
 
             }])
-        .controller('uploadController',['$scope','dataResources','resolved','$timeout',function($scope, dataResources, resolved, $timeout){
-
-            $scope.uploader = $scope.$parent.uploader;
-
-            //загрузка файлов
-            $scope.upload = function () {
-                var items = $scope.uploader.getNotUploadedItems();
-                var formData = new FormData();
-
-                angular.forEach(items, function (item, idx) {
-                    formData.append("file" + idx, item._file);
-                });
-
-                formData.append("itemId", resolved.itemId);
-
-                dataResources.itemContent.upload(formData, function(data){
-                    angular.forEach(data, function (image) {
-                        $scope.images.push(image);
-                        $scope.uploader.clearQueue();
-                        $scope.closeThisDialog();
-                    });
-                });
-            };
-
-            /* удаление из очереди загрузки */
-            $scope.removeFromQueue = function(item){
-                if(item){
-                    item.remove();
-                }
-                if($scope.uploader.queue.length == 0){
-                    $scope.closeThisDialog();
-                }
-            };
-
-            /* добавление файлов в очередь загрузки */
-            $scope.add = function(){
-                $('#uploadBtn').click();
-            };
-
-            /* изменение ширины модального окна */
-            $timeout(function(){
-                var curWidth = $(window).width();
-                console.log(curWidth);
-                if(curWidth > 601){
-                    $('.ngdialog-content').css('width','80%');
-                } else if(curWidth > 961){
-                    $('.ngdialog-content').css('width','50%');
-                } else {
-                    /* set size for mobile devices */
-                    $('.ngdialog-content').css('width','90%');
-                }
-            },10);
-
-
-        }])
 })();

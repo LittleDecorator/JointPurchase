@@ -1,0 +1,36 @@
+<div class="table-result">
+
+    <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Название</th>
+            <th>Производитель</th>
+            <th>Артикул</th>
+            <th>Цена</th>
+            <th>В наличии</th>
+            <th>Заказано</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad">
+            <td style="text-align: right;">
+                <input type="checkbox" class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)"/>
+                <label for="{{::item.id}}" style="vertical-align: -15px;"></label>
+            </td>
+            <td class="center-align">{{::item.name}}</td>
+            <td class="center-align">{{::item.companyName}}</td>
+            <td class="center-align">{{::item.article}}</td>
+            <td class="center-align">{{::item.price}} руб</td>
+            <td class="center-align">{{::item.inStock|asZero}}</td>
+            <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
+            <td class="right-align">
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><md-icon>edit</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id,$index)"><md-icon>close</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><md-icon>photo_camera</md-icon></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

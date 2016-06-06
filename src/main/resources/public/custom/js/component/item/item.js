@@ -7,6 +7,7 @@
 
     angular.module('item')
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
+            var templatePath = "pages/fragment/items/";
             $scope.companyNames = companies;
             $scope.items = [];
 
@@ -67,11 +68,9 @@
 
             //clear filter
             $scope.clear = function () {
-                // $('.filter-item .active').removeClass('active');
                 portion = 0;
                 $scope.filter = {name:null, article:null, selectedCompany:null, selectedCategory:null, limit:30, offset:0};
                 localStorage.removeItem($state.current.name);
-                // $scope.confirmedFilter = angular.copy($scope.filter);
                 $scope.stopLoad = false;
                 
                 $scope.loadData(true);
@@ -100,12 +99,25 @@
                 dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
             };
 
+            $scope.getTemplate = function(){
+                if($scope.width < 601){
+                    return templatePath + "items-sm.html"
+                }
+                if($scope.width > 600){
+                    if($scope.width < 961){
+                        return templatePath + "items-md.html"
+                    }
+                    return templatePath + "items-lg.html"
+                }
+            };
+
             $timeout(function(){
                 $('select').material_select();
             },10);
         }])
 
         .controller('itemDetailController',['$scope','$state','resolved','dataResources','modal','$timeout', function ($scope, $state, resolved, dataResources,modal,$timeout){
+            var templatePath = "pages/fragment/items/card/";
 
             $scope.selected = resolved[0];
             $scope.categories = [];
@@ -171,9 +183,16 @@
                 $state.go("item.detail.gallery", {id: $scope.selected.id});
             };
 
-            $timeout(function(){
-                $('select').material_select();
-            },10);
+            $scope.getTemplateUrl = function(){
+                $timeout(function(){
+                    $('select').material_select();
+                },10);
+                if($scope.width < 601){
+                    return templatePath + "item-card-sm.html";
+                } else {
+                    return templatePath + "item-card-lg.html";
+                }
+            };
 
         }])
 
