@@ -9,7 +9,8 @@
         .controller('orderController',['$scope','$state','$stateParams','dataResources',function ($scope, $state, $stateParams, dataResources) {
             //TODO: Написать сервис подсчета товаров при заказах
             //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
-            console.log("Enter order controller");
+
+            var templatePath = "pages/fragment/order/";
 
             /* array of orders*/
             $scope.orders = [];
@@ -56,7 +57,20 @@
                 $state.transitionTo("order.detail");
             };
 
+            $scope.getTemplateUrl = function(){
+                if($scope.width < 601){
+                    return templatePath + "order-sm.html"
+                }
+                if($scope.width > 600){
+                    if($scope.width < 1025){
+                        return templatePath + "order-md.html"
+                    }
+                    return templatePath + "order-lg.html"
+                }
+            }
+
         }])
+
         .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','modal',function ($scope, $state, order,$stateParams, dataResources,$timeout,modal){
 
             $scope.stats = [];
@@ -64,6 +78,8 @@
             var time = new Date().getTime();
             $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time,delivery:null};
             $scope.isNewOrder = true;
+
+            var templatePath = "pages/fragment/order/card/";
 
             if (order) {
                 $scope.currentOrder = angular.copy(order);
@@ -164,21 +180,6 @@
                 recalculatePayment();
             };
 
-            //$scope.$on('onItemClssSelected',function() {
-            //    var oldItems = $scope.currentOrder.items;
-            //    $scope.currentOrder.items = [];
-            //    var currItem;
-            //    angular.forEach(eventService.data, function (item) {
-            //        currItem = helpers.findInArrayById(oldItems,item.id);
-            //        if(helpers.isEmpty(currItem)){
-            //            currItem = item;
-            //            currItem.cou = 1;
-            //        }
-            //        $scope.currentOrder.items.push(currItem)
-            //    });
-            //    recalculatePayment();
-            //});
-
             //increment item cou in order
             $scope.incrementCou = function (idx) {
                 var item = $scope.currentOrder.items[idx];
@@ -226,12 +227,21 @@
                 }
             };*/
 
-            console.log($scope);
+            $scope.getTemplateUrl = function(){
+                if($scope.width < 601){
+                    return templatePath + "order-card-sm.html"
+                }
+                if($scope.width > 600){
+                    if($scope.width < 1025){
+                        return templatePath + "order-card-md.html"
+                    }
+                    return templatePath + "order-card-lg.html"
+                }
+            };
 
-            $timeout(function(){
-                // $('.toc-wrapper').pushpin({ offset: 100});
+            $scope.afterInclude = function(){
                 $('select').material_select();
-            },10);
+            };
 
         }])
 

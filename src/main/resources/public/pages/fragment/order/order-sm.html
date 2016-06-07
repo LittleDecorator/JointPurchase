@@ -1,0 +1,47 @@
+<md-list>
+    <div class="card" ng-repeat="order in orders">
+        <div class="card-content" style="padding: 15px!important;" >
+                        <span class="card-title text-darken-4" style="color: #846C63; line-height: 50px;font-size: 20px;height: 50px;" layout="row">
+                            <span flex="80" style="font-size: 1.2rem">Заказ #{{::order.uid}}</span>
+                            <div flex></div>
+                            <md-menu flex="nogrow" style="padding: 0">
+                                <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item><md-button ng-click="editOrder(order.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="deleteOrder(order.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </span>
+            <div class="card-panel">
+                <md-list-item class="md-3-line" style="padding: 0">
+                    <div class="md-list-item-text" layout="column">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="personName" type="text" value="{{::order.personName}}">
+                                <label for="personName" class="active">Получатель</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="dateAdd" type="text" value="{{::order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}">
+                                <label for="dateAdd" class="active">Дата создания</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="closeOrderDate" type="text" value="{{::order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}">
+                                <label for="closeOrderDate" class="active">Дата закрытия</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="status" type="text" value="{{::order.status}}">
+                                <label for="status" class="active">Статус заказа</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="payment" type="text" value="{{::payment|asZero}} руб">
+                                <label for="payment" class="active">Сумма к оплате</label>
+                            </div>
+                        </div>
+                    </div>
+                </md-list-item>
+            </div>
+        </div>
+
+    </div>
+
+</md-list>

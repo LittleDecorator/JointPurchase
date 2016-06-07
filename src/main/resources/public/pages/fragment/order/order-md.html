@@ -1,0 +1,37 @@
+<div>
+    <h3 class="example_head">Заказы:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+            <thead>
+            <tr>
+                <th style="width: 17%">Номер заказа</th>
+                <th style="width: 25%">Получатель</th>
+                <th style="width: 19%">Дата создания</th>
+                <th style="width: 19%">Дата закрытия</th>
+                <th style="width: 10%">Статус</th>
+                <th style="width: 10%">Сумма</th>
+                <th style="width: 5%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
+                <td class="center-align">{{order.uid}}</td>
+                <td class="center-align">{{order.personName}}</td>
+                <td class="center-align">{{order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                <td class="center-align">{{order.closeOrderDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                <td class="center-align">{{order.status}}</td>
+                <td class="center-align">{{order.payment}} руб</td>
+                <td class="right-align">
+                    <md-menu flex="nogrow" style="padding: 0">
+                        <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item><md-button ng-click="editOrder(order.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                            <md-menu-item><md-button ng-click="deleteOrder(order.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

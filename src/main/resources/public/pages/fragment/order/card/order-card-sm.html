@@ -1,0 +1,117 @@
+<div style="padding-bottom: 20px;">
+    <h4>Информация о заказе</h4>
+    <!-- Main Order Info -->
+    <div class="card-panel" style="padding-bottom: 0">
+        <div class="row">
+            <div class="input-field col s6">
+                <input type="text" id="uid" ng-model="currentOrder.uid" disabled>
+                <label class="active" for="uid">Номер заказа</label>
+            </div>
+
+            <div class="input-field col s6">
+                <input type="text" id="payment" ng-model="currentOrder.payment" disabled>
+                <label class="active" for="payment" >Сумма к оплате</label>
+            </div>
+
+            <div class="input-field col s6">
+                <input type="text" id="dateAdd" ng-model="currentOrder.formatedDateAdd" disabled>
+                <label class="active" for="dateAdd">Дата создания</label>
+            </div>
+
+            <div class="input-field col s6">
+                <label class="control-label" for="dateAdd">Дата закрытия</label>
+                <input type="text" id="closeDate" class="form-control" ng-model="currentOrder.closeOrderDate" disabled>
+            </div>
+
+            <div class="input-field col s12">
+                <label ng-class="{'active':currentOrder.status.length>0}">Стату заказа</label>
+                <select id="status" ng-model="currentOrder.status">
+                    <option ng-repeat="status in stats" ng-selected="currentOrder.status == status.id" value="{{::status.id}}">{{::status.value}}</option>
+                </select>
+
+            </div>
+
+            <div class="input-field col s12">
+                <label class="required" ng-class="{'active':currentOrder.delivery.length>0}">Тип доставки</label>
+                <select id="delivery" ng-model="currentOrder.delivery">
+                    <option ng-repeat="delivery in deliveries" ng-selected="currentOrder.status == delivery.id" value="{{::delivery.id}}">{{::delivery.value}}</option>
+                </select>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- Customer Info -->
+    <div class="card-panel" style="padding-bottom: 0">
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="text" id="fname" ng-model="currentOrder.recipientFname" required>
+                <label class="required" ng-class="{'active':!isNewOrder}" for="fname">Имя</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="lname" ng-model="currentOrder.recipientLname" required>
+                <label class="required" ng-class="{'active':!isNewOrder}" for="lname">Фамилия</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="mname" ng-model="currentOrder.recipientMname">
+                <label ng-class="{'active':!isNewOrder && currentOrder.recipientMname.length>0}" for="mname">Отчество</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="email" ng-model="currentOrder.recipientEmail" email-validate
+                       ng-class="{'invalid': (_order.$error.emailValidator && currentOrder.recipientEmail.length>0),'valid':(!_order.$error.emailValidator && currentOrder.recipientEmail.length>0)}">
+                <label class="control-label" for="email" ng-class="{'active':!isNewOrder && currentOrder.recipientEmail.length>0}" data-error='Not valid email'>Email</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="phone" ng-model="currentOrder.recipientPhone" required phone-validate
+                       ng-class="{'invalid': (_order.$error.phoneValidator && currentOrder.recipientPhone.length>0),'valid':(!_order.$error.phoneValidator && currentOrder.recipientPhone.length>0)}">
+                <label class="control-label required" ng-class="{'active':!isNewOrder}" for="phone" data-error='Not valid phone'>Телефон</label>
+            </div>
+        </div>
+    </div>
+
+    <h4>Содержимое заказа</h4>
+    <div class="card-panel" ng-if="currentOrder.items.length>0" style="padding: 10px;">
+        <table class="table table-bordered collection" style="border: medium none;margin-bottom: 0;">
+            <thead>
+            <tr>
+                <th style="text-align: center;padding: 10px 5px;">Название</th>
+                <th style="text-align: center;padding: 10px 5px;">Артикул</th>
+                <th style="text-align: center;padding: 10px 5px;">Кол-во</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in currentOrder.items" class="collection-item">
+                <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
+                <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
+                <td class="col s2 non-float" style="text-align: center">
+                    <div style="display: flex;">
+                        <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.cou<1}"></i>
+                        <span>{{item.cou}}</span>
+                        <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
+                    </div>
+                </td>
+                <td class="col s1 non-float" style="text-align: center">
+                    <div style="cursor: pointer" ng-click="remItemsFromOrder($index)">
+                        <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="table-result" ng-if="currentOrder.items.length==0">
+        <span style="margin-right: 2%">Не добавлено ни одного товара</span>
+    </div>
+
+    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
+        <a class="btn-floating blue lighten-3" ng-click="addItemsInOrder()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+            <i class="large mdi-content-add"></i>
+        </a>
+    </div>
+</div>
