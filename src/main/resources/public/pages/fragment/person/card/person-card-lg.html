@@ -1,0 +1,62 @@
+<div class="table-container">
+    <form role="form">
+        <div class="modal-body">
+
+            <div class="input-field">
+                <input id="firstName" type="text" name="firstName" class="form-control" ng-model="person.firstName">
+                <label for="firstName" ng-class="{'active':person.firstName.length>0}">Имя</label>
+            </div>
+
+            <div class="input-field">
+                <input id="lastName" type="text" name="lastName" class="form-control" ng-model="person.lastName">
+                <label for="lastName" ng-class="{'active':person.lastName.length>0}">Фамилия</label>
+            </div>
+
+            <div class="input-field">
+                <input id="middleName" type="text" name="middleName" class="form-control" ng-model="person.middleName">
+                <label for="middleName" ng-class="{'active':person.middleName.length>0}">Отчество</label>
+            </div>
+
+            <div class="input-field">
+                <input id="phoneNumber" type="text" name="phoneNumber" class="form-control" ng-model="person.phoneNumber">
+                <label for="phoneNumber" ng-class="{'active':person.phoneNumber.length>0}">Номер телефона</label>
+            </div>
+
+            <div class="input-field">
+                <input id="email" type="text" name="email" class="form-control" ng-model="person.email">
+                <label for="email" ng-class="{'active':person.email.length>0}">Почта</label>
+            </div>
+
+            <div class="input-field">
+                <input id="address" type="text" name="address" class="form-control" ng-model="person.address">
+                <label for="address" ng-class="{'active':person.address.length>0}">Адрес:</label>
+            </div>
+
+            <div class="input-field">
+                <input id="postAddress" type="text" name="postAddress" class="form-control" ng-model="person.postAddress">
+                <label for="postAddress" ng-class="{'active':person.postAddress.length>0}">Индекс</label>
+            </div>
+
+            <div class="input-field" ng-show="current.isEmployer">
+                <select id="company" name="companyId" ng-model="person.companyId" ng-options="company.name for company in companies track by company.id"></select>
+                <label for="company" class="control-label">Организация</label>
+            </div>
+
+            <div class="input-field" ng-show="current.isEmployer">
+                <input id="job" type="text" name="job" class="form-control" ng-model="person.job">
+                <label for="job" ng-class="{'active':person.job.length>0}">Должность</label>
+            </div>
+
+            <div class="input-field">
+                <input id="employer" type="checkbox" class="filled-in" ng-model="person.isEmployer">
+                <label for="employer">Сотрудник компании</label>
+            </div>
+        </div>
+    </form>
+
+    <div class="fixed-action-btn " style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large blue lighten-3" ng-click="save()">
+            <i class="large mdi-content-save"></i>
+        </a>
+    </div>
+</div>

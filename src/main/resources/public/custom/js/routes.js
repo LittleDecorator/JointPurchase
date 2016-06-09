@@ -20,7 +20,7 @@ var route = {
                 url: '/cart',
                 views: {
                     'main@': {
-                        templateUrl: 'pages/orderPreview.html',
+                        templateUrl: 'pages/cart.html',
                         controller: 'cartController'
                     }
                 },

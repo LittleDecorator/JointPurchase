@@ -175,6 +175,13 @@ div:focus, i:focus, a:focus , button:focus{
     bottom: 5px;
     overflow: hidden;
 }
+
+.boxInner.md-avatar {
+    position: inherit;
+    width: 60px!important;
+    height: 60px!important;
+}
+
 .boxInner img {
     /*width: 100%;*/
 }

@@ -184,14 +184,15 @@
             };
 
             $scope.getTemplateUrl = function(){
-                $timeout(function(){
-                    $('select').material_select();
-                },10);
                 if($scope.width < 601){
                     return templatePath + "item-card-sm.html";
                 } else {
                     return templatePath + "item-card-lg.html";
                 }
+            };
+
+            $scope.afterInclude = function(){
+                $('select').material_select();
             };
 
         }])

@@ -1,0 +1,43 @@
+<div class="table-result" >
+    <table  class="bordered" >
+
+        <tbody>
+        <tr ng-repeat="item in cart.content" class="row" ng-style="$last && {'border':'none'}">
+
+            <td class="col s2 non-float" style="text-align: center">
+                <img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" />
+            </td>
+            <td class="col s5 non-float">
+                <a ng-click="itemView(item.id)" style="cursor: pointer">
+                    <span style="font-size: 20px;">{{item.name}}</span>
+                </a>
+            </td>
+            <td class="col s1 non-float" style="text-align: center; width: 12%;">
+                <span class="price">{{item.price}} руб</span>
+            </td>
+            <td class="col s2 non-float" style="text-align: center;">
+                <div>
+                    <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)"></i>
+                    <span>{{item.cou}}</span>
+                    <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
+                </div>
+            </td>
+            <td class="col s1 non-float" style="text-align: center; center; width: 12%;">
+                <span class="price">{{item.price * item.cou}} руб</span>
+            </td>
+            <td class="col s1 non-float" style="text-align: center">
+                <div style="cursor: pointer" ng-click="removeFromCart($index)">
+                    <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                </div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<div class="gray-row table-result" style="margin-top:20px">
+    <div class="col s6 offset-s6 table-total">
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey}} руб</span>
+    </div>
+</div>

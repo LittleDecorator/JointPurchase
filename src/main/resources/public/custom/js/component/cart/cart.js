@@ -10,6 +10,8 @@
         .controller('cartController',['$scope','$state',function($scope,$state){
             console.log("enter cart controller");
 
+            var templatePath = "pages/fragment/cart/";
+
             $scope.THUMB_URL = "media/image/thumb/";
             $scope.ORIG_URL = "media/image/";
 
@@ -32,7 +34,19 @@
             //TODO: here will be check of auth
             $scope.toOrderCreation = function(){
                 $state.transitionTo("cart.checkout");
-            }
+            };
+
+            $scope.getTemplate = function(){
+                if($scope.width < 601){
+                    return templatePath + "cart-sm.html"
+                }
+                if($scope.width > 600){
+                    if($scope.width < 841){
+                        return templatePath + "cart-md.html"
+                    }
+                    return templatePath + "cart-lg.html"
+                }
+            };
 
         }])
 

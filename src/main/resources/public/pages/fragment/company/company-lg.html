@@ -1,0 +1,24 @@
+<div style="padding-top: 20px;">
+    <h3 class="example_head">Компании:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="company in companies" id="{{company.id}}" class="collection-item">
+                <td class="center-align">{{company.name}}</td>
+                <td class="center-align">{{company.description}}</td>
+                <td class="right-align">
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="edit(company.id)"><md-icon>edit</md-icon></a>
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="delete(company.id)"><md-icon>close</md-icon></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

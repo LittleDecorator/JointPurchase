@@ -1,0 +1,19 @@
+<div>
+    <md-list class="hide-on-med-and-up">
+        <div class="card-panel" ng-repeat="company in companies" style="padding: 5px 10px">
+            <md-list-item class="md-3-line">
+                <div class="md-list-item-text" layout="column">
+                    <h3>{{::company.name}}</h3>
+                    <p>{{::company.description}}</p>
+                </div>
+                <md-menu>
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item><md-button ng-click="edit(company.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="delete(company.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </md-list-item>
+        </div>
+    </md-list>
+</div>

@@ -7,9 +7,9 @@
 
     angular.module('person')
         .controller('personController',['$scope','$state','dataResources', function ($scope, $state, dataResources) {
-            //TODO: делать неактивным кнопку показа заказов клиента, если их нет
-            //TODO: возможно стоит показывать в таблице кол-во заказов
 
+            var templatePath = "pages/fragment/person/";
+            
             $scope.customers = dataResources.customer.query();
 
             $scope.editPerson = function (id) {
@@ -39,9 +39,22 @@
                 dataResources.customer.save($scope.current);
             };
 
+            $scope.getTemplateUrl = function(){
+                if($scope.width < 601){
+                    return templatePath + "person-sm.html"
+                }
+                if($scope.width > 600){
+                    if($scope.width < 961){
+                        return templatePath + "person-md.html"
+                    }
+                    return templatePath + "person-lg.html"
+                }
+            };
+
         }])
 
         .controller('personDetailController',['$scope','$state','dataResources','person','companies', function ($scope, $state, dataResources, person, companies) {
+            var templatePath = "pages/fragment/person/card/";
             $scope.person = {};
             $scope.companies = companies;
             $scope.companies.unshift({id:null,name:'Выберите компанию'});
@@ -50,6 +63,18 @@
                 $scope.person = person;
                 $scope.person.isEmployer = ($scope.person.companyId != null);
             }
+
+            $scope.getTemplateUrl = function(){
+                if($scope.width < 601){
+                    return templatePath + "person-card-sm.html";
+                } else {
+                    return templatePath + "person-card-lg.html";
+                }
+            };
+
+            $scope.afterInclude = function(){
+                $('select').material_select();
+            };
 
         }])
 })();

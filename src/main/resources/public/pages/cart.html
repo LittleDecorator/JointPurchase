@@ -1,0 +1,13 @@
+<div class="section" style="margin-top: 20px;">
+
+    <div ng-if="showContent">
+
+        <div ng-include="getTemplate()"></div>
+
+        <a class="btn btn-primary" ng-click="toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>
+
+    </div>
+
+    <div class="table-result" ng-if="!showContent">Не выбранно ни одного товара</div>
+
+</div>

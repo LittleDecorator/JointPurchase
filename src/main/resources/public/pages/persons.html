@@ -1,52 +1,13 @@
 <div style="padding-top: 20px;">
     <h3 class="example_head" style="margin-top: 0">Покупатели:</h3>
 
-    <div class="table-result" ng-if="width > 600">
-
-        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
-            <thead>
-            <tr>
-                <th style="width: 55%">ФИО</th>
-                <th>Phone</th>
-                <th>Mail</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="customer in customers" id="{{customer.id}}" class="collection-item">
-                <td class="center-align" style="width: 20%">{{customer.lastName}} {{customer.firstName}} {{customer.middleName}}</td>
-                <td class="center-align" style="width: 10%">{{customer.phoneNumber}}</td>
-                <td class="center-align" style="width: 10%">{{customer.email}}</td>
-                <td class="right-align" style="width: 60%">
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editPerson(customer.id)"><md-icon>edit</md-icon></a>
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deletePerson(customer.id)"><md-icon>close</md-icon></a>
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showOrders(customer.id)"><md-icon>shopping_basket</md-icon></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div ng-if="customers.length>0">
+        <div ng-include="getTemplateUrl()"></div>
     </div>
 
-    <md-list ng-if="width < 601">
-        <div class="card-panel" ng-repeat="customer in customers" style="padding: 5px 10px">
-            <md-list-item class="md-3-line">
-                <md-icon style="font-size: 55px;">portrait</md-icon>
-                <div class="md-list-item-text" layout="column">
-                    <h3>{{::customer.lastName}} {{::customer.firstName}} {{::customer.middleName}}</h3>
-                    <h4>{{::customer.phoneNumber}}</h4>
-                    <p>{{::customer.email}}</p>
-                </div>
-                <md-menu style="  margin-top: 15px;">
-                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
-                    <md-menu-content width="4">
-                        <md-menu-item><md-button ng-click="editPerson(customer.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="deletePerson(customer.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="showOrders(customer.id)"><md-icon>shopping_cart</md-icon>Заказы</md-button></md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-            </md-list-item>
-        </div>
-    </md-list>
+    <div class="table-result" ng-if="customers.length==0">
+        <span style="margin-right: 2%">Не создано ни одного покупателя</span>
+    </div>
 
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a class="btn-floating blue lighten-3" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" ng-click="addPerson()">

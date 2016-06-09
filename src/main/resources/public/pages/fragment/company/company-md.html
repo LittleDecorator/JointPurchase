@@ -1,0 +1,30 @@
+<div style="padding-top: 20px;">
+    <h3 class="example_head">Компании:</h3>
+    <div class="table-result">
+        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="company in companies" id="{{company.id}}" class="collection-item">
+                <td class="center-align">{{company.name}}</td>
+                <td class="center-align">{{company.description}}</td>
+                <td class="right-align">
+                    <md-menu>
+                        <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
+                        <md-menu-content width="4">
+                            <md-menu-item><md-button ng-click="edit(company.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                            <md-menu-item><md-button ng-click="delete(company.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

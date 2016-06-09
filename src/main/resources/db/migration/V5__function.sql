@@ -10,3 +10,25 @@
 --       RETURN NEXT ref2;                                                                              -- Return the cursor to the caller
 --     END;
 --     $$ LANGUAGE plpgsql;
+
+/* ITEM VIEW */
+CREATE VIEW public.item_view AS
+SELECT
+	t.id,
+	t.name,
+	t.article,
+	t.description,
+	t.price,
+	t.not_for_sale,
+	t.in_stock,
+	t.company_id,
+	comp.name AS company_name,
+	t.content_id
+FROM (
+  SELECT i.*,
+          CASE WHEN ic.content_id is NULL
+              THEN (SELECT c.id FROM public.content c WHERE c.is_default='Y')
+              ELSE ic.content_id END AS content_id
+  FROM public.item i
+  LEFT OUTER JOIN public.item_content ic ON (i.id=ic.item_id AND ic.main='Y')) t
+  INNER JOIN public.company comp ON t.company_id = comp.id;
