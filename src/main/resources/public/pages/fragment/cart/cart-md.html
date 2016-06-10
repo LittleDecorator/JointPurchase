@@ -2,7 +2,7 @@
     <md-list class="row" flex style="margin: 0">
         <md-list-item class="md-1-line col s12" ng-repeat="item in cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
             <div class="md-list-item-inner" style="width: 100%;">
-                <div class="boxInner md-avatar" style="margin-right: 10px">
+                <div class="boxInner md-avatar" style="margin-right: 10px;padding: 0 5px;">
                     <a ng-href="media/image/{{::image.id}}" class="swipebox" title="Some Title">
                         <img ng-src="{{tem.media?ORIG_URL+item.media[0]:item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                     </a>
@@ -13,12 +13,12 @@
                             <span style="font-size: 20px">{{::item.name}}</span>
                         </a>
                     </div>
-                    <div class="col s2" style="display: flex;">
+                    <div class="col s2" style="display: flex;width: 14%;padding-left: 0;">
                         <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)"></i>
                         <span style="margin: auto;">{{item.cou}}</span>
                         <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i></div>
-                    <div class="col s2" style="width: 21%;">{{item.price * item.cou}} руб</div>
-                    <md-icon class="col s1" ng-click="removeFromCart($index)" style="color: darksalmon;cursor: pointer">clear</md-icon>
+                    <div class="col s2" style="width: 21%;text-align: center;">{{::item.price}} руб</div>
+                    <md-icon class="col s1" ng-click="removeFromCart($index)" style="color: darksalmon;cursor: pointer;font-size: 2.5rem;height: 2.5rem; width: 2.5rem;margin-right: 20px;">clear</md-icon>
                 </div>
             </div>
         </md-list-item>

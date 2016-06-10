@@ -37,10 +37,10 @@
             };
 
             $scope.getTemplate = function(){
-                if($scope.width < 601){
+                if($scope.width < 481){
                     return templatePath + "cart-sm.html"
                 }
-                if($scope.width > 600){
+                if($scope.width > 480){
                     if($scope.width < 841){
                         return templatePath + "cart-md.html"
                     }
