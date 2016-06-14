@@ -42,9 +42,10 @@
 --     $$ LANGUAGE plpgsql;
 
 /* ITEM VIEW */
-CREATE VIEW public.item_view AS
+CREATE VIEW public.catalog AS
   SELECT i.*,comp.name as company_name,
           CASE WHEN ic.content_id is NULL THEN (SELECT c.id FROM public.content c WHERE c.is_default='Y') ELSE ic.content_id END AS content_id
   FROM public.item i
   LEFT OUTER JOIN public.item_content ic ON (i.id=ic.item_id AND ic.main='Y')
-  INNER JOIN public.company comp ON i.company_id = comp.id;
+  INNER JOIN public.company comp ON i.company_id = comp.id
+  WHERE i.not_for_sale = 'N';

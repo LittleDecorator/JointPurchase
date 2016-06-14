@@ -2,7 +2,7 @@ package com.acme.repository.mapper;
 
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
-import com.acme.model.dto.ItemSearchResult;
+import com.acme.model.dto.Product;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.io.IOException;
@@ -24,30 +24,31 @@ public class Mappers {
         return item;
     };
 
-    public final static RowMapper<ItemSearchResult> itemSearchMapper = (rs,num) -> {
-        Item item = new Item();
-        item.setId(rs.getString("id"));
-        item.setName(rs.getString("name"));
-        item.setCompanyId(rs.getString("company_id"));
-        item.setArticle(rs.getString("article"));
-        item.setDescription(rs.getString("description"));
-        item.setPrice(rs.getBigDecimal("price"));
-        item.setNotForSale(rs.getBoolean("not_for_sale"));
-        item.setInStock(rs.getInt("in_stock"));
-        item.setDateAdd(rs.getDate("date_add"));
-
-        ItemSearchResult searchResult = new ItemSearchResult();
-        searchResult.setItem(item);
-        searchResult.setCategoryId(rs.getString("category_id"));
-        searchResult.setContentId(rs.getString("content_id"));
-
-        return searchResult;
-    };
+//    public final static RowMapper<ItemSearchResult> itemSearchMapper = (rs,num) -> {
+//        Item item = new Item();
+//        item.setId(rs.getString("id"));
+//        item.setName(rs.getString("name"));
+//        item.setCompanyId(rs.getString("company_id"));
+//        item.setArticle(rs.getString("article"));
+//        item.setDescription(rs.getString("description"));
+//        item.setPrice(rs.getBigDecimal("price"));
+//        item.setNotForSale(rs.getBoolean("not_for_sale"));
+//        item.setInStock(rs.getInt("in_stock"));
+//        item.setDateAdd(rs.getDate("date_add"));
+//
+//        ItemSearchResult searchResult = new ItemSearchResult();
+//        searchResult.setItem(item);
+//        searchResult.setCategoryId(rs.getString("category_id"));
+//        searchResult.setContentId(rs.getString("content_id"));
+//
+//        return searchResult;
+//    };
 
     public final static RowMapper<CategoryItem> categoryItemMapper = (rs,num) -> {
         CategoryItem categoryItem = new CategoryItem();
         categoryItem.setId(rs.getString("id"));
         categoryItem.setCategoryId(rs.getString("category_id"));
+        categoryItem.setCategoryName(rs.getString("name"));
         categoryItem.setItemId(rs.getString("item_id"));
         categoryItem.setDateAdd(rs.getDate("date_add"));
         return categoryItem;
@@ -108,19 +109,16 @@ public class Mappers {
     public final static RowMapper<Product> productMapper = (rs,num) -> {
         Product product = new Product();
         product.setContentId(rs.getString("content_id"));
+        product.setId(rs.getString("id"));
+        product.setName(rs.getString("name"));
+        product.setCompanyId(rs.getString("company_id"));
+        product.setArticle(rs.getString("article"));
+        product.setDescription(rs.getString("description"));
+        product.setPrice(rs.getBigDecimal("price"));
+        product.setNotForSale(rs.getBoolean("not_for_sale"));
+        product.setInStock(rs.getInt("in_stock"));
+        product.setDateAdd(rs.getDate("date_add"));
 
-        Item item = new Item();
-        item.setId(rs.getString("id"));
-        item.setName(rs.getString("name"));
-        item.setCompanyId(rs.getString("company_id"));
-        item.setArticle(rs.getString("article"));
-        item.setDescription(rs.getString("description"));
-        item.setPrice(rs.getBigDecimal("price"));
-        item.setNotForSale(rs.getBoolean("not_for_sale"));
-        item.setInStock(rs.getInt("in_stock"));
-        item.setDateAdd(rs.getDate("date_add"));
-
-        product.setItem(item);
         System.out.println(product);
         return product;
     };

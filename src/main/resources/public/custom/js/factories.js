@@ -45,6 +45,16 @@
 
         .factory('dataResources',['$resource',function($resource){
             return {
+
+                catalog: {
+                    list : $resource('/catalog',{},{
+                        all:{method:'POST',isArray:true}
+                    }),
+                    search : $resource('/catalog/search/',{},{
+                        get :{method:'GET',isArray:true}
+                    }),
+                },
+
                 company: $resource("/company/:id"),
                 itemImage: $resource('/content/items/:id',{},{
                     query :{method:'GET',isArray:true},
@@ -59,7 +69,7 @@
                     }
                 }),
 
-                searchItem:$resource('/item/search/',{},{get :{method:'GET',isArray:true}}),
+                //searchItem:$resource('/item/search/',{},{get :{method:'GET',isArray:true}}),
 
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},
@@ -135,9 +145,9 @@
                 contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
                 customer: $resource('/customer/:id'),
 
-                previewItems: $resource('/item/preview',{},{
-                    filter:{method:'POST',isArray:false}
-                }),
+                //previewItems: $resource('/item/preview',{},{
+                //    filter:{method:'POST',isArray:false}
+                //}),
 
                 galleryShow: $resource('content/set/show',{},{
                     toggle:{method:'PUT',isArray:false}

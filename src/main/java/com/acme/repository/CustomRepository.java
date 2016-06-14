@@ -1,9 +1,10 @@
 package com.acme.repository;
 
 import com.acme.constant.Queue;
-import com.acme.model.Product;
-import com.acme.model.filter.ProductFilter;
+import com.acme.model.dto.Product;
+import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.mapper.Mappers;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CustomRepository {
@@ -35,22 +37,21 @@ public class CustomRepository {
         return jdbcTemplate.queryForList(Queue.ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE, String.class, parentId);
     }
 
-    public List<Product> getItemsByFilter(ProductFilter productFilter, List<String> categorties){
-        System.out.println(productFilter.toString());
+    public List<Product> getCatalog(CatalogFilter catalogFilter/*, List<String> categorties*/){
+        System.out.println(catalogFilter.toString());
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("limit", productFilter.getLimit());
-        parameters.addValue("offset", productFilter.getOffset());
-        parameters.addValue("categoryIds", categorties);
-
-        String queue = Queue.CUSTOM_FIND_ITEMS;
-
-        if(categorties != null && !categorties.isEmpty()){
-            queue += " AND ct.id IN ( :categoryIds )";
-        }
-
+        parameters.addValue("limit", catalogFilter.getLimit());
+        parameters.addValue("offset", catalogFilter.getOffset());
+        String queue = Queue.GET_CATALOG;
         queue += " limit :limit offset :offset";
         return parameterJdbcTemplate.query(queue, parameters, Mappers.productMapper);
+    }
+
+    public List<Product> getBySearch(String criteria){
+        Map<String,Object> namedParameters = Maps.newHashMap();
+        namedParameters.put("criteria", "%"+criteria+"%");
+        return parameterJdbcTemplate.query(Queue.FIND_BY_SEARCH,namedParameters, Mappers.productMapper);
     }
 
 }

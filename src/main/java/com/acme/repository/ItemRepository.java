@@ -2,7 +2,6 @@ package com.acme.repository;
 
 import com.acme.constant.Queue;
 import com.acme.model.Item;
-import com.acme.model.dto.ItemSearchResult;
 import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -55,11 +54,7 @@ public class ItemRepository {
         return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_ID_LIST, parameterSource, Mappers.itemMapper);
     }
 
-    public List<ItemSearchResult> getBySearch(String criteria){
-        Map<String,Object> namedParameters = Maps.newHashMap();
-        namedParameters.put("criteria", "%"+criteria+"%");
-        return parameterJdbcTemplate.query(Queue.ITEM_FIND_BY_SEARCH,namedParameters, Mappers.itemSearchMapper);
-    }
+
 
     public boolean deleteById(String id){
         int result = jdbcTemplate.update(Queue.ITEM_DELETE_BY_ID,id);

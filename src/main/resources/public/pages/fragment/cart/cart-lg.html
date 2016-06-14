@@ -1,10 +1,19 @@
 <div class="table-result" >
     <table  class="bordered" >
-
+        <thead>
+            <tr>
+                <th></th>
+                <th style="text-align: center">Наименование</th>
+                <th style="text-align: center">Цена</th>
+                <th style="text-align: center">Кол-во</th>
+                <th style="text-align: center">Сумма</th>
+                <th></th>
+            </tr>
+        </thead>
         <tbody>
         <tr ng-repeat="item in cart.content" class="row" ng-style="$last && {'border':'none'}">
 
-            <td class="col s2 non-float" style="text-align: center">
+            <td class="col s2 non-float" style="text-align: center;padding: 5px 0;">
                 <img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" />
             </td>
             <td class="col s5 non-float">
@@ -41,3 +50,5 @@
         <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey}} руб</span>
     </div>
 </div>
+
+<a class="btn btn-primary" ng-click="toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>

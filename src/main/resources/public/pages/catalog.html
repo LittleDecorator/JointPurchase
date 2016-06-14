@@ -1,7 +1,7 @@
 <!-- SEARCH INPUT -->
 <nav style="margin-top: 20px;">
     <div class="nav-wrapper" style="background-color: #86A8A8!important;">
-            <div class="input-field row">
+            <div class="input-field row" style="height: 56px;">
                 <input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">
                 <label for="search"><i class="material-icons" ng-click="search()">search</i></label>
                 <i class="material-icons" ng-click="clear()">close</i>
@@ -25,15 +25,15 @@
         <div class="col s12 m6 l4" ng-repeat="item in items">
             <div class="card">
                 <div class="card-image waves-effect waves-block waves-light">
-                    <img ng-src="{{item.url}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
+                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
                 </div>
 
                 <div class="card-content" style="padding: 15px!important;" >
-                        <span class="card-title grey-text text-darken-4" style="font-size: 15px!important; color: #846C63!important; line-height: 25px;">{{item.name}}</span>
+                        <span class="card-title grey-text text-darken-4" style="font-size: 15px!important; color: #846C63!important; line-height: 25px;">{{::item.name}}</span>
                         <a class="btn btn-primary btn-small right" ng-click="addToCart(item)" title="Добавить в корзину">
                             <i class="mdi-content-add" style="font-size: 2rem;"></i>
                         </a>
-                        <br><b>Цена: </b>{{item.price}} руб
+                        <br><b>Цена: </b>{{::item.price}} руб
                 </div>
             </div>
         </div>

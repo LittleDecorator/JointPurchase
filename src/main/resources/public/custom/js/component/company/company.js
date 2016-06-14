@@ -29,7 +29,7 @@
                 $scope.companies.splice(idx, 1);
             };
 
-            $scope.getTemplate = function(){
+            $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "company-sm.html"
                 }

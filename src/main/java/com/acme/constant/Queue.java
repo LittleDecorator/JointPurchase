@@ -22,11 +22,8 @@ public interface Queue {
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_ID = "DELETE FROM public.category_item WHERE category_id = ?";
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
-    String ITEM_FIND_BY_SEARCH = "SELECT i.*, ic.content_id, ci.category_id FROM public.item i " +
-            "left outer join public.item_content ic on (i.id = ic.item_id and ic.main='Y') " +
-            "inner join public.category_item ci on i.id = ci.item_id " +
-            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
-            "ORDER BY i.date_add ASC";
+
+
 //    String ITEM_FIND_BY_SEARCH = "SELECT * FROM public.item i " +
 //            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
 //            "ORDER BY i.date_add ASC";
@@ -100,11 +97,14 @@ public interface Queue {
             "INNER JOIN category c ON ci.category_id=c.id " +
             "ORDER BY i.date_add asc ";
 
-    String CUSTOM_FIND_ITEMS = "SELECT i.*, ct.name, c.id as content_id FROM public.item i " +
-            " INNER JOIN public.category_item ci ON i.id = ci.item_id " +
-            " INNER JOIN public.category ct ON ci.category_id = ct.id " +
-            " LEFT OUTER JOIN public.item_content ic ON i.id=ic.item_id " +
-            " LEFT OUTER JOIN public.content c ON ( ic.content_id = c.id AND ic.main = 'Y' AND ic.show = 'Y' )" +
-            " WHERE i.not_for_sale = 'N'";
+    String GET_CATALOG = "select * from public.catalog ORDER BY date_add asc";
 
+    String FIND_BY_SEARCH = "SELECT * FROM public.catalog i " +
+            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description LIKE :criteria " +
+            "ORDER BY i.date_add ASC";
+
+    String ITEM_CATEGORY_FIND_BY_ITEM_ID = "SELECT ci.*, c.name FROM public.category_item ci INNER JOIN public.category c ON ci.category_id = c.id WHERE item_id = ? ORDER BY date_add ASC";
+    String ITEM_CATEGORY_FIND_BY_CATEGORY_ID = "SELECT ci.*, c.name FROM public.category_item ci INNER JOIN public.category c ON ci.category_id = c.id WHERE category_id = ? ORDER BY date_add ASC";
+    String ITEM_CATEGORY_FIND_BY_ITEM_ID_LIST = "SELECT ci.*, c.name FROM public.category_item ci INNER JOIN public.category c ON ci.category_id = c.id WHERE item_id in (:ids) ORDER BY date_add ASC";
+    String ITEM_CATEGORY_FIND_BY_CATEGORY_ID_LIST = "SELECT ci.*, c.name FROM public.category_item ci INNER JOIN public.category c ON ci.category_id = c.id WHERE category_id in (:ids) ORDER BY date_add ASC";
 }

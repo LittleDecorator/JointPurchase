@@ -1,18 +1,11 @@
-package com.acme.model;
+package com.acme.model.dto;
 
-public class Product {
+import com.acme.model.Item;
 
-    Item item;
+public class Product extends Item {
+
     String contentId;
     String imageUrl;
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
 
     public String getContentId() {
         return contentId;
@@ -33,9 +26,8 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "item=" + item +
-                ", contentId='" + contentId + '\'' +
+                "contentId='" + contentId + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                '}';
+                "} " + super.toString();
     }
 }

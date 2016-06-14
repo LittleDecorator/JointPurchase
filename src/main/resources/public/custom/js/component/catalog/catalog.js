@@ -11,7 +11,7 @@
             console.log("catalogController");
 
             $scope.items = [];
-            $scope.searchFilter = {category:null, company:null, criteria:null, price:null, offset:0, limit:30};
+            $scope.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
             $scope.sideFilters = [];
 
             var busy = false;
@@ -21,36 +21,22 @@
             $scope.stopLoad=false;
             $scope.allDataLoaded = false;
             $scope.infiniteDistance = 2;
-            // $scope.searchInputOpen=false;
-
-            // $scope.companyNames = dataResources.companyMap.get();
-            // $scope.categoryTypes = dataResources.categoryMap.get();
-
 
             //get items
             $scope.loadData = function(isClean){
                 if(!$scope.stopLoad && !busy){
                     busy = true;
-                    dataResources.previewItems.filter($scope.searchFilter).$promise.then(function (data) {
-                        console.log(data.items.length);
-                        if(data.items.length < $scope.searchFilter.limit){
+                    dataResources.catalog.list.all($scope.searchFilter).$promise.then(function (data) {
+
+                        $scope.items = data;
+
+                        if(data.length < $scope.searchFilter.limit){
                             $scope.stopLoad = true;
                         }
                         if(isClean){
                             $scope.items = [];
                         }
 
-                        angular.forEach(data.items, function (item) {
-                            item.item.url = item.imageUrl;
-                            $scope.items.push(item.item);
-                        });
-
-                        if($scope.searchFilter.category){
-                            angular.forEach(data.filter, function (category) {
-                                $scope.sideFilters.push({id:category.id, name:category.name});
-                            })
-                        }
-                        console.log($scope.stopLoad);
                         portion++;
                         $scope.searchFilter.offset = portion * $scope.searchFilter.limit;
                         $scope.allDataLoaded = true;
@@ -107,15 +93,14 @@
                 if(!$scope.searchFilter.criteria){
                     $('#search').focus();
                 } else {
-                    console.log("click search");
-                    dataResources.searchItem.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
+                    dataResources.catalog.search.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
                         console.log(data);
                         $scope.searchResult = data;
                         $scope.showResults = true;
-                        portion = 0;
-                        $scope.searchFilter.offset = 0;
-                        $scope.stopLoad = false;
-                        $scope.loadData(true);
+                        //portion = 0;
+                        //$scope.searchFilter.offset = 0;
+                        //$scope.stopLoad = false;
+                        //$scope.loadData(true);
                     });
                 }
             };

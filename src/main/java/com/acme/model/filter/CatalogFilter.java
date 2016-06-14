@@ -1,6 +1,6 @@
 package com.acme.model.filter;
 
-public class ProductFilter {
+public class CatalogFilter {
 
     String category;
     String company;

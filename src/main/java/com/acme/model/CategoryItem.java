@@ -9,6 +9,8 @@ public class CategoryItem {
 
     private String categoryId;
 
+    private String categoryName;
+
     private String itemId;
 
     private Date dateAdd;
@@ -45,11 +47,20 @@ public class CategoryItem {
         this.dateAdd = dateAdd;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     @Override
     public String toString() {
         return "CategoryItem{" +
                 "id='" + id + '\'' +
                 ", categoryId='" + categoryId + '\'' +
+                ", categoryName='" + categoryName + '\'' +
                 ", itemId='" + itemId + '\'' +
                 ", dateAdd=" + dateAdd +
                 '}';

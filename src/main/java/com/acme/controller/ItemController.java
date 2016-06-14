@@ -1,19 +1,17 @@
 package com.acme.controller;
 
-import com.acme.model.*;
+import com.acme.model.CategoryItem;
+import com.acme.model.Item;
+import com.acme.model.ItemCategoryLink;
+import com.acme.model.OrderItem;
 import com.acme.model.dto.ItemMediaTransfer;
-import com.acme.model.dto.ItemSearchResult;
 import com.acme.model.dto.ItemTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.ItemFilter;
-import com.acme.model.filter.ProductFilter;
 import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
-import com.acme.constant.Constants;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,8 +53,7 @@ public class ItemController{
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Autowired
-    CustomRepository customRepository;
+
 
     @Autowired
     PlatformTransactionManager transactionManager;
@@ -204,35 +200,35 @@ public class ItemController{
         return itemService.getItemMediaTransfers(item);
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/preview")
-    public Map<String,Object> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
-        List<Category> categoryList = null;
-        List<String> categorIds = null;
-
-        if(!Strings.isNullOrEmpty(filter.getCategory())){
-            categorIds = customRepository.getCategoriesMapByParentId(filter.getCategory());
-            System.out.println(categorIds);
-            categoryList = categoryRepository.getByIdList(categorIds);
-            System.out.println(categoryList);
-        }
-
-        List<Product> list = customRepository.getItemsByFilter(filter,categorIds);
-
-        Content defContent = contentRepository.getDefault();
-        for(Product product : list){
-            if(Strings.isNullOrEmpty(product.getContentId())){
-                product.setContentId(defContent.getId());
-                product.setImageUrl(Constants.PREVIEW_URL+defContent.getId());
-            } else {
-                product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
-            }
-        }
-
-        Map<String,Object> result = Maps.newHashMap();
-        result.put("items",list);
-        result.put("filter",categoryList);
-        return result;
-    }
+//    @RequestMapping(method = RequestMethod.POST,value = "/preview")
+//    public Map<String,Object> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
+//        List<Category> categoryList = null;
+//        List<String> categorIds = null;
+//
+//        if(!Strings.isNullOrEmpty(filter.getCategory())){
+//            categorIds = customRepository.getCategoriesMapByParentId(filter.getCategory());
+//            System.out.println(categorIds);
+//            categoryList = categoryRepository.getByIdList(categorIds);
+//            System.out.println(categoryList);
+//        }
+//
+//        List<Product> list = customRepository.getItemsByFilter(filter,categorIds);
+//
+//        Content defContent = contentRepository.getDefault();
+//        for(Product product : list){
+//            if(Strings.isNullOrEmpty(product.getContentId())){
+//                product.setContentId(defContent.getId());
+//                product.setImageUrl(Constants.PREVIEW_URL+defContent.getId());
+//            } else {
+//                product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
+//            }
+//        }
+//
+//        Map<String,Object> result = Maps.newHashMap();
+//        result.put("items",list);
+//        result.put("filter",categoryList);
+//        return result;
+//    }
 
     @RequestMapping(method = RequestMethod.GET,value = "/filter/category")
     public List<ItemUrlTransfer> filterByCategory(@RequestParam("categoryId") String categoryId) throws IOException {
@@ -261,38 +257,6 @@ public class ItemController{
         itemRepository.updateSelectiveById(item);
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "search")
-    public List<Map<String,Object>> searchItem(@RequestParam(value = "criteria",name = "criteria") String criteria) throws ParseException {
-        List<ItemSearchResult> searchResults = itemRepository.getBySearch(criteria);
-        Map<String,Category> categories = categoryRepository.getAll().stream().collect(Collectors.toMap(Category::getId, Function.<Category>identity()));
-        Content defContent = contentRepository.getDefault();
-        List result = Lists.newArrayList();
 
-        Map<String,Object> raw = Maps.newHashMap();
-        for(ItemSearchResult searchResult : searchResults){
-            Map<String,Object> entry = Maps.newHashMap();
-            if(searchResult.getContentId() == null){
-                entry.put("content","/media/image/gallery/"+defContent.getId());
-            } else {
-                entry.put("content","/media/image/gallery/"+searchResult.getContentId());
-            }
-            entry.put("item",searchResult.getItem());
-            if(raw.containsKey(searchResult.getCategoryId())){
-                ((List)raw.get(searchResult.getCategoryId())).add(entry);
-            } else {
-                List rows = Lists.newArrayList(entry);
-                raw.put(searchResult.getCategoryId(), rows);
-            }
-        }
-
-        Map<String,Object> map;
-        for(String key : raw.keySet()){
-            map = Maps.newHashMap();
-            map.put("category",categories.get(key).getName());
-            map.put("rows",raw.get(key));
-            result.add(map);
-        }
-        return result;
-    }
 }
 

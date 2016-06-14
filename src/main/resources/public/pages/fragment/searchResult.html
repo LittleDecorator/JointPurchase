@@ -4,14 +4,14 @@
     <md-content ng-if="searchResult.length > 0">
         <section ng-repeat="result in searchResult">
             <md-list class="row" flex style="margin: 0">
-                <md-subheader class="md-no-sticky">найденно в категории: <span style="font-size: 1.5rem">{{::result.category}}</span></md-subheader>
-                <md-list-item class="md-2-line md-clickable col s12 m6 l4" ng-repeat="row in result.rows">
-                    <md-button class="md-no-style md-button md-ink-ripple" ng-click="itemView(row.item.id)">
+                <md-subheader class="md-no-sticky">найденно в : <span style="font-size: 1.5rem">{{::result.groupName}}</span></md-subheader>
+                <md-list-item class="md-2-line md-clickable col s12 m6 l4" ng-repeat="row in result.children">
+                    <md-button class="md-no-style md-button md-ink-ripple" ng-click="itemView(row.id)">
                         <div class="md-list-item-inner">
-                            <img ng-src="{{::row.content}}" class="md-avatar" alt="{{::row.item.name}}">
+                            <img ng-src="{{::row.imageUrl}}" class="md-avatar">
                             <div class="md-list-item-text">
-                                <h3>{{::row.item.name}}</h3>
-                                <p>{{::row.item.description|limitTo:50}}...</p>
+                                <h3>{{::row.name}}</h3>
+                                <p>{{::row.description|limitTo:50}}...</p>
                             </div>
                         </div>
                     </md-button>
