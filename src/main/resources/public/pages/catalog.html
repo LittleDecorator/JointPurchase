@@ -1,7 +1,7 @@
 <!-- SEARCH INPUT -->
 <nav style="margin-top: 20px;">
     <div class="nav-wrapper" style="background-color: #86A8A8!important;">
-            <div class="input-field row" style="height: 56px;">
+            <div class="input-field row" style="height: 100%;">
                 <input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">
                 <label for="search"><i class="material-icons" ng-click="search()">search</i></label>
                 <i class="material-icons" ng-click="clear()">close</i>
@@ -10,13 +10,13 @@
 </nav>
 
 <!-- SEARCH RESULT -->
-<div ng-include="'pages/fragment/searchResult.html'" ng-if="showResults"></div>
+<div ng-include="'pages/template/searchResult.html'" ng-if="showResults"></div>
 
 <!-- SIMPLE FILTER. DEPEND ON SIDE NAV SELECTION -->
-<div class="row" ng-if="showSideFilter">
-    <h5>Фильтр:</h5>
-    <div class="chip" ng-repeat="filter in sideFilters" style="margin: 3px;">{{::filter.name}}<i class="material-icons" ng-click="removeFilterElem($index)">close</i></div>
-</div>
+<!--<div class="row" ng-if="showSideFilter">-->
+    <!--<h5>Фильтр:</h5>-->
+    <!--<div class="chip" ng-repeat="filter in sideFilters" style="margin: 3px;">{{::filter.name}}<i class="material-icons" ng-click="removeFilterElem($index)">close</i></div>-->
+<!--</div>-->
 
 <!-- CONTENT WITH ITEMS -->
 <div class="section" style="margin-top: 20px;" ng-if="!showResults">

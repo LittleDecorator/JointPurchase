@@ -132,19 +132,19 @@ var route = {
                     requireLogin: false,
                 }
             },
-            {
-                name:'remember',
-                url:'/remember',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/remember.html',
-                        controller: 'rememberController'
-                    }
-                },
-                data: {
-                    requireLogin: false,
-                }
-            },
+            //{
+            //    name:'remember',
+            //    url:'/remember',
+            //    views: {
+            //        'main@': {
+            //            templateUrl : 'pages/remember.html',
+            //            controller: 'rememberController'
+            //        }
+            //    },
+            //    data: {
+            //        requireLogin: false,
+            //    }
+            //},
             {
                 name:'restore',
                 url:'/restore',
@@ -171,7 +171,7 @@ var route = {
                     requireLogin: false,
                 }
             },
-            
+
             {
                 name: 'catalog',
                 url:'/catalog',
@@ -183,9 +183,44 @@ var route = {
                 },
                 data:{
                     displayName: 'Каталог',
-                    requireLogin: false
+                    requireLogin: false,
+                    options: function() {
+                        return {reload: true}
+                    }
+                },
+                resolve: {
+                    node: function() {
+                       return null;
+                    }
                 }
             },
+
+            {
+                name: 'catalog.type',
+                url:'/:type?id',
+                parent:'catalog',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/catalog.html',
+                        controller: 'catalogController'
+                    }
+                },
+                data:{
+                    displayName: '{{node.name}}',
+                    requireLogin: false
+                },
+                resolve: {
+                    node: function($stateParams,resolveService) {
+                        console.log($stateParams);
+                        if($stateParams.type == 'category'){
+                            return resolveService.getCategory($stateParams.id);
+                        } else {
+                            return resolveService.getCompany($stateParams.id);
+                        }
+                    }
+                }
+            },
+
             {
                 name:'catalog.detail',
                 url:'/:itemId',

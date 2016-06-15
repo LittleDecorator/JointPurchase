@@ -5,6 +5,7 @@ import com.acme.model.Item;
 public class Product extends Item {
 
     String contentId;
+    String companyName;
     String imageUrl;
 
     public String getContentId() {
@@ -23,10 +24,19 @@ public class Product extends Item {
         this.imageUrl = imageUrl;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
                 "contentId='" + contentId + '\'' +
+                ", companyName='" + companyName + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 "} " + super.toString();
     }

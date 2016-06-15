@@ -5,7 +5,6 @@
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
     <link rel="stylesheet" href="webjars/angular-material/1.0.8/angular-material.min.css">
-    <!--<link rel="stylesheet" href="/webjars/font-awesome/4.6.2/css/font-awesome.min.css">-->
 
     <link rel="stylesheet" href="official/css/swipebox.min.css">
     <link rel="stylesheet" href="official/css/ngDialog.css">
@@ -34,19 +33,13 @@
 
     <!-- HEADER AND NAVBAR -->
     <header>
-        <div class="navbar-fixed" ng-include="'pages/template/navMainMenu.html'">
-            <div style="border-top: 1px solid #ddd">
-                <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
-            </div>
-        </div>
-        <!-- make it fixed if width > 1440 -->
-        <div ng-include="'pages/template/sideMenuNew.html'" ng-if="newLocation=='/catalog'"></div>
+        <div ng-include="getMenuTemplateUrl()" include-callback="afterInclude()"></div>
+        <div ng-include="'pages/template/sideMenuNew.html'"></div>
 
     </header>
 
-    <main style="width:100%; background-color: rgb(246, 244, 241)">
+    <main style="width:100%; background-color: rgb(246, 244, 241);margin-top: 64px;">
         <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
-
         <!-- MAIN CONTENT AND INJECTED VIEWS -->
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <div ui-view="main"></div>

@@ -124,7 +124,7 @@
                 }),
                 
 
-                itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
+                //itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
                 itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
 
                 authLogin: $resource('/auth/login',{},{

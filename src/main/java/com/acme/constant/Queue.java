@@ -8,6 +8,7 @@ public interface Queue {
     String CATEGORY_FIND_BY_ID = "SELECT * FROM public.category WHERE id = ? ";
     String CATEGORY_FIND_BY_PARENT_ID = "SELECT * FROM public.category WHERE parent_id = ? ";
     String CATEGORY_FIND_BY_ID_LIST = "SELECT * FROM public.category WHERE id in (:ids) ";
+    String CATEGORY_FIND_BY_ITEM_ID = "SELECT * FROM public.category c INNER JOIN public.category_item ci ON c.id=ci.category_id WHERE ci.item_id = ? ";
     String CATEGORY_UPDATE_BY_ID = "UPDATE public.category set name = ?, parent_id = ?, date_add = ? WHERE id = ? ";
     String CATEGORY_INSERT = "INSERT INTO public.category(id, name, parent_id, date_add) values(?,?,?,?)";
     String CATEGORY_DELETE = "DELETE FROM public.category WHERE id = ? OR parent_id = ?";
@@ -23,21 +24,24 @@ public interface Queue {
 
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
 
-
-//    String ITEM_FIND_BY_SEARCH = "SELECT * FROM public.item i " +
-//            "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description = :criteria " +
-//            "ORDER BY i.date_add ASC";
     String ITEM_FIND_BY_ID = "SELECT * FROM public.item WHERE id = ?";
     String ITEM_FIND_BY_ID_LIST = "SELECT * FROM public.item WHERE id in (:idList)";
-    String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.item WHERE company_id = ? AND not_for_sale = 'N'";
+    String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.catalog WHERE company_id = :companyId AND not_for_sale = 'N'";
+    String ITEM_BY_CATEGORY_FOR_SALE = "WITH RECURSIVE tmp ( id, parent_id ) AS ( " +
+            " SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = :categoryId " +
+            " UNION " +
+            " SELECT c2.id, c2.parent_id FROM public.category c2 INNER JOIN tmp ON ( tmp.id = c2.parent_id)) " +
+            " SELECT DISTINCT i.* FROM public.catalog i " +
+            " INNER JOIN public.category_item ci ON i.id=ci.item_id " +
+            " INNER JOIN tmp t ON t.id=ci.category_id " +
+            " WHERE i.not_for_sale = 'N' ";
     String ITEM_BY_COMPANY_ID = "SELECT * FROM public.item WHERE company_id = ? ";
-    String ITEM_BY_CATEGORY_ID = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? ";
-    String ITEM_BY_CATEGORY_FOR_SALE = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? AND i.not_for_sale = 'N' ";
-    String ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE = " WITH RECURSIVE temp1 ( id, parent_id ) AS ( " +
-            "   SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = ? " +
-            "   union " +
-            "   SELECT c2.id, c2.parent_id FROM public.category c2 INNER JOIN temp1 ON ( temp1.id = c2.parent_id)) " +
-            "   SELECT id FROM temp1 ";
+//    String ITEM_BY_CATEGORY_ID = "SELECT i.* FROM public.item i INNER JOIN public.category_item ci ON i.id=ci.item_id WHERE ci.category_id= ? ";
+//    String ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE = " WITH RECURSIVE temp1 ( id, parent_id ) AS ( " +
+//            "   SELECT c1.id,c1.parent_id FROM public.category c1 WHERE c1.id = ? " +
+//            "   union " +
+//            "   SELECT c2.id, c2.parent_id FROM public.category c2 INNER JOIN temp1 ON ( temp1.id = c2.parent_id)) " +
+//            "   SELECT id FROM temp1 ";
     String ITEM_DELETE_BY_ID = "DELETE FROM public.item WHERE id = ? ";
 
     String COMPANY_FIND_ALL = " SELECT * FROM public.company";
@@ -91,13 +95,13 @@ public interface Queue {
     String PURCHASE_ORDER_DELETE_BY_SUBJECT_ID = "DELETE FROM public.purchase_order WHERE subject_id = ?";
     String PURCHASE_ORDER_FIND_BY_SUBJECT_ID = "SELECT * FROM public.purchase_order WHERE subject_id = ? ";
 
-    String ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS = "SELECT i.id , i.name , i.company_id, i.article, i.description, i.price, i.not_for_sale, i.in_stock, c.id as category_id, c.name as category_name " +
-            "FROM item i " +
-            "RIGHT JOIN category_item ci ON ci.item_id=i.id " +
-            "INNER JOIN category c ON ci.category_id=c.id " +
-            "ORDER BY i.date_add asc ";
+//    String ITEM_CATEGORY_LINK_FIND_FILTERED_ITEMS = "SELECT i.id , i.name , i.company_id, i.article, i.description, i.price, i.not_for_sale, i.in_stock, c.id as category_id, c.name as category_name " +
+//            "FROM item i " +
+//            "RIGHT JOIN category_item ci ON ci.item_id=i.id " +
+//            "INNER JOIN category c ON ci.category_id=c.id " +
+//            "ORDER BY i.date_add asc ";
 
-    String GET_CATALOG = "select * from public.catalog ORDER BY date_add asc";
+    String GET_CATALOG = "SELECT * FROM public.catalog ORDER BY date_add asc";
 
     String FIND_BY_SEARCH = "SELECT * FROM public.catalog i " +
             "WHERE lower(i.name) LIKE :criteria OR i.article LIKE :criteria OR i.description LIKE :criteria " +

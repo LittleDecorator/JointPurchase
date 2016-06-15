@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Item {
+
     private String id;
 
     private String name;
@@ -21,6 +22,20 @@ public class Item {
     private boolean notForSale;
 
     private Integer inStock;
+
+    public Item() {}
+
+    public Item(Item item) {
+        this.id = item.getId();
+        this.name = item.getName();
+        this.companyId = item.getCompanyId();
+        this.article = item.getArticle();
+        this.description = item.getDescription();
+        this.price = item.getPrice();
+        this.dateAdd = item.getDateAdd();
+        this.notForSale = item.isNotForSale();
+        this.inStock = item.getInStock();
+    }
 
     public String getId() {
         return id;

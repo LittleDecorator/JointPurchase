@@ -24,7 +24,8 @@
                 if(!$scope.stopLoad && !busy){
                     busy = true;
 
-                    dataResources.itemFilter.apply($scope.confirmedFilter).$promise.then(function(data){
+                    dataResources.item.all($scope.confirmedFilter).$promise.then(function(data){
+                        console.log(data);
                         if(data.length < $scope.confirmedFilter.limit){
                             $scope.stopLoad = true;
                         }
@@ -33,11 +34,13 @@
                             $scope.items = [];
                         }
 
-                        angular.forEach(data, function (item) {
-                            var company = helpers.findInArrayById(companies, item.companyId);
-                            item.companyName = company.name;
-                            $scope.items.push(item);
-                        });
+                        $scope.items = data;
+
+                        //angular.forEach(data, function (item) {
+                        //    var company = helpers.findInArrayById(companies, item.companyId);
+                        //    item.companyName = company.name;
+                        //    $scope.items.push(item);
+                        //});
 
                         portion++;
                         $scope.confirmedFilter.offset = portion * $scope.confirmedFilter.limit;

@@ -1,12 +1,11 @@
 package com.acme.controller;
 
+import com.acme.model.CategorizeItem;
 import com.acme.model.CategoryItem;
 import com.acme.model.Item;
-import com.acme.model.ItemCategoryLink;
 import com.acme.model.OrderItem;
-import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemTransfer;
-import com.acme.model.dto.ItemUrlTransfer;
+import com.acme.model.dto.Product;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.*;
 import com.acme.service.CategoryService;
@@ -68,33 +67,23 @@ public class ItemController{
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<Item> getItems(){
-        return itemRepository.getAll();
-//        List<ItemCategoryLink> links = itemCategoryLinkRepository.getGetAll();
-//        if(links!=null && links.size()>0){
-//            JSONParser parser = new JSONParser();
-//            ObjectMapper mapper = new ObjectMapper();
-//            JSONArray array = (JSONArray) parser.parse(mapper.writeValueAsString(links));
-//            int arrSize = array.size();
-//            JSONObject object;
-//            for(int i=0;i<arrSize;i++){
-//                object = (JSONObject) array.get(i);
-//                //can return NULL
-//                Integer val = customRepository.getOrderedItemCou((String) object.get("id"));
-//                object.put("inOrder", val!=null? val :0);
-//                array.set(i, object);
-//            }
-//            return array;
-//        } else {
-//            return null;
-//        }
+    public List<Product> getItems(ItemFilter filter){
+        System.out.println(filter);
+        return itemRepository.getFilteredItems(filter);
     }
 
+    /**
+     * Create new Item
+     *
+     * @param transfer
+     * @return ID of new item
+     * @throws ParseException
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.POST)
     public String addItem(@RequestBody ItemTransfer transfer) throws ParseException, IOException {
         String itemId = null;
         if (transfer != null) {
-            System.out.println(transfer);
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
                 itemId = UUID.randomUUID().toString();
@@ -111,11 +100,14 @@ public class ItemController{
         return itemId;
     }
 
+    /**
+     * Update item record
+     *
+     * @param transfer
+     */
     @RequestMapping(method = RequestMethod.PUT)
     public void updateItem(@RequestBody ItemTransfer transfer){
-        System.out.println(transfer);
         if (transfer != null) {
-            System.out.println(transfer);
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
                 itemRepository.updateSelectiveById(transfer.getItem());
@@ -125,30 +117,58 @@ public class ItemController{
                 categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex) {
-                System.out.println(ex);
                 transactionManager.rollback(status);
             }
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public ItemCategoryLink getGoodById(@PathVariable("id") String id) {
-        Item item = itemRepository.getById(id);
-        ItemCategoryLink link = new ItemCategoryLink(item);
-
-        List<String> categoryIdList = Lists.transform(categoryItemRepository.getByItemId(item.getId()), CategoryItem::getCategoryId);
-        link.setCategories(categoryRepository.getByIdList(categoryIdList));
-        return link;
+    /**
+     * Delete Item by id
+     * @param id
+     */
+    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
+    public void deleteItem(@PathVariable("id") String id) {
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try{
+            orderItemRepository.deleteByItemId(id);
+            itemRepository.deleteById(id);
+            transactionManager.commit(status);
+        } catch (Exception ex){
+            transactionManager.rollback(status);
+        }
     }
 
+    /**
+     * Get Item detail
+     *
+     * @param id
+     * @return Item info with Categories
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
+    public CategorizeItem getItemDetail(@PathVariable("id") String id) {
+        CategorizeItem item = new CategorizeItem(itemRepository.getById(id));
+        item.setCategories(categoryRepository.getByItemId(item.getId()));
+        return item;
+    }
+
+    /**
+     * Return Item list by specific order
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
-    public List<Item> getGoodsByOrderId(@PathVariable("id") String orderId) {
+    public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
         List<String> itemIdList = Lists.transform(orderItemRepository.getByOrderId(orderId), OrderItem::getItemId);
         return itemRepository.getByIdList(itemIdList);
     }
 
+    /**
+     * Return all items by specific company
+     * @param companyId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/company/{id}")
-    public List<Item> getGoodsByCompanyId(@PathVariable("id")String companyId) {
+    public List<Item> getAllByCompanyId(@PathVariable("id")String companyId) {
         return itemRepository.getByCompanyId(companyId);
     }
 
@@ -168,83 +188,25 @@ public class ItemController{
         return list;
     }
 
-
-
-    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
-    public void deleteItem(@PathVariable("id") String id) {
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try{
-            orderItemRepository.deleteByItemId(id);
-            itemRepository.deleteById(id);
-            transactionManager.commit(status);
-        } catch (Exception ex){
-            System.out.println(ex);
-            transactionManager.rollback(status);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.POST,value = "/filter")
-    public List<ItemCategoryLink> getByFilter(@RequestBody ItemFilter filter) throws ParseException, IOException {
-        List<ItemCategoryLink> result;
-        if(filter == null ){
-            result = itemCategoryLinkRepository.getGetAll();
-        } else {
-            result = itemCategoryLinkRepository.getFilteredItems(filter.getName(),filter.getArticle(),filter.getCompanyId());
-        }
-        return result;
-    }
-
-    @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
-    public ItemMediaTransfer getItemDetail(@PathVariable("id") String itemId) throws Exception {
-        Item item = itemRepository.getById(itemId);
-        return itemService.getItemMediaTransfers(item);
-    }
-
-//    @RequestMapping(method = RequestMethod.POST,value = "/preview")
-//    public Map<String,Object> getCategoriesPreviewItems(@RequestBody ProductFilter filter) throws Exception {
-//        List<Category> categoryList = null;
-//        List<String> categorIds = null;
-//
-//        if(!Strings.isNullOrEmpty(filter.getCategory())){
-//            categorIds = customRepository.getCategoriesMapByParentId(filter.getCategory());
-//            System.out.println(categorIds);
-//            categoryList = categoryRepository.getByIdList(categorIds);
-//            System.out.println(categoryList);
-//        }
-//
-//        List<Product> list = customRepository.getItemsByFilter(filter,categorIds);
-//
-//        Content defContent = contentRepository.getDefault();
-//        for(Product product : list){
-//            if(Strings.isNullOrEmpty(product.getContentId())){
-//                product.setContentId(defContent.getId());
-//                product.setImageUrl(Constants.PREVIEW_URL+defContent.getId());
-//            } else {
-//                product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
-//            }
-//        }
-//
-//        Map<String,Object> result = Maps.newHashMap();
-//        result.put("items",list);
-//        result.put("filter",categoryList);
-//        return result;
+//    @RequestMapping(method = RequestMethod.GET,value = "/filter/category")
+//    public List<ItemUrlTransfer> filterByCategory(@RequestParam("categoryId") String categoryId) throws IOException {
+//        List<Item> itemList = itemRepository.getByCategoryForSale(categoryId);
+//        return itemService.getItemUrlTransfers(itemList);
 //    }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/filter/category")
-    public List<ItemUrlTransfer> filterByCategory(@RequestParam("categoryId") String categoryId) throws IOException {
-        List<Item> itemList = itemRepository.getByCategoryForSale(categoryId);
-        return itemService.getItemUrlTransfers(itemList);
-    }
+//    @RequestMapping(method = RequestMethod.GET,value = "/filter/company")
+//    public List<ItemUrlTransfer> filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
+//        List<Item> itemList = itemRepository.getByCompanyForSale(companyId);
+//        return itemService.getItemUrlTransfers(itemList);
+//    }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/filter/company")
-    public List<ItemUrlTransfer> filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
-        List<Item> itemList = itemRepository.getByCompanyForSale(companyId);
-        return itemService.getItemUrlTransfers(itemList);
-    }
-
+    /**
+     * Toggle item for select
+     * @param input
+     * @throws ParseException
+     */
     @RequestMapping(method = RequestMethod.POST,value = "/set/sale")
     public void saleToggle(@RequestBody String input) throws ParseException {
-        System.out.println(input);
         JSONParser parser=new JSONParser();
         JSONObject main = (JSONObject) parser.parse(input);
 

@@ -25,6 +25,10 @@
                     scope.base = $state.$current.data.base;
                 });
 
+                scope.$on('$refreshBreadcrumbs', function() {
+                    updateBreadcrumbsArray();
+                });
+
                 /**
                  * Start with the current state and traverse up the path to build the
                  * array of breadcrumbs that can be used in an ng-repeat in the template.
@@ -41,10 +45,14 @@
                             displayName = getDisplayName(workingState);
 
                             if (displayName !== false && !stateAlreadyInBreadcrumbs(workingState, breadcrumbs)) {
-                                breadcrumbs.push({
+                                var bread = {
                                     displayName: displayName,
                                     route: workingState.name
-                                });
+                                };
+                                if(workingState.data.options){
+                                    bread.options = workingState.data.options();
+                                }
+                                breadcrumbs.push(bread);
                             }
                         }
                         currentState = currentState.parent;

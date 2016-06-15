@@ -49,6 +49,10 @@ public class CategoryRepository {
         return parameterJdbcTemplate.query(Queue.CATEGORY_FIND_BY_ID_LIST,namedParameters, Mappers.categoryMapper);
     }
 
+    public List<Category> getByItemId(String itemId){
+        return jdbcTemplate.query(Queue.CATEGORY_FIND_BY_ITEM_ID, Mappers.categoryMapper, itemId);
+    }
+
     public void update(Category category) throws PersistException {
         int result = jdbcTemplate.update(Queue.CATEGORY_UPDATE_BY_ID,category.getName(),category.getParentId(), category.getDateAdd(), category.getId());
         if(result != 1){

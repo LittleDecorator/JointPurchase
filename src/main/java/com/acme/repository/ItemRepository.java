@@ -2,7 +2,10 @@ package com.acme.repository;
 
 import com.acme.constant.Queue;
 import com.acme.model.Item;
+import com.acme.model.dto.Product;
+import com.acme.model.filter.ItemFilter;
 import com.acme.repository.mapper.Mappers;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +32,21 @@ public class ItemRepository {
         return jdbcTemplate.query(Queue.ITEM_FIND_ALL,Mappers.itemMapper);
     }
 
-    public List<Item> getByCompanyForSale(String companyId){
-        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_FOR_SALE,Mappers.itemMapper,companyId);
-    }
+//    public List<Item> getByCompanyForSale(String companyId){
+//        return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_FOR_SALE,Mappers.itemMapper,companyId);
+//    }
 
     public List<Item> getByCompanyId(String companyId){
         return jdbcTemplate.query(Queue.ITEM_BY_COMPANY_ID,Mappers.itemMapper,companyId);
     }
 
-    public List<Item> getByCategoryId(String categoryId){
-        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_ID,Mappers.itemMapper,categoryId);
-    }
+//    public List<Item> getByCategoryId(String categoryId){
+//        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_ID,Mappers.itemMapper,categoryId);
+//    }
 
-    public List<Item> getByCategoryForSale(String categoryId){
-        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_FOR_SALE,Mappers.itemMapper,categoryId);
-    }
+//    public List<Item> getByCategoryForSale(String categoryId){
+//        return jdbcTemplate.query(Queue.ITEM_BY_CATEGORY_FOR_SALE,Mappers.itemMapper,categoryId);
+//    }
 
     public Item getById(String id){
         return jdbcTemplate.queryForObject(Queue.ITEM_FIND_BY_ID, Mappers.itemMapper, id);
@@ -138,11 +141,6 @@ public class ItemRepository {
     private String updateSelective(Item item, MapSqlParameterSource namedParameters){
         List<String> querySB = Lists.newArrayList();
 
-//        if(item.getId() != null){
-//            querySB.add(" ID = :id ");
-//            namedParameters.put("id", item.getId());
-//        }
-
         if(item.getName() != null){
             querySB.add(" NAME = :name ");
             namedParameters.addValue("name", item.getName());
@@ -169,7 +167,7 @@ public class ItemRepository {
         }
 
         querySB.add(" NOT_FOR_SALE = :forSale ");
-        namedParameters.addValue("forSale", item.isNotForSale()?'Y':'N');
+        namedParameters.addValue("forSale", item.isNotForSale() ? 'Y' : 'N');
 
         if(item.getInStock() != null){
             querySB.add(" IN_STOCK = :inStock ");
@@ -182,6 +180,42 @@ public class ItemRepository {
         }
 
         return "update ITEM set " + String.join(",",querySB);
+    }
+
+    public List<Product> getFilteredItems(ItemFilter filter){
+        String queue = Queue.GET_CATALOG;
+        List<String> clause = Lists.newArrayList();
+        Map<String,Object> namedParameters = Maps.newHashMap();
+
+        if(!Strings.isNullOrEmpty(filter.getName())){
+            clause.add(" lower(i.name) like :name ");
+            namedParameters.put("name", "%" + filter.getName() + "%");
+        }
+
+        if(!Strings.isNullOrEmpty(filter.getArticle())){
+            clause.add(" i.article like :article ");
+            namedParameters.put("article", "%" + filter.getArticle() + "%");
+        }
+
+        if(!Strings.isNullOrEmpty(filter.getCompanyId())){
+            clause.add(" i.company_id = ':company' ");
+            namedParameters.put("company", filter.getCompanyId());
+        }
+
+        if(namedParameters.size()>0){
+            int pos = Queue.GET_CATALOG.indexOf("ORDER");
+            if(pos != -1){
+                String firstPart = Queue.GET_CATALOG.substring(0,pos);
+                String secondPart = Queue.GET_CATALOG.substring(pos);
+                queue = firstPart + " WHERE " + String.join(" AND ",clause) + secondPart ;
+            }
+        }
+
+        namedParameters.put("offset", filter.getOffset());
+        namedParameters.put("limit", filter.getLimit());
+
+        queue += " offset :offset limit :limit ";
+        return parameterJdbcTemplate.query(queue,namedParameters, Mappers.productMapper);
     }
 
 }

@@ -1,0 +1,37 @@
+<ul id="dropdown_adm" class="dropdown-content">
+    <li><a ui-sref="order">Заказы</a></li>
+    <li><a ui-sref="person">Клиенты</a></li>
+    <li><a ui-sref="item">Товар</a></li>
+    <li><a ui-sref="company">Поставщики</a></li>
+    <li><a ui-sref="category">Категории</a></li>
+    <li><a ui-sref="email">Почта</a></li>
+</ul>
+
+<nav class="white" style="position: fixed; width: 100%; z-index: 55; top: 0;">
+    <div class="container">
+        <div class="nav-wrapper">
+            <div id="logo-container">
+                <a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>
+                <!--<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>-->
+            </div>
+
+            <div class="menu-adbeus-container">
+                <ul id="nav-mobile" class="right" ng-if="width > 990">
+                    <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
+                    <li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Личный кабинет</a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="catalog">Каталог</a></li>
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>-->
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown_adm">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()">
+                        <a style="cursor: pointer">Выход</a>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+</nav>

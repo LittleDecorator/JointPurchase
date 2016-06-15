@@ -6,13 +6,21 @@
     'use strict';
 
     angular.module('catalog')
-        .controller('catalogController', ['$scope', '$state','dataResources','$timeout','eventService',function ($scope, $state, dataResources,$timeout,eventService) {
+        .controller('catalogController', ['$scope', '$state','dataResources','$timeout','eventService','$stateParams','$rootScope','node',function ($scope, $state, dataResources,$timeout,eventService,$stateParams,$rootScope,node) {
 
             console.log("catalogController");
 
             $scope.items = [];
             $scope.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
             $scope.sideFilters = [];
+
+            if(node){
+                if($stateParams.type == 'category') {
+                    $scope.searchFilter.category = $stateParams.id
+                } else {
+                    $scope.searchFilter.company = $stateParams.id
+                }
+            }
 
             var busy = false;
             var portion = 0;
@@ -28,14 +36,15 @@
                     busy = true;
                     dataResources.catalog.list.all($scope.searchFilter).$promise.then(function (data) {
 
-                        $scope.items = data;
-
                         if(data.length < $scope.searchFilter.limit){
                             $scope.stopLoad = true;
                         }
+
                         if(isClean){
                             $scope.items = [];
                         }
+
+                        $scope.items = data;
 
                         portion++;
                         $scope.searchFilter.offset = portion * $scope.searchFilter.limit;
@@ -68,15 +77,20 @@
             /* with will work when side click */
             $scope.$on('onFilter',function() {
                 var node = eventService.data;
-                console.log(node);
+                var type;
                 if(node.company){
                     $scope.searchFilter.company = node.id;
                     $scope.searchFilter.category = null;
+                    type = 'company';
                 } else {
                     $scope.searchFilter.company = null;
                     $scope.searchFilter.category = node.id;
                     $scope.showSideFilter = true;
+                    type = 'category';
                 }
+                $state.go('catalog.type',{id:node.id,type:type},{notify:false}).then(function(){
+                    $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                });
                 portion = 0;
                 $scope.searchFilter.offset = 0;
                 $scope.stopLoad = false;
@@ -84,9 +98,9 @@
             });
 
             /* load page timeout */
-            $timeout(function() {
-                $(".collapsible").collapsible();
-            }, 10);
+            //$timeout(function() {
+            //    $(".collapsible").collapsible();
+            //}, 10);
 
 
             $scope.search = function(){
@@ -94,13 +108,8 @@
                     $('#search').focus();
                 } else {
                     dataResources.catalog.search.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
-                        console.log(data);
                         $scope.searchResult = data;
                         $scope.showResults = true;
-                        //portion = 0;
-                        //$scope.searchFilter.offset = 0;
-                        //$scope.stopLoad = false;
-                        //$scope.loadData(true);
                     });
                 }
             };
@@ -142,7 +151,6 @@
             }
 
             $scope.show = function(id){
-                console.log($scope.mainImage);
                 var keepGoing = true;
                 var res = null;
 
@@ -155,7 +163,6 @@
                     }
                 });
                 $scope.mainImage = id;
-                console.log($scope.mainImage);
             };
 
             $scope.showGallery = function () {

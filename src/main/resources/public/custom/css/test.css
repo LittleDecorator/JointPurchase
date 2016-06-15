@@ -333,14 +333,12 @@ md-sidenav , md-backdrop{
 
 @media only screen and (min-width : 600px) {
     md-sidenav{
-        top: 64px!important;
         width: 240px;
     }
 }
 
 @media only screen and (max-width : 600px) {
     md-sidenav {
-        top: 54px !important;
         width: 240px;
     }
 }

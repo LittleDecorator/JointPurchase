@@ -3,6 +3,7 @@ package com.acme.repository.mapper;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
 import com.acme.model.dto.Product;
+import com.acme.util.MapperHelper;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class Mappers {
         CategoryItem categoryItem = new CategoryItem();
         categoryItem.setId(rs.getString("id"));
         categoryItem.setCategoryId(rs.getString("category_id"));
-        categoryItem.setCategoryName(rs.getString("name"));
+        categoryItem.setCategoryName(MapperHelper.getExistString(rs,"name"));
         categoryItem.setItemId(rs.getString("item_id"));
         categoryItem.setDateAdd(rs.getDate("date_add"));
         return categoryItem;
@@ -112,19 +113,18 @@ public class Mappers {
         product.setId(rs.getString("id"));
         product.setName(rs.getString("name"));
         product.setCompanyId(rs.getString("company_id"));
+        product.setCompanyName(MapperHelper.getExistString(rs,"company_name"));
         product.setArticle(rs.getString("article"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getBigDecimal("price"));
         product.setNotForSale(rs.getBoolean("not_for_sale"));
         product.setInStock(rs.getInt("in_stock"));
         product.setDateAdd(rs.getDate("date_add"));
-
-        System.out.println(product);
         return product;
     };
 
-    public final static RowMapper<ItemCategoryLink> itemCategoryLinkMapper = (rs,num) -> {
-        ItemCategoryLink link = new ItemCategoryLink();
+    public final static RowMapper<CategorizeItem> itemCategoryLinkMapper = (rs,num) -> {
+        CategorizeItem link = new CategorizeItem();
         link.setId(rs.getString("id"));
         link.setArticle(rs.getString("article"));
         link.setName(rs.getString("name"));

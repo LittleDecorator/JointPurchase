@@ -10,6 +10,8 @@
             function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log) {
                 console.log("Enter main controller");
 
+                var templatePath = "pages/fragment/menu/";
+
                 $scope.uname = "";
                 $scope.password = "";
 
@@ -177,11 +179,8 @@
                 };
 
                 $timeout(function() {
-                    $(".button-collapse").sideNav();
-                    $(".collapsible").collapsible();
-                    $('.dropdown-button').dropdown();
                     $('.swipebox').swipebox();
-                }, 100);
+                }, 10);
 
                 //TEMPORARY ADD HERE
                 $scope.itemView = function(id){
@@ -224,6 +223,22 @@
                 
                 $scope.goto =function(name){
                     $state.go(name);
+                };
+
+                $scope.getMenuTemplateUrl = function(){
+                    if($scope.width < 961){
+                        return templatePath + "menu-sm.html";
+                    } else {
+                        return templatePath + "menu-lg.html";
+                    }
+                };
+
+                $scope.afterInclude = function(){
+                    $timeout(function(){
+                        $('.dropdown-button').dropdown();
+                        $(".button-collapse").sideNav();
+                        console.log("dropdown-button & collapse after 100");
+                    },100);
                 };
 
 
