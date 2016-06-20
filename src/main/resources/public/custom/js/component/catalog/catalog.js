@@ -97,35 +97,6 @@
                 $scope.loadData(true);
             });
 
-            /* load page timeout */
-            //$timeout(function() {
-            //    $(".collapsible").collapsible();
-            //}, 10);
-
-
-            $scope.search = function(){
-                if(!$scope.searchFilter.criteria){
-                    $('#search').focus();
-                } else {
-                    dataResources.catalog.search.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
-                        $scope.searchResult = data;
-                        $scope.showResults = true;
-                    });
-                }
-            };
-
-            $scope.keyPress = function(keyCode) {
-                if (keyCode == 13){
-                    $scope.search();
-                }
-            };
-
-            $scope.clear = function(){
-                $scope.searchFilter.criteria = null;
-                $scope.showResults = false;
-            };
-
-
             $scope.removeFilterElem = function(idx){
                 $scope.sideFilters.splice(idx,1);
                 //TODO: maybe change to server clean
@@ -134,6 +105,8 @@
                     $scope.showSideFilter = false;
                 }
             }
+
+
         }])
 
         .controller('catalogCardController',['$scope','$state','product',function ($scope, $state, product) {

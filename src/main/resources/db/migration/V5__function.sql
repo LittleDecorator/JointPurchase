@@ -49,3 +49,8 @@ CREATE VIEW public.catalog AS
   LEFT OUTER JOIN public.item_content ic ON (i.id=ic.item_id AND ic.main='Y')
   INNER JOIN public.company comp ON i.company_id = comp.id
   WHERE i.not_for_sale = 'N';
+
+
+CREATE VIEW public.item_view AS
+  SELECT i.*,comp.name as company_name
+  FROM public.item i INNER JOIN public.company comp ON i.company_id = comp.id;

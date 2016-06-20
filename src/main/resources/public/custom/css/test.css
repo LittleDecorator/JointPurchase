@@ -415,3 +415,24 @@ td > a > .material-icons:hover{
         margin-right: -40px;
     }
 }
+
+
+.hiddendiv{
+    letter-spacing: normal;
+}
+
+.fine{
+    background-color: #00C853!important;
+}
+
+.error{
+    background-color: darksalmon!important;
+}
+
+md-toolbar a {
+    color: #ffffff!important;
+}
+
+ul.dropdown-content > li > a {
+    color: #88AAA9!important;
+}

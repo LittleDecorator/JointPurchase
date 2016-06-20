@@ -2,12 +2,16 @@ package com.acme.controller;
 
 import com.acme.constant.Constants;
 import com.acme.model.CategoryItem;
+import com.acme.model.Item;
+import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.Product;
 import com.acme.model.dto.SearchResultElement;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.CategoryRepository;
 import com.acme.repository.CustomRepository;
 import com.acme.repository.ItemCategoryLinkRepository;
+import com.acme.repository.ItemRepository;
+import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +34,14 @@ public class CatalogController {
     CategoryRepository categoryRepository;
 
     @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
     ItemCategoryLinkRepository itemCategoryLinkRepository;
+
+    @Autowired
+    ItemService itemService;
+
 
     @RequestMapping(method = RequestMethod.POST)
     public List<Product> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
@@ -65,6 +76,12 @@ public class CatalogController {
             }
         }
         return stash.values();
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
+    public ItemMediaTransfer getItemDetail(@PathVariable("id") String itemId) throws Exception {
+        Item item = itemRepository.getById(itemId);
+        return itemService.getItemMediaTransfers(item);
     }
 
 }

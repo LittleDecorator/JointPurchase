@@ -1,13 +1,13 @@
 <!-- SEARCH INPUT -->
-<nav style="margin-top: 20px;">
-    <div class="nav-wrapper" style="background-color: #86A8A8!important;">
-            <div class="input-field row" style="height: 100%;">
-                <input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">
-                <label for="search"><i class="material-icons" ng-click="search()">search</i></label>
-                <i class="material-icons" ng-click="clear()">close</i>
-            </div>
-    </div>
-</nav>
+<!--<nav style="margin-top: 20px;">-->
+    <!--<div class="nav-wrapper" style="background-color: #86A8A8!important;">-->
+            <!--<div class="input-field row" style="height: 100%;">-->
+                <!--<input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">-->
+                <!--<label for="search"><i class="material-icons" ng-click="search()">search</i></label>-->
+                <!--<i class="material-icons" ng-click="clear()">close</i>-->
+            <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
 
 <!-- SEARCH RESULT -->
 <div ng-include="'pages/template/searchResult.html'" ng-if="showResults"></div>

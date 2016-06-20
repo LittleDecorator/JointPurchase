@@ -53,6 +53,9 @@
                     search : $resource('/catalog/search/',{},{
                         get :{method:'GET',isArray:true}
                     }),
+                    itemDetail: $resource("/catalog/:id/detail",{},{
+                        get:{method:'GET',isArray:false}
+                    }),
                 },
 
                 company: $resource("/company/:id"),
@@ -74,7 +77,9 @@
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
-                    post:{method:'POST',isArray:false},
+                    post:{method:'POST',isArray:false,transformResponse:function(data, headers){
+                        return {result:data}
+                    }},
                     put:{method:'PUT',isArray:false}
                 }),
                 

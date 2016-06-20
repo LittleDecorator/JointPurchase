@@ -1,11 +1,7 @@
 package com.acme.controller;
 
-import com.acme.model.CategorizeItem;
-import com.acme.model.CategoryItem;
-import com.acme.model.Item;
-import com.acme.model.OrderItem;
-import com.acme.model.dto.ItemTransfer;
-import com.acme.model.dto.Product;
+import com.acme.model.*;
+import com.acme.model.dto.ItemView;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.*;
 import com.acme.service.CategoryService;
@@ -52,8 +48,6 @@ public class ItemController{
     @Autowired
     CategoryRepository categoryRepository;
 
-
-
     @Autowired
     PlatformTransactionManager transactionManager;
 
@@ -67,30 +61,29 @@ public class ItemController{
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<Product> getItems(ItemFilter filter){
-        System.out.println(filter);
+    public List<ItemView> getItems(ItemFilter filter){
         return itemRepository.getFilteredItems(filter);
     }
 
     /**
      * Create new Item
      *
-     * @param transfer
+     * @param item
      * @return ID of new item
      * @throws ParseException
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String addItem(@RequestBody ItemTransfer transfer) throws ParseException, IOException {
+    public String addItem(@RequestBody CategorizeItem item) throws ParseException, IOException {
         String itemId = null;
-        if (transfer != null) {
+        if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
                 itemId = UUID.randomUUID().toString();
-                transfer.getItem().setId(itemId);
-                itemRepository.insertSelective(transfer.getItem());
+                item.setId(itemId);
+                itemRepository.insertSelective(item);
                 /* add new linked categories */
-                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(transfer.getItem().getId(), transfer.getCategories()));
+                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(itemId, item.getCategories().stream().map(Category::getId).collect(Collectors.toList())));
                 transactionManager.commit(status);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -103,17 +96,18 @@ public class ItemController{
     /**
      * Update item record
      *
-     * @param transfer
+     * @param item
      */
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateItem(@RequestBody ItemTransfer transfer){
-        if (transfer != null) {
+    public void updateItem(@RequestBody CategorizeItem item){
+        if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
-                itemRepository.updateSelectiveById(transfer.getItem());
-                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(transfer.getItem().getId(), transfer.getCategories());
-                transfer.getCategories().removeAll(categoryItemRepository.getByItemId(transfer.getItem().getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
-                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(transfer.getItem().getId(),transfer.getCategories());
+                itemRepository.updateSelectiveById(item);
+                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
+                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
+                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
+                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
                 categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex) {
@@ -131,9 +125,12 @@ public class ItemController{
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
             orderItemRepository.deleteByItemId(id);
+            itemContentRepository.deleteByItemId(id);
+            categoryItemRepository.deleteByItemId(id);
             itemRepository.deleteById(id);
             transactionManager.commit(status);
         } catch (Exception ex){
+            System.out.println(Arrays.toString(ex.getStackTrace()));
             transactionManager.rollback(status);
         }
     }
@@ -187,18 +184,6 @@ public class ItemController{
         }
         return list;
     }
-
-//    @RequestMapping(method = RequestMethod.GET,value = "/filter/category")
-//    public List<ItemUrlTransfer> filterByCategory(@RequestParam("categoryId") String categoryId) throws IOException {
-//        List<Item> itemList = itemRepository.getByCategoryForSale(categoryId);
-//        return itemService.getItemUrlTransfers(itemList);
-//    }
-
-//    @RequestMapping(method = RequestMethod.GET,value = "/filter/company")
-//    public List<ItemUrlTransfer> filterByCompany(@RequestParam(value = "companyId", required = true) String companyId) throws IOException {
-//        List<Item> itemList = itemRepository.getByCompanyForSale(companyId);
-//        return itemService.getItemUrlTransfers(itemList);
-//    }
 
     /**
      * Toggle item for select

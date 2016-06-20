@@ -69,22 +69,20 @@ public class ImageServcieImpl implements ImageService {
         return imageString;
     }
 
-//    @Cacheable(value = "writer")
     public ImageWriter getWriter(String type) {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(type);
-
         if (!writers.hasNext())
             throw new IllegalStateException("No writers found");
-
         return writers.next();
     }
 
-//    @Cacheable(value = "param")
     public ImageWriteParam getDefaultWriterParam(ImageWriter writer) {
         float quality = 0.5f;
         ImageWriteParam param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(quality);
+        if (param.canWriteCompressed()) {
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(quality);
+        }
         return param;
     }
 }

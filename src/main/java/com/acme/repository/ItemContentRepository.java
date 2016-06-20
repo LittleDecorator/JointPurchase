@@ -45,6 +45,11 @@ public class ItemContentRepository {
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
+    public boolean deleteByItemId(String itemId){
+        int result = jdbcTemplate.update(Queue.ITEM_CONTENT_DELETE_BY_ITEM_ID, itemId);
+        return result == 0 ? Boolean.FALSE : Boolean.TRUE;
+    }
+
     public boolean updateSelective(ItemContent itemContent, Map<String,Object> whereClause){
         Map<String,Object> namedParameters = Maps.newHashMap();
         Boolean result = Boolean.FALSE;

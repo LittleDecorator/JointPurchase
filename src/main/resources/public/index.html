@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="custom/css/spinner.css">
     <!-- endbuild -->
 
+    <link rel="stylesheet" href="custom/css/searchInput.css">
+
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -31,15 +33,25 @@
 
 <body ng-app="purchase" ng-controller="mainController" class="home blog">
 
+<!--<ul id="dropdown_adm" class="dropdown-content">-->
+    <!--<li><a ui-sref="order">Заказы</a></li>-->
+    <!--<li><a ui-sref="person">Клиенты</a></li>-->
+    <!--<li><a ui-sref="item">Товар</a></li>-->
+    <!--<li><a ui-sref="company">Поставщики</a></li>-->
+    <!--<li><a ui-sref="category">Категории</a></li>-->
+    <!--<li><a ui-sref="email">Почта</a></li>-->
+<!--</ul>-->
+
     <!-- HEADER AND NAVBAR -->
     <header>
         <div ng-include="getMenuTemplateUrl()" include-callback="afterInclude()"></div>
+
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
 
     </header>
 
-    <main style="width:100%; background-color: rgb(246, 244, 241);margin-top: 64px;">
-        <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
+    <main style="width:100%; background-color: rgb(246, 244, 241); padding-top: 88px;">
+
         <!-- MAIN CONTENT AND INJECTED VIEWS -->
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <div ui-view="main"></div>
@@ -108,6 +120,7 @@
     <script src="custom/js/component/remember/remember.js"></script>
     <script src="custom/js/component/email/email.js"></script>
     <script src="custom/js/component/address/address.js"></script>
+    <script src="custom/js/component/search/search.js"></script>
     <!-- endbuild -->
 
 </body>

@@ -1,0 +1,27 @@
+<div layout="row" class="layout-row md-whiteframe-z1">
+    <button type="button" ng-click="closeThisDialog()" class="clearSearch">
+        <md-icon>keyboard_backspace</md-icon>
+    </button>
+    <input flex type="search" id="searchInput"
+           ng-model="searchText"
+           ng-keydown="$mdAutocompleteCtrl.keydown($event)"
+           class="flex"
+           ng-model-options="{debounce:200}"
+            ng-change="querySearch()"/>
+
+    <button type="button" ng-click="clear()" class="clearSearch" ng-if="searchText">
+        <md-icon>close</md-icon>
+    </button>
+</div>
+
+
+<md-virtual-repeat-container class="md-autocomplete-suggestions-container md-whiteframe-z1 md-virtual-repeat-container md-orient-vertical" ng-if="filtered.length > 0">
+    <div>
+        <ul class="md-autocomplete-suggestions" >
+            <li md-virtual-repeat="item in filtered">
+                <span md-highlight-flags="^i" md-highlight-text="searchText" style="    font-size: 20px;">{{item.value}}</span>
+            </li>
+        </ul>
+    </div>
+
+</md-virtual-repeat-container>

@@ -2,6 +2,7 @@ package com.acme.repository.mapper;
 
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
+import com.acme.model.dto.ItemView;
 import com.acme.model.dto.Product;
 import com.acme.util.MapperHelper;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +20,23 @@ public class Mappers {
         item.setArticle(rs.getString("article"));
         item.setDescription(rs.getString("description"));
         item.setPrice(rs.getBigDecimal("price"));
-        item.setNotForSale(rs.getBoolean("not_for_sale"));
+        item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
+        item.setInStock(rs.getInt("in_stock"));
+        item.setDateAdd(rs.getDate("date_add"));
+        return item;
+    };
+
+    public final static RowMapper<ItemView> itemViewMapper = (rs,num) -> {
+        ItemView item = new ItemView();
+        item.setId(rs.getString("id"));
+        item.setName(rs.getString("name"));
+        item.setCompanyId(rs.getString("company_id"));
+        item.setCompanyId(rs.getString("company_id"));
+        item.setCompanyName(rs.getString("company_name"));
+        item.setArticle(rs.getString("article"));
+        item.setDescription(rs.getString("description"));
+        item.setPrice(rs.getBigDecimal("price"));
+        item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         item.setInStock(rs.getInt("in_stock"));
         item.setDateAdd(rs.getDate("date_add"));
         return item;
@@ -117,7 +134,7 @@ public class Mappers {
         product.setArticle(rs.getString("article"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getBigDecimal("price"));
-        product.setNotForSale(rs.getBoolean("not_for_sale"));
+        product.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         product.setInStock(rs.getInt("in_stock"));
         product.setDateAdd(rs.getDate("date_add"));
         return product;
@@ -129,7 +146,7 @@ public class Mappers {
         link.setArticle(rs.getString("article"));
         link.setName(rs.getString("name"));
         link.setInStock(rs.getInt("in_stock"));
-        link.setNotForSale(rs.getBoolean("not_for_sale"));
+        link.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         link.setPrice(rs.getBigDecimal("price"));
         link.setDescription(rs.getString("description"));
         link.setCompanyId(rs.getString("company_id"));

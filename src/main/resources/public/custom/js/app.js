@@ -43,6 +43,9 @@
                 $timeout(function() {
                     $("#spinner").fadeTo(800, 0, function(){ $(this).hide()});
                 },10);
+
+                console.log(toState);
+                console.log($state);
             });
 
             /* if token expired or not login then move to mane page and clear all data */

@@ -6350,8 +6350,9 @@ input[type=text] + label:after, input[type=password] + label:after, input[type=e
 .input-field input[type=search]:focus {
     background-color: #fff;
     border: 0;
-    box-shadow: none;
-    color: #444; }
+    color: #444;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
 .input-field input[type=search]:focus + label i, .input-field input[type=search]:focus ~ .mdi-navigation-close {
     color: #444; }
 .input-field input[type=search] + label {
@@ -6634,7 +6635,7 @@ form p:last-child {
     z-index: 0; }
 [type="checkbox"].filled-in:checked + label:before {
     top: 0;
-    left: 1px;
+    left: -3px;
     width: 8px;
     height: 13px;
     border-top: 2px solid transparent;

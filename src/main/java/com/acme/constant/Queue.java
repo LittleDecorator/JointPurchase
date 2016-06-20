@@ -70,6 +70,7 @@ public interface Queue {
     String ITEM_CONTENT_FIND_BY_ITEM_ID = "SELECT * FROM public.item_content WHERE item_id = ? ORDER BY date_add ASC";
     String ITEM_CONTENT_FIND_MAIN = "SELECT * FROM public.item_content WHERE main = 'Y' ORDER BY date_add ASC";
     String ITEM_CONTENT_DELETE_BY_ITEM_ID_AND_CONTENT_ID = "DELETE FROM public.item_content WHERE item_id = ? AND content_id = ? ";
+    String ITEM_CONTENT_DELETE_BY_ITEM_ID = "DELETE FROM public.item_content WHERE item_id = ? ";
 
     String CONTENT_FIND_DEFAULT = "SELECT * FROM public.content WHERE is_default = 'Y' ";
     String CONTENT_FIND_BY_ID = "SELECT * FROM public.content WHERE id = ?";
@@ -101,6 +102,7 @@ public interface Queue {
 //            "INNER JOIN category c ON ci.category_id=c.id " +
 //            "ORDER BY i.date_add asc ";
 
+    String GET_ITEM_VIEW = "SELECT * FROM public.item_view ORDER BY date_add asc";
     String GET_CATALOG = "SELECT * FROM public.catalog ORDER BY date_add asc";
 
     String FIND_BY_SEARCH = "SELECT * FROM public.catalog i " +

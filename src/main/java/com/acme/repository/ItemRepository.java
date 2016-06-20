@@ -2,7 +2,7 @@ package com.acme.repository;
 
 import com.acme.constant.Queue;
 import com.acme.model.Item;
-import com.acme.model.dto.Product;
+import com.acme.model.dto.ItemView;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.mapper.Mappers;
 import com.google.common.base.Strings;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Repository
 public class ItemRepository {
@@ -82,7 +81,7 @@ public class ItemRepository {
         // for id property
         into.add(" ID ");
         values.add(" :id ");
-        namedParameters.put("id", UUID.randomUUID());
+        namedParameters.put("id", item.getId());
 
         if(item.getName() != null){
             into.add(" NAME ");
@@ -116,7 +115,7 @@ public class ItemRepository {
 
         into.add(" NOT_FOR_SALE ");
         values.add(" :forSale ");
-        namedParameters.put("forSale",item.isNotForSale());
+        namedParameters.put("forSale",item.isNotForSale()?'Y':'N');
 
         if(item.getInStock() != null){
             into.add(" IN_STOCK ");
@@ -182,7 +181,7 @@ public class ItemRepository {
         return "update ITEM set " + String.join(",",querySB);
     }
 
-    public List<Product> getFilteredItems(ItemFilter filter){
+    public List<ItemView> getFilteredItems(ItemFilter filter){
         String queue = Queue.GET_CATALOG;
         List<String> clause = Lists.newArrayList();
         Map<String,Object> namedParameters = Maps.newHashMap();
@@ -215,7 +214,7 @@ public class ItemRepository {
         namedParameters.put("limit", filter.getLimit());
 
         queue += " offset :offset limit :limit ";
-        return parameterJdbcTemplate.query(queue,namedParameters, Mappers.productMapper);
+        return parameterJdbcTemplate.query(queue,namedParameters, Mappers.itemViewMapper);
     }
 
 }

@@ -1,37 +1,118 @@
-<ul id="dropdown_adm" class="dropdown-content">
-    <li><a ui-sref="order">Заказы</a></li>
-    <li><a ui-sref="person">Клиенты</a></li>
-    <li><a ui-sref="item">Товар</a></li>
-    <li><a ui-sref="company">Поставщики</a></li>
-    <li><a ui-sref="category">Категории</a></li>
-    <li><a ui-sref="email">Почта</a></li>
-</ul>
+<!--<ul id="dropdown_adm" class="dropdown-content">-->
+    <!--<li><a ui-sref="order">Заказы</a></li>-->
+    <!--<li><a ui-sref="person">Клиенты</a></li>-->
+    <!--<li><a ui-sref="item">Товар</a></li>-->
+    <!--<li><a ui-sref="company">Поставщики</a></li>-->
+    <!--<li><a ui-sref="category">Категории</a></li>-->
+    <!--<li><a ui-sref="email">Почта</a></li>-->
+<!--</ul>-->
 
-<nav class="white" style="position: fixed; width: 100%; z-index: 55; top: 0;">
-    <div class="container">
-        <div class="nav-wrapper">
-            <div id="logo-container">
-                <a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>
-                <!--<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>-->
-            </div>
+<!--&lt;!&ndash;<nav class="white" style="position: fixed; width: 100%; z-index: 55; top: 0;">&ndash;&gt;-->
+<!--<nav class="white">-->
+    <!--<div class="container">-->
+        <!--<div class="nav-wrapper">-->
+            <!--<div id="logo-container">-->
+                <!--<a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>-->
+                <!--&lt;!&ndash;<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>&ndash;&gt;-->
+            <!--</div>-->
 
-            <div class="menu-adbeus-container">
-                <ul id="nav-mobile" class="right" ng-if="width > 990">
-                    <li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>
-                    <li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>
-                    <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Личный кабинет</a></li>
-                    <li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="catalog">Каталог</a></li>
-                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>-->
-                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>-->
-                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>-->
-                    <li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown_adm">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()">
-                        <a style="cursor: pointer">Выход</a>
+            <!--<div class="menu-adbeus-container">-->
+                <!--<ul id="nav-mobile" class="right">-->
+                    <!--<li><a ui-sref="cart"><i class="mdi-action-shopping-basket"><span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></i></a></li>-->
+                    <!--<li ng-if="auth.isAuth()"><a style="cursor: pointer">Hello,<strong style="font-size: 20px;margin-left: 5px">{{currentUser.name}}</strong></a></li>-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="!auth.isAuth()"><a style="cursor: pointer" ui-sref="login">Личный кабинет</a></li>-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="catalog">Каталог</a></li>-->
+                    <!--&lt;!&ndash;<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="about">О нас</a></li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="contact">Заказ/доставка</a></li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li class="menu-item menu-item-type-custom menu-item-object-custom"><a ui-sref="stock">Акции</a></li>&ndash;&gt;-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom"><a style="cursor: pointer" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown_adm">Администрирование<i class="material-icons right">arrow_drop_down</i></a></li>-->
+                    <!--<li class="menu-item menu-item-type-custom menu-item-object-custom" ng-if="auth.isAuth()" ng-click="logout()">-->
+                        <!--<a style="cursor: pointer">Выход</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+
+
+        <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
+
+
+
+<md-toolbar class="demo-toolbar md-primary _md" style="line-height: 64px;position: fixed;top: 0;box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);z-index: 100">
+    <div class="md-toolbar-tools" style="background-color: #86A8A8!important;padding: 0 30px;">
+        <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
+            <div layout="row" class="layout-row">
+
+                <a class="left brand-logo-lpad" ui-sref="home" style="font-size: 2rem;">GrimmStory</a>
+
+                <a ui-sref="cart" style="padding: 0 15px;font-size: 2rem;">
+                    <i class="mdi-action-shopping-basket" style="color: #846C63!important;position: relative;">
+                        <span class="badge contain ng-binding ng-hide" ng-show="cart.cou>0" aria-hidden="true" style="position: absolute;height: 1.2rem;top: 2.2rem;right: -10px;min-width: 1.2rem;line-height: 0.4rem;font-size: 1rem;border-radius: 50%;padding: 5px;">0</span>
+                    </i>
+                </a>
+
+                <span flex="" class="flex"></span>
+
+                <nav style="margin: 0 30px;width: 20%;padding: 15px 0;background-color:transparent;height: inherit;line-height: inherit;box-shadow:none">
+                    <div class="nav-wrapper">
+                        <div class="input-field row" style="height: 100%;border-bottom: 1px solid #fff;">
+                            <input id="search" type="search" class="col s12 ng-pristine ng-valid ng-empty ng-touched" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria" aria-invalid="false" style="margin: 0;padding-left: 2.2rem;padding-right: 2.2rem;">
+                            <label for="search" style="left: 0">
+                                <i class="material-icons" ng-click="search()" role="button" tabindex="0" style="line-height: 36px;height: 36px;">search</i>
+                            </label>
+                            <i class="material-icons" ng-click="clear()" role="button" tabindex="0" style="line-height: 36px;height: 36px;">close</i>
+                        </div>
+                    </div>
+                </nav>
+
+                <ul id="nav-mobile" class="right ng-scope" style="margin: 0;line-height: 62px;height: 64px;">
+                    <li ng-if="auth.isAuth()" class="ng-scope" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a style="cursor: pointer;font-size: 1rem;color: #fff;display: flex;padding: 0 10px;">
+                            <md-icon>account_circle</md-icon><strong style="font-size: 20px;margin-left: 5px" class="ng-binding">Nikolay</strong></a>
+                    </li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a ui-sref="catalog" style="font-size: 1rem;color: #fff;display: block;padding: 0 10px;">Каталог</a>
+                    </li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a ui-sref="about" style="font-size: 1rem;color: #fff;display: block;padding: 0 10px;">О нас</a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a ui-sref="contact" style="font-size: 1rem;color: #fff;display: block;padding: 0 10px;">Заказ/доставка</a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a ui-sref="stock" style="font-size: 1rem;color: #fff;display: block;padding: 0 10px;">Акции</a></li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a style="cursor: pointer;font-size: 1rem;color: #fff;display: block;padding: 0 10px;" class="dropdown-button" ng-show="auth.isAuth()" data-activates="dropdown_adm" aria-hidden="false">Администрирование
+                            <!--<md-icon>expand_more</md-icon>-->
+                        </a>
+                        <ul id="dropdown_adm" class="dropdown-content">
+                            <li><a ui-sref="order">Заказы</a></li>
+                            <li><a ui-sref="person">Клиенты</a></li>
+                            <li><a ui-sref="item">Товар</a></li>
+                            <li><a ui-sref="company">Поставщики</a></li>
+                            <li><a ui-sref="category">Категории</a></li>
+                            <li><a ui-sref="email">Почта</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom ng-scope" ng-if="auth.isAuth()" ng-click="logout()" tabindex="0" style="transition: background-color .3s;float: left;padding: 0;">
+                        <a style="cursor: pointer;font-size: 1rem;color: #fff;display: block;padding: 0 10px;">Выход</a>
                     </li>
                 </ul>
             </div>
-
-
+            <div layout="row" class="layout-row">
+                <!--<breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>-->
+            </div>
         </div>
+
     </div>
-</nav>
+
+</md-toolbar>
+
+
+<!--<ul id="dropdown_adm" class="dropdown-content">-->
+<!--<li><a ui-sref="order">Заказы</a></li>-->
+<!--<li><a ui-sref="person">Клиенты</a></li>-->
+<!--<li><a ui-sref="item">Товар</a></li>-->
+<!--<li><a ui-sref="company">Поставщики</a></li>-->
+<!--<li><a ui-sref="category">Категории</a></li>-->
+<!--<li><a ui-sref="email">Почта</a></li>-->
+<!--</ul>-->

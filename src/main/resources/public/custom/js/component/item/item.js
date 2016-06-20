@@ -7,11 +7,13 @@
 
     angular.module('item')
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
-            var templatePath = "pages/fragment/items/";
+
             $scope.companyNames = companies;
+
             $scope.items = [];
 
             $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
+
             $scope.confirmedFilter = angular.copy($scope.filter);
 
             var busy = false;
@@ -25,7 +27,7 @@
                     busy = true;
 
                     dataResources.item.all($scope.confirmedFilter).$promise.then(function(data){
-                        console.log(data);
+
                         if(data.length < $scope.confirmedFilter.limit){
                             $scope.stopLoad = true;
                         }
@@ -34,13 +36,8 @@
                             $scope.items = [];
                         }
 
+                        console.log(data);
                         $scope.items = data;
-
-                        //angular.forEach(data, function (item) {
-                        //    var company = helpers.findInArrayById(companies, item.companyId);
-                        //    item.companyName = company.name;
-                        //    $scope.items.push(item);
-                        //});
 
                         portion++;
                         $scope.confirmedFilter.offset = portion * $scope.confirmedFilter.limit;
@@ -72,10 +69,9 @@
             //clear filter
             $scope.clear = function () {
                 portion = 0;
-                $scope.filter = {name:null, article:null, selectedCompany:null, selectedCategory:null, limit:30, offset:0};
+                $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
                 localStorage.removeItem($state.current.name);
                 $scope.stopLoad = false;
-                
                 $scope.loadData(true);
                 $timeout(function(){
                     $('select').material_select();
@@ -103,6 +99,7 @@
             };
 
             $scope.getTemplate = function(){
+                var templatePath = "pages/fragment/items/";
                 if($scope.width < 601){
                     return templatePath + "items-sm.html"
                 }
@@ -119,31 +116,25 @@
             },10);
         }])
 
-        .controller('itemDetailController',['$scope','$state','resolved','dataResources','modal','$timeout', function ($scope, $state, resolved, dataResources,modal,$timeout){
-            var templatePath = "pages/fragment/items/card/";
-
-            $scope.selected = resolved[0];
-            $scope.categories = [];
-            angular.forEach(resolved[1], function (category) {
-                $scope.categories.push({id:category.id,name:category.name});
-            });
-            $scope.companyNames = [];
-            angular.forEach(resolved[2], function (company) {
-                $scope.companyNames.push(company);
-            });
+        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies){
+            console.log(item);
+            $scope.selected = item;
+            $scope.companyNames = companies;
             $scope.companyNames.unshift({id:null,name:"Выберите производителя ..."});
 
             if(!$scope.selected.inStock){
                 $scope.selected.inStock = 0;
             }
-            
+
+            /* Удаление категории из товара */
             $scope.removeCategory = function(idx){
                 $scope.selected.categories.splice(idx,1);
             };
-            
+
+            /* Открытие модального окна для выбора категории */
             $scope.showCategoryModal = function(){
                 var selected = [];
-                if($scope.selected.categories.length > 0){
+                if($scope.selected.categories && $scope.selected.categories.length > 0){
                     selected = $scope.selected.categories.map(function(category){
                         return category['id'];
                     })
@@ -156,37 +147,42 @@
                 });
             };
 
-            //modal button save listener
+            /* Сохранение товара */
             $scope.save = function () {
-                var categories = $scope.selected.categories.map(function(category){
-                    return category['id'];
-                });
-
-                var dto = {
-                    item: $scope.selected,
-                    categories: categories
-                };
-
-                if($scope.selected.id){
-                    dataResources.item.put(dto).$promise.then(function(data){
-                        Materialize.toast('Item UPDATE success',3000);
-                    }, function(error){
-                        Materialize.toast('Item UPDATE failed',3000);
-                    })
-                } else {
-                    dataResources.item.post(dto).$promise.then(function(data){
-                        Materialize.toast('Item CREATE success',3000);
-                    }, function(error){
-                        Materialize.toast('Item CREATE failed',3000);
-                    })
+                if(!$scope.itemCard.$pristine && !$scope.itemCard.$invalid){
+                    if($scope.selected.id){
+                        dataResources.item.put($scope.selected).$promise.then(function(data){
+                            Materialize.toast('Товар успешно изменён', 3000, 'fine');
+                            $scope.itemCard.$setPristine();
+                            $state.go($state.current,{id:$scope.selected.id},{notify:false}).then(function(){
+                                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                            });
+                        }, function(error){
+                            Materialize.toast('Неудалось сохранить изменения', 3000, 'error');
+                        })
+                    } else {
+                        dataResources.item.post($scope.selected).$promise.then(function(data){
+                            Materialize.toast('Товар успешно создан', 3000, 'fine');
+                            $scope.itemCard.$setPristine();
+                            $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                                $scope.selected.id = data.result;
+                                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                            });
+                        }, function(error){
+                            Materialize.toast('Неудалось создать новый товар', 3000, 'error');
+                        })
+                    }
                 }
             };
 
+            /* Переход в галерею данного товара */
             $scope.showGallery = function () {
                 $state.go("item.detail.gallery", {id: $scope.selected.id});
             };
 
+            /* Получения шаблона страницы */
             $scope.getTemplateUrl = function(){
+                var templatePath = "pages/fragment/items/card/";
                 if($scope.width < 601){
                     return templatePath + "item-card-sm.html";
                 } else {
@@ -194,9 +190,16 @@
                 }
             };
 
+            /* Callback после загрузки шаблона */
             $scope.afterInclude = function(){
                 $('select').material_select();
             };
+
+            /* Post-init обработка */
+            $timeout(function(){
+                $('select').material_select();
+                console.log($scope);
+            },20);
 
         }])
 

@@ -223,7 +223,8 @@ var route = {
 
             {
                 name:'catalog.detail',
-                url:'/:itemId',
+                url:'/card/:itemId',
+                parent:'catalog',
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/catalogCard.html',
@@ -384,10 +385,10 @@ var route = {
                 },
                 data: {
                     requireLogin: true,
-                    displayName: '{{resolved[0].name|nvl:"Создание"}}'
+                    displayName: '{{item.name|nvl:"Создание"}}'
                 },
                 resolve: {
-                    resolved: function($stateParams, resolveService) {
+                    item: function($stateParams, resolveService) {
                         return resolveService.getItemDetail($stateParams.id);
                     }
                 }

@@ -11,6 +11,7 @@
             return function(params) {
                 var className = 'ngdialog-theme-default';
                 var closeByEscape = true;
+                var closeByDocument = false;
                 if(params.className){
                     className = params.className;
                 }
@@ -20,7 +21,10 @@
 
                 if(params.closeByEscape != undefined){
                     closeByEscape = params.closeByEscape;
+                }
 
+                if(params.closeByDocument != undefined){
+                    closeByDocument = params.closeByDocument;
                 }
 
                 return ngDialog.open({
@@ -29,7 +33,7 @@
                     controller: params.controller,
                     showClose: false,
                     closeByEscape: closeByEscape,
-                    closeByDocument:false,
+                    closeByDocument: closeByDocument,
                     resolve: {
                         resolved: function getData() {
                             return params.data;
@@ -165,44 +169,15 @@
             
             this.getItemDetail = function(id){
                 console.log("Get Item Detail");
-                var getItemPromise = function() {
-                    var deferred = $q.defer();
-                    if(id){
-                        dataResources.item.get({id:id},function(item){
-                            deferred.resolve(item);
-                        });
-                    } else {
-                        deferred.resolve({});
-                    }
-                    return deferred.promise;
-                };
-
-                var getCategoryPromise = function() {
-                    var deferred = $q.defer();
-                    dataResources.categoryMap.get(function(res) {
-                        var categories = [];
-                        angular.forEach(res, function (category) {
-                            categories.push({id:category.id,name:category.name});
-                        });
-                        console.log(categories);
-                        deferred.resolve(categories);
+                var deferred = $q.defer();
+                if(id){
+                    dataResources.item.get({id:id},function(item){
+                        deferred.resolve(item);
                     });
-                    return deferred.promise;
-                };
-
-                var getCompanyPromise = function() {
-                    var deferred = $q.defer();
-                    dataResources.companyMap.get(function(res){
-                        var companies = [];
-                        angular.forEach(res, function (comp) {
-                            companies.push(comp);
-                        });
-                        console.log(companies);
-                        deferred.resolve(companies);
-                    });
-                    return deferred.promise;
-                };
-                return $q.all([getItemPromise(),getCategoryPromise(),getCompanyPromise()]);
+                } else {
+                    deferred.resolve({});
+                }
+                return deferred.promise;
             };
 
             this.getPerson = function(id){
@@ -293,8 +268,7 @@
 
             this.getProduct = function(itemId){
                 var deferred = $q.defer();
-                dataResources.itemDetail.get({id: itemId},function(data){
-                    console.log(data);
+                dataResources.catalog.itemDetail.get({id: itemId},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;

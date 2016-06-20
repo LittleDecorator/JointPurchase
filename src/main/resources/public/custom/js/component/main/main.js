@@ -6,8 +6,8 @@
     'use strict';
 
     angular.module('main')
-        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout','$mdSidenav','$log',
-            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log) {
+        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout','$mdSidenav','$log','modal',
+            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log,modal) {
                 console.log("Enter main controller");
 
                 var templatePath = "pages/fragment/menu/";
@@ -167,10 +167,10 @@
                     $scope.nodes= data;
                 });
 
-                dataResources.categoryRootMap.get().$promise.then(function(data){
-                    $scope.categoryFilter = data;
-                    console.log(data);
-                });
+                //dataResources.categoryRootMap.get().$promise.then(function(data){
+                //    $scope.categoryFilter = data;
+                //    console.log(data);
+                //});
 
                 /* handle event in side menu .Broadcast event */
                 $scope.filterProduct = function(node){
@@ -223,11 +223,17 @@
                 
                 $scope.goto =function(name){
                     $state.go(name);
+                    if($('ul.tabs a').hasClass('active')){
+                        $('md-toolbar .indicator').css('background-color','#f6b2b5');
+                    }
                 };
 
                 $scope.getMenuTemplateUrl = function(){
-                    if($scope.width < 961){
+                    if($scope.width < 720){
                         return templatePath + "menu-sm.html";
+                    }
+                    if($scope.width < 1025){
+                        return templatePath + "menu-md.html";
                     } else {
                         return templatePath + "menu-lg.html";
                     }
@@ -237,10 +243,16 @@
                     $timeout(function(){
                         $('.dropdown-button').dropdown();
                         $(".button-collapse").sideNav();
-                        console.log("dropdown-button & collapse after 100");
+                        $('ul.tabs').tabs();
+                        $('md-toolbar .indicator').css('background-color','transparent');
                     },100);
                 };
 
+                $scope.isCurrent = function(name){
+                    console.log(name);
+                    console.log($state);
+                    return $state.current.name == name;
+                };
 
 /*========================== SIDE NAV ============================*/
                 //TODO: move all this to directive
@@ -271,6 +283,51 @@
                             });
                     }, 200);
                 }
+
+                $scope.toggleSearch = function(flag){
+                    if(flag){
+                        $('#search-nav').css('display','block');
+                        $('#menu-tabs').css('display','none');
+                        $('#search').focus();
+                    } else {
+                        console.log("BLUR");
+                        $('#search-nav').css('display','none');
+                        $('#menu-tabs').css('display','block');
+                    }
+
+                };
+
+                $scope.search = function(){
+                    if(!$scope.searchFilter.criteria){
+                        $('#search').focus();
+                    } else {
+                        dataResources.catalog.search.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
+                            $scope.searchResult = data;
+                            $scope.showResults = true;
+                        });
+                    }
+                };
+
+                $scope.keyPress = function(keyCode) {
+                    if (keyCode == 13){
+                        $scope.search();
+                    }
+                };
+
+                $scope.clearSearch = function(){
+                    $scope.searchFilter.criteria = null;
+                    $scope.showResults = false;
+                };
+
+                $scope.openSearch = function(event){
+                    console.log(event)
+                    var dialog = modal({templateUrl:"pages/modal/searchModal.html",className:'ngdialog-theme-default fixed-full-width',closeByEscape:true,closeByDocument:true,controller:"searchController"});
+                    dialog.closePromise.then(function(output) {
+                        if(output.value && output.value != '$escape'){
+                        }
+                    });
+                }
+
         }])
 
 })();
