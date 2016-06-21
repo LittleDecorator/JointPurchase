@@ -9,7 +9,6 @@
         .controller('searchController', ['$scope', '$state', 'dataResources', '$timeout', function ($scope, $state, dataResources, $timeout) {
             $scope.simulateQuery = false;
             $scope.isDisabled    = false;
-            // list of `state` value/display objects
 
             function createFilterFor () {
                 var lowercaseQuery = angular.lowercase($scope.searchText);
@@ -21,28 +20,23 @@
                 };
             }
 
-            $scope.newState = function (state) {
-                alert("Sorry! You'll need to create a Constituion for " + state + " first!");
+            $scope.keyPress = function(keyCode) {
+                if (keyCode == 13){
+                    $scope.querySearch();
+                }
             };
-            // ******************************
-            // Internal methods
-            // ******************************
-            /**
-             * Search for states... use $timeout to simulate
-             * remote dataservice call.
-             */
+
             $scope.querySearch = function() {
                 //var results = query ? $scope.states.filter( createFilterFor(query) ) : $scope.states,
                 var results = $scope.searchText ? $scope.states.filter( createFilterFor() ) : [],
                     deferred;
-                if ($scope.simulateQuery) {
-                    deferred = $q.defer();
-                    $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-                    $scope.filtered = deferred.promise;
-                } else {
+                //if ($scope.simulateQuery) {
+                //    deferred = $q.defer();
+                //    $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+                //    $scope.filtered = deferred.promise;
+                //} else {
                     $scope.filtered = results;
-                    console.log($scope.filtered);
-                }
+                //}
 
             };
 

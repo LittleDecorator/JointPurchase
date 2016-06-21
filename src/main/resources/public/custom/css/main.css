@@ -18,11 +18,11 @@ div.table-result {
     /*height: 600px;*/
 }
 
-.main-wrapper {
-    height: 100%;
-    overflow-y: auto;
-    width:90%
-}
+/*.main-wrapper {*/
+    /*height: 100%;*/
+    /*overflow-y: auto;*/
+    /*width:90%*/
+/*}*/
 
 .sidebar-wrapper {
     height: 100%;
@@ -153,7 +153,8 @@ ul.navbar-nav>li:hover {
 .nv-file-over { border: dotted 3px red; } /* Default class applied to drop zones on over */
 .another-file-over-class { border: dotted 3px green; }
 
-html, body { height: 100%; }
+/*html, body { height: 100%; }*/
+html{ height: inherit; }
 
 canvas {
     background-color: #f3f3f3;
@@ -468,3 +469,48 @@ nav .brand-logo-lpad {
     font-size: 1.6rem;
     opacity: .7;
 }
+
+
+/* CONTAINER WRAPPER */
+
+.main-wrapper {
+    width:100%;
+    background-color: rgb(246, 244, 241);
+}
+
+@media screen and (max-width: 1024px){
+    .main-wrapper {
+        margin-top: 15%;
+    }
+}
+
+@media screen and (max-width: 720px){
+    .main-wrapper {
+        margin-top: 20%;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .main-wrapper {
+        padding-bottom: 20%;
+        margin: 0 auto auto;
+    }
+}
+
+@media screen and (max-width: 360px){
+    .main-wrapper {
+        margin-top: 20%;
+    }
+}
+
+
+
+
+
+
+
+/*@media screen and (min-width: 361px){*/
+    /*.main-wrapper {*/
+        /*padding-top: 88px;*/
+    /*}*/
+/*}*/

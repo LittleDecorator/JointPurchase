@@ -1,5 +1,4 @@
-<div class="modal-content center" style="width: 60%; margin: 0 auto; margin-top: 150px">
-    <!--Registration via icon-->
+<div class="login-card center">
     <h4>Авторизация</h4>
 
     <div class="input-field col s12">
@@ -10,9 +9,9 @@
         <input type="password" ng-model="password" id="password" ng-keydown="keyPress($event.keyCode)"/>
         <label class="control-label" for="password" style="left: 0.75rem">Пароль</label>
     </div>
-    <div style="float: right">
-        <a style="cursor: pointer" class="waves-effect waves-green btn" ng-click="submit()">Подтвердить</a>
-        <a ui-sref="remember" style="cursor: pointer" class="waves-effect waves-green btn-flat" >Забыли пароль?</a>
-        <a ui-sref="registration" style="cursor: pointer" class="waves-effect waves-green btn-flat" >Регистрация</a>
+    <div class="login-control-wrapper">
+        <a ui-sref="remember" class="waves-effect waves-green btn-flat" >Забыли пароль?</a>
+        <a ui-sref="registration" class="waves-effect waves-green btn-flat" >Регистрация</a>
+        <a class="waves-effect waves-green btn" ng-click="submit()">Подтвердить</a>
     </div>
 </div>

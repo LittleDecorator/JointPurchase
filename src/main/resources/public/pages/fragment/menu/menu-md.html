@@ -13,32 +13,47 @@
 
                 <span flex="" class="flex"></span>
 
-                <!--<md-icon style="font-size: 30px; cursor: pointer" ng-click="toggleSearch(true)">search</md-icon>-->
-                <md-icon style="font-size: 30px; cursor: pointer" ng-click="openSearch($event)">search</md-icon>
-
-                 <md-menu flex="nogrow" style="padding: 0;line-height: 30px;">
-                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">more_vert</i></md-button>
-                    <md-menu-content width="4">
-                        <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>account_circle</md-icon><span>{{currentUser.name}}</span></md-button></md-menu-item>
-                        <md-menu-item ng-if="!auth.isAuth()"><md-button ng-click="goto('login')"><md-icon>vpn_key</md-icon><span>Вход</span></md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="logout()"><md-icon>exit_to_app</md-icon>Выход</md-button></md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                <md-button style="width: 30px;min-width: 30px"><md-icon ng-click="openSearch($event)">search</md-icon></md-button>
+                <md-button ng-if="auth.isAuth()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>account_circle</md-icon></md-button>
+                <md-button ng-if="auth.isAuth()" ng-click="logout()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>exit_to_app</md-icon></md-button>
+                <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn light-green lighten-2" style="margin: auto;margin-left: 15px;" >Вход</a>
 
             </div>
-            <div id="menu-tabs" layout="row" class="layout-row">
+
+            <div id="menu-tabs" layout="row" class="layout-row vertical-align-middle">
                 <ul class="tabs" style="width: 100%;background-color: transparent;">
-                    <li class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
+                    <li id="catalog" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>
                     </li>
-                    <li class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
+                    <li id="about" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('about')" style="cursor: pointer">О нас</a>
                     </li>
-                    <li class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('contact')" style="cursor: pointer">Заказ/доставка</a>
+                    <li id="contact" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
+                        <a ng-click="goto('contact')" style="cursor: pointer">Контакты</a>
                     </li>
-                    <li class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
+                    <li id="stock" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('stock')" style="cursor: pointer">Акции</a>
+                    </li>
+                    <li id="order" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a ng-click="goto('order')" style="cursor: pointer">Заказы</a>
+                    </li>
+                    <li id="person" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a ng-click="goto('person')" style="cursor: pointer">Клиенты</a>
+                    </li>
+                    <li id="item" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a ng-click="goto('item')" style="cursor: pointer">Товар</a>
+                    </li>
+                    <li id="company" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a ng-click="goto('company')" style="cursor: pointer">Поставщики</a>
+                    </li>
+                    <li id="category" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a ng-click="goto('category')" style="cursor: pointer">Категории</a>
+                    </li>
+                    <li id="mail" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a style="cursor: pointer">Почта</a>
+                    </li>
+                    <li id="settings" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
+                        <a style="cursor: pointer" >Настройки</a>
                     </li>
                 </ul>
             </div>

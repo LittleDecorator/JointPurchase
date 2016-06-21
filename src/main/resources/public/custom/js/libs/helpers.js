@@ -194,6 +194,33 @@ var helpers = {
             e = document.documentElement || document.body;
         }
         return {width: e[a + 'Width'], height: e[a + 'Height']};
+    },
+
+    centerItFixedWidth: function(target, outer){
+        var out = $(outer);
+        var tar = $(target);
+        var x = out.width();
+        var y = tar.outerWidth(true);
+        var z = tar.index();
+        var val = Math.max(0, (y * z) - (x - y)/2);
+        //out.scrollLeft(val);
+        out.animate({ 'scrollLeft': val},{duration: 200, easing: "linear", queue: false});
+    },
+
+    centerItVariableWidth: function(target, outer){
+        var out = $(outer);
+        var tar = $(target);
+        var x = out.width();
+        var y = tar.outerWidth(true);
+        var z = tar.index();
+        var q = 0;
+        var m = out.find('li');
+        //Just need to add up the width of all the elements before our target.
+        for(var i = 0; i < z; i++){
+            q+= $(m[i]).outerWidth(true);
+        }
+        var val = Math.max(0, q - (x - y)/2);
+        out.scrollLeft(val);
     }
 
 };

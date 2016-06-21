@@ -222,9 +222,13 @@
                 };
                 
                 $scope.goto =function(name){
+                    console.log(name);
+                    helpers.centerItFixedWidth('#'+name,'div#menu-tabs');
                     $state.go(name);
                     if($('ul.tabs a').hasClass('active')){
+
                         $('md-toolbar .indicator').css('background-color','#f6b2b5');
+
                     }
                 };
 
@@ -245,6 +249,7 @@
                         $(".button-collapse").sideNav();
                         $('ul.tabs').tabs();
                         $('md-toolbar .indicator').css('background-color','transparent');
+                        //$('.scrollspy').scrollSpy();
                     },100);
                 };
 
@@ -283,41 +288,6 @@
                             });
                     }, 200);
                 }
-
-                $scope.toggleSearch = function(flag){
-                    if(flag){
-                        $('#search-nav').css('display','block');
-                        $('#menu-tabs').css('display','none');
-                        $('#search').focus();
-                    } else {
-                        console.log("BLUR");
-                        $('#search-nav').css('display','none');
-                        $('#menu-tabs').css('display','block');
-                    }
-
-                };
-
-                $scope.search = function(){
-                    if(!$scope.searchFilter.criteria){
-                        $('#search').focus();
-                    } else {
-                        dataResources.catalog.search.get({criteria:$scope.searchFilter.criteria}).$promise.then(function(data){
-                            $scope.searchResult = data;
-                            $scope.showResults = true;
-                        });
-                    }
-                };
-
-                $scope.keyPress = function(keyCode) {
-                    if (keyCode == 13){
-                        $scope.search();
-                    }
-                };
-
-                $scope.clearSearch = function(){
-                    $scope.searchFilter.criteria = null;
-                    $scope.showResults = false;
-                };
 
                 $scope.openSearch = function(event){
                     console.log(event)

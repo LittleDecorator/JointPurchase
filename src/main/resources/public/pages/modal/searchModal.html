@@ -4,7 +4,7 @@
     </button>
     <input flex type="search" id="searchInput"
            ng-model="searchText"
-           ng-keydown="$mdAutocompleteCtrl.keydown($event)"
+           ng-keydown="keyPress($event.keyCode)"
            class="flex"
            ng-model-options="{debounce:200}"
             ng-change="querySearch()"/>
@@ -15,13 +15,10 @@
 </div>
 
 
-<md-virtual-repeat-container class="md-autocomplete-suggestions-container md-whiteframe-z1 md-virtual-repeat-container md-orient-vertical" ng-if="filtered.length > 0">
-    <div>
-        <ul class="md-autocomplete-suggestions" >
-            <li md-virtual-repeat="item in filtered">
-                <span md-highlight-flags="^i" md-highlight-text="searchText" style="    font-size: 20px;">{{item.value}}</span>
-            </li>
-        </ul>
-    </div>
-
+<md-virtual-repeat-container md-auto-shrink md-auto-shrink-min="1" ng-if="filtered.length > 0" class="md-autocomplete-suggestions-container md-whiteframe-z1">
+    <ul class="md-autocomplete-suggestions">
+        <li md-virtual-repeat="item in filtered">
+            <span md-highlight-flags="^i" md-highlight-text="searchText" style=" font-size: 20px;">{{item.value}}</span>
+        </li>
+    </ul>
 </md-virtual-repeat-container>

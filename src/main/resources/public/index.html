@@ -1,9 +1,10 @@
 <!doctype html>
-<html>
+<html style="background-color: initial;">
 <head>
     <!-- SCROLLS -->
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">-->
+    <link rel="stylesheet" href="official/css/material.css">
     <link rel="stylesheet" href="webjars/angular-material/1.0.8/angular-material.min.css">
 
     <link rel="stylesheet" href="official/css/swipebox.min.css">
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="custom/css/styles.css">
     <link rel="stylesheet" href="custom/css/test.css">
     <link rel="stylesheet" href="custom/css/spinner.css">
+    <link rel="stylesheet" href="custom/css/login.css">
     <!-- endbuild -->
 
     <link rel="stylesheet" href="custom/css/searchInput.css">
@@ -33,26 +35,12 @@
 
 <body ng-app="purchase" ng-controller="mainController" class="home blog">
 
-<!--<ul id="dropdown_adm" class="dropdown-content">-->
-    <!--<li><a ui-sref="order">Заказы</a></li>-->
-    <!--<li><a ui-sref="person">Клиенты</a></li>-->
-    <!--<li><a ui-sref="item">Товар</a></li>-->
-    <!--<li><a ui-sref="company">Поставщики</a></li>-->
-    <!--<li><a ui-sref="category">Категории</a></li>-->
-    <!--<li><a ui-sref="email">Почта</a></li>-->
-<!--</ul>-->
-
-    <!-- HEADER AND NAVBAR -->
     <header>
         <div ng-include="getMenuTemplateUrl()" include-callback="afterInclude()"></div>
-
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
-
     </header>
 
-    <main style="width:100%; background-color: rgb(246, 244, 241); padding-top: 88px;">
-
-        <!-- MAIN CONTENT AND INJECTED VIEWS -->
+    <main class="main-wrapper">
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <div ui-view="main"></div>
         </div>
