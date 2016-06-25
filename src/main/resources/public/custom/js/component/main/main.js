@@ -225,10 +225,8 @@
                     console.log(name);
                     helpers.centerItFixedWidth('#'+name,'div#menu-tabs');
                     $state.go(name);
-                    if($('ul.tabs a').hasClass('active')){
-
-                        $('md-toolbar .indicator').css('background-color','#f6b2b5');
-
+                    if($mdSidenav('menu').isOpen()){
+                        $mdSidenav('menu').close();
                     }
                 };
 
@@ -249,7 +247,6 @@
                         $(".button-collapse").sideNav();
                         $('ul.tabs').tabs();
                         $('md-toolbar .indicator').css('background-color','transparent');
-                        //$('.scrollspy').scrollSpy();
                     },100);
                 };
 
@@ -262,6 +259,7 @@
 /*========================== SIDE NAV ============================*/
                 //TODO: move all this to directive
                 $scope.toggleLeft = buildDelayedToggler('left');
+                $scope.toggleMenu = buildDelayedToggler('menu');
 
                 function debounce(func, wait, context) {
                     var timer;

@@ -1,41 +1,80 @@
 <!--<nav class="white" style="position: fixed; width: 100%; z-index: 56; top: 0;">-->
-<nav class="white">
-    <div class="container">
-        <div class="nav-wrapper">
-            <div id="logo-container" >
-                <a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-            </div>
+<!--<nav class="white">-->
+    <!--<div class="container">-->
+        <!--<div class="nav-wrapper">-->
+            <!--<div id="logo-container" >-->
+                <!--<a class="left brand-logo-lpad" ui-sref="home">GrimmStory</a>-->
+                <!--<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>-->
+            <!--</div>-->
 
-            <!-- width style must be dynamic (check ngStyle) -->
-            <ul class="side-nav" id="mobile-demo" style="width: 165px;">
-                <md-menu-item style="width: 100%;">
-                    <md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="auth.isAuth()">
-                        <md-icon style="margin: 0 16px;">account_circle</md-icon>
-                        <span style="color: #676565;">{{currentUser.name}}</span>
-                    </md-button>
-                    <md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="!auth.isAuth()" ng-click="goto('login')">
-                        <md-icon style="margin: 0 16px;">vpn_key</md-icon>
-                        <span style="color: #676565;">Вход</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Каталог</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Заказы</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span style="color: #676565;">Клиенты</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Товар</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Поставщики</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Категории</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span style="color: #676565;">Почта</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span style="color: #676565;">Настройки</span></md-button></md-menu-item>
-                <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="logout()"><md-icon>exit_to_app</md-icon><span style="color: #676565;">Выход</span></md-button></md-menu-item>
-
-
-                <md-menu-item><md-button style="border-top: 1px solid #ddd;" ng-click="goto('cart')"><md-icon>shopping_basket</md-icon><span style="color: #676565;">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></span></md-button></md-menu-item>
-            </ul>
+            <!--&lt;!&ndash; width style must be dynamic (check ngStyle) &ndash;&gt;-->
+            <!--<ul class="side-nav" id="mobile-demo" style="width: 165px;">-->
+                <!--<md-menu-item style="width: 100%;">-->
+                    <!--<md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="auth.isAuth()">-->
+                        <!--<md-icon style="margin: 0 16px;">account_circle</md-icon>-->
+                        <!--<span style="color: #676565;">{{currentUser.name}}</span>-->
+                    <!--</md-button>-->
+                    <!--<md-button style="padding: 0;border-bottom: 1px solid #ddd;" ng-if="!auth.isAuth()" ng-click="goto('login')">-->
+                        <!--<md-icon style="margin: 0 16px;">vpn_key</md-icon>-->
+                        <!--<span style="color: #676565;">Вход</span>-->
+                    <!--</md-button>-->
+                <!--</md-menu-item>-->
+                <!--<md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Каталог</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Заказы</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span style="color: #676565;">Клиенты</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Товар</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Поставщики</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span style="color: #676565;">Категории</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span style="color: #676565;">Почта</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span style="color: #676565;">Настройки</span></md-button></md-menu-item>-->
+                <!--<md-menu-item ng-if="auth.isAuth()"><md-button ng-click="logout()"><md-icon>exit_to_app</md-icon><span style="color: #676565;">Выход</span></md-button></md-menu-item>-->
 
 
-        </div>
+                <!--<md-menu-item><md-button style="border-top: 1px solid #ddd;" ng-click="goto('cart')"><md-icon>shopping_basket</md-icon><span style="color: #676565;">Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></span></md-button></md-menu-item>-->
+            <!--</ul>-->
+
+
+        <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
+
+
+<md-toolbar style="box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);  top: 0; z-index: 50;position: fixed;">
+    <div class="md-toolbar-tools" style="background-color: #86A8A8!important">
+        <md-button class="md-icon-button" style="height: 50px; width: 50px;" ng-click="toggleMenu()">
+            <md-icon style="font-size: 2.5rem; line-height: 34px; width: 34px; height: 34px;">menu</md-icon>
+        </md-button>
+        <span flex></span>
+        <h2 style="text-transform: capitalize;font-size: 2.1rem"><a ui-sref="home">GrimmStory</a></h2>
     </div>
-</nav>
+</md-toolbar>
 
 
+<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" style="overflow: auto;  width: 175px; min-width: 0;">
+    <md-menu-item style="width: 100%;">
+        <md-button style="padding: 0" ng-if="auth.isAuth()">
+            <md-icon style="margin: 0 16px;">account_circle</md-icon>
+            <span>{{currentUser.name}}</span>
+        </md-button>
+        <md-button style="padding: 0;" ng-if="!auth.isAuth()" ng-click="goto('login')">
+            <md-icon style="margin: 0 16px;">vpn_key</md-icon>
+            <span>Вход</span>
+        </md-button>
+    </md-menu-item>
+    <md-menu-item><md-button ng-click="openSearch($event)"><md-icon>search</md-icon><span>Поиск</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('cart')"><md-icon>shopping_basket</md-icon><span>Корзина<span class="badge contain" ng-show="cart.cou>0">{{cart.cou}}</span></span></md-button></md-menu-item>
+    <md-divider></md-divider>
+
+    <md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
+
+    <md-divider ></md-divider>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="logout()"><md-icon>exit_to_app</md-icon><span>Выход</span></md-button></md-menu-item>
+
+</md-sidenav>

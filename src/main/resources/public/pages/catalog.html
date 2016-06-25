@@ -23,11 +23,20 @@
 
     <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='1' infinite-scroll-disabled="stopLoad">
         <div class="col s12 m6 l4" ng-repeat="item in items">
-            <div class="card">
+            <!--<div class="card">
                 <div class="card-image waves-effect waves-block waves-light">
                     <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
                 </div>
-
+                <ul class="card-action-buttons" style="  margin: -26px 10px 0 0;  text-align: right;">
+                    <li style="display: inline-block; padding-left: 5px;">
+                        <a class="btn-floating waves-effect waves-light green accent-4">
+                            <i class="mdi-content-add" style=""></i>
+                        </a>
+                    </li>
+                    <li style="display: inline-block; padding-left: 5px;">
+                        <a class="btn-floating waves-effect waves-light red accent-2"><i class="mdi-action-favorite"></i></a>
+                    </li>
+                </ul>
                 <div class="card-content" style="padding: 15px!important;" >
                         <span class="card-title grey-text text-darken-4" style="font-size: 15px!important; color: #846C63!important; line-height: 25px;">{{::item.name}}</span>
                         <a class="btn btn-primary btn-small right" ng-click="addToCart(item)" title="Добавить в корзину">
@@ -35,7 +44,24 @@
                         </a>
                         <br><b>Цена: </b>{{::item.price}} руб
                 </div>
-            </div>
+            </div>-->
+
+            <md-card>
+                <div class="card-image waves-effect waves-block waves-light md-card-image">
+                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
+                    <a href="#" class="btn-floating btn-large btn-price waves-effect waves-light  pink accent-2" style="top: 10px;  position: fixed;  left: 10px;text-transform: capitalize;">{{::item.price}}р</a>
+                    <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">В наличие</div>
+                </div>
+
+                    <md-card-actions layout="row" layout-align="end center" style="margin: 5px 10px;">
+                        <span class="md-headline" style="font-size: 1.2rem">{{::item.name}}</span>
+                        <span flex></span>
+                        <md-button class="md-icon-button" style="width: 25px;padding: 0;margin-left: 0"><md-icon>favorite</md-icon></md-button>
+                        <md-button class="md-icon-button" style="width: 25px;padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
+                        <!--<md-button class="md-icon-button" style="width: 25px;padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>add_box</md-icon></md-button>-->
+                    </md-card-actions>
+
+            </md-card>
         </div>
     </div>
 </div>

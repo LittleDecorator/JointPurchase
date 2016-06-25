@@ -1,0 +1,9 @@
+md-sidenav#menu > md-menu-item {
+    min-height: 40px;
+    height: 40px;
+}
+
+md-sidenav#menu .md-button span {
+    font-size: 1.1rem;
+    color: #676565!important;
+}
