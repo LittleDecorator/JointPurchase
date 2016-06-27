@@ -49,8 +49,8 @@ public class CompanyRepository {
         namedParameters.put("inn", company.getInn());
         namedParameters.put("ks", company.getKs());
         namedParameters.put("rs", company.getRs());
-        namedParameters.put("dateAd", company.getDateAdd());
-        int result = parameterJdbcTemplate.update(Queue.SUBJECT_INSERT,namedParameters);
+        namedParameters.put("dateAdd", company.getDateAdd());
+        int result = parameterJdbcTemplate.update(Queue.COMPANY_INSERT,namedParameters);
         return result == 1 ? Boolean.TRUE : Boolean.FALSE;
     }
 

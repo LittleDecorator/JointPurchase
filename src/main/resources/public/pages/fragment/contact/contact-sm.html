@@ -1,0 +1,46 @@
+<div class="container about">
+
+    <div id="callback">
+        <h5>Как связаться</h5>
+        <h6>заполните форму обратной связи</h6>
+        <hr>
+        <div class="card">
+            <div class="card-content">
+                <div ng-form="_callback" class="row" style="margin-bottom: 0">
+                    <div class="input-field col s12">
+                        <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
+                               ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
+                        <label for="phone" data-error='Not valid phone'>Телефон</label>
+                    </div>
+
+                    <div class="input-field col s12">
+                        <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
+                        <label for="message">Сообщение</label>
+                    </div>
+
+                    <div class="login-control-wrapper" style="float: right">
+                        <a class="waves-effect waves-green btn" ng-click="send()">Отправить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="address" style="margin-top: 5rem">
+        <h5>Где забрать</h5>
+        <h6>просто посмотрите на карту</h6>
+        <hr>
+        <div class="row">
+            <div class="col s12">
+                <!--<a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="load()">Загрузить</a>-->
+                <div class="center" style="margin: 0 auto;">
+                    <div class="table-container">
+                        <!--<div id="map" style="height: 800px"></div>-->
+                        <div id="map" style="height: 250px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

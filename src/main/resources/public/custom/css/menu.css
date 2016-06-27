@@ -1,4 +1,4 @@
-md-sidenav#menu > md-menu-item {
+md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
     min-height: 40px;
     height: 40px;
 }

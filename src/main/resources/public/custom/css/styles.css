@@ -72,7 +72,7 @@ hr {
     background-color:#86A8A8!important;
     color:white !important;
 }
-.btn:hover, .btn-large:hover {
+.btn:not(.btn-price):hover, .btn-large:not(.btn-price):hover {
     background-color: #E0BB8E!important;
 }
 .brown-text.text-darken-4 {

@@ -211,7 +211,7 @@
                         deferred.resolve(data);
                     });
                 } else {
-                    deferred.resolve(null);
+                    deferred.resolve({});
                 }
                 return deferred.promise;
             };

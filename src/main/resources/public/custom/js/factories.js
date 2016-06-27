@@ -55,10 +55,18 @@
                     }),
                     itemDetail: $resource("/catalog/:id/detail",{},{
                         get:{method:'GET',isArray:false}
-                    }),
+                    })
                 },
 
-                company: $resource("/company/:id"),
+                company: $resource("/company/:id",{},{
+                    all: {method:'GET',isArray:true},
+                    get: {method:'GET',isArray:false},
+                    delete: {method:'DELETE',isArray:false},
+                    put: {method:'PUT',isArray:false},
+                    post:{method:'POST',isArray:false,transformResponse:function(data, headers){
+                        return {result:data}
+                    }}
+                }),
                 itemImage: $resource('/content/items/:id',{},{
                     query :{method:'GET',isArray:true},
                     get:{method:'GET',isArray:true}

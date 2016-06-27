@@ -13,16 +13,18 @@
     }
 }
 
-@media only screen and (max-width : 1024px){
-    .login-card {
-        margin-top: 30%;
-    }
-}
-
 @media only screen and (max-width : 720px){
     .login-card {
         width: 80%;
         margin-top: 40%;
+    }
+}
+
+@media only screen and (max-width : 600px){
+    .login-card {
+        width: 90%;
+        margin: 10% auto auto;
+        background: white;
     }
 }
 
@@ -33,14 +35,6 @@
 @media only screen and (max-width : 360px){
     .login-card div.input-field {
         margin: 0 10px;
-    }
-}
-
-@media only screen and (max-width : 600px){
-    .login-card {
-        width: 90%;
-        margin: 10% auto auto;
-        background: white;
     }
 }
 
@@ -67,6 +61,5 @@
 
 .login-control-wrapper > a {
     cursor: pointer;
-    /*padding: 0 10px;*/
 }
 

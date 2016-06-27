@@ -110,8 +110,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/contact.html',
-                        //controller: 'contactController'
-                        controller: 'wrapperController'
+                        controller: 'contactController'
+                        //controller: 'wrapperController'
                     }
                 },
                 data: {

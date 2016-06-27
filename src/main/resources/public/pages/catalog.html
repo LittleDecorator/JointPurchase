@@ -49,16 +49,16 @@
             <md-card>
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
                     <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
-                    <a href="#" class="btn-floating btn-large btn-price waves-effect waves-light  pink accent-2" style="top: 10px;  position: fixed;  left: 10px;text-transform: capitalize;">{{::item.price}}р</a>
+                    <a class="btn-price btn-floating btn-large pink accent-2">{{::item.price}}р</a>
                     <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">В наличие</div>
                 </div>
 
                     <md-card-actions layout="row" layout-align="end center" style="margin: 5px 10px;">
                         <span class="md-headline" style="font-size: 1.2rem">{{::item.name}}</span>
                         <span flex></span>
-                        <md-button class="md-icon-button" style="width: 25px;padding: 0;margin-left: 0"><md-icon>favorite</md-icon></md-button>
-                        <md-button class="md-icon-button" style="width: 25px;padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
-                        <!--<md-button class="md-icon-button" style="width: 25px;padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>add_box</md-icon></md-button>-->
+                        <md-button class="md-icon-button" style="padding: 0;margin-left: 0"><md-icon>favorite_outline</md-icon></md-button>
+                        <!--<md-button class="md-icon-button" style="width: 25px;padding: 0;margin-left: 0"><md-icon>favorite</md-icon></md-button>-->
+                        <md-button class="md-icon-button" style="padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
                     </md-card-actions>
 
             </md-card>

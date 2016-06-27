@@ -5,7 +5,7 @@
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">-->
     <link rel="stylesheet" href="official/css/material.css">
-    <link rel="stylesheet" href="webjars/angular-material/1.0.8/angular-material.min.css">
+    <link rel="stylesheet" href="webjars/angular-material/1.0.9/angular-material.min.css">
 
     <link rel="stylesheet" href="official/css/swipebox.min.css">
     <link rel="stylesheet" href="official/css/ngDialog.css">
@@ -14,14 +14,18 @@
     <link rel="stylesheet" href="official/css/ngDialog-theme-wide.css">
 
     <!-- build:css custom/css/all.css -->
+    <link rel="stylesheet" href="custom/css/app.css">
     <link rel="stylesheet" href="custom/css/main.css">
     <link rel="stylesheet" href="custom/css/side.css">
     <link rel="stylesheet" href="custom/css/styles.css">
     <link rel="stylesheet" href="custom/css/test.css">
-    <link rel="stylesheet" href="custom/css/app.css">
     <link rel="stylesheet" href="custom/css/spinner.css">
     <link rel="stylesheet" href="custom/css/login.css">
     <link rel="stylesheet" href="custom/css/menu.css">
+    <link rel="stylesheet" href="custom/css/breadcrumbs.css">
+    <link rel="stylesheet" href="custom/css/sidebar.css">
+    <link rel="stylesheet" href="custom/css/scrollbar.css">
+    <link rel="stylesheet" href="custom/css/contact.css">
     <!-- endbuild -->
 
     <link rel="stylesheet" href="custom/css/searchInput.css">
@@ -44,6 +48,7 @@
 
     <main class="main-wrapper">
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
+            <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main"></div>
         </div>
     </main>
@@ -53,26 +58,25 @@
     </div>
 
     <!--  Scripts-->
-    <script src="/webjars/jquery/2.2.3/jquery.min.js"></script>
-    <script src="/webjars/angular/1.5.5/angular.min.js"></script>
+    <script src="/webjars/jquery/2.2.4/jquery.min.js"></script>
+    <script src="/webjars/angular/1.5.7/angular.min.js"></script>
     <script src="/webjars/ngDialog/0.5.8/js/ngDialog.min.js"></script>
-    <script src="/webjars/angular-ui-router/0.3.0/release/angular-ui-router.min.js"></script>
-    <script src="/webjars/angular-resource/1.5.5/angular-resource.min.js" ></script>
+    <script src="/webjars/angular-ui-router/0.3.1/release/angular-ui-router.min.js"></script>
+    <script src="/webjars/angular-resource/1.5.7/angular-resource.min.js"></script>
+    <script src="/webjars/angular-animate/1.5.7/angular-animate.min.js"></script>
+    <script src="/webjars/angular-aria/1.5.7/angular-aria.js"></script>
+    <script src="/webjars/angular-touch/1.5.7/angular-touch.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
     <script src="official/ng-infinite-scroll.min.js"></script>
     <script src="official/nav-tree/abn-tree.js"></script>
 
     <!-- 2gis maps -->
-    <!--<script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=basic"></script>-->
+    <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=basic"></script>
 
     <!--materialize-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
-    <script src="/webjars/angular-material/1.0.8/angular-material.min.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-touch.min.js"></script>
+    <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
 
     <script src="official/jquery.swipebox.min.js"></script>
     <script src="official/auth0/angular-jwt.min.js"></script>

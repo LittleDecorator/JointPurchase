@@ -23,10 +23,15 @@
             };
 
             $scope.delete = function (id) {
-                dataResources.company.delete({id: id});
                 var company = helpers.findInArrayById($scope.companies, id);
-                var idx = $scope.companies.indexOf(company);
-                $scope.companies.splice(idx, 1);
+                dataResources.company.delete({id: id}).$promise.then(function(data){
+                    var idx = $scope.companies.indexOf(company);
+                    $scope.companies.splice(idx, 1);
+                    Materialize.toast('Поставщик '+ company.name +' успешно удален',3000,'fine');
+                }, function(error){
+                    console.log(error);
+                    Materialize.toast('Не удалось удалить  поставщика '+ company.name ,3000,'error');
+                });
             };
 
             $scope.getTemplateUrl = function(){
@@ -42,14 +47,33 @@
             };
 
         }])
-        .controller('companyDetailController',['$scope','$state','company','dataResources', function ($scope, $state, company, dataResources) {
+        .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources', function ($rootScope,$scope, $state, company, dataResources) {
 
             var templatePath = "pages/fragment/company/card/";
             
             $scope.company = company;
 
             $scope.save = function () {
-                dataResources.company.save($scope.company);
+                console.log($scope);
+                console.log($scope.company);
+                if($scope.company && $scope.company.id){
+                    dataResources.company.put($scope.company).$promise.then(function(data){
+                        Materialize.toast('Поставщик '+ $scope.company.name +' успешно изменён',3000,'fine');
+                    },function(error){
+                        Materialize.toast('Не удалось изменить поставщика '+ $scope.company.name ,3000,'error');
+                    });
+                } else {
+                    dataResources.company.post($scope.company).$promise.then(function(data){
+                        Materialize.toast('Поставщик '+ $scope.company.name +' успешно создан',3000,'fine');
+                        $scope.companyCard.$setPristine();
+                        $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                            $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                        });
+                    },function(error){
+                        console.log(error);
+                        Materialize.toast('Не удалось создать поставщика '+ $scope.company.name ,3000,'error');
+                    });
+                }
             };
 
             $scope.getTemplateUrl = function(){

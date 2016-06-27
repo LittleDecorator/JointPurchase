@@ -1,7 +1,7 @@
-<ol class="breadcrumb" ng-if="breadcrumbs.length>1">
-
-    <li ng-repeat="crumb in breadcrumbs" ng-class="{ active: $last }">
+<ol class="breadcrumb" ng-if="breadcrumbs.length>1" layout-fill="row">
+    <li ng-repeat-start="crumb in breadcrumbs" ng-class="{ active: $last }">
         <a ui-sref="{{ crumb.route }}" ui-sref-opts="{{ crumb.options }}" ng-if="!$last">{{ crumb.displayName }}&nbsp;</a>
         <span ng-show="$last">{{crumb.displayName }}</span>
     </li>
+    <md-icon ng-repeat-end ng-if="!$last" class="delimiter">navigate_next</md-icon>
 </ol>

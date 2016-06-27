@@ -1,0 +1,19 @@
+.about h5
+{
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.about h6
+{
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 35px;
+}
+
+.about hr
+{
+    width: 40px;
+    margin-bottom: 35px;
+}

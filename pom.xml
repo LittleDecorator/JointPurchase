@@ -67,8 +67,13 @@
         <!-- MAIL -->
         <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.5.5</version>
         </dependency>
 
         <!-- JWT-->
@@ -142,26 +147,49 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-material</artifactId>
-            <!--<version>1.1.0-rc4</version>-->
-            <version>1.0.8</version>
+            <version>1.0.9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>angularjs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>font-awesome</artifactId>
-            <version>4.6.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.webjars</groupId>-->
+            <!--<artifactId>font-awesome</artifactId>-->
+            <!--<version>4.6.2</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>2.2.3</version>
+            <version>2.2.4</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-aria</artifactId>
+            <version>1.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-animate</artifactId>
+            <version>1.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-touch</artifactId>
+            <version>1.5.7</version>
         </dependency>
 
         <!--<dependency>-->
@@ -173,13 +201,13 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-router</artifactId>
-            <version>0.3.0</version>
+            <version>0.3.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-resource</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.7</version>
         </dependency>
 
         <!--<dependency>-->

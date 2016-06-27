@@ -375,10 +375,10 @@ td > a > .material-icons:hover{
 
     .chip-sm {
         height: 25px;
-        font-size: 10px;
+        font-size: 12px;
         line-height: 25px;
         padding: 0 7px;
-        border-radius: 9px;
+        border-radius: 10px;
     }
 
     .chip-sm > i.material-icons {
