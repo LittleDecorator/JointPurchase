@@ -406,9 +406,9 @@ td > a > .material-icons:hover{
     background-color: darksalmon!important;
 }
 
-md-toolbar a {
-    color: #ffffff!important;
-}
+/*md-toolbar a {*/
+    /*color: #ffffff!important;*/
+/*}*/
 
 ul.dropdown-content > li > a {
     color: #88AAA9!important;

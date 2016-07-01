@@ -21,7 +21,10 @@ body {
     background-color: #F6F4F1!important;
 }
 /* COLORS */
-a,i.menu {
+/*a,i.menu {*/
+    /*color:#88AAA9!important;*/
+/*}*/
+i.menu {
     color:#88AAA9!important;
 }
 /*a:hover {
@@ -239,13 +242,13 @@ p {
 }
 
 /* SEARCH */
-input.search {
-    display: none;
-    width: 400px;
-    background: #846C63!important;
-    color: white;
-    padding: 0px 10px;
-}
+/*input.search {*/
+    /*display: none;*/
+    /*width: 400px;*/
+    /*background: #846C63!important;*/
+    /*color: white;*/
+    /*padding: 0px 10px;*/
+/*}*/
 
 @media only screen and (max-width : 992px) {
 

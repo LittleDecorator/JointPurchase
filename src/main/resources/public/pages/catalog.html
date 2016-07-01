@@ -1,54 +1,12 @@
-<!-- SEARCH INPUT -->
-<!--<nav style="margin-top: 20px;">-->
-    <!--<div class="nav-wrapper" style="background-color: #86A8A8!important;">-->
-            <!--<div class="input-field row" style="height: 100%;">-->
-                <!--<input id="search" type="search" class="col s12" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria">-->
-                <!--<label for="search"><i class="material-icons" ng-click="search()">search</i></label>-->
-                <!--<i class="material-icons" ng-click="clear()">close</i>-->
-            <!--</div>-->
-    <!--</div>-->
-<!--</nav>-->
-
-<!-- SEARCH RESULT -->
 <div ng-include="'pages/template/searchResult.html'" ng-if="showResults"></div>
 
-<!-- SIMPLE FILTER. DEPEND ON SIDE NAV SELECTION -->
-<!--<div class="row" ng-if="showSideFilter">-->
-    <!--<h5>Фильтр:</h5>-->
-    <!--<div class="chip" ng-repeat="filter in sideFilters" style="margin: 3px;">{{::filter.name}}<i class="material-icons" ng-click="removeFilterElem($index)">close</i></div>-->
-<!--</div>-->
-
-<!-- CONTENT WITH ITEMS -->
 <div class="section" style="margin-top: 20px;" ng-if="!showResults">
 
     <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='1' infinite-scroll-disabled="stopLoad">
         <div class="col s12 m6 l4" ng-repeat="item in items">
-            <!--<div class="card">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
-                </div>
-                <ul class="card-action-buttons" style="  margin: -26px 10px 0 0;  text-align: right;">
-                    <li style="display: inline-block; padding-left: 5px;">
-                        <a class="btn-floating waves-effect waves-light green accent-4">
-                            <i class="mdi-content-add" style=""></i>
-                        </a>
-                    </li>
-                    <li style="display: inline-block; padding-left: 5px;">
-                        <a class="btn-floating waves-effect waves-light red accent-2"><i class="mdi-action-favorite"></i></a>
-                    </li>
-                </ul>
-                <div class="card-content" style="padding: 15px!important;" >
-                        <span class="card-title grey-text text-darken-4" style="font-size: 15px!important; color: #846C63!important; line-height: 25px;">{{::item.name}}</span>
-                        <a class="btn btn-primary btn-small right" ng-click="addToCart(item)" title="Добавить в корзину">
-                            <i class="mdi-content-add" style="font-size: 2rem;"></i>
-                        </a>
-                        <br><b>Цена: </b>{{::item.price}} руб
-                </div>
-            </div>-->
-
             <md-card>
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
-                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img wp-post-image"/>
+                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img"/>
                     <a class="btn-price btn-floating btn-large pink accent-2">{{::item.price}}р</a>
                     <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">В наличие</div>
                 </div>
@@ -57,7 +15,6 @@
                         <span class="md-headline" style="font-size: 1.2rem">{{::item.name}}</span>
                         <span flex></span>
                         <md-button class="md-icon-button" style="padding: 0;margin-left: 0"><md-icon>favorite_outline</md-icon></md-button>
-                        <!--<md-button class="md-icon-button" style="width: 25px;padding: 0;margin-left: 0"><md-icon>favorite</md-icon></md-button>-->
                         <md-button class="md-icon-button" style="padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
                     </md-card-actions>
 

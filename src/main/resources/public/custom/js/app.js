@@ -51,6 +51,8 @@
             /* if token expired or not login then move to mane page and clear all data */
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams, options) {
 
+                console.log(event);
+
                 $timeout(function(){
                     $("#spinner").fadeTo(800, 1, function(){ $(this).show()});
                 },10);

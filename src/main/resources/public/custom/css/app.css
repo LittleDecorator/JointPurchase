@@ -73,6 +73,9 @@ md-card .btn-price {
 
 md-card .btn-price:hover {
     cursor: default;
-    /*background-color: transparent;*/
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)!important;
+}
+
+img:focus, img:active{
+    outline: none;
 }
