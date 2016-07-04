@@ -258,8 +258,8 @@
 
 /*========================== SIDE NAV ============================*/
                 //TODO: move all this to directive
-                $scope.toggleLeft = buildDelayedToggler('left');
-                $scope.toggleMenu = buildDelayedToggler('menu');
+                $scope.toggleLeft = buildToggler('left');
+                $scope.toggleMenu = buildToggler('menu');
 
                 function debounce(func, wait, context) {
                     var timer;
@@ -277,14 +277,24 @@
                 // * Build handler to open/close a SideNav; when animation finishes
                 // * report completion in console
                 // */
-                function buildDelayedToggler(navID) {
-                    return debounce(function() {
+                //function buildDelayedToggler(navID) {
+                //    return debounce(function() {
+                //        $mdSidenav(navID)
+                //            .toggle()
+                //            .then(function () {
+                //                $log.debug("toggle " + navID + " is done");
+                //            });
+                //    }, 200);
+                //}
+
+                function buildToggler(navID) {
+                    return function() {
                         $mdSidenav(navID)
                             .toggle()
                             .then(function () {
                                 $log.debug("toggle " + navID + " is done");
                             });
-                    }, 200);
+                    }
                 }
 
                 $scope.openSearch = function(event){

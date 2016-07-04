@@ -1,0 +1,38 @@
+.card .card-title {
+    font-size: 20px;
+}
+
+.card-image {
+    max-height: 223px;
+}
+
+/* BLOG */
+.blog-date {
+    display: block;
+}
+.card-title {
+    text-transform: uppercase;
+}
+.card .card-action a {
+    color: white!important;
+
+}
+
+.waves-effect {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    vertical-align: middle;
+    z-index: 1;
+    will-change: opacity, transform;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    transition: all .3s ease-out; }

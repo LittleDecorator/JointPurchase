@@ -5,10 +5,9 @@
 
                 <a class="left brand-logo-lpad" ui-sref="home" style="font-size: 2rem;">GrimmStory</a>
 
-                <a ui-sref="cart" style="padding: 0 15px;font-size: 2rem;">
-                    <i class="mdi-action-shopping-basket" style="color: #846C63!important;position: relative;">
-                        <span class="badge contain ng-binding ng-hide" ng-show="cart.cou>0" aria-hidden="true" style="position: absolute;height: 1.2rem;top: 2.2rem;right: -10px;min-width: 1.2rem;line-height: 0.4rem;font-size: 1rem;border-radius: 50%;padding: 5px;">{{cart.cou}}</span>
-                    </i>
+                <a ui-sref="cart" class="cart">
+                    <md-icon>shopping_basket</md-icon>
+                    <span class="badge ng-binding ng-hide" ng-show="cart.cou>0">{{cart.cou}}</span>
                 </a>
 
                 <span flex="" class="flex"></span>
