@@ -1,59 +1,12 @@
-<!--
-    <div style="position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 700;
-    border-radius: 0 0 2px 2px;
-    background-color: #fafafa;
-    padding: 4px 6px;
-    height: 56px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
-        <h5 style="margin-left: 2%;">Категории</h5>
-    </div>
-
-    <div class="modal-content" style="height: calc(100% - 112px)!important; top: 56px!important;">
-
-        <ul class="collection">
-            <li class="collection-item dismissable" ng-repeat="category in categories">
-                <div>
-                    <input type="checkbox" id="{{category.id}}" ng-model="category.selected"/>
-                    <label for="{{category.id}}">{{category.name}}</label>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div class="modal-footer">
-
-        <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="select()">Выбрать</a>
-        <a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" >Отмена</a>
-    </div>-->
-
-
 <div style="height: 90%;">
     <div class="card-content" style="height: 95%;">
         <div class="card-title">
             <div class="row valign-wrapper" style="margin-bottom: 0">
                 <div class="col s12">
                     <span style="font-size: 1.8rem; line-height: 55.5px;">Категории:</span>
-                    <a class="waves-effect waves-teal"  ng-click="closeThisDialog()" style="border-radius: 50%;width: 50px;height: 50px;line-height: 51px;padding: 0;float: right;">
-                        <i class="material-icons right" style="text-align: center;line-height: 55.5px;width: inherit;font-size: 30px;color: #846C63;">clear</i>
-                    </a>
                 </div>
             </div>
         </div>
-        <!--<div class="card-panel" style="padding: 0 15px;" >
-            <table class="table table-bordered collection" style="border: medium none;">
-                <tbody>
-                <tr ng-repeat="category in categories" class="collection-item">
-                    <td style="padding: 7px 0;">
-                        <input type="checkbox" id="{{::category.id}}" ng-model="category.selected"/>
-                        <label for="{{::category.id}}">{{category.name}}</label>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>-->
         <div style="background:#FFFFFF;border:1px solid lightgray;border-radius:5px;height: 90%; margin-bottom: 10px;">
             <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="1" template-url="official/nav-tree/abn-tree-modal-chk.tpl.html"></abn-tree>
         </div>

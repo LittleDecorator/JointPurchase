@@ -39,10 +39,8 @@
 
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;opacity: .6;">
-        <a class="btn-floating btn-large blue lighten-3" ng-click="addItem()">
-            <i class="large mdi-content-add"></i>
-        </a>
-    </div>
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+        <md-icon>add</md-icon>
+    </md-button>
 
 </div>

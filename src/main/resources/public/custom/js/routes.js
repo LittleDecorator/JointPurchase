@@ -279,7 +279,7 @@ var route = {
                     }
                 },
                 data: {
-                    displayName:'{{ person.firstName}} {{person.lastName}} {{person.middleName}}',
+                    displayName:'{{(person.firstName + person.lastName + person.middleName)|nvl:"Создание"}}',
                     requireLogin: true
                 },
                 resolve: {

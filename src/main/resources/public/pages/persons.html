@@ -1,6 +1,6 @@
 <div ng-cloak class="ng-cloak">
 
-    <h3 style="margin-top: 0">Покупатели:</h3>
+    <h4 style="margin-top: 0">Покупатели:</h4>
 
     <div ng-if="customers.length>0">
         <div ng-include="getTemplateUrl()"></div>
@@ -10,9 +10,7 @@
         <span style="margin-right: 2%">Не создано ни одного покупателя</span>
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating blue lighten-3" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" ng-click="addPerson()">
-            <i class="large mdi-content-add"></i>
-        </a>
-    </div>
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addPerson()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 45px; right: 24px;">
+        <md-icon>add</md-icon>
+    </md-button>
 </div>
