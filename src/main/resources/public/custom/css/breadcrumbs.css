@@ -43,3 +43,7 @@
     line-height: 45px!important;
     height: 45px;
 }
+
+.breadcrumb a {
+    color:#86A8A8!important;
+}

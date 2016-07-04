@@ -29,18 +29,13 @@
                 $scope.isCollapsed = false;
                 $scope.showContent = false;
 
-                if(helpers.viewport().width < 1350){
-                    $scope.mobile = true;
-                } else {
-                    $scope.mobile = false;
-                }
-
                 $scope.initCart = function(){
                     $scope.cart = {cou:0,content:[]};
                     var c = store.get("cart");
                     if(!helpers.isArray(c)) {
                         $scope.cart = store.get("cart");
                     }
+                    console.log($scope.cart)
                 };
 
                 //restore token
@@ -246,7 +241,7 @@
                         $('.dropdown-button').dropdown();
                         $(".button-collapse").sideNav();
                         $('ul.tabs').tabs();
-                        $('md-toolbar .indicator').css('background-color','transparent');
+                        //$('md-toolbar .indicator').css('background-color','transparent');
                     },100);
                 };
 
@@ -273,19 +268,6 @@
                         }, wait || 10);
                     };
                 }
-                ///**
-                // * Build handler to open/close a SideNav; when animation finishes
-                // * report completion in console
-                // */
-                //function buildDelayedToggler(navID) {
-                //    return debounce(function() {
-                //        $mdSidenav(navID)
-                //            .toggle()
-                //            .then(function () {
-                //                $log.debug("toggle " + navID + " is done");
-                //            });
-                //    }, 200);
-                //}
 
                 function buildToggler(navID) {
                     return function() {
@@ -298,7 +280,6 @@
                 }
 
                 $scope.openSearch = function(event){
-                    console.log(event)
                     var dialog = modal({templateUrl:"pages/modal/searchModal.html",className:'ngdialog-theme-default fixed-full-width',closeByEscape:true,closeByDocument:true,controller:"searchController"});
                     dialog.closePromise.then(function(output) {
                         if(output.value && output.value != '$escape'){

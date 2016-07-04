@@ -24,12 +24,25 @@ body {
 /*a,i.menu {*/
 /*color:#88AAA9!important;*/
 /*}*/
-i.menu {
+i.menu, a.btn-flat {
     color:#88AAA9!important;
+}
+
+.tabs .tab a{
+    color:white!important;
+}
+
+.tabs .indicator {
+    background-color:  burlywood;
+    height: 3px;
 }
 
 .fixed-action-btn {
     z-index: 50;
+}
+
+.tabs {
+    height: 50px;
 }
 
 .card-action-buttons .btn-floating i {
@@ -109,10 +122,6 @@ md-card .btn-price:hover {
 img:focus, img:active{
     outline: none;
 }
-
-
-
-
 
 .container {
     margin: 0 auto;

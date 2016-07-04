@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th style="text-align: center">Наименование</th>
+                <th>Наименование</th>
                 <th style="text-align: center">Цена</th>
                 <th style="text-align: center">Кол-во</th>
                 <th style="text-align: center">Сумма</th>
@@ -11,24 +11,25 @@
             </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="item in cart.content" class="row" ng-style="$last && {'border':'none'}">
+        <tr ng-repeat="item in cart.content" class="row cart-item" ng-style="$last && {'border':'none'}">
 
             <td class="col s2 non-float" style="text-align: center;padding: 5px 0;">
-                <img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" />
+                <!--<img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" />-->
+                <img height="110" ng-src="{{item.imageUrl}}" />
             </td>
             <td class="col s5 non-float">
                 <a ng-click="itemView(item.id)" style="cursor: pointer">
-                    <span style="font-size: 20px;">{{item.name}}</span>
+                    <span style="font-size: 20px;">{{::item.name}}</span>
                 </a>
             </td>
             <td class="col s1 non-float" style="text-align: center; width: 12%;">
-                <span class="price">{{item.price}} руб</span>
+                <span class="price">{{::item.price}} руб</span>
             </td>
             <td class="col s2 non-float" style="text-align: center;">
                 <div>
-                    <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)"></i>
+                    <md-icon ng-click="decrementCou($index)" style="cursor: pointer">chevron_left</md-icon>
                     <span>{{item.cou}}</span>
-                    <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
+                    <md-icon ng-click="incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
                 </div>
             </td>
             <td class="col s1 non-float" style="text-align: center; center; width: 12%;">
@@ -36,7 +37,7 @@
             </td>
             <td class="col s1 non-float" style="text-align: center">
                 <div style="cursor: pointer" ng-click="removeFromCart($index)">
-                    <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                    <md-icon style="color: #ee6e73">clear</md-icon>
                 </div>
             </td>
         </tr>

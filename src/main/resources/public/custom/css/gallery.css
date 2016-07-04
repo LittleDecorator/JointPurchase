@@ -1,0 +1,218 @@
+/* GALLERY */
+
+.title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 5px 0;
+}
+
+.title > div {
+    flex-grow: 1;
+    margin-left: 16px;
+    margin-right: 0;
+    color: rgb(255, 255, 255);
+    overflow: hidden;
+}
+
+.titleHead {
+    font-size: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.titleSubHead{
+    font-size: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.titleIconPanel{
+    display: inline-block;
+    padding: 5px;
+}
+
+.titleIconPanel > i {
+    cursor: pointer;
+    color: white;
+    padding-top: 5px;
+}
+
+/* OFFICIAL */
+.wrap {
+    overflow: hidden;
+    margin: 15px auto;
+}
+.box {
+    float: left;
+    position: relative;
+    width: 20%;
+    padding-bottom: 20%;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+    margin: 3px;
+    background-color: white;
+}
+.boxInner {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    overflow: hidden;
+}
+
+.boxInner.md-avatar {
+    position: inherit;
+    /*width: 60px!important;*/
+    width: 90px!important;
+    /*height: 60px!important;*/
+    height: 90px!important;
+}
+
+.boxInner img {
+    /*width: 100%;*/
+}
+.boxInner .titleBox {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 0;
+    background: #000;
+    background: rgba(0, 0, 0, 0.5);
+    color: #FFF;
+    padding: 10px;
+    text-align: center;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {
+    margin-bottom: 0;
+}
+
+@media only screen and (max-width : 480px) {
+    /* Tablet view: 1 tiles */
+    .box {
+        width: 100%;
+        padding-bottom: 100%;
+    }
+}
+@media only screen and (max-width : 650px) and (min-width : 481px) {
+    /* Tablet view: 2 tiles */
+    .box {
+        width: calc(50% - 10px);
+        padding-bottom: 50%;
+    }
+}
+@media only screen and (max-width : 1050px) and (min-width : 651px) {
+    /* Small desktop / ipad view: 3 tiles */
+    .box {
+        width: 33.3%;
+        padding-bottom: 33.3%;
+    }
+}
+@media only screen and (max-width : 1290px) and (min-width : 1051px) {
+    /* Medium desktop: 4 tiles */
+    .box {
+        width: calc(25% - 10px);
+        padding-bottom: 25%;
+    }
+}
+
+@media only screen and (min-width : 1291px) {
+    /* Medium desktop: 5 tiles */
+    .box {
+        width: 20%;
+        padding-bottom: 20%;
+    }
+}
+
+
+@media only screen and (max-width : 360px) {
+    /* Smartphone view: 1 tile */
+    .box {
+        width: 100%;
+        padding-bottom: 100%;
+    }
+}
+@media only screen and (max-width : 600px) and (min-width : 361px) {
+    /* Tablet view: 2 tiles */
+    .box {
+        width: calc(50% - 6px);
+        padding-bottom: 50%;
+    }
+}
+@media only screen and (max-width : 720px) and (min-width : 601px) {
+    /* Small desktop / ipad view: 3 tiles */
+    .box {
+        width: calc(33.3% - 6px);
+        padding-bottom: 33.3%;
+    }
+    .titleHead{
+        font-size: 14px;
+    }
+    .titleSubHead{
+        font-size: 8px;
+    }
+    .title > div {
+        margin-left: 7px;
+    }
+    .titleIconPanel > i {
+        font-size: 20px;
+    }
+}
+@media only screen and (max-width : 1024px) and (min-width : 721px) {
+    /* Medium desktop: 4 tiles */
+    .box {
+        /*width: 25%;*/
+        width: calc(25% - 6px);
+        padding-bottom: 25%;
+    }
+    .titleHead{
+        font-size: 14px;
+    }
+    .titleSubHead{
+        font-size: 8px;
+    }
+    .title > div {
+        margin-left: 7px;
+    }
+    .titleIconPanel > i {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (min-width : 1291px) {
+    /* Medium desktop: 5 tiles */
+    .box {
+        /*width: 25%;*/
+        width: calc(20% - 6px);
+        padding-bottom: 20%;
+    }
+    .titleHead{
+        font-size: 14px;
+    }
+    .titleSubHead{
+        font-size: 8px;
+    }
+    .title > div {
+        margin-left: 7px;
+    }
+    .titleIconPanel > i {
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-width : 600px) {
+    .breadcrumb li {
+        font-size: 14px;
+    }
+}

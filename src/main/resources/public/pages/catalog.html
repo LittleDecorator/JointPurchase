@@ -23,8 +23,6 @@
     </div>
 </div>
 
-<div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
-    <a class="btn-floating btn-large blue lighten-3" ng-click="toggleLeft()">
-        <i class="large mdi-navigation-more-vert"></i>
-    </a>
-</div>
+<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="toggleLeft()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+    <md-icon>more_vert</md-icon>
+</md-button>

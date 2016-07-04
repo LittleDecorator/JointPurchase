@@ -15,13 +15,6 @@
             $scope.THUMB_URL = "media/image/thumb/";
             $scope.ORIG_URL = "media/image/";
 
-            //get device type by width
-            if(helpers.viewport().width < 1350){
-                $scope.view = "mobile";
-            } else {
-                $scope.view = "normal";
-            }
-
             console.log($scope);
 
             if($scope.cart && $scope.cart.cou==0){

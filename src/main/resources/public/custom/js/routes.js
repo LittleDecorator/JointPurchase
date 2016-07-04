@@ -132,19 +132,6 @@ var route = {
                     requireLogin: false,
                 }
             },
-            //{
-            //    name:'remember',
-            //    url:'/remember',
-            //    views: {
-            //        'main@': {
-            //            templateUrl : 'pages/remember.html',
-            //            controller: 'rememberController'
-            //        }
-            //    },
-            //    data: {
-            //        requireLogin: false,
-            //    }
-            //},
             {
                 name:'restore',
                 url:'/restore',

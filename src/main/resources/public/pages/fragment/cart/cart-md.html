@@ -1,10 +1,13 @@
 <div >
     <md-list class="row" flex style="margin: 0">
-        <md-list-item class="md-3-line col s12" ng-repeat="item in cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
+        <md-list-item class="md-3-line col s12 cart-item" ng-repeat="item in cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
             <div class="md-list-item-inner" style="width: 100%;">
                 <div class="boxInner md-avatar" style="margin-right: 10px;padding: 0 5px;">
-                    <a ng-href="media/image/{{::image.id}}" class="swipebox" title="Some Title">
-                        <img ng-src="{{tem.media?ORIG_URL+item.media[0]:item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                    <!--<a ng-href="media/image/{{::image.id}}" class="swipebox" title="Some Title">-->
+                    <a ng-href="media/image/{{::item.contentId}}" class="swipebox" title="Some Title">
+                        <!--<img ng-src="{{tem.media?ORIG_URL+item.media[0]:item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">-->
+                        <!--<img ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">-->
+                        <img ng-src="{{item.imageUrl}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                     </a>
                 </div>
                 <div class="md-list-item-text" style="margin-bottom: 0;width: 100%; " layout="column">
