@@ -33,10 +33,12 @@
                     };
                     if (attrs.iconExpand == null) {
                         // attrs.iconExpand = ' mdi-content-add ';
-                        attrs.iconExpand = ' mdi-content-add ';
+                        //attrs.iconExpand = ' mdi-content-add ';
+                        attrs.iconExpand = ' add ';
                     }
                     if (attrs.iconCollapse == null) {
-                        attrs.iconCollapse = 'mdi-content-remove';
+                        //attrs.iconCollapse = 'mdi-content-remove';
+                        attrs.iconCollapse = 'remove';
                     }
                     if (attrs.iconLeaf == null) {
                         attrs.iconLeaf = 'isLeaf';

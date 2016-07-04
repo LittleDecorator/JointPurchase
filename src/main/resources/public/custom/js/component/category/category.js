@@ -8,6 +8,8 @@
     angular.module('category')
         .controller('categoryController',['$scope','$state','categoryNodes','$timeout', function($scope,$state,categoryNodes,$timeout){
 
+            var templatePath = "pages/fragment/category/";
+
             /* for big one (TEMPORARY COMMENTED)*/
             var newCategoryList=[],editCategoryList=[],deleteCategoryList=[];
             $scope.categories = categoryNodes;
@@ -16,7 +18,7 @@
             $scope.selected = null;
             $scope.selectedCopy = null;
             $scope.newCategory = "";
-            
+
             //get selected category items
             // function getCategoryItems(categoryId){
             //     var items = [];
@@ -28,20 +30,23 @@
             //     });
             //     return items;
             // }
-            
+
             //get selected node
             $scope.treeHandler = function(branch) {
                 console.log(branch);
-                $state.go("category.card",{id:branch.id});
-                // $scope.selected = branch;
-                // $scope.selectedCopy = angular.copy(branch);
-                // if(!$scope.selected.items.length>0){
-                //     $scope.selected.items = $scope.selectedCopy.items = getCategoryItems($scope.selectedCopy.id);
-                // }
+                if($scope.width < 601){
+                    $state.go("category.card",{id:branch.id});
+                } else {
+                    $scope.selected = branch;
+                    $scope.selectedCopy = angular.copy(branch);
+                    if(!$scope.selected.items.length>0){
+                        $scope.selected.items = $scope.selectedCopy.items = getCategoryItems($scope.selectedCopy.id);
+                    }
 
-                // $("#add_sibling").removeClass('disabled');
-                // $("#add").removeClass('disabled');
-                $('.toc-wrapper').pushpin({ offset: 163});
+                    $("#add_sibling").removeClass('disabled');
+                    $("#add").removeClass('disabled');
+                    $('.toc-wrapper').pushpin({ offset: 163});
+                }
             };
             
             /* toggle listener */
@@ -201,8 +206,19 @@
             $scope.createCategory = function(){
                 $state.go("category.card");
             };
-            
-            
+
+            $scope.getTemplateUrl = function(){
+                if($scope.width < 601){
+                    return templatePath + "category-sm.html"
+                }
+                if($scope.width > 600){
+                    //if($scope.width < 961){
+                    //    return templatePath + "company-md.html"
+                    //}
+                    return templatePath + "category-lg.html"
+                }
+            };
+
             $timeout(function(){
                 // $('.toc-wrapper').pushpin({ offset: 100});
                 $('select').material_select();

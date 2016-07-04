@@ -3,7 +3,8 @@
         ng-animate="'abn-tree-animate'" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')"
         class="abn-tree-row" style="display: flex">
         <a class="waves-effect waves-light " style="border-radius: 50%;width: 28px;height: 28px;line-height: 26px;" ng-class="'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')">
-            <i ng-class="row.tree_icon" ng-click="toggleBranch(row.branch)" class="tree-icon" style="width: 28px;line-height: 28px;"></i>
+            <!--<i ng-class="row.tree_icon" ng-click="toggleBranch(row.branch)" class="tree-icon" style="width: 28px;line-height: 28px;"></i>-->
+            <md-icon ng-click="toggleBranch(row.branch)" class="tree-icon" style="width: 28px;line-height: 28px;">{{row.tree_icon}}</md-icon>
         </a>
         <div style="width: 100%;" ng-click="user_clicks_branch(row.branch)">
             <input type="checkbox" class="filled-in" id="{{::row.id}}" ng-model="row.branch.checked"/>

@@ -1,14 +1,22 @@
-<div style="padding-bottom: 20px">
-    <div class="input-field">
-        <select id="category" name="category" ng-model="data.parentCategory">
-            <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
-        </select>
-        <label for="category" style="left: 0">Родительская категория</label>
-    </div>
+<div>
 
-    <div class="form-group">
-        <label for="selectedCategory" class="control-label">Выбранная категории</label>
-        <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
+    <div style="margin-top: 50px">
+        <div class="row">
+
+            <div class="input-field col s12">
+                <label for="category" class="active">Родительская категория</label>
+                <select id="category" name="category" ng-model="data.parentCategory">
+                    <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
+                </select>
+            </div>
+
+            <div class="form-group col s12">
+                <label for="selectedCategory" class="control-label">Выбранная категории</label>
+                <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
+            </div>
+
+        </div>
+
     </div>
 
     <div style="margin-top: 20px">
@@ -36,23 +44,18 @@
 
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-x-small blue lighten-3" ng-click="delete()">
-            <i class="large mdi-content-clear"></i>
-        </a>
-    </div>
-
-
-    <div class="fixed-action-btn" style="bottom: 115px; right: 24px;">
-        <a class="btn-floating btn-x-small blue lighten-3" ng-click="save()">
-            <i class="large mdi-content-save"></i>
-        </a>
-    </div>
-
-    <div class="fixed-action-btn" style="bottom: 185px; right: 24px;">
-        <a class="btn-floating btn-x-small blue lighten-3" ng-click="showItemModal()">
-            <i class="large mdi-action-open-in-new"></i>
-        </a>
-    </div>
-
 </div>
+
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="delete()" style="bottom: 45px; right: 15px;">
+        <md-icon>clear</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" style="bottom: 115px; right: 15px;">
+        <md-icon>save</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showItemModal()" style="bottom: 185px; right: 15px;">
+        <md-icon>open_in_new</md-icon>
+    </md-button>
+

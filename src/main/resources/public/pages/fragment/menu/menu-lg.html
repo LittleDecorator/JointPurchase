@@ -1,4 +1,4 @@
-<md-toolbar class="menu-lg" style="">
+<md-toolbar class="menu-lg">
 
     <div class="md-toolbar-tools">
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
@@ -32,7 +32,7 @@
                         <li class="menu-item active" ui-sref-active="active"><a ui-sref="home"><md-icon>store</md-icon></a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="catalog">Каталог</a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="about">О нас</a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Доставка</a></li>
+                        <li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Контакты</a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="stock">Акции</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="order">Заказы</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="person">Клиенты</a></li>
@@ -40,6 +40,7 @@
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="company">Поставщики</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="category">Категории</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="email">Почта</a></li>
+                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="settings">Настройка</a></li>
                     </ul>
                 </div>
             </div>

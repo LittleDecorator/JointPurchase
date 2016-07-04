@@ -1,0 +1,10 @@
+<div class="section" style="padding-bottom: 2rem">
+    <div style="background:#FFFFFF;border:1px solid lightgray;border-radius:5px;overflow-x: auto;">
+        <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>
+    </div>
+
+</div>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="createCategory()" style="bottom: 45px; right: 15px;">
+    <md-icon>add</md-icon>
+</md-button>

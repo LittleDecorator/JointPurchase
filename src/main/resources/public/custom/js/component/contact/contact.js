@@ -42,7 +42,11 @@
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "contact-sm.html";
-                } else {
+                }
+                if($scope.width > 600){
+                    if($scope.width < 1025){
+                        return templatePath + "contact-md.html"
+                    }
                     return templatePath + "contact-lg.html";
                 }
             };
