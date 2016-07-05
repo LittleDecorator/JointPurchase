@@ -1,28 +1,33 @@
 <div>
 
     <div style="margin-top: 50px">
-        <div class="row">
 
-            <div class="input-field col s12">
-                <label for="category" class="active">Родительская категория</label>
-                <select id="category" name="category" ng-model="data.parentCategory">
-                    <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
-                </select>
+        <div class="table-result">
+            <div class="row">
+
+                <div class="input-field col s12">
+                    <label for="category" class="active">Родительская категория</label>
+                    <select id="category" name="category" ng-model="data.parentCategory">
+                        <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
+                    </select>
+                </div>
+
+                <div class="input-field col s12">
+                    <label for="selectedCategory" class="control-label">Выбранная категории</label>
+                    <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
+                </div>
+
             </div>
-
-            <div class="form-group col s12">
-                <label for="selectedCategory" class="control-label">Выбранная категории</label>
-                <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
-            </div>
-
         </div>
+
+
 
     </div>
 
     <div style="margin-top: 20px">
         <h5>Связанные товары:</h5>
 
-        <div class="table-result" ng-if="data.categoryItems && data.categoryItems.length>0" style="margin-top: 5px;">
+        <!--<div class="table-result" ng-if="data.categoryItems && data.categoryItems.length>0" style="margin-top: 5px;">
             <table class="bordered table-result">
                 <tbody>
                 <tr ng-repeat="item in data.categoryItems" class="row" ng-class="{'no-bottom-border':$last}">
@@ -36,7 +41,15 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div>-->
+        <md-list>
+            <md-list-item ng-repeat="item in data.categoryItems">
+                <p>{{::item.article}}</p>
+                <p>{{::item.name}}</p>
+                <md-icon ng-click="removeItem($index)" style="color: #ee6e73;cursor: pointer">remove</md-icon>
+            </md-list-item>
+            <!--<md-divider></md-divider>-->
+        </md-list>
 
         <div class="table-result" ng-if="(!data.categoryItems || data.categoryItems.length==0)" style="margin-top: 5px;" >
             <span >Ни одного товара не связано с выбранной категорией</span>

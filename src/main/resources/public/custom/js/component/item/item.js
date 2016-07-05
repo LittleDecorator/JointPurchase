@@ -9,6 +9,7 @@
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
 
             $scope.companyNames = companies;
+            $scope.companyNames.unshift({id:null,name:"Выберите поставщика..."});
 
             $scope.items = [];
 

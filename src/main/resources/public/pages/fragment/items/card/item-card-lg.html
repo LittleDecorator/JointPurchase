@@ -1,72 +1,62 @@
-<div class="table-container">
-    <form role="form">
-        <div class="modal-body">
+<div class="table-container" ng-form="itemCard">
 
-            <div class="input-field">
-                <input type="text" name="name" class="form-control" ng-model="selected.name">
-                <label class="control-label" ng-class="{'active':selected.name.length>0}">Название</label>
-            </div>
+    <md-content>
+        <div layout="row">
+            <md-input-container flex="80">
+                <label>Название</label>
+                <input ng-model="selected.name">
+            </md-input-container>
 
-            <div class="form-group" id="company">
-                <label class="control-label" ng-class="{'active':selected.company.length>0}">Производитель</label>
-                <select name="companyId" class="form-control" ng-model="selected.companyId">
-                    <option ng-repeat="company in companyNames" ng-selected="selected.companyId == company.id" value="{{company.id}}">{{company.name}}</option>
-                </select>
-            </div>
-
-            <div class="form-group" style="border-bottom: 1px dotted rgba(0,0,0,0.26);">
-                <label class="control-label disabled" ng-class="{'active':selected.company.length>0}">Категории</label>
-                <div class="row" style="margin: 10px 0px;">
-                    <div class="input-field col s12" style="padding: 0;  margin-top: 0;">
-                        <div class="chip" ng-repeat="category in selected.categories">
-                            {{::category.name}}
-                            <i class="material-icons" ng-click="removeCategory($index)">close</i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-field">
-                <input type="text" name="article" class="form-control" ng-model="selected.article">
-                <label class="control-label" ng-class="{'active':selected.article.length>0}">Артикул</label>
-            </div>
-            <div class="input-field">
-                <input type="text" name="price" class="form-control" ng-model="selected.price">
-                <label class="control-label" ng-class="{'active':selected.price.toString().length>0}">Цена (руб)</label>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <div class="input-field col s12">
-                        <textarea name="description" id="description" class="materialize-textarea" ng-model="selected.description" style="padding: 1.6rem 0 0;"></textarea>
-                        <label for="description" ng-class="{'active':selected.description.length>0}">Описание</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="input-field">
-                <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
-                <label class="control-label" ng-class="{'active':selected.inStock.toString().length>0}">Кол-во в наличие</label>
-            </div>
-
-            <div class="form-group">
-                <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked" ng-model="selected.notForSale"/>
-                <label for="filled-in-box">Исключён из продажи</label>
-            </div>
+            <md-input-container flex="15" flex-offset="5">
+                <md-checkbox ng-model="selected.notForSale">Исключён из продажи</md-checkbox>
+            </md-input-container>
 
         </div>
-    </form>
+    </md-content>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="showCategoryModal()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 205px; right: 24px;">
-        <md-icon>open_in_new</md-icon>
-    </md-button>
+    <md-content>
+        <div layout="row">
+            <md-input-container class="md-block" flex="25">
+                <label>Производитель</label>
+                <md-select ng-model="selected.companyId">
+                    <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+                </md-select>
+            </md-input-container>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="showGallery()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 120px; right: 24px;">
-        <md-icon>photo</md-icon>
-    </md-button>
+            <md-input-container flex="25">
+                <label>Артикул</label>
+                <input ng-model="selected.article">
+            </md-input-container>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!itemCard.$dirty, 'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 45px; right: 24px;">
-        <md-icon>save</md-icon>
-    </md-button>
+            <md-input-container flex="25">
+                <label>Цена (руб)</label>
+                <input ng-model="selected.price">
+            </md-input-container>
+
+            <md-input-container flex="25">
+                <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
+                <label class="control-label" ng-class="{'active':selected.inStock.toString().length>0}">Кол-во в наличие</label>
+            </md-input-container>
+        </div>
+    </md-content>
+
+    <md-content style="overflow: visible; margin-bottom: 18px">
+        <label class="control-label disabled" ng-class="{'active':selected.company.length>0}">Категории</label>
+        <md-chips ng-model="selected.categories" class="category-chips" readonly="false">
+            <md-chip-template>
+                <span>{{::$chip.name}}</span>
+            </md-chip-template>
+            <button md-chip-remove class="md-primary vegetablechip" ng-click="removeCategory($index)">
+                <md-icon md-svg-icon="md-close"></md-icon>
+            </button>
+        </md-chips>
+    </md-content>
+
+    <md-content>
+        <md-input-container class="md-block">
+            <label>Описание</label>
+            <textarea ng-model="selected.description" md-select-on-focus></textarea>
+        </md-input-container>
+    </md-content>
 
 </div>

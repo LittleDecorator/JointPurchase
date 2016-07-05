@@ -1,30 +1,30 @@
 <div class="filter-item">
 
-    <div class="row">
-        <div class="input-field col s6">
-            <input id="name" type="text" name="name" ng-model="filter.name">
-            <label for="name">Название</label>
-        </div>
-        <div class="input-field col s6">
-            <input id="article" type="text" name="article" ng-model="filter.article">
-            <label for="article">Артикул</label>
-        </div>
+    <div layout="row">
+        <md-input-container flex="33" style="margin-bottom: 0">
+            <label>Название</label>
+            <input ng-model="filter.name">
+        </md-input-container>
 
-        <div class="input-field col s12" id="company">
-            <select  name="company" ng-options="company.name for company in companyNames track by company.id" ng-model="filter.companyId">
-                <option value="">Выберите компанию ...</option>
-            </select>
-        </div>
+        <md-input-container flex="33" style="margin-bottom: 0">
+            <label>Артикул</label>
+            <input ng-model="filter.article">
+        </md-input-container>
 
-            <!--<div class="input-field col s3" id="category">-->
-                <!--<select  name="category" ng-options="category.name for category in categoryTypes track by category.id" ng-model="filter.selectedCategory" ng-change="categoryChanged()">-->
-                    <!--<option value="">Выберите Категорию ...</option>-->
-                <!--</select>-->
-            <!--</div>-->
-        <div class="col s12">
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.apply()" >Найти</a>
-            <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="filter.clear()">Сбросить</a>
-        </div>
+        <md-input-container class="md-block" flex="33" style="margin-bottom: 0">
+            <label>Производитель</label>
+            <md-select ng-model="filter.companyId" placeholder="Выберите компанию ...">
+                <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+
+
+    <div layout="row" layout-align="end">
+        <a class="waves-effect waves-light btn" ng-click="filter.apply()" >Найти</a>
+        <a class="waves-effect waves-light btn" ng-click="filter.clear()">Сбросить</a>
+    </div>
 
     </div>
 

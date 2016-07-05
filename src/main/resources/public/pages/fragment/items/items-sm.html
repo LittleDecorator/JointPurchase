@@ -14,32 +14,33 @@
                             </md-menu>
                         </span>
             <div class="card-panel">
-                <md-list-item class="md-3-line" style="padding: 0">
-                    <div class="md-list-item-text" layout="column">
-                        <div class="row">
-                            <div class="input-field col s6">
-                                <input id="_company" type="text" name="company" value="{{::item.companyName}}">
-                                <label for="_company" class="active">Производитель</label>
-                            </div>
-                            <div class="input-field col s6">
-                                <input id="_article" type="text" name="article" value="{{::item.article}}">
-                                <label for="_article" class="active">Артикул</label>
-                            </div>
-                            <div class="input-field col s4">
-                                <input id="_price" type="text" name="price" value="{{::item.price}}">
-                                <label for="_price" class="active">Цена</label>
-                            </div>
-                            <div class="input-field col s4">
-                                <input id="_stock" type="text" name="stock" value="{{::item.inStock|asZero}}">
-                                <label for="_stock" class="active">В наличии</label>
-                            </div>
-                            <div class="input-field col s4">
-                                <input id="_order" type="text" name="order" value="{{::item.inOrder|asZero}}">
-                                <label for="_order" class="active">Заказано</label>
-                            </div>
-                        </div>
+                <div layout="column">
+                    <div layout="row">
+                        <md-input-container flex="50">
+                            <label>Производитель</label>
+                            <input value="{{::item.companyName}}">
+                        </md-input-container>
+                        <md-input-container flex="50">
+                            <label>Артикул</label>
+                            <input value="{{::item.article}}">
+                        </md-input-container>
                     </div>
-                </md-list-item>
+
+                    <div layout="row">
+                        <md-input-container flex="33">
+                            <label>Цена</label>
+                            <input value="{{::item.price}}">
+                        </md-input-container>
+                        <md-input-container flex="33">
+                            <label>В наличии</label>
+                            <input value="{{::item.inStock|asZero}}">
+                        </md-input-container>
+                        <md-input-container flex="33">
+                            <label>Заказано</label>
+                            <input value="{{::item.inOrder|asZero}}">
+                        </md-input-container>
+                    </div>
+                </div>
                 <div flex-xs>
                     <md-checkbox ng-model="item.notForSale" ng-change="forSaleToggle(item)">Исключить из продажи</md-checkbox>
                 </div>
