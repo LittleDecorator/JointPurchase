@@ -52,28 +52,32 @@
             var templatePath = "pages/fragment/company/card/";
             
             $scope.company = company;
+            $scope.showHints = true;
 
             $scope.save = function () {
                 console.log($scope);
                 console.log($scope.company);
-                if($scope.company && $scope.company.id){
-                    dataResources.company.put($scope.company).$promise.then(function(data){
-                        Materialize.toast('Поставщик '+ $scope.company.name +' успешно изменён',3000,'fine');
-                    },function(error){
-                        Materialize.toast('Не удалось изменить поставщика '+ $scope.company.name ,3000,'error');
-                    });
-                } else {
-                    dataResources.company.post($scope.company).$promise.then(function(data){
-                        Materialize.toast('Поставщик '+ $scope.company.name +' успешно создан',3000,'fine');
-                        $scope.companyCard.$setPristine();
-                        $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                            $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                        });
-                    },function(error){
-                        console.log(error);
-                        Materialize.toast('Не удалось создать поставщика '+ $scope.company.name ,3000,'error');
-                    });
-                }
+                //if($scope.companyCard.$dirty && !$scope.companyCard.$invalid){
+                //    if($scope.company && $scope.company.id){
+                //        dataResources.company.put($scope.company).$promise.then(function(data){
+                //            Materialize.toast('Поставщик '+ $scope.company.name +' успешно изменён',3000,'fine');
+                //        },function(error){
+                //            Materialize.toast('Не удалось изменить поставщика '+ $scope.company.name ,3000,'error');
+                //        });
+                //    } else {
+                //        dataResources.company.post($scope.company).$promise.then(function(data){
+                //            Materialize.toast('Поставщик '+ $scope.company.name +' успешно создан',3000,'fine');
+                //            $scope.companyCard.$setPristine();
+                //            $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                //                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                //            });
+                //        },function(error){
+                //            console.log(error);
+                //            Materialize.toast('Не удалось создать поставщика '+ $scope.company.name ,3000,'error');
+                //        });
+                //    }
+                //}
+
             };
 
             $scope.getTemplateUrl = function(){
@@ -87,6 +91,8 @@
             $scope.afterInclude = function(){
 
             };
+
+            console.log($scope);
 
         }])
 })();

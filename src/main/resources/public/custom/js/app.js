@@ -1,12 +1,12 @@
 (function(){
-    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'angularBootstrapNavTree', 'ngResource', 'angularFileUpload', 'angular-jwt',
+    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'ngMessages','angularBootstrapNavTree', 'ngResource',/*'ui.mask',*/'ngMask', 'angularFileUpload', 'angular-jwt',
         'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators']);
 })();
 
 (function() {
     angular.module('purchase')
 
-        .config(['$stateProvider', '$urlRouterProvider','$httpProvider',function ($stateProvider, $urlRouterProvider,$httpProvider) {
+        .config(['$stateProvider', '$urlRouterProvider','$httpProvider',/*'uiMask.ConfigProvider',*/function ($stateProvider, $urlRouterProvider,$httpProvider/*,uiMaskConfigProvider*/) {
             $httpProvider.interceptors.push('authInterceptor');
 
             // For any unmatched url, redirect to /state1
@@ -16,6 +16,9 @@
             angular.forEach(route.getRoutes(),function(route){
                 $stateProvider.state(route);
             });
+
+            //uiMaskConfigProvider.eventsToHandle(['input', null, null, null]);
+            //uiMaskConfigProvider.addDefaultPlaceholder('false');
         }])
 
         .run(['$state', '$rootScope', '$location','$timeout','modal',function ($state, $rootScope, $location,$timeout,modal) {

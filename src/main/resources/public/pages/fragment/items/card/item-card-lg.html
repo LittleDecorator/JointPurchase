@@ -3,11 +3,14 @@
     <md-content>
         <div layout="row">
             <md-input-container flex="80">
-                <label>Название</label>
-                <input ng-model="selected.name">
+                <label class="required">Название</label>
+                <input ng-model="selected.name" >
+                <div ng-messages="itemCard.name.$error" ng-if="itemCard.name.$invalid">
+                    <div ng-message="required">Name is required.</div>
+                </div>
             </md-input-container>
 
-            <md-input-container flex="15" flex-offset="5">
+            <md-input-container flex="15" flex-offset="5" class="no-errors">
                 <md-checkbox ng-model="selected.notForSale">Исключён из продажи</md-checkbox>
             </md-input-container>
 
@@ -16,24 +19,24 @@
 
     <md-content>
         <div layout="row">
-            <md-input-container class="md-block" flex="25">
+            <md-input-container class="md-block" flex="25" class="no-errors">
                 <label>Производитель</label>
                 <md-select ng-model="selected.companyId">
                     <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
                 </md-select>
             </md-input-container>
 
-            <md-input-container flex="25">
+            <md-input-container flex="25" class="no-errors">
                 <label>Артикул</label>
                 <input ng-model="selected.article">
             </md-input-container>
 
-            <md-input-container flex="25">
+            <md-input-container flex="25" class="no-errors">
                 <label>Цена (руб)</label>
                 <input ng-model="selected.price">
             </md-input-container>
 
-            <md-input-container flex="25">
+            <md-input-container flex="25" class="no-errors">
                 <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
                 <label class="control-label" ng-class="{'active':selected.inStock.toString().length>0}">Кол-во в наличие</label>
             </md-input-container>

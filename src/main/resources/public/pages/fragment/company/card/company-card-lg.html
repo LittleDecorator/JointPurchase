@@ -1,38 +1,54 @@
-<div class="table-container" ng-form="companyCard">
-    <div>
-        <div class="form-group">
-            <label class="control-label">Название</label>
-            <input type="text" name="name" class="form-control" placeholder="Название" ng-model="company.name">
+<div class="table-container">
+    <div layout="column">
+        <div layout="row">
+            <md-input-container flex="50">
+                <label class="required">Название</label>
+                <input name="name" ng-model="company.name" required >
+                <div ng-messages="companyCard.name.$error" ng-if="companyCard.name.$invalid">
+                    <div ng-message="required">Name is required.</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container flex-offset="5" flex="45">
+                <label>Сайт</label>
+                <input ng-model="company.url">
+                <div class="hint">Пример: http://website.com</div>
+            </md-input-container>
         </div>
 
-        <div class="form-group">
-            <label class="control-label">Описание</label>
-            <input type="text" name="description" class="form-control" placeholder="Чем занимается" ng-model="company.description">
+        <div layout="row">
+            <md-input-container class="md-block" flex="50">
+                <label>Почта</label>
+                <input name="email" ng-model="company.email" ng-pattern="/^.+@.+\..+$/">
+                <div class="hint" ng-hide="companyCard.email.$invalid">Пример: test@mail.com</div>
+                <div ng-messages="companyCard.email.$error" ng-show="companyCard.email.$invalid">
+                    <div ng-message-exp="['pattern']">Your email must look like an e-mail address.</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-offset="5" flex="45">
+                <label>Телефон</label>
+                <input name=phone ng-model="company.phone" ui-mask="+7(999) 99-99-999" placeholder="" ng-pattern="/^\+[0-9]([0-9]{3}) [0-9]{2}-[0-9]{2}-[0-9]{3}$/">
+                <div ng-messages="companyCard.phone.$error" ng-show="companyCard.phone.$invalid">
+                    <div ng-message="pattern">(###) ###-#### - Please enter a valid phone number.</div>
+                </div>
+            </md-input-container>
         </div>
 
-        <div class="form-group">
-            <label class="control-label">Сайт</label>
-            <input type="text" name="url" class="form-control" placeholder="Сайт" ng-model="company.url">
-        </div>
+        <md-input-container style="margin-bottom: 0" class="no-errors">
+            <label>Описание</label>
+            <input ng-model="company.description">
+        </md-input-container>
 
-        <div class="form-group">
-            <label class="control-label">Адрес</label>
-            <input type="text" name="address" class="form-control" placeholder="Адрес" ng-model="company.address">
-        </div>
-
-        <div class="form-group">
-            <label class="control-label">Почта</label>
-            <input type="text" name="email" class="form-control" placeholder="Email" ng-model="company.email">
-        </div>
-
-        <div class="form-group">
-            <label class="control-label">Телефон</label>
-            <input type="text" name="phone" class="form-control" placeholder="Телефонный номер" ng-model="company.phone">
-        </div>
+        <md-input-container style="margin-bottom: 0" class="no-errors">
+            <label>Адрес</label>
+            <input ng-model="company.address">
+        </md-input-container>
 
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty, 'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 45px; right: 24px;">
+    <!--<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}" style="bottom: 45px; right: 24px;">-->
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}" style="bottom: 45px; right: 24px;">
         <md-icon>save</md-icon>
     </md-button>
 </div>

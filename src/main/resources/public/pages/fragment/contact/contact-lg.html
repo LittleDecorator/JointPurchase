@@ -6,12 +6,16 @@
         <hr>
         <div class="card" style="width: 50%;margin: 0 auto">
             <div class="card-content">
-                <div ng-form="_callback" class="row" style="margin-bottom: 0">
-                    <div class="input-field col s12">
-                        <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
-                               ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
-                        <label for="phone" data-error='Not valid phone'>Телефон</label>
-                    </div>
+                <div style="margin-bottom: 0" layout="column">
+
+                    <md-input-container>
+                        <label>Телефон</label>
+                        <input name="phone" ng-model="selected.article" required mask="(999) 999-99-99" mask-restrict="reject">
+                        <div class="hint" ng-show="showHints">номер указывается без 8-ки</div>
+                        <div ng-messages="contactForm.phone.$error" ng-show="!showHints">
+                            <div ng-message-exp="['required']">Поле не может быть пустым</div>
+                        </div>
+                    </md-input-container>
 
                     <div class="input-field col s12">
                         <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>

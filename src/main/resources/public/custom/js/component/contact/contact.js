@@ -12,16 +12,28 @@
             var templatePath = "pages/fragment/contact/";
             $scope.request = {phone:null,message:null};
 
+            $scope.showHints = true;
+
             $scope.send = function(){
-                console.log("send pressed");
-                dataResources.contactCallback.post($scope.request,
-                    function(response){
-                        console.log("success");
-                    },
-                    function(response){
-                        console.log("failed");
-                    });
-                $scope.request = {phone:null,message:null};
+                console.log($scope);
+                console.log($scope.contactForm.$error);
+                if($scope.contactForm.phone.$valid){
+                    console.log('BLA')
+                } else {
+                    console.log('FLA')
+                }
+                //    $scope.showHints = false;
+                //} else {
+                //    dataResources.contactCallback.post($scope.request,
+                //        function(response){
+                //            console.log("success");
+                //        },
+                //        function(response){
+                //            console.log("failed");
+                //        });
+                //    $scope.request = {phone:null,message:null};
+                //    $scope.showHints = true;
+                //}
             };
 
             $scope.load = function(){

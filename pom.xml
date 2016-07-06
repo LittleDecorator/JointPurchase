@@ -144,6 +144,8 @@
             <version>0.5.8</version>
         </dependency>
 
+
+
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-material</artifactId>
@@ -189,6 +191,12 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-touch</artifactId>
+            <version>1.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-messages</artifactId>
             <version>1.5.7</version>
         </dependency>
 
