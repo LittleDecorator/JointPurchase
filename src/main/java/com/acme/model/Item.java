@@ -1,6 +1,5 @@
 package com.acme.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class Item {
@@ -15,7 +14,7 @@ public class Item {
 
     private String description;
 
-    private BigDecimal price;
+    private Integer price;
 
     private Date dateAdd;
 
@@ -76,11 +75,11 @@ public class Item {
         this.description = description == null ? null : description.trim();
     }
 
-    public BigDecimal getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

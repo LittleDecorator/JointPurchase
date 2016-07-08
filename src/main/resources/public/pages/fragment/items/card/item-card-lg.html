@@ -1,65 +1,83 @@
-<div class="table-container" ng-form="itemCard">
+<div class="card">
 
-    <md-content>
-        <div layout="row">
-            <md-input-container flex="80">
-                <label class="required">Название</label>
-                <input ng-model="selected.name" >
-                <div ng-messages="itemCard.name.$error" ng-if="itemCard.name.$invalid">
-                    <div ng-message="required">Name is required.</div>
-                </div>
-            </md-input-container>
+    <div class="card-content">
+        <md-content>
+            <div layout="row">
 
-            <md-input-container flex="15" flex-offset="5" class="no-errors">
-                <md-checkbox ng-model="selected.notForSale">Исключён из продажи</md-checkbox>
-            </md-input-container>
+                <md-input-container flex="auto">
+                    <label class="required">Название</label>
+                    <input name="name" ng-model="selected.name" required>
+                    <div ng-messages="itemCard.name.$error" ng-if="!showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
 
-        </div>
-    </md-content>
+                <md-input-container class="no-errors" style="margin-left:2%">
+                    <md-checkbox ng-model="selected.notForSale">Исключён из продажи</md-checkbox>
+                </md-input-container>
 
-    <md-content>
-        <div layout="row">
-            <md-input-container class="md-block" flex="25" class="no-errors">
-                <label>Производитель</label>
-                <md-select ng-model="selected.companyId">
-                    <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
-                </md-select>
-            </md-input-container>
+            </div>
+        </md-content>
 
-            <md-input-container flex="25" class="no-errors">
-                <label>Артикул</label>
-                <input ng-model="selected.article">
-            </md-input-container>
+        <md-content>
+            <div layout="row">
+                <md-input-container class="md-block" flex="25" class="no-errors">
+                    <label class="required">Производитель</label>
+                    <md-select name="company" ng-model="selected.companyId" required>
+                        <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+                    </md-select>
+                    <div ng-messages="itemCard.company.$error" ng-if="!showHints">
+                        <div ng-message="required">Не выбран производитель</div>
+                    </div>
+                </md-input-container>
 
-            <md-input-container flex="25" class="no-errors">
-                <label>Цена (руб)</label>
-                <input ng-model="selected.price">
-            </md-input-container>
+                <md-input-container flex="25">
+                    <label class="required">Артикул</label>
+                    <input name="article" ng-model="selected.article" required only-number>
+                    <div ng-messages="itemCard.article.$error" ng-if="!showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
 
-            <md-input-container flex="25" class="no-errors">
-                <input type="text" name="inStock" class="form-control" ng-model="selected.inStock">
-                <label class="control-label" ng-class="{'active':selected.inStock.toString().length>0}">Кол-во в наличие</label>
-            </md-input-container>
-        </div>
-    </md-content>
+                <md-input-container flex="25">
+                    <label class="required">Цена (руб)</label>
+                    <input name="price" ng-model="selected.price" required currency-mask >
+                    <div ng-messages="itemCard.price.$error" ng-if="!showHints">
+                        <div ng-message-exp="['parse']">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
 
-    <md-content style="overflow: visible; margin-bottom: 18px">
-        <label class="control-label disabled" ng-class="{'active':selected.company.length>0}">Категории</label>
-        <md-chips ng-model="selected.categories" class="category-chips" readonly="false">
-            <md-chip-template>
-                <span>{{::$chip.name}}</span>
-            </md-chip-template>
-            <button md-chip-remove class="md-primary vegetablechip" ng-click="removeCategory($index)">
-                <md-icon md-svg-icon="md-close"></md-icon>
-            </button>
-        </md-chips>
-    </md-content>
+                <md-input-container flex="25">
+                    <label class="required">Кол-во в наличие</label>
+                    <input name="inStock" ng-model="selected.inStock" only-number>
+                    <div ng-messages="itemCard.inStock.$error" ng-if="!showHints">
+                        <div ng-message-exp="['parse']">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-content>
 
-    <md-content>
-        <md-input-container class="md-block">
-            <label>Описание</label>
-            <textarea ng-model="selected.description" md-select-on-focus></textarea>
+        <md-input-container style="width: 100%;">
+            <label class="required">Категории</label>
+            <md-chips name="categories" ng-model="selected.categories" class="category-chips" md-on-remove="removeCategory($index)">
+                <md-chip-template>
+                    <span>{{::$chip.name}}</span>
+                </md-chip-template>
+                <button md-chip-remove class="md-primary vegetablechip">
+                    <md-icon md-svg-icon="md-close"></md-icon>
+                </button>
+            </md-chips>
+            <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
+                <div ng-message="required">Необходимо выбрать хотя бы одну категорию</div>
+            </div>
         </md-input-container>
-    </md-content>
+
+        <md-content>
+            <md-input-container class="md-block">
+                <label>Описание</label>
+                <textarea ng-model="selected.description"></textarea>
+            </md-input-container>
+        </md-content>
+    </div>
 
 </div>

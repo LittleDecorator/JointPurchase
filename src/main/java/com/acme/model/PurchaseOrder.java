@@ -1,7 +1,6 @@
 package com.acme.model;
 
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class PurchaseOrder extends Base {
@@ -48,7 +47,7 @@ public class PurchaseOrder extends Base {
     private String delivery;
 
 
-    private BigDecimal payment;
+    private Integer payment;
 
 
     public String getId() {
@@ -188,12 +187,11 @@ public class PurchaseOrder extends Base {
     }
 
 
-    public BigDecimal getPayment() {
+    public Integer getPayment() {
         return payment;
     }
 
-
-    public void setPayment(BigDecimal payment) {
+    public void setPayment(Integer payment) {
         this.payment = payment;
     }
 

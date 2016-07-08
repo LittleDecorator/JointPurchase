@@ -79,7 +79,7 @@ create table purchase_order (
   comment varchar(255),     -- комментарий
   status varchar(30) default 'new',     --статус заказа
   delivery varchar(30) default 'Самовывоз',
-  payment decimal(20,2),      -- сумма к оплате
+  payment int,      -- сумма к оплате
   primary key (id),
   foreign key (subject_id) references subject
 );
@@ -101,7 +101,7 @@ create table item (
   company_id varchar(37) not null,
   article varchar(30),
   description varchar(2000),
-  price decimal(20,2) not null, --цена еденицы товара
+  price int not null, --цена еденицы товара
   date_add timestamp default current_timestamp,
   not_for_sale char(1) not null default 'N' check(not_for_sale in ('Y', 'N')),
   in_stock int not null default 0,

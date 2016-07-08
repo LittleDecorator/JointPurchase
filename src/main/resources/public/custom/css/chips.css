@@ -1,0 +1,22 @@
+md-chips-wrap.md-chips-invalid{
+    box-shadow: 0 1px rgb(221,44,0);
+}
+
+/*md-container md-chips ~ [ng-messages] {*/
+    /*position: relative;*/
+    /*-webkit-order: 4;*/
+    /*-ms-flex-order: 4;*/
+    /*order: 4;*/
+    /*overflow: hidden;*/
+    /*clear: left;*/
+    /*color: rgb(221,44,0);*/
+/*}*/
+
+/*md-container md-chips ~ [ng-message] {*/
+    /*padding-right: 5px;*/
+    /*padding-left: 0;*/
+/*}*/
+
+.md-chips .md-chip-input-container {
+    display: none;
+}

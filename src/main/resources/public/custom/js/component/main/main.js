@@ -47,6 +47,14 @@
                     $rootScope.currentUser.roles = decodedToken.roles;
                 }
 
+                if(localStorage.getItem('tab')){
+                    var tab = localStorage.getItem('tab');
+                    console.log(tab);
+                    $('.tab > a').removeClass('active');
+                    $('#'+tab+'.tab > a').addClass('active');
+                    $('ul.tabs').tabs();
+                }
+
                 //add new item to cart
                 $scope.addToCart = function(item){
                     //check if item already in cart
@@ -218,6 +226,7 @@
                 
                 $scope.goto =function(name){
                     console.log(name);
+                    localStorage.setItem('tab',name);
                     helpers.centerItFixedWidth('#'+name,'div#menu-tabs');
                     $state.go(name);
                     if($mdSidenav('menu').isOpen()){

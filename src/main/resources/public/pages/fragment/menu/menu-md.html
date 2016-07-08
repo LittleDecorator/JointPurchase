@@ -23,15 +23,19 @@
                 <ul class="tabs" style="width: 100%;background-color: transparent;">
                     <li id="catalog" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>
+                        <!--<a ui-sref="catalog" ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>-->
                     </li>
                     <li id="about" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('about')" style="cursor: pointer">О нас</a>
+                        <!--<a ui-sref="about" style="cursor: pointer">О нас</a>-->
                     </li>
                     <li id="contact" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('contact')" style="cursor: pointer">Контакты</a>
+                        <!--<a ui-sref="contact" style="cursor: pointer">Контакты</a>-->
                     </li>
                     <li id="stock" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('stock')" style="cursor: pointer">Акции</a>
+                        <!--<a ui-sref="stock" style="cursor: pointer">Акции</a>-->
                     </li>
                     <li id="order" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
                         <a ng-click="goto('order')" style="cursor: pointer">Заказы</a>
@@ -54,6 +58,7 @@
                     <li id="settings" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
                         <a style="cursor: pointer" >Настройки</a>
                     </li>
+                    <!--<div class="indicator" style="right: 530.455px; left: 0px;"></div>-->
                 </ul>
             </div>
         </div>

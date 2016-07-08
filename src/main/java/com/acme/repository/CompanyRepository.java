@@ -37,6 +37,16 @@ public class CompanyRepository {
 
     public boolean insert(Company company){
         company.setId(UUID.randomUUID().toString());
+        int result = parameterJdbcTemplate.update(Queue.COMPANY_INSERT, getParams(company));
+        return result == 1 ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    public boolean update(Company company){
+        int result = parameterJdbcTemplate.update(Queue.COMPANY_UPDATE, getParams(company));
+        return result == 1 ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    private Map<String,Object> getParams(Company company){
         Map<String,Object> namedParameters = Maps.newHashMap();
         namedParameters.put("id", company.getId());
         namedParameters.put("name", company.getName());
@@ -49,11 +59,7 @@ public class CompanyRepository {
         namedParameters.put("inn", company.getInn());
         namedParameters.put("ks", company.getKs());
         namedParameters.put("rs", company.getRs());
-        namedParameters.put("dateAdd", company.getDateAdd());
-        int result = parameterJdbcTemplate.update(Queue.COMPANY_INSERT,namedParameters);
-        return result == 1 ? Boolean.TRUE : Boolean.FALSE;
+        return namedParameters;
     }
-
-
 
 }

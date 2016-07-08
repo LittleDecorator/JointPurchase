@@ -47,42 +47,61 @@
             };
 
         }])
-        .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources', function ($rootScope,$scope, $state, company, dataResources) {
+        .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources','$mdToast', function ($rootScope,$scope, $state, company, dataResources,$mdToast) {
 
             var templatePath = "pages/fragment/company/card/";
             
             $scope.company = company;
             $scope.showHints = true;
 
-            $scope.save = function () {
-                console.log($scope);
-                console.log($scope.company);
-                //if($scope.companyCard.$dirty && !$scope.companyCard.$invalid){
-                //    if($scope.company && $scope.company.id){
-                //        dataResources.company.put($scope.company).$promise.then(function(data){
-                //            Materialize.toast('Поставщик '+ $scope.company.name +' успешно изменён',3000,'fine');
-                //        },function(error){
-                //            Materialize.toast('Не удалось изменить поставщика '+ $scope.company.name ,3000,'error');
-                //        });
-                //    } else {
-                //        dataResources.company.post($scope.company).$promise.then(function(data){
-                //            Materialize.toast('Поставщик '+ $scope.company.name +' успешно создан',3000,'fine');
-                //            $scope.companyCard.$setPristine();
-                //            $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                //                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                //            });
-                //        },function(error){
-                //            console.log(error);
-                //            Materialize.toast('Не удалось создать поставщика '+ $scope.company.name ,3000,'error');
-                //        });
-                //    }
-                //}
+            var last = {
+                bottom: false,
+                top: true,
+                left: false,
+                right: true
+            };
+            $scope.toastPosition = angular.extend({},last);
+            $scope.getToastPosition = function() {
+                var result = Object.keys($scope.toastPosition).filter(function(pos) { return $scope.toastPosition[pos]; }).join(' ');
+                console.log(result);
+                return result;
+            };
 
+            $scope.save = function () {
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+                if($scope.companyCard.$dirty){
+                    if($scope.companyCard.$valid){
+                        if($scope.company && $scope.company.id){
+                            dataResources.company.put($scope.company).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Поставщик '+ $scope.company.name +' успешно изменён').theme('success'));
+                            },function(error){
+                                $mdToast.show(toast.textContent('Не удалось изменить поставщика '+ $scope.company.name).theme('error'));
+                            });
+                        } else {
+                            dataResources.company.post($scope.company).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Поставщик '+ $scope.company.name +' успешно создан').theme('success'));
+                                $scope.companyCard.$setPristine();
+                                $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                                    $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                                });
+                            },function(error){
+                                console.log(error);
+                                $mdToast.show(toast.textContent('Не удалось создать поставщика '+ $scope.company.name).theme('error'));
+                            });
+                        }
+                        $scope.showHints = true;
+                    } else {
+                        $scope.showHints = false;
+                    }
+                }
             };
 
             $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
+                if($scope.width < 601) {
                     return templatePath + "company-card-sm.html";
+                }
+                if($scope.width < 961){
+                    return templatePath + "company-card-md.html";
                 } else {
                     return templatePath + "company-card-lg.html";
                 }
@@ -92,7 +111,22 @@
 
             };
 
+            $scope.showSimpleToast = function() {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent('Simple Toast!')
+                        .position($scope.getToastPosition())
+                        .hideDelay(3000)
+                );
+            };
+
             console.log($scope);
 
         }])
+
+        .controller('companyToastController', function($scope, $mdToast) {
+            $scope.closeToast = function() {
+                $mdToast.hide();
+            };
+        });
 })();

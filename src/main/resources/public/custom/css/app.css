@@ -431,3 +431,12 @@ md-select-content{
     left: 0;
     width: 100%;
 }
+
+table > tbody > tr.bad-row {
+    background-color: #f3c6c6;
+}
+
+
+md-input-container .md-input.ng-invalid.ng-dirty {
+    border-width: 0 0 1px;
+}

@@ -43,7 +43,7 @@
             };
         }])
 
-        .factory('dataResources',['$resource',function($resource){
+        .factory('dataResources',['$resource','$filter',function($resource,$filter){
             return {
 
                 catalog: {
@@ -80,20 +80,29 @@
                     }
                 }),
 
-                //searchItem:$resource('/item/search/',{},{get :{method:'GET',isArray:true}}),
-
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
-                    post:{method:'POST',isArray:false,transformResponse:function(data, headers){
-                        return {result:data}
-                    }},
-                    put:{method:'PUT',isArray:false}
+                    post:{method:'POST',isArray:false,
+                        transformRequest:function(data, headers) {
+                            var result = angular.copy(data);
+                            result.price= result.price.replace(/[^0-9]/g,'');
+                            return angular.toJson(result);
+                        },
+                        transformResponse:function(data, headers){
+                            return {result:data}
+                        }
+                    },
+                    put:{method:'PUT',isArray:false,
+                        transformRequest:function(data, headers) {
+                            var result = angular.copy(data);
+                            result.price= result.price.replace(/[^0-9]/g,'');
+                            return angular.toJson(result);
+                            //return data;
+                        }
+                    }
                 }),
                 
-                //filterByType:$resource('/item/filter/type',{},{
-                //    filter:{method:'POST',isArray:true}
-                //}),
                 filterByCompany:$resource('/item/filter/company',{},{
                     filter:{method:'GET',isArray:true}
                 }),

@@ -1,0 +1,11 @@
+md-toast{
+    position: fixed;
+}
+
+md-toast.md-success-theme .md-toast-content {
+    background-color: #4CAF50;
+}
+
+md-toast.md-error-theme .md-toast-content{
+    background-color: #F44336;
+}

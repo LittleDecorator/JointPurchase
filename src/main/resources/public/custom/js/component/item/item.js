@@ -8,7 +8,7 @@
     angular.module('item')
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
 
-            $scope.companyNames = companies;
+            $scope.companyNames = angular.copy(companies);
             $scope.companyNames.unshift({id:null,name:"Выберите поставщика..."});
 
             $scope.items = [];
@@ -37,7 +37,6 @@
                             $scope.items = [];
                         }
 
-                        console.log(data);
                         $scope.items = data;
 
                         portion++;
@@ -117,11 +116,13 @@
             },10);
         }])
 
-        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies){
-            console.log(item);
+        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter){
             $scope.selected = item;
+            $scope.selected.price = $filter('number')($scope.selected.price);
             $scope.companyNames = companies;
-            $scope.companyNames.unshift({id:null,name:"Выберите производителя ..."});
+            $scope.companyNames.unshift({id:null,name:"Выберите поставщика..."});
+            console.log($scope.companyNames);
+            $scope.showHints = true;
 
             if(!$scope.selected.inStock){
                 $scope.selected.inStock = 0;
@@ -130,6 +131,11 @@
             /* Удаление категории из товара */
             $scope.removeCategory = function(idx){
                 $scope.selected.categories.splice(idx,1);
+                if($scope.selected.categories.length == 0){
+                    $scope.itemCard.categories.$error.required = true;
+                    $scope.itemCard.categories.$setValidity("required", false);
+                    $('md-chips-wrap').addClass('md-chips-invalid');
+                }
             };
 
             /* Открытие модального окна для выбора категории */
@@ -144,34 +150,46 @@
                 dialog.closePromise.then(function(output) {
                     if(output.value && output.value != '$escape'){
                         $scope.selected.categories = output.value;
+                        $scope.itemCard.categories.$error = {};
+                        $scope.itemCard.categories.$setValidity("required", true);
+                        $('md-chips-wrap').removeClass('md-chips-invalid');
                     }
                 });
             };
 
             /* Сохранение товара */
             $scope.save = function () {
-                if(!$scope.itemCard.$pristine && !$scope.itemCard.$invalid){
-                    if($scope.selected.id){
-                        dataResources.item.put($scope.selected).$promise.then(function(data){
-                            Materialize.toast('Товар успешно изменён', 3000, 'fine');
-                            $scope.itemCard.$setPristine();
-                            $state.go($state.current,{id:$scope.selected.id},{notify:false}).then(function(){
-                                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                            });
-                        }, function(error){
-                            Materialize.toast('Неудалось сохранить изменения', 3000, 'error');
-                        })
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+
+                function refreshState(data){
+                    $scope.itemCard.$setPristine();
+                    /* refresh state because name can be changed */
+                    $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                        $scope.selected.id = data.result;
+                        $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                    });
+                }
+
+                if($scope.itemCard.$dirty){
+                    if($scope.itemCard.$valid){
+                        if($scope.selected.id){
+                            dataResources.item.put($scope.selected).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно изменён').theme('success'));
+                                refreshState({result:$scope.selected.id});
+                            }, function(error){
+                                $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
+                            })
+                        } else {
+                            dataResources.item.post($scope.selected).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно создан').theme('success'));
+                                refreshState(data);
+                            }, function(error){
+                                $mdToast.show(toast.textContent('Неудалось создать новый товар').theme('error'));
+                            })
+                        }
+                        $scope.showHints = true;
                     } else {
-                        dataResources.item.post($scope.selected).$promise.then(function(data){
-                            Materialize.toast('Товар успешно создан', 3000, 'fine');
-                            $scope.itemCard.$setPristine();
-                            $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                                $scope.selected.id = data.result;
-                                $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                            });
-                        }, function(error){
-                            Materialize.toast('Неудалось создать новый товар', 3000, 'error');
-                        })
+                        $scope.showHints = false;
                     }
                 }
             };

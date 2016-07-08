@@ -42,7 +42,6 @@ public class CompanyController {
     public String createCompany(@RequestBody Company company) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
-            System.out.println(company);
             companyRepository.insert(company);
             transactionManager.commit(status);
             return company.getId();
@@ -54,18 +53,15 @@ public class CompanyController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Company updateCompany(@RequestBody Company company) {
-        System.out.println("UPDATE NOT WORK FOR NOW");
-//        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-//        try{
-//            System.out.println(company);
-//            companyRepository.insert(company);
-//            transactionManager.commit(status);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            transactionManager.rollback(status);
-//        }
-        return company;
+    public void updateCompany(@RequestBody Company company) {
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try{
+            companyRepository.update(company);
+            transactionManager.commit(status);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            transactionManager.rollback(status);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/map")

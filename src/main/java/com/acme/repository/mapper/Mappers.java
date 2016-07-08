@@ -19,7 +19,7 @@ public class Mappers {
         item.setCompanyId(rs.getString("company_id"));
         item.setArticle(rs.getString("article"));
         item.setDescription(rs.getString("description"));
-        item.setPrice(rs.getBigDecimal("price"));
+        item.setPrice(rs.getInt("price"));
         item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         item.setInStock(rs.getInt("in_stock"));
         item.setDateAdd(rs.getDate("date_add"));
@@ -35,7 +35,7 @@ public class Mappers {
         item.setCompanyName(rs.getString("company_name"));
         item.setArticle(rs.getString("article"));
         item.setDescription(rs.getString("description"));
-        item.setPrice(rs.getBigDecimal("price"));
+        item.setPrice(rs.getInt("price"));
         item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         item.setInStock(rs.getInt("in_stock"));
         item.setDateAdd(rs.getDate("date_add"));
@@ -133,7 +133,7 @@ public class Mappers {
         product.setCompanyName(MapperHelper.getExistString(rs,"company_name"));
         product.setArticle(rs.getString("article"));
         product.setDescription(rs.getString("description"));
-        product.setPrice(rs.getBigDecimal("price"));
+        product.setPrice(rs.getInt("price"));
         product.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         product.setInStock(rs.getInt("in_stock"));
         product.setDateAdd(rs.getDate("date_add"));
@@ -147,7 +147,7 @@ public class Mappers {
         link.setName(rs.getString("name"));
         link.setInStock(rs.getInt("in_stock"));
         link.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
-        link.setPrice(rs.getBigDecimal("price"));
+        link.setPrice(rs.getInt("price"));
         link.setDescription(rs.getString("description"));
         link.setCompanyId(rs.getString("company_id"));
         return link;
@@ -189,7 +189,7 @@ public class Mappers {
         order.setComment(rs.getString("COMMENT"));
         order.setStatus(rs.getString("STATUS"));
         order.setDelivery(rs.getString("DELIVERY"));
-        order.setPayment(rs.getBigDecimal("PAYMENT"));
+        order.setPayment(rs.getInt("PAYMENT"));
         order.setDateAdd(rs.getDate("date_add"));
         return order;
     };

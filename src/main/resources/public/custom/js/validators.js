@@ -133,6 +133,7 @@
                 restrict:'A',
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
+
                     ctrl.$parsers.push(function(value) {
                         console.log(value);
                         console.log(typeof value);
@@ -156,5 +157,55 @@
                 }
             };
         })
+
+        .directive('onlyNumber', function() {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModelCtrl) {
+
+                    function fromUser(text) {
+                        console.log(text);
+                        if (text) {
+                            console.log('text present');
+                            var transformedInput = text.replace(/[^0-9]/g,'');
+                            transformedInput = transformedInput.replace(/\s+/g,'');
+                            console.log(transformedInput);
+                            if (transformedInput !== text) {
+                                ngModelCtrl.$setViewValue(transformedInput);
+                                ngModelCtrl.$render();
+                            }
+                            return transformedInput;
+                        }
+                        console.log('no text');
+                        return undefined;
+                    }
+                    ngModelCtrl.$parsers.unshift(fromUser);
+                }
+            };
+        })
+
+        .directive('currencyMask',[ '$filter', function($filter){
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModelCtrl) {
+
+                    function format(amount) {
+                        if (amount) {
+                            console.log('amount present');
+                            var value = amount.replace(/[^0-9]/g,'');
+                            value = $filter('number')(value);
+                            if(amount !== value){
+                                ngModelCtrl.$setViewValue(value);
+                                ngModelCtrl.$render();
+                            }
+                            return value;
+                        }
+                        return undefined;
+                    }
+
+                    ngModelCtrl.$parsers.push(format);
+                }
+            };
+        }])
 
 })();

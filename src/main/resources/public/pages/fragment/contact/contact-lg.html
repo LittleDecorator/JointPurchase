@@ -11,16 +11,16 @@
                     <md-input-container>
                         <label>Телефон</label>
                         <input name="phone" ng-model="selected.article" required mask="(999) 999-99-99" mask-restrict="reject">
-                        <div class="hint" ng-show="showHints">номер указывается без 8-ки</div>
+                        <div class="hint" ng-show="showHints">Номер указывается начиная с кода оператора: (915) 343-43-45</div>
                         <div ng-messages="contactForm.phone.$error" ng-show="!showHints">
                             <div ng-message-exp="['required']">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
-                    <div class="input-field col s12">
-                        <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
-                        <label for="message">Сообщение</label>
-                    </div>
+                    <md-input-container class="md-block">
+                        <label>Сообщение</label>
+                        <textarea ng-model="request.message" rows="3"></textarea>
+                    </md-input-container>
 
                     <div class="login-control-wrapper" style="float: right">
                         <a class="waves-effect waves-green btn" ng-click="send()">Отправить</a>

@@ -25,6 +25,10 @@ import java.util.Locale;
 @PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 
+//    @Autowired
+//    private ResourceProperties resourceProperties = new ResourceProperties();
+
+
     @Bean
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -46,5 +50,24 @@ public class Application extends WebMvcConfigurerAdapter {
         Locale.setDefault(american);
         SpringApplication.run(Application.class, args);
     }
+
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        Integer cachePeriod = resourceProperties.getCachePeriod();
+//
+//        registry.addResourceHandler("/public/**")
+//                .addResourceLocations("classpath:/public/")
+//                .setCachePeriod(cachePeriod);
+//
+//        registry.addResourceHandler("/**")
+//                .addResourceLocations("classpath:/public/index.html")
+//                .setCachePeriod(cachePeriod).resourceChain(true)
+//                .addResolver(new PathResourceResolver() {
+//                    @Override
+//                    protected Resource getResource(String resourcePath, Resource location) throws IOException {
+//                        return location.exists() && location.isReadable() ? location : null;
+//                    }
+//                });
+//    }
 
 }

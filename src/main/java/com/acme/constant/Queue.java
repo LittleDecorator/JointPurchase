@@ -47,8 +47,9 @@ public interface Queue {
     String COMPANY_FIND_ALL = " SELECT * FROM public.company";
     String COMPANY_FIND_BY_ID = " SELECT * FROM public.company WHERE id = ? ";
     String COMPANY_DELETE_BY_ID = "DELETE FROM public.company WHERE id= ?";
-    String COMPANY_INSERT = "INSERT INTO public.company (id, name, description, address, email, phone, url, bik, inn, ks, rs, date_add) " +
-            "values (:id, :name, :description, :address, :email, :phone, :url, :bik, :inn, :ks, :rs, :dateAdd)";
+    String COMPANY_UPDATE = "UPDATE public.company SET name = :name, description = :description, address = :address, email = :email, phone = :phone, url = :url, bik = :bik, inn = :inn, ks = :ks, rs = :rs WHERE id = :id";
+    String COMPANY_INSERT = "INSERT INTO public.company (id, name, description, address, email, phone, url, bik, inn, ks, rs) " +
+            "values (:id, :name, :description, :address, :email, :phone, :url, :bik, :inn, :ks, :rs)";
 
     String CREDENTIAL_FIND_BY_ID = "SELECT * FROM public.credential where subject_id = ? ";
     String CREDENTIAL_UPDATE_BY_ID = "UPDATE public.credential SET password = ?, role_id = ?, date_add = ? WHERE subject_id = ? ";

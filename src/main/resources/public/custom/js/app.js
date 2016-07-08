@@ -6,7 +6,7 @@
 (function() {
     angular.module('purchase')
 
-        .config(['$stateProvider', '$urlRouterProvider','$httpProvider',/*'uiMask.ConfigProvider',*/function ($stateProvider, $urlRouterProvider,$httpProvider/*,uiMaskConfigProvider*/) {
+        .config(['$stateProvider', '$urlRouterProvider','$httpProvider','$locationProvider','$mdThemingProvider',function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider, $mdThemingProvider) {
             $httpProvider.interceptors.push('authInterceptor');
 
             // For any unmatched url, redirect to /state1
@@ -16,9 +16,15 @@
             angular.forEach(route.getRoutes(),function(route){
                 $stateProvider.state(route);
             });
+            //
+            //$locationProvider.html5Mode({
+            //    enabled: true,
+            //    requireBase: false,
+            //    rewriteLinks: false
+            //});
 
-            //uiMaskConfigProvider.eventsToHandle(['input', null, null, null]);
-            //uiMaskConfigProvider.addDefaultPlaceholder('false');
+            $mdThemingProvider.theme('success','default').dark();
+            $mdThemingProvider.theme('success','default').dark();
         }])
 
         .run(['$state', '$rootScope', '$location','$timeout','modal',function ($state, $rootScope, $location,$timeout,modal) {
@@ -49,6 +55,8 @@
 
                 console.log(toState);
                 console.log($state);
+
+
             });
 
             /* if token expired or not login then move to mane page and clear all data */

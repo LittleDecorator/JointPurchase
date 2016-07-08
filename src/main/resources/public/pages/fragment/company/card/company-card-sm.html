@@ -1,40 +1,48 @@
 <div class="card">
     <div class="card-content" layout="column">
 
-
-        <md-input-container style="margin-bottom: 0">
-            <label>Название</label>
-            <input ng-model="company.name">
+        <md-input-container>
+            <label class="required">Название</label>
+            <input name="name" ng-model="company.name" required>
+            <div ng-messages="companyCard.name.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
+            </div>
         </md-input-container>
 
-        <md-input-container style="margin-bottom: 0">
+        <md-input-container>
             <label>Описание</label>
-            <textarea ng-model="company.description" md-select-on-focus></textarea>
+            <textarea ng-model="company.description" rows="3"></textarea>
         </md-input-container>
 
-        <md-input-container style="margin-bottom: 0">
+        <md-input-container>
             <label>Сайт</label>
             <input ng-model="company.url">
+            <div class="hint">Пример: http://website.com</div>
         </md-input-container>
 
-        <md-input-container style="margin-bottom: 0">
+        <md-input-container>
             <label>Адрес</label>
             <input ng-model="company.address">
         </md-input-container>
 
-        <md-input-container style="margin-bottom: 0">
+        <md-input-container>
             <label>Почта</label>
-            <input ng-model="company.email">
+            <input name="email" ng-model="company.email" ng-pattern="/^.+@.+\..+$/">
+            <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+            <div ng-messages="companyCard.email.$error" ng-if="!showHints">
+                <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+            </div>
         </md-input-container>
 
-        <md-input-container style="margin-bottom: 0">
+        <md-input-container>
             <label>Телефон</label>
-            <input ng-model="company.phone" ui-mask="+7(999) 99-99-999" placeholder="">
+            <input ng-model="company.phone" mask="(999) 999-99-99" mask-restrict="reject">
+            <div class="hint">Пример: (915) 343-43-45</div>
         </md-input-container>
 
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" style="bottom: 30px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}" style="bottom: 30px; right: 15px;">
         <md-icon>save</md-icon>
     </md-button>
 </div>
