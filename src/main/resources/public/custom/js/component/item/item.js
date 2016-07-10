@@ -8,9 +8,7 @@
     angular.module('item')
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
 
-            $scope.companyNames = angular.copy(companies);
-            $scope.companyNames.unshift({id:null,name:"Выберите поставщика..."});
-
+            $scope.companyNames = companies;
             $scope.items = [];
 
             $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
@@ -73,9 +71,6 @@
                 localStorage.removeItem($state.current.name);
                 $scope.stopLoad = false;
                 $scope.loadData(true);
-                $timeout(function(){
-                    $('select').material_select();
-                },10);
             };
 
             /* apply filter */
@@ -118,11 +113,16 @@
 
         .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter){
             $scope.selected = item;
-            $scope.selected.price = $filter('number')($scope.selected.price);
             $scope.companyNames = companies;
-            $scope.companyNames.unshift({id:null,name:"Выберите поставщика..."});
-            console.log($scope.companyNames);
             $scope.showHints = true;
+
+            if($scope.selected.price){
+                $scope.selected.price = $filter('number')($scope.selected.price);
+            }
+
+            if(!$scope.selected.categories){
+                $scope.selected.categories = [];
+            }
 
             if(!$scope.selected.inStock){
                 $scope.selected.inStock = 0;
@@ -209,16 +209,7 @@
                 }
             };
 
-            /* Callback после загрузки шаблона */
-            $scope.afterInclude = function(){
-                $('select').material_select();
-            };
-
-            /* Post-init обработка */
-            $timeout(function(){
-                $('select').material_select();
-                console.log($scope);
-            },20);
+            console.log($scope)
 
         }])
 

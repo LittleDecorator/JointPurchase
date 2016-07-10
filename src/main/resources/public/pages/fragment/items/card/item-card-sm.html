@@ -2,32 +2,44 @@
     <div class="card-content" layout="column">
 
         <md-input-container style="margin-bottom: 0">
-            <label>Название</label>
-            <input ng-model="selected.name">
+            <label class="required">Название</label>
+            <input ng-model="selected.name" required>
+            <div ng-messages="itemCard.name.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
+            </div>
         </md-input-container>
 
         <md-input-container class="md-block">
-            <label>Производитель</label>
-            <md-select ng-model="selected.companyId">
+            <label class="required">Производитель</label>
+            <md-select ng-model="selected.companyId" required>
                 <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
             </md-select>
+            <div ng-messages="itemCard.company.$error" ng-if="!showHints">
+                <div ng-message="required">Не выбран производитель</div>
+            </div>
         </md-input-container>
 
         <md-content style="overflow: visible; margin-bottom: 18px">
-            <label>Категории</label>
-            <md-chips ng-model="selected.categories" class="category-chips" readonly="false">
+            <label class="required">Категории</label>
+            <md-chips ng-model="selected.categories" class="category-chips" md-on-remove="removeCategory($index)">
                 <md-chip-template>
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
-                <button md-chip-remove class="md-primary vegetablechip" ng-click="removeCategory($index)">
+                <button md-chip-remove class="md-primary vegetablechip">
                     <md-icon md-svg-icon="md-close"></md-icon>
                 </button>
             </md-chips>
+            <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
+                <div ng-message="required">Необходимо выбрать хотя бы одну категорию</div>
+            </div>
         </md-content>
 
         <md-input-container style="margin-bottom: 0">
-            <label>Артикул</label>
-            <input ng-model="selected.article">
+            <label class="required">Артикул</label>
+            <input ng-model="selected.article" required only-number>
+            <div ng-messages="itemCard.article.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
+            </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
@@ -36,13 +48,19 @@
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
-            <label>Цена (руб)</label>
-            <input ng-model="selected.price">
+            <label class="required">Цена (руб)</label>
+            <input ng-model="selected.price" required currency-mask>
+            <div ng-messages="itemCard.price.$error" ng-if="!showHints">
+                <div ng-message-exp="['parse']">Поле не может быть пустым</div>
+            </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
-            <label>Кол-во в наличие</label>
-            <input ng-model="selected.inStock">
+            <label class="required">Кол-во в наличие</label>
+            <input ng-model="selected.inStock" only-number>
+            <div ng-messages="itemCard.inStock.$error" ng-if="!showHints">
+                <div ng-message-exp="['parse']">Поле не может быть пустым</div>
+            </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">

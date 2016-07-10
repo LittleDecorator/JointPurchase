@@ -168,7 +168,8 @@
             console.log("in resolver");
             
             this.getItemDetail = function(id){
-                console.log("Get Item Detail");
+                console.log("Get Item Detail for id -> ");
+                console.log(id);
                 var deferred = $q.defer();
                 if(id){
                     dataResources.item.get({id:id},function(item){
@@ -219,6 +220,7 @@
             this.getCompanyMap = function(){
                 var deferred = $q.defer();
                 dataResources.companyMap.get(function(res){
+                    res.unshift({id:null,name:"Выберите компанию..."});
                     deferred.resolve(res);
                 });
                 return deferred.promise;

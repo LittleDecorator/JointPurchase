@@ -1,60 +1,80 @@
-<div style="padding-bottom: 20px" class="card">
-    <div class="card-content row">
-        <div class="input-field col s12">
-            <input id="firstName" type="text" name="firstName" class="form-control" ng-model="person.firstName">
-            <label for="firstName" ng-class="{'active':person.firstName.length>0}">Имя</label>
+<div class="card">
+    <div class="card-content" layout="column">
+
+        <md-input-container>
+            <label class="required">Имя</label>
+            <input name="firstName" ng-model="person.firstName">
+            <div ng-messages="personCard.firstName.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container>
+            <label class="required">Фамилия</label>
+            <input name="lastName" ng-model="person.lastName">
+            <div ng-messages="personCard.lastName.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Отчество</label>
+            <input name="middleName" ng-model="person.middleName">
+        </md-input-container>
+
+        <md-input-container>
+            <label>Номер телефона</label>
+            <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
+            <div class="hint">Пример: (915) 343-43-45</div>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Почта</label>
+            <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/">
+            <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+            <div ng-messages="personCard.email.$error" ng-if="!showHints">
+                <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Адрес</label>
+            <input ng-model="person.address">
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Индекс</label>
+            <input ng-model="person.postAddress" mask="999 999" mask-restrict="reject">
+        </md-input-container>
+
+        <md-input-container style="margin-bottom: 0" >
+            <md-checkbox ng-model="person.isEmployer">Сотрудник компании</md-checkbox>
+        </md-input-container>
+
+        <div ng-if="person.isEmployer" layout="column">
+            <md-input-container md-no-float>
+                <label class="required">Компания</label>
+                <md-select name="company" ng-model="person.companyId" required >
+                    <md-option ng-repeat="company in companies" ng-value="company.id">{{::company.name}}</md-option>
+                </md-select>
+                <div ng-messages="personCard.company.$error" ng-if="!showHints">
+                    <div ng-message="required">Компания не выбрана</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="no-errors">
+                <label class="required">Должность</label>
+                <input name="job" ng-model="person.job" required>
+                <div ng-messages="personCard.job.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
+            </md-input-container>
+
         </div>
 
-        <div class="input-field col s12">
-            <input id="lastName" type="text" name="lastName" class="form-control" ng-model="person.lastName">
-            <label for="lastName" ng-class="{'active':person.lastName.length>0}">Фамилия</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="middleName" type="text" name="middleName" class="form-control" ng-model="person.middleName">
-            <label for="middleName" ng-class="{'active':person.middleName.length>0}">Отчество</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="phoneNumber" type="text" name="phoneNumber" class="form-control" ng-model="person.phoneNumber">
-            <label for="phoneNumber" ng-class="{'active':person.phoneNumber.length>0}">Номер телефона</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="email" type="text" name="email" class="form-control" ng-model="person.email">
-            <label for="email" ng-class="{'active':person.email.length>0}">Почта</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="address" type="text" name="address" class="form-control" ng-model="person.address">
-            <label for="address" ng-class="{'active':person.address.length>0}">Адрес:</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="postAddress" type="text" name="postAddress" class="form-control" ng-model="person.postAddress">
-            <label for="postAddress" ng-class="{'active':person.postAddress.length>0}">Индекс</label>
-        </div>
-
-        <div class="input-field col s12" ng-show="current.isEmployer">
-            <select id="company" name="companyId" ng-model="person.companyId" ng-options="company.name for company in companies track by company.id"></select>
-            <label for="company" class="control-label">Организация</label>
-        </div>
-
-        <div class="input-field col s12" ng-show="current.isEmployer">
-            <input id="job" type="text" name="job" class="form-control" ng-model="person.job">
-            <label for="job" ng-class="{'active':person.job.length>0}">Должность</label>
-        </div>
-
-        <div class="input-field col s12">
-            <input id="employer" type="checkbox" class="filled-in" ng-model="person.isEmployer">
-            <label for="employer">Сотрудник компании</label>
-        </div>
     </div>
 
-
-    <div class="fixed-action-btn " style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-x-small blue lighten-3" ng-click="save()">
-            <i class="large mdi-content-save"></i>
-        </a>
-    </div>
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}" style="bottom: 30px; right: 15px;">
+        <md-icon>save</md-icon>
+    </md-button>
 </div>

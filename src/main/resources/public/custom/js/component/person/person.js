@@ -32,13 +32,6 @@
                 $state.transitionTo("order", {customerId: id});
             };
 
-            $scope.save = function () {
-                if ($scope.selectedCompany != null) {
-                    $scope.current.companyId = $scope.selectedCompany.id;
-                }
-                dataResources.customer.save($scope.current);
-            };
-
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "person-sm.html"
@@ -53,15 +46,16 @@
 
         }])
 
-        .controller('personDetailController',['$scope','$state','dataResources','person','companies', function ($scope, $state, dataResources, person, companies) {
+        .controller('personDetailController',['$scope','$state','dataResources','person','companies','$mdToast', function ($scope, $state, dataResources, person, companies,$mdToast) {
             var templatePath = "pages/fragment/person/card/";
-            $scope.person = {};
+            $scope.person = person ? person : {};
             $scope.companies = companies;
-            $scope.companies.unshift({id:null,name:'Выберите компанию'});
+            $scope.showHints = true;
 
-            if(person){
-                $scope.person = person;
-                $scope.person.isEmployer = ($scope.person.companyId != null);
+            if($scope.person.companyId && $scope.person.companyId != null){
+                $scope.person.isEmployer = true;
+            } else {
+                $scope.person.companyId = null;
             }
 
             $scope.getTemplateUrl = function(){
@@ -72,9 +66,48 @@
                 }
             };
 
-            $scope.afterInclude = function(){
-                $('select').material_select();
+            $scope.save = function () {
+                // if ($scope.selectedCompany != null) {
+                //     $scope.current.companyId = $scope.selectedCompany.id;
+                // }
+                // dataResources.customer.save($scope.current);
+
+
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+
+                function refreshState(data){
+                    // $scope.itemCard.$setPristine();
+                    // /* refresh state because name can be changed */
+                    // $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                    //     $scope.selected.id = data.result;
+                    //     $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                    // });
+                }
+
+                if($scope.personCard.$dirty){
+                    if($scope.personCard.$valid){
+                        if($scope.selected.id){
+                            // dataResources.item.put($scope.selected).$promise.then(function(data){
+                            //     $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно изменён').theme('success'));
+                            //     refreshState({result:$scope.selected.id});
+                            // }, function(error){
+                            //     $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
+                            // })
+                        } else {
+                            // dataResources.item.post($scope.selected).$promise.then(function(data){
+                            //     $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно создан').theme('success'));
+                            //     refreshState(data);
+                            // }, function(error){
+                            //     $mdToast.show(toast.textContent('Неудалось создать новый товар').theme('error'));
+                            // })
+                        }
+                        $scope.showHints = true;
+                    } else {
+                        $scope.showHints = false;
+                    }
+                }
             };
+
 
         }])
 })();

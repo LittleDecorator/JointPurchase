@@ -22,7 +22,7 @@
             <td class="center-align">{{::item.name}}</td>
             <td class="center-align">{{::item.companyName}}</td>
             <td class="center-align">{{::item.article}}</td>
-            <td class="center-align">{{::item.price}} руб</td>
+            <td class="center-align">{{::item.price|number}} руб</td>
             <td class="center-align">{{::item.inStock|asZero}}</td>
             <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
             <td class="right-align">

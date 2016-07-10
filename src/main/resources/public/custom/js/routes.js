@@ -352,7 +352,7 @@ var route = {
                 },
                 data: {
                     displayName: 'Товар',
-                    requireLogin: true,
+                    requireLogin: true
                 },
                 resolve: {
                     companies: function(resolveService) {

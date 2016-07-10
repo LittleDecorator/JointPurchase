@@ -92,7 +92,6 @@
                     $rootScope.subMenus = [];
                     $scope.cart = {cou:0,content:[]};
                     $rootScope.currentUser = {};
-                    $scope.refreshMenu();
                 }
 
                 //явный logout через меню
@@ -104,25 +103,6 @@
                         // $state.transitionTo("home");
                     });*/
                     clearCookieInfo();
-                };
-
-                //обновление меню после login/logout
-                //TODO: исправить зависимость меню от роли
-                $scope.refreshMenu = function(){
-                    $scope.menu = [];
-                    angular.forEach(menu.getMenu(),function(item){
-                        if(item.displayCondition){
-                            if(item.displayCondition.admin && item.displayCondition.auth && authService.isAuth()){
-                                $scope.menu.push(item);
-                            } else if(item.displayCondition.auth && authService.isAuth()){
-                                $scope.menu.push(item);
-                            } else if(!item.displayCondition.auth && !authService.isAuth()){
-                                $scope.menu.push(item);
-                            }
-                        } else {
-                            $scope.menu.push(item);
-                        }
-                    })
                 };
 
                 //удаление всех promises для login из сервиса, отмена login'а

@@ -1,42 +1,53 @@
-<div class="table-container">
-    <div ng-form="personCard">
+<div class="card">
+    <div ng-form="personCard" class="card-content">
 
         <div layout="column">
 
         <div layout="row">
 
-            <md-input-container flex="33" class="no-errors">
-                <label>Имя</label>
-                <input ng-model="person.firstName">
+            <md-input-container flex="33">
+                <label class="required">Имя</label>
+                <input name="firstName" ng-model="person.firstName">
+                <div ng-messages="personCard.firstName.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
             </md-input-container>
 
             <md-input-container flex="33" class="no-errors">
-                <label>Фамилия</label>
-                <input ng-model="person.lastName">
+                <label class="required">Фамилия</label>
+                <input name="lastName" ng-model="person.lastName">
+                <div ng-messages="personCard.lastName.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
             </md-input-container>
 
             <md-input-container flex="33" class="no-errors">
                 <label>Отчество</label>
-                <input ng-model="person.middleName">
+                <input name="middleName" ng-model="person.middleName">
             </md-input-container>
 
         </div>
 
         <div layout="row">
 
-            <md-input-container flex="33" class="no-errors">
+            <md-input-container flex="33">
                 <label>Номер телефона</label>
-                <input ng-model="person.phoneNumber">
+                <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
+                <div class="hint">Пример: (915) 343-43-45</div>
             </md-input-container>
 
-            <md-input-container flex="33" class="no-errors">
+            <md-input-container flex="33">
                 <label>Почта</label>
-                <input ng-model="person.email">
+                <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/">
+                <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+                <div ng-messages="personCard.email.$error" ng-if="!showHints">
+                    <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                </div>
             </md-input-container>
 
             <md-input-container flex="33" class="no-errors">
                 <label>Индекс</label>
-                <input ng-model="person.postAddress">
+                <input ng-model="person.postAddress" mask="999 999" mask-restrict="reject">
             </md-input-container>
 
         </div>
@@ -51,17 +62,22 @@
             </md-input-container>
 
         <div ng-if="person.isEmployer" layout="row">
-
-            <md-input-container flex="50" class="no-errors">
-                <label>Организация</label>
-                <md-select ng-model="person.companyId">
-                    <md-option ng-repeat="company in companies" value="{{company.id}}">{{company.name}}</md-option>
+            <md-input-container flex="50" md-no-float>
+                <label class="required">Компания</label>
+                <md-select name="company" ng-model="person.companyId" required >
+                    <md-option ng-repeat="company in companies" ng-value="company.id">{{::company.name}}</md-option>
                 </md-select>
+                <div ng-messages="personCard.company.$error" ng-if="!showHints">
+                    <div ng-message="required">Компания не выбрана</div>
+                </div>
             </md-input-container>
 
             <md-input-container flex="50" class="no-errors">
-                <label>Должность</label>
-                <input ng-model="person.job">
+                <label class="required">Должность</label>
+                <input name="job" ng-model="person.job" required>
+                <div ng-messages="personCard.job.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
             </md-input-container>
 
         </div>
