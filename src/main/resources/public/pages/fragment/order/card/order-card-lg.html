@@ -1,11 +1,11 @@
 <div>
+
     <h4>Информация о заказе</h4>
     <div class="card">
+        <div class="card-content" layout="column">
 
-        <div class="card-content" ng-form="_order" layout="column">
             <!-- Main Order Info -->
             <div layout="row">
-
                 <md-input-container flex="15" class="no-errors">
                     <label>Номер заказа</label>
                     <input ng-model="currentOrder.uid" disabled>
@@ -34,12 +34,14 @@
                         <md-option ng-repeat="delivery in deliveries" ng-value="delivery.id">{{delivery.value}}</md-option>
                     </md-select>
                 </md-input-container>
-
             </div>
 
-            <md-input-container class="no-errors">
+            <md-input-container>
                 <label class="required">Адрес</label>
-                <input ng-model="currentOrder.recipientAddress" required>
+                <input name="address" ng-model="currentOrder.recipientAddress" required>
+                <div ng-messages="orderCard.address.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
             </md-input-container>
 
             <md-input-container class="no-errors">
@@ -53,35 +55,42 @@
 
     <h4>Информация о заказчике</h4>
     <div class="card">
+        <div layout="row" class="card-content">
 
-            <div layout="row" class="card-content">
+            <md-input-container flex="20">
+                <label class="required">Имя</label>
+                <input name="firstName" ng-model="currentOrder.recipientFname" required>
+                <div ng-messages="orderCard.firstName.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
+            </md-input-container>
 
-                <md-input-container flex="20" class="no-errors">
-                    <label class="required">Имя</label>
-                    <input ng-model="currentOrder.recipientFname" required>
-                </md-input-container>
+            <md-input-container flex="20" style="margin-left:1%">
+                <label class="required">Фамилия</label>
+                <input name="lastName" ng-model="currentOrder.recipientLname" required>
+                <div ng-messages="orderCard.lastName.$error" ng-if="!showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
+                </div>
+            </md-input-container>
 
-                <md-input-container flex="20" class="no-errors" style="margin-left:1%">
-                    <label class="required">Фамилия</label>
-                    <input ng-model="currentOrder.recipientLname" required>
-                </md-input-container>
+            <md-input-container flex="20" class="no-errors" style="margin-left:1%">
+                <input ng-model="currentOrder.recipientMname" placeholder="Отчество">
+            </md-input-container>
 
-                <md-input-container flex="20" class="no-errors" style="margin-left:1%">
-                    <label>Отчество</label>
-                    <input ng-model="currentOrder.recipientMname">
-                </md-input-container>
+            <md-input-container flex="20" style="margin-left:1%">
+                <label>Email</label>
+                <input name="email" ng-model="currentOrder.recipientEmail" ng-pattern="/^.+@.+\..+$/">
+                <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+                <div ng-messages="orderCard.email.$error" ng-if="!showHints">
+                    <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                </div>
+            </md-input-container>
 
-                <md-input-container flex="20" class="no-errors" style="margin-left:1%">
-                    <label>Email</label>
-                    <input ng-model="currentOrder.recipientEmail">
-                </md-input-container>
-
-                <md-input-container flex="20" class="no-errors" style="margin-left:1%">
-                    <label>Телефон</label>
-                    <input ng-model="currentOrder.recipientPhone" ui-mask="+9(999) 99-99-999" placeholder="">
-                </md-input-container>
-            </div>
-
+            <md-input-container flex="20" style="margin-left:1%">
+                <label>Телефон</label>
+                <input ng-model="currentOrder.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+                <div class="hint">Пример: (915) 343-43-45</div>
+            </md-input-container>
         </div>
     </div>
 

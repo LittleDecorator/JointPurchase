@@ -63,6 +63,15 @@ create table credential(
   foreign key (role_id) references role
 );
 
+-- таблица типов доставок
+create table delivery(
+  id varchar(37) not null,
+  name varchar(37) not null,
+  hint text not null,
+  date_add timestamp default current_timestamp,
+  primary key (id)
+);
+
 -- таблица заказов
 create table purchase_order (
   id varchar(37) not null,                --id
@@ -78,10 +87,11 @@ create table purchase_order (
   close_order_date timestamp,     --дата закрытия заказа
   comment varchar(255),     -- комментарий
   status varchar(30) default 'new',     --статус заказа
-  delivery varchar(30) default 'Самовывоз',
-  payment int,      -- сумма к оплате
+  delivery_id varchar(37) not null,
+  payment int not null,      -- сумма к оплате
   primary key (id),
-  foreign key (subject_id) references subject
+  foreign key (subject_id) references subject,
+  foreign key (delivery_id) references delivery
 );
 
 --категории товаров (дерево которое содержит также и подкатегорию) - меню
@@ -144,6 +154,8 @@ create table item_content(
   foreign key (item_id) references item,
   foreign key (content_id) references content
 );
+
+
 
 
 

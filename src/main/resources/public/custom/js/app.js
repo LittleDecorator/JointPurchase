@@ -38,35 +38,29 @@
             $rootScope.$on('$locationChangeSuccess', function (event, toState, toParams) {
 
                 //hide side menu filter
-                 var slider = $('.slide-outt');
-                 if(slider.hasClass('slide-inn')){
-                     slider.removeClass('slide-inn');
-                     $('.button-collapse').sideNav('hide');
-                 }
+                // var slider = $('.slide-outt');
+                // if(slider.hasClass('slide-inn')){
+                //     slider.removeClass('slide-inn');
+                //     $('.button-collapse').sideNav('hide');
+                // }
 
                 /* emulate click outside of mobile-menu */
                  $("#sidenav-overlay").trigger("click");
 
                 $rootScope.actualLocation = $location.$$url;
 
-                $timeout(function() {
-                    $("#spinner").fadeTo(800, 0, function(){ $(this).hide()});
-                },10);
-
-                console.log(toState);
-                console.log($state);
-
+                //$timeout(function() {
+                //    $("#spinner").fadeTo(800, 0, function(){ $(this).hide()});
+                //},10);
 
             });
 
             /* if token expired or not login then move to mane page and clear all data */
             $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams, options) {
 
-                console.log(event);
-
-                $timeout(function(){
-                    $("#spinner").fadeTo(800, 1, function(){ $(this).show()});
-                },10);
+                //$timeout(function(){
+                //    $("#spinner").fadeTo(800, 1, function(){ $(this).show()});
+                //},10);
 
                 if(localStorage.getItem('token') == undefined){
                     localStorage.removeItem('menus');

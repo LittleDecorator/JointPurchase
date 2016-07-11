@@ -226,6 +226,42 @@
                 return deferred.promise;
             };
 
+            this.getPersonMap = function(){
+                var deferred = $q.defer();
+                dataResources.personMap.get(function(res){
+                    deferred.resolve(res);
+                });
+                return deferred.promise;
+            };
+
+            this.getStatusMap = function(){
+                var deferred = $q.defer();
+                dataResources.statusMap.get(function(res){
+                    deferred.resolve(res);
+                });
+                return deferred.promise;
+            };
+
+            this.getDeliveryMap = function(){
+                var deferred = $q.defer();
+                dataResources.deliveryMap.get(function(res){
+                    deferred.resolve(res);
+                });
+                return deferred.promise;
+            };
+
+            this.getOrderItems = function(id){
+                if(id){
+                    var deferred = $q.defer();
+                    dataResources.orderItems.get({id:id},function(res){
+                        deferred.resolve(res);
+                    });
+                    return deferred.promise;
+                } else {
+                    return null;
+                }
+            };
+
             this.getCategoryTreeData = function(){
                 var deferred = $q.defer();
                 dataResources.categoryTree.get().$promise.then(function(data){

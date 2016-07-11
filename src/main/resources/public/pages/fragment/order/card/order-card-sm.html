@@ -1,83 +1,101 @@
 <div style="padding-bottom: 20px;">
     <h4 style="font-size: 1.5rem; text-align: center;">Информация о заказе</h4>
     <!-- Main Order Info -->
-    <div class="card-panel" style="padding-bottom: 0">
-        <div class="row">
-            <div class="input-field col s6">
-                <input type="text" id="uid" ng-model="currentOrder.uid" disabled>
-                <label class="active" for="uid">Номер заказа</label>
+    <div class="card-panel" layout="column">
+
+        <md-input-container class="no-errors">
+            <input value="{{::currentOrder.uid}}" disabled placeholder="Номер заказа">
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Сумма к оплате</label>
+            <input value="{{currentOrder.payment | number}}" disabled>
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Дата создания</label>
+            <input value="{{::currentOrder.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+        </md-input-container>
+
+        <md-input-container>
+            <label class="required">Статус заказа</label>
+            <md-select name="status" ng-model="currentOrder.status.id" required>
+                <md-option ng-repeat="status in statuses" ng-value="status.id">{{status.value}}</md-option>
+            </md-select>
+            <div ng-messages="orderCard.status.$error" ng-if="!showHints">
+                <div ng-message="required">Не указан статус заказа</div>
             </div>
+        </md-input-container>
 
-            <div class="input-field col s6">
-                <input type="text" id="payment" ng-model="currentOrder.payment" disabled>
-                <label class="active" for="payment" >Сумма к оплате</label>
+        <md-input-container>
+            <label class="required">Тип доставки</label>
+            <md-select name="delivery" ng-model="currentOrder.delivery" required>
+                <md-option ng-repeat="delivery in deliveries" ng-value="delivery.id">{{delivery.value}}</md-option>
+            </md-select>
+            <div ng-messages="orderCard.delivery.$error" ng-if="!showHints">
+                <div ng-message="required">Не указан тип доставки</div>
             </div>
+        </md-input-container>
 
-            <div class="input-field col s6">
-                <input type="text" id="dateAdd" ng-model="currentOrder.formatedDateAdd" disabled>
-                <label class="active" for="dateAdd">Дата создания</label>
+        <md-input-container>
+            <label class="required">Адрес</label>
+            <input name="address" ng-model="currentOrder.recipientAddress" required>
+            <div ng-messages="orderCard.address.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
             </div>
+        </md-input-container>
 
-            <div class="input-field col s6">
-                <label class="control-label" for="dateAdd">Дата закрытия</label>
-                <input type="text" id="closeDate" class="form-control" ng-model="currentOrder.closeOrderDate" disabled>
-            </div>
+        <md-input-container class="no-errors">
+            <label>Комментарий</label>
+            <input ng-model="currentOrder.comment">
+        </md-input-container>
 
-            <div class="input-field col s12">
-                <label ng-class="{'active':currentOrder.status.length>0}">Стату заказа</label>
-                <select id="status" ng-model="currentOrder.status">
-                    <option ng-repeat="status in stats" ng-selected="currentOrder.status == status.id" value="{{::status.id}}">{{::status.value}}</option>
-                </select>
-
-            </div>
-
-            <div class="input-field col s12">
-                <label class="required" ng-class="{'active':currentOrder.delivery.length>0}">Тип доставки</label>
-                <select id="delivery" ng-model="currentOrder.delivery">
-                    <option ng-repeat="delivery in deliveries" ng-selected="currentOrder.status == delivery.id" value="{{::delivery.id}}">{{::delivery.value}}</option>
-                </select>
-            </div>
-
-
-        </div>
     </div>
 
     <!-- Customer Info -->
     <h4 style="font-size: 1.5rem; text-align: center;">Информация о заказчике</h4>
-    <div class="card-panel" style="padding-bottom: 0">
-        <div class="row">
-            <div class="input-field col s12">
-                <input type="text" id="fname" ng-model="currentOrder.recipientFname" required>
-                <label class="required" ng-class="{'active':!isNewOrder}" for="fname">Имя</label>
-            </div>
+    <div class="card-panel" layout="column">
 
-            <div class="input-field col s12">
-                <input type="text" id="lname" ng-model="currentOrder.recipientLname" required>
-                <label class="required" ng-class="{'active':!isNewOrder}" for="lname">Фамилия</label>
+        <md-input-container>
+            <label class="required">Имя</label>
+            <input name="firstName" ng-model="currentOrder.recipientFname" required>
+            <div ng-messages="orderCard.firstName.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
             </div>
+        </md-input-container>
 
-            <div class="input-field col s12">
-                <input type="text" id="mname" ng-model="currentOrder.recipientMname">
-                <label ng-class="{'active':!isNewOrder && currentOrder.recipientMname.length>0}" for="mname">Отчество</label>
+        <md-input-container>
+            <label class="required">Фамилия</label>
+            <input name="lastName" ng-model="currentOrder.recipientLname" required>
+            <div ng-messages="orderCard.lastName.$error" ng-if="!showHints">
+                <div ng-message="required">Поле не может быть пустым</div>
             </div>
+        </md-input-container>
 
-            <div class="input-field col s12">
-                <input type="text" id="email" ng-model="currentOrder.recipientEmail" email-validate
-                       ng-class="{'invalid': (_order.$error.emailValidator && currentOrder.recipientEmail.length>0),'valid':(!_order.$error.emailValidator && currentOrder.recipientEmail.length>0)}">
-                <label class="control-label" for="email" ng-class="{'active':!isNewOrder && currentOrder.recipientEmail.length>0}" data-error='Not valid email'>Email</label>
-            </div>
+        <md-input-container class="no-errors">
+            <input ng-model="currentOrder.recipientMname" placeholder="Отчество">
+        </md-input-container>
 
-            <div class="input-field col s12">
-                <input type="text" id="phone" ng-model="currentOrder.recipientPhone" required phone-validate
-                       ng-class="{'invalid': (_order.$error.phoneValidator && currentOrder.recipientPhone.length>0),'valid':(!_order.$error.phoneValidator && currentOrder.recipientPhone.length>0)}">
-                <label class="control-label required" ng-class="{'active':!isNewOrder}" for="phone" data-error='Not valid phone'>Телефон</label>
+        <md-input-container>
+            <label>Email</label>
+            <input name="email" ng-model="currentOrder.recipientEmail" ng-pattern="/^.+@.+\..+$/">
+            <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+            <div ng-messages="orderCard.email.$error" ng-if="!showHints">
+                <div ng-message-exp="['pattern']">Не корректный e-mail</div>
             </div>
-        </div>
+        </md-input-container>
+
+        <md-input-container>
+            <label class="required">Телефон</label>
+            <input ng-model="currentOrder.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+            <div class="hint">Пример: (915) 343-43-45</div>
+        </md-input-container>
+
     </div>
 
     <h4 style="font-size: 1.5rem; text-align: center;">Содержимое заказа</h4>
     <div class="card-panel" ng-if="currentOrder.items.length>0" style="padding: 10px;">
-        <table class="table table-bordered collection" style="border: medium none;margin-bottom: 0;">
+        <table>
             <thead>
             <tr>
                 <th style="text-align: center;padding: 10px 5px;">Название</th>
@@ -91,28 +109,29 @@
                 <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
                 <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
                 <td class="col s2 non-float" style="text-align: center">
-                    <div style="display: flex;">
-                        <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.cou<1}"></i>
+                    <div style="display: flex;line-height: 2;">
+                        <md-icon ng-click="decrementCou($index)" style="cursor: pointer">chevron_left</md-icon>
                         <span>{{item.cou}}</span>
-                        <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
+                        <md-icon ng-click="incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
                     </div>
                 </td>
                 <td class="col s1 non-float" style="text-align: center">
-                    <div style="cursor: pointer" ng-click="remItemsFromOrder($index)">
-                        <i class="small mdi-content-clear" style="color: #ee6e73"></i>
-                    </div>
+                    <md-icon ng-click="remItemsFromOrder($index)" style="color: darksalmon;margin-right: 0;cursor: pointer;font-size: 2rem;height: 2rem; ">delete</md-icon>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="table-result" ng-if="currentOrder.items.length==0">
+
+    <div class="card-panel" ng-if="currentOrder.items.length==0" style="padding: 5px; text-align: center; background-color: cadetblue; color: white;">
         <span style="margin-right: 2%">Не добавлено ни одного товара</span>
     </div>
 
-    <div class="fixed-action-btn" style="bottom: 15px; right: 15px;">
-        <a class="btn-floating blue lighten-3" ng-click="addItemsInOrder()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
-            <i class="large mdi-content-add"></i>
-        </a>
-    </div>
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="addItemsInOrder()" style="bottom: 115px; right: 15px;">
+        <md-icon>add</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!orderCard.$dirty}" style="bottom: 45px; right: 15px;">
+        <md-icon>save</md-icon>
+    </md-button>
 </div>

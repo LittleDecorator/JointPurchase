@@ -167,9 +167,9 @@
                 contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
                 customer: $resource('/customer/:id'),
 
-                //previewItems: $resource('/item/preview',{},{
-                //    filter:{method:'POST',isArray:false}
-                //}),
+                previewItems: $resource('/item/preview',{},{
+                    filter:{method:'POST',isArray:false}
+                }),
 
                 galleryShow: $resource('content/set/show',{},{
                     toggle:{method:'PUT',isArray:false}
@@ -180,11 +180,23 @@
                 notForSale:$resource('item/set/sale',{},{
                     toggle:{method:'POST',isArray:false}
                 }),
-                orderStatus:$resource('clss/order/status',{},{
-                    get:{method:'GET',isArray:true}
+                statusMap:$resource('clss/order/status/map',{},{
+                    get:{method:'GET',isArray:true,transformResponse: function(data){
+                        var result = [{id:null,value:"Выберите статус заказа ..."}];
+                        angular.forEach(angular.fromJson(data), function(value, key){
+                            result.push({id:key,value:value})
+                        });
+                        return result;
+                    }}
                 }),
-                orderDelivery:$resource('clss/order/delivery',{},{
-                    get:{method:'GET',isArray:true}
+                deliveryMap:$resource('clss/order/delivery/map',{},{
+                    get:{method:'GET',isArray:true,transformResponse: function(data){
+                        var result = [{id:null,value:"Укажите тип доставки ..."}];
+                        angular.forEach(angular.fromJson(data), function(value, key){
+                            result.push({id:key,value:value})
+                        });
+                        return result;
+                    }}
                 })
 
             }

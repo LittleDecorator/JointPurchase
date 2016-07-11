@@ -1,6 +1,8 @@
 package com.acme.model;
 
 
+import com.acme.enums.OrderStatus;
+
 import java.util.Date;
 
 public class PurchaseOrder extends Base {
@@ -41,7 +43,7 @@ public class PurchaseOrder extends Base {
     private String comment;
 
 
-    private String status;
+    private OrderStatus status;
 
 
     private String delivery;
@@ -166,16 +168,13 @@ public class PurchaseOrder extends Base {
         this.comment = comment == null ? null : comment.trim();
     }
 
-
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
-
 
     public String getDelivery() {
         return delivery;

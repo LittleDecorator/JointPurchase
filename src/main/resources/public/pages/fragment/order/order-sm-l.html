@@ -13,25 +13,26 @@
                 </md-menu>
             </span>
             <div class="card-panel">
-                <md-list-item class="md-3-line" style="padding: 0">
+                <md-list-item class="md-2-line" style="padding: 0">
                     <div class="md-list-item-text" layout="column">
+                        <div layout="row">
+                            <md-input-container class="no-errors" flex>
+                                <input value="{{::order.personName}}" placeholder="Получатель">
+                            </md-input-container>
+                            <md-input-container class="no-errors" flex="50">
+                                <input value="{{::order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания">
+                            </md-input-container>
+                        </div>
 
-                        <md-input-container class="no-errors">
-                            <input value="{{::order.personName}}" placeholder="Получатель">
-                        </md-input-container>
+                        <div layout="row">
+                            <md-input-container class="no-errors" flex>
+                                <input value="{{::order.status}}" placeholder="Статус заказа">
+                            </md-input-container>
 
-                        <md-input-container class="no-errors">
-                            <input value="{{::order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания">
-                        </md-input-container>
-
-                        <md-input-container class="no-errors">
-                            <input value="{{::order.status}}" placeholder="Статус заказа">
-                        </md-input-container>
-
-                        <md-input-container class="no-errors">
-                            <input value="{{::payment|asZero|number}} руб" placeholder="Сумма к оплате">
-                        </md-input-container>
-
+                            <md-input-container class="no-errors" flex="50">
+                                <input value="{{::payment|asZero|number}} руб" placeholder="Сумма к оплате">
+                            </md-input-container>
+                        </div>
                     </div>
                 </md-list-item>
             </div>

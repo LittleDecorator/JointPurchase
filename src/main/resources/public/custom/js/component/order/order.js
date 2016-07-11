@@ -6,7 +6,7 @@
     'use strict';
 
     angular.module('order')
-        .controller('orderController',['$scope','$state','$stateParams','dataResources',function ($scope, $state, $stateParams, dataResources) {
+        .controller('orderController',['$scope','$state','$stateParams','dataResources', function ($scope, $state, $stateParams, dataResources) {
             //TODO: Написать сервис подсчета товаров при заказах
             //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
 
@@ -14,31 +14,17 @@
 
             /* array of orders*/
             $scope.orders = [];
-
-            /* map of person names */
-            $scope.personNames = dataResources.personMap.get();
-
-            /*items for selection*/
-            $scope.itemNames = dataResources.itemMap.get();
-
             $scope.selectedPerson = {};
 
             if ($stateParams.customerId) {
-                $scope.orders = dataResources.orderByCustomerId.get({id: $stateParams.customerId}, function (data) {
-                    angular.forEach(data, function (order) {
-                        var person = helpers.findInArrayById($scope.personNames, order.personId);
-                        order.personName = person.name;
-                    });
-                });
+                //$scope.orders = dataResources.orderByCustomerId.get({id: $stateParams.customerId}, function (data) {
+                //    angular.forEach(data, function (order) {
+                //        var person = helpers.findInArrayById(persons, order.personId);
+                //        order.personName = person.name;
+                //    });
+                //});
             } else {
-                $scope.orders = dataResources.order.query(function (data) {
-                    angular.forEach(data, function (order) {
-                        order.personName = order.recipientLname + " "+ order.recipientFname;
-                        if(order.recipientMname!=null && order.recipientMname.length>0){
-                            order.personName = order.personName + " "+order.recipientMname;
-                        }
-                    });
-                });
+                $scope.orders = dataResources.order.query(function (data) {});
             }
 
             $scope.editOrder = function (id) {
@@ -59,7 +45,10 @@
 
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
-                    return templatePath + "order-sm.html"
+                    if($scope.width < 361) {
+                        return templatePath + "order-sm.html"
+                    }
+                    return templatePath + "order-sm-l.html"
                 }
                 if($scope.width > 600){
                     if($scope.width < 1025){
@@ -71,92 +60,104 @@
 
         }])
 
-        .controller('orderDetailController',['$scope','$state','order','$stateParams','dataResources','$timeout','modal',function ($scope, $state, order,$stateParams, dataResources,$timeout,modal){
-
-            $scope.stats = [];
-            $scope.deliveries = [];
-            var time = new Date().getTime();
-            $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time,delivery:null};
-            $scope.isNewOrder = true;
+        .controller('orderDetailController',['$scope','$state','$stateParams','dataResources','$timeout','$mdToast','modal','order','items','deliveryMap','statusMap',function ($scope, $state, $stateParams, dataResources,$timeout,$mdToast,modal,order,items,deliveryMap,statusMap){
 
             var templatePath = "pages/fragment/order/card/";
 
+            $scope.statuses = statusMap;
+            $scope.deliveries = deliveryMap;
+
+            $scope.showHints = true;
+
+            $scope.currentOrder = order;
+            $scope.currentOrder.items = [];
+
             if (order) {
-                $scope.currentOrder = angular.copy(order);
-                $scope.currentOrder.items = [];
-
-                dataResources.orderItems.get({id: order.id}, function (data) {
-                    angular.forEach(data, function (orderItem) {
-                        var item = orderItem.item;
-                        item.cou = orderItem.cou;
-                        $scope.currentOrder.items.push(item);
-                    });
+                angular.forEach(items, function(orderItem){
+                    var item = orderItem.item;
+                    item.cou = orderItem.cou;
+                    $scope.currentOrder.items.push(item);
                 });
-
-                $scope.isNewOrder = !$scope.isNewOrder;
+            } else {
+                var time = new Date().getTime();
+                $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time,delivery:null};
             }
-            $scope.currentOrder.formatedDateAdd = helpers.dateTimeFormat($scope.currentOrder.dateAdd);
-
-            // Status
-            dataResources.orderStatus.get(function(data){
-                angular.forEach(data,function(stat){
-                    $scope.stats.push(stat);
-                });
-                $scope.stats.unshift({id:null,value:"Укажите статус заказа ..."});
-                console.log($scope.stats);
-                //if (order) {
-                //    $scope.currentOrder.status = helpers.findInArrayByValue($scope.stats, order.status);
-                //} else {
-                //    $scope.currentOrder.status = helpers.findInArrayById($scope.stats, 0);
-                //    $('#status').prop( "disabled", true );
-                //}
-            });
-
-            dataResources.orderDelivery.get(function(data){
-                angular.forEach(data,function(del){
-                    $scope.deliveries.push(del);
-                });
-                $scope.deliveries.unshift({id:null,value:"Укажите тип доставки ..."});
-                console.log($scope.deliveries);
-                //if (order) {
-                //    $scope.currentOrder.delivery = helpers.findInArrayByValue($scope.deliveries, order.delivery);
-                //} else {
-                //    $scope.currentOrder.delivery = helpers.findInArrayById($scope.deliveries, 0);
-                //}
-            });
-
-            console.log($scope.currentOrder);
 
             $scope.save = function () {
-                console.log("Save button pressed");
-                if($scope.currentOrder.items.length!=0 && !haveEmptyItems() && !$scope._order.$invalid){
-                    var cleanOrderItems = [];
 
-                    $scope.currentOrder.items.forEach(function (item) {
-                        if(item.cou>0){
-                            cleanOrderItems.push({
-                                id:null,
-                                orderId: $scope.currentOrder.id,
-                                itemId: item.id,
-                                cou: item.cou
-                            })
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+
+                function haveEmptyItems(){
+                    var result = false;
+                    $scope.currentOrder.items.some(function(item){
+                        if(item.cou==0){
+                            return result = true;
+                        } else {
+                            return result = false;
                         }
                     });
+                    return result;
+                }
 
-                    var correctOrder = angular.copy($scope.currentOrder);
-                    correctOrder.status = correctOrder.status.value;
-                    correctOrder.delivery = correctOrder.delivery.value;
-
-                    var respData = {
-                        order: correctOrder,
-                        items: cleanOrderItems
-                    };
-                    //TODO: try handle order after save
-                    var items = angular.copy($scope.currentOrder.items);
-                    dataResources.order.save(respData,function(data){
-                        $scope.currentOrder = data;
-                        $scope.currentOrder.items = items;
+                function refreshState(data){
+                    $scope.orderCard.$setPristine();
+                    /* refresh state because name can be changed */
+                    $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                        $scope.selected.id = data.result;
+                        $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                     });
+                }
+
+                if($scope.orderCard.$dirty) {
+                    if ($scope.orderCard.$valid) {
+                        if($scope.currentOrder.items.length!=0 && !haveEmptyItems()){
+
+                            var cleanOrderItems = [];
+
+                            $scope.currentOrder.items.forEach(function (item) {
+                                if(item.cou>0){
+                                    cleanOrderItems.push({
+                                        id:null,
+                                        orderId: $scope.currentOrder.id,
+                                        itemId: item.id,
+                                        cou: item.cou
+                                    })
+                                }
+                            });
+
+                            var correctOrder = angular.copy($scope.currentOrder);
+                            correctOrder.status = correctOrder.status.value;
+                            correctOrder.delivery = correctOrder.delivery.value;
+
+                            var respData = {
+                                order: correctOrder,
+                                items: cleanOrderItems
+                            };
+                            //TODO: try handle order after save
+                            var items = angular.copy($scope.currentOrder.items);
+                            dataResources.order.save(respData,function(data){
+                                $scope.currentOrder = data;
+                                $scope.currentOrder.items = items;
+
+                                if($scope.currentOrder.id){
+                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.currentOrder.uid +'] успешно изменён').theme('success'));
+                                } else {
+                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.currentOrder.uid +'] успешно создан').theme('success'));
+                                    refreshState({result:$scope.currentOrder.id});
+                                }
+                            }, function(error){
+                                if($scope.currentOrder.id){
+                                    $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
+                                } else {
+                                    $mdToast.show(toast.textContent('Неудалось создать новый заказ').theme('error'));
+                                }
+                            });
+                        } else {
+                            $mdToast.show(toast.textContent('В заказе отсутствует товар!').theme('error'));
+                        }
+                    } else {
+                        $scope.showHints = false;
+                    }
                 }
             };
 
@@ -170,6 +171,7 @@
                             item.cou = 1;
                         });
                         recalculatePayment();
+                        $scope.orderCard.$setDirty(true);
                     }
                 });
             };
@@ -203,18 +205,6 @@
                 })
             }
 
-            $scope.haveEmptyItems = function(){
-                var result = false;
-                $scope.currentOrder.items.some(function(item){
-                    if(item.cou==0){
-                        return result = true;
-                    } else {
-                        return result = false;
-                    }
-                });
-                return result;
-            };
-
             //TODO: need add addresses for self delivery and add new address field
             /*$scope.deliveryChanged = function(){
                 var elem = $('#deliveryType .select-wrapper');
@@ -240,8 +230,12 @@
             };
 
             $scope.afterInclude = function(){
-                $('select').material_select();
-            };
+                $timeout(function(){
+                    $scope.orderCard.$setPristine(true);
+                    console.log($scope);
+                },50);
+
+            }
 
         }])
 

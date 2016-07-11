@@ -173,13 +173,15 @@ public class ItemController{
      * Get all items as map
      **/
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<Map<String,String>> getItemMap() {
-        List<Map<String,String>> list = new ArrayList<>();
-        Map<String,String> map;
+    public List<Map<String,Object>> getItemMap() {
+        List<Map<String,Object>> list = new ArrayList<>();
+        Map<String,Object> map;
         for(Item i : itemRepository.getAll()){
             map = new HashMap<>();
             map.put("id",i.getId());
             map.put("name",i.getName());
+            map.put("price",i.getPrice());
+            map.put("article",i.getArticle());
             list.add(map);
         }
         return list;

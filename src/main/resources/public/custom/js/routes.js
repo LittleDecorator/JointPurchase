@@ -228,6 +228,24 @@ var route = {
                     }
                 }
             },
+
+            {
+                name: 'order',
+                url: '/order?customerId',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/orders.html',
+                        controller: 'orderController'
+                    }
+                },
+                data: {
+                    displayName: 'Заказы',
+                    requireLogin: true
+                    //base:true
+                },
+                resolve: {
+                }
+            },
             {
                 name: 'order.detail',
                 url: '/:id',
@@ -245,26 +263,15 @@ var route = {
                 resolve: {
                     order: function($stateParams, resolveService) {
                         return resolveService.getOrder($stateParams.id);
-                    }
-                }
-            },
-            {
-                name: 'order',
-                url: '/order?customerId',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/orders.html',
-                        controller: 'orderController'
-                    }
-                },
-                data: {
-                    displayName: 'Заказы',
-                    requireLogin: true,
-                    //base:true
-                },
-                resolve: {
-                    order: function() {
-                        return null;
+                    },
+                    items: function($stateParams,resolveService) {
+                        return resolveService.getOrderItems($stateParams.id);
+                    },
+                    statusMap:function(resolveService) {
+                        return resolveService.getStatusMap();
+                    },
+                    deliveryMap:function(resolveService) {
+                        return resolveService.getDeliveryMap();
                     }
                 }
             },
@@ -305,7 +312,6 @@ var route = {
                     requireLogin: true
                 }
             },
-
             {
                 name: 'company',
                 url:'/company',
@@ -340,7 +346,6 @@ var route = {
                     }
                 }
             },
-
             {
                 name:'item',
                 url:'/item?:companyId:orderId',

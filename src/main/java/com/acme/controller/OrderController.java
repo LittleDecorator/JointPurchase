@@ -3,6 +3,7 @@ package com.acme.controller;
 import com.acme.model.Item;
 import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
+import com.acme.model.dto.OrderView;
 import com.acme.repository.ItemRepository;
 import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
@@ -19,12 +20,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +57,7 @@ public class OrderController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<PurchaseOrder> getOrders() {
+    public List<OrderView> getOrders() {
         return purchaseOrderRepository.getAll();
     }
 
@@ -70,7 +67,7 @@ public class OrderController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/customer/{id}")
-    public List<PurchaseOrder> getCustomerOrders(@PathVariable("id") String id) {
+    public List<OrderView> getCustomerOrders(@PathVariable("id") String id) {
         return purchaseOrderRepository.getBySubjectId(id);
     }
 
@@ -90,11 +87,9 @@ public class OrderController{
      * @throws ParseException
      * @throws IOException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
+//    @Transactional(propagation = Propagation.REQUIRED)
     @RequestMapping(method = RequestMethod.POST)
     public PurchaseOrder createOrUpdateOrder(@RequestBody String input) throws ParseException, IOException {
-
-        System.out.println(input);
 
         ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -106,12 +101,12 @@ public class OrderController{
         PurchaseOrder order = mapper.readValue(orderS, PurchaseOrder.class);
 
         //try use transaction here
-        TransactionDefinition definition = new DefaultTransactionDefinition();
-        TransactionStatus status = transactionManager.getTransaction(definition);
-
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        System.out.println(status.isCompleted());
         try{
             if(order.getId()!=null){
                 purchaseOrderRepository.updateSelectiveById(order);
+                System.out.println(status.isCompleted());
             } else {
                 order.setUid(System.currentTimeMillis());
                 purchaseOrderRepository.insertSelective(order);
@@ -121,18 +116,19 @@ public class OrderController{
             List<OrderItem> orderItems = mapper.readValue(itemsArray.toJSONString(), new TypeReference<List<OrderItem>>(){});
             //delete old links
             orderItemRepository.deleteByOrderId(order.getId());
+            System.out.println(status.isCompleted());
             //insert new links
             for(OrderItem orderItem : orderItems){
                 orderItem.setOrderId(order.getId());
                 orderItemRepository.insertSelective(orderItem);
+                System.out.println(status.isCompleted());
             }
+            transactionManager.commit(status);
+            return order;
         } catch (Exception e){
             transactionManager.rollback(status);
+            return null;
         }
-
-        transactionManager.commit(status);
-
-        return order;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.acme.repository;
 
 import com.acme.constant.Queue;
 import com.acme.model.PurchaseOrder;
+import com.acme.model.dto.OrderView;
 import com.acme.repository.mapper.Mappers;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -23,11 +24,12 @@ public class PurchaseOrderRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
-    public List<PurchaseOrder> getAll(){
-        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_ALL, Mappers.purchaseOrderMapper);
+    public List<OrderView> getAll(){
+        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_ALL, Mappers.orderViewMapper);
     }
 
     public PurchaseOrder getById(String id){
+        System.out.println(id);
         return jdbcTemplate.queryForObject(Queue.PURCHASE_ORDER_FIND_BY_ID, Mappers.purchaseOrderMapper, id);
     }
 
@@ -41,8 +43,8 @@ public class PurchaseOrderRepository {
         return result == 1;
     }
 
-    public List<PurchaseOrder> getBySubjectId(String subjectId){
-        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_BY_SUBJECT_ID, Mappers.purchaseOrderMapper,subjectId);
+    public List<OrderView> getBySubjectId(String subjectId){
+        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_BY_SUBJECT_ID, Mappers.orderViewMapper,subjectId);
     }
 
     public boolean insertSelective(PurchaseOrder order){
@@ -153,88 +155,85 @@ public class PurchaseOrderRepository {
         Map<String,Object> namedParameters = Maps.newHashMap();
 
         String queue = updateSelective(order,namedParameters);
-        int res = parameterJdbcTemplate.update(queue + " WHERE id = "+ order.getId(),namedParameters);
+        int res = parameterJdbcTemplate.update(queue + " WHERE id = :id",namedParameters);
         return res == 1;
     }
 
     private String updateSelective(PurchaseOrder order, Map<String,Object> namedParameters){
-        StringBuilder querySB = new StringBuilder("update PURCHASE_ORDER set");
-        if(order.getId() != null){
-            querySB.append(" ID = :id ");
-            namedParameters.put("id", order.getId());
-        }
+        List<String> query = Lists.newArrayList();
+        namedParameters.put("id", order.getId());
 
         if(order.getSubjectId() != null){
-            querySB.append(" SUBJECT_ID = :subjectId ");
+            query.add(" SUBJECT_ID = :subjectId ");
             namedParameters.put("subjectId",order.getSubjectId());
         }
 
         if(order.getCloseOrderDate() != null){
-            querySB.append(" CLOSE_ORDER_DATE = :closeDate ");
+            query.add(" CLOSE_ORDER_DATE = :closeDate ");
             namedParameters.put("closeDate",order.getCloseOrderDate());
         }
 
         if(order.getUid() != null){
-            querySB.append(" UID = :uid ");
+            query.add(" UID = :uid ");
             namedParameters.put("uid",order.getUid());
         }
 
         if(order.getRecipientFname() != null){
-            querySB.append(" RECIPIENT_FNAME = :fname ");
+            query.add(" RECIPIENT_FNAME = :fname ");
             namedParameters.put("fname",order.getRecipientFname());
         }
 
         if(order.getRecipientLname() != null){
-            querySB.append(" RECIPIENT_LNAME = :lname ");
+            query.add(" RECIPIENT_LNAME = :lname ");
             namedParameters.put("lname",order.getRecipientLname());
         }
 
         if(order.getRecipientMname() != null){
-            querySB.append(" RECIPIENT_MNAME = :mname ");
+            query.add(" RECIPIENT_MNAME = :mname ");
             namedParameters.put("mname",order.getRecipientMname());
         }
 
         if(order.getRecipientAddress() != null){
-            querySB.append(" RECIPIENT_ADDRESS = :recipientAddress ");
+            query.add(" RECIPIENT_ADDRESS = :recipientAddress ");
             namedParameters.put("recipientAddress",order.getRecipientAddress());
         }
 
         if(order.getRecipientEmail() != null){
-            querySB.append(" RECIPIENT_EMAIL = :recipientEmail ");
+            query.add(" RECIPIENT_EMAIL = :recipientEmail ");
             namedParameters.put("recipientEmail",order.getRecipientEmail());
         }
 
         if(order.getRecipientPhone() != null){
-            querySB.append(" RECIPIENT_PHONE = :recipientPhone ");
+            query.add(" RECIPIENT_PHONE = :recipientPhone ");
             namedParameters.put("recipientPhone",order.getRecipientPhone());
         }
 
         if(order.getComment() != null){
-            querySB.append(" COMMENT = :comment ");
+            query.add(" COMMENT = :comment ");
             namedParameters.put("comment",order.getComment());
         }
 
         if(order.getStatus() != null){
-            querySB.append(" STATUS = :status ");
+            query.add(" STATUS = :status ");
             namedParameters.put("status",order.getStatus());
         }
 
         if(order.getPayment() != null){
-            querySB.append(" PAYMENT = :payment ");
+            query.add(" PAYMENT = :payment ");
             namedParameters.put("payment",order.getPayment());
         }
 
         if(order.getDelivery() != null){
-            querySB.append(" DELIVERY = :delivery ");
+            query.add(" delivery_id = :delivery ");
             namedParameters.put("delivery",order.getDelivery());
         }
 
         if(order.getDateAdd() != null){
-            querySB.append(" DATE_ADD = :dateAdd ");
+            query.add(" DATE_ADD = :dateAdd ");
             namedParameters.put("dateAdd",order.getDateAdd());
         }
 
-        return querySB.toString();
+        return "update PURCHASE_ORDER set" + String.join(",",query);
     }
 
 

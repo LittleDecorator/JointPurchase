@@ -1,5 +1,6 @@
 .ngdialog.ngdialog-theme-default.custom-width .ngdialog-content {
     width: 90%;
+    top: 80px;
 }
 
 .ngdialog.ngdialog-theme-default.fixed-full-width .ngdialog-content{

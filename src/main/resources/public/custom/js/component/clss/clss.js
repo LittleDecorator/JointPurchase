@@ -94,7 +94,8 @@
 
             $scope.items = [];
 
-            dataResources.item.all().$promise.then(function(result){
+            dataResources.itemMap.get().$promise.then(function(result){
+                console.log(result);
                 angular.forEach(result, function (item) {
                     item.selected=false;
                     $scope.items.push(item);

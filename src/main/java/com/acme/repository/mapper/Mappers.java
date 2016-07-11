@@ -1,8 +1,10 @@
 package com.acme.repository.mapper;
 
+import com.acme.enums.OrderStatus;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
 import com.acme.model.dto.ItemView;
+import com.acme.model.dto.OrderView;
 import com.acme.model.dto.Product;
 import com.acme.util.MapperHelper;
 import org.springframework.jdbc.core.RowMapper;
@@ -134,7 +136,7 @@ public class Mappers {
         product.setArticle(rs.getString("article"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getInt("price"));
-        product.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
+        product.setNotForSale(rs.getString("not_for_sale").charAt(0) == 'Y');
         product.setInStock(rs.getInt("in_stock"));
         product.setDateAdd(rs.getDate("date_add"));
         return product;
@@ -146,7 +148,7 @@ public class Mappers {
         link.setArticle(rs.getString("article"));
         link.setName(rs.getString("name"));
         link.setInStock(rs.getInt("in_stock"));
-        link.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
+        link.setNotForSale(rs.getString("not_for_sale").charAt(0) == 'Y');
         link.setPrice(rs.getInt("price"));
         link.setDescription(rs.getString("description"));
         link.setCompanyId(rs.getString("company_id"));
@@ -179,18 +181,31 @@ public class Mappers {
         order.setId(rs.getString("id"));
         order.setSubjectId(rs.getString("subject_id"));
         order.setUid(rs.getLong("uid"));
-        order.setRecipientFname(rs.getString("RECIPIENT_FNAME"));
-        order.setRecipientMname(rs.getString("RECIPIENT_MNAME"));
-        order.setRecipientLname(rs.getString("RECIPIENT_LNAME"));
-        order.setRecipientPhone(rs.getString("RECIPIENT_PHONE"));
-        order.setRecipientEmail(rs.getString("RECIPIENT_EMAIL"));
-        order.setRecipientAddress(rs.getString("RECIPIENT_ADDRESS"));
-        order.setCloseOrderDate(rs.getDate("CLOSE_ORDER_DATE"));
-        order.setComment(rs.getString("COMMENT"));
-        order.setStatus(rs.getString("STATUS"));
-        order.setDelivery(rs.getString("DELIVERY"));
-        order.setPayment(rs.getInt("PAYMENT"));
-        order.setDateAdd(rs.getDate("date_add"));
+        order.setRecipientFname(rs.getString("recipient_fname"));
+        order.setRecipientMname(rs.getString("recipient_mname"));
+        order.setRecipientLname(rs.getString("recipient_lname"));
+        order.setRecipientPhone(rs.getString("recipient_phone"));
+        order.setRecipientEmail(rs.getString("recipient_email"));
+        order.setRecipientAddress(rs.getString("recipient_address"));
+        order.setCloseOrderDate(rs.getDate("close_order_date"));
+        order.setComment(rs.getString("comment"));
+        order.setStatus(OrderStatus.getByName(rs.getString("status")));
+        order.setDelivery(rs.getString("delivery_id"));
+        order.setPayment(rs.getInt("payment"));
+        order.setDateAdd(rs.getTimestamp("date_add"));
+        return order;
+    };
+
+    public final static RowMapper<OrderView> orderViewMapper = (rs,num) -> {
+        OrderView order = new OrderView();
+        order.setId(rs.getString("id"));
+        order.setUid(rs.getLong("uid"));
+        order.setRecipientId(rs.getString("recipient_id"));
+        order.setRecipientName(rs.getString("recipient_name"));
+        order.setCreateDate(rs.getTimestamp("create_order_date"));
+        order.setCloseDate(rs.getTimestamp("close_order_date"));
+        order.setStatus(OrderStatus.getByName(rs.getString("status")));
+        order.setPayment(rs.getInt("payment"));
         return order;
     };
 
@@ -207,5 +222,14 @@ public class Mappers {
         subject.setPhoneNumber(rs.getString("post_address"));
         subject.setDateAdd(rs.getDate("date_add"));
         return subject;
+    };
+
+    public final static RowMapper<Delivery> deliveryMapper = (rs,num) -> {
+        Delivery delivery = new Delivery();
+        delivery.setId(rs.getString("id"));
+        delivery.setName(rs.getString("name"));
+        delivery.setHint(rs.getString("hint"));
+        delivery.setDateAdd(rs.getDate("date_add"));
+        return delivery;
     };
 }
