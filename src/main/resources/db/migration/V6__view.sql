@@ -14,12 +14,8 @@ CREATE OR REPLACE VIEW public.item_view AS
 
 /* ORDER VIEW */
 CREATE OR REPLACE VIEW public.order_view AS
-SELECT id,
-      uid,
-      subject_id as recipient_id,
-      concat_ws(' ', recipient_lname::varchar, recipient_fname::varchar, recipient_mname::varchar) as recipient_name,
-      date_add as create_order_date,
-      close_order_date,
-      status,
-      payment
-FROM public.purchase_order;
+SELECT po.id, po.uid, po.subject_id as recipient_id,
+      concat_ws(' ', po.recipient_lname::varchar, po.recipient_fname::varchar, po.recipient_mname::varchar) as recipient_name,
+      d.name as delivery, po.date_add as create_order_date, po.status, po.payment
+FROM public.purchase_order po
+INNER JOIN public.delivery d on po.delivery_id=d.id

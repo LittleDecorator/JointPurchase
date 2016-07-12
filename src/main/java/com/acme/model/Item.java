@@ -1,5 +1,7 @@
 package com.acme.model;
 
+import com.acme.enums.ItemStatus;
+
 import java.util.Date;
 
 public class Item {
@@ -22,6 +24,8 @@ public class Item {
 
     private Integer inStock;
 
+    private ItemStatus status;
+
     public Item() {}
 
     public Item(Item item) {
@@ -34,6 +38,7 @@ public class Item {
         this.dateAdd = item.getDateAdd();
         this.notForSale = item.isNotForSale();
         this.inStock = item.getInStock();
+        this.status = item.getStatus();
     }
 
     public String getId() {
@@ -107,6 +112,14 @@ public class Item {
         this.inStock = inStock;
     }
 
+    public ItemStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ItemStatus status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -119,6 +132,7 @@ public class Item {
                 ", dateAdd=" + dateAdd +
                 ", notForSale=" + notForSale +
                 ", inStock=" + inStock +
+                ", status=" + status +
                 '}';
     }
 }

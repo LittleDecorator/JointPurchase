@@ -4,23 +4,28 @@
     <div class="card-panel" layout="column">
 
         <md-input-container class="no-errors">
-            <input value="{{::currentOrder.uid}}" disabled placeholder="Номер заказа">
+            <input value="{{::order.uid}}" disabled placeholder="Номер заказа">
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Сумма к оплате</label>
-            <input value="{{currentOrder.payment | number}}" disabled>
+            <input value="{{order.payment | number}}" disabled>
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Дата создания</label>
-            <input value="{{::currentOrder.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+            <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+        </md-input-container>
+
+        <md-input-container class="no-errors">
+            <label>Дата закрытия</label>
+            <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
         </md-input-container>
 
         <md-input-container>
             <label class="required">Статус заказа</label>
-            <md-select name="status" ng-model="currentOrder.status.id" required>
-                <md-option ng-repeat="status in statuses" ng-value="status.id">{{status.value}}</md-option>
+            <md-select name="status" ng-model="order.status" required ng-model-options="{trackBy: '$value.id'}">
+                <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
             </md-select>
             <div ng-messages="orderCard.status.$error" ng-if="!showHints">
                 <div ng-message="required">Не указан статус заказа</div>
@@ -29,7 +34,7 @@
 
         <md-input-container>
             <label class="required">Тип доставки</label>
-            <md-select name="delivery" ng-model="currentOrder.delivery" required>
+            <md-select name="delivery" ng-model="order.delivery" required>
                 <md-option ng-repeat="delivery in deliveries" ng-value="delivery.id">{{delivery.value}}</md-option>
             </md-select>
             <div ng-messages="orderCard.delivery.$error" ng-if="!showHints">
@@ -39,7 +44,7 @@
 
         <md-input-container>
             <label class="required">Адрес</label>
-            <input name="address" ng-model="currentOrder.recipientAddress" required>
+            <input name="address" ng-model="order.recipientAddress" required>
             <div ng-messages="orderCard.address.$error" ng-if="!showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
@@ -47,7 +52,7 @@
 
         <md-input-container class="no-errors">
             <label>Комментарий</label>
-            <input ng-model="currentOrder.comment">
+            <input ng-model="order.comment">
         </md-input-container>
 
     </div>
@@ -58,7 +63,7 @@
 
         <md-input-container>
             <label class="required">Имя</label>
-            <input name="firstName" ng-model="currentOrder.recipientFname" required>
+            <input name="firstName" ng-model="order.recipientFname" required>
             <div ng-messages="orderCard.firstName.$error" ng-if="!showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
@@ -66,19 +71,19 @@
 
         <md-input-container>
             <label class="required">Фамилия</label>
-            <input name="lastName" ng-model="currentOrder.recipientLname" required>
+            <input name="lastName" ng-model="order.recipientLname" required>
             <div ng-messages="orderCard.lastName.$error" ng-if="!showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container class="no-errors">
-            <input ng-model="currentOrder.recipientMname" placeholder="Отчество">
+            <input ng-model="order.recipientMname" placeholder="Отчество">
         </md-input-container>
 
         <md-input-container>
             <label>Email</label>
-            <input name="email" ng-model="currentOrder.recipientEmail" ng-pattern="/^.+@.+\..+$/">
+            <input name="email" ng-model="order.recipientEmail" ng-pattern="/^.+@.+\..+$/">
             <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
             <div ng-messages="orderCard.email.$error" ng-if="!showHints">
                 <div ng-message-exp="['pattern']">Не корректный e-mail</div>
@@ -87,14 +92,14 @@
 
         <md-input-container>
             <label class="required">Телефон</label>
-            <input ng-model="currentOrder.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+            <input ng-model="order.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
             <div class="hint">Пример: (915) 343-43-45</div>
         </md-input-container>
 
     </div>
 
     <h4 style="font-size: 1.5rem; text-align: center;">Содержимое заказа</h4>
-    <div class="card-panel" ng-if="currentOrder.items.length>0" style="padding: 10px;">
+    <div class="card-panel" ng-if="items.length>0" style="padding: 10px;">
         <table>
             <thead>
             <tr>
@@ -105,13 +110,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in currentOrder.items" class="collection-item">
+            <tr ng-repeat="item in items" class="collection-item">
                 <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
                 <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
                 <td class="col s2 non-float" style="text-align: center">
                     <div style="display: flex;line-height: 2;">
-                        <md-icon ng-click="decrementCou($index)" style="cursor: pointer">chevron_left</md-icon>
-                        <span>{{item.cou}}</span>
+                        <md-icon ng-click="decrementCou($index)" style="cursor: pointer" ng-hide="item.count < 1">chevron_left</md-icon>
+                        <span>{{item.count}}</span>
                         <md-icon ng-click="incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
                     </div>
                 </td>
@@ -123,7 +128,7 @@
         </table>
     </div>
 
-    <div class="card-panel" ng-if="currentOrder.items.length==0" style="padding: 5px; text-align: center; background-color: cadetblue; color: white;">
+    <div class="card-panel" ng-if="items.length==0" style="padding: 5px; text-align: center; background-color: cadetblue; color: white;">
         <span style="margin-right: 2%">Не добавлено ни одного товара</span>
     </div>
 

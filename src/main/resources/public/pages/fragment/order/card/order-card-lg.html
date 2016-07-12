@@ -8,45 +8,55 @@
             <div layout="row">
                 <md-input-container flex="15" class="no-errors">
                     <label>Номер заказа</label>
-                    <input ng-model="currentOrder.uid" disabled>
+                    <input value="{{::order.uid}}" disabled>
                 </md-input-container>
 
                 <md-input-container flex="15" class="no-errors" style="margin-left:1%">
                     <label>Дата создания</label>
-                    <input ng-model="currentOrder.formatedDateAdd" disabled>
+                    <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+                </md-input-container>
+
+                <md-input-container flex class="no-errors">
+                    <label>Дата закрытия</label>
+                    <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
                 </md-input-container>
 
                 <md-input-container flex="15" class="no-errors" style="margin-left:1%">
                     <label>Сумма к оплате</label>
-                    <input ng-model="currentOrder.payment|asZero" disabled>
+                    <input value="{{order.payment | number}}" disabled>
                 </md-input-container>
 
                 <md-input-container flex=25" class="no-errors" style="margin-left:1%">
-                    <label>Статус заказа</label>
-                    <md-select ng-model="currentOrder.status">
-                        <md-option ng-repeat="status in stats" ng-value="status.id">{{status.value}}</md-option>
+                    <label class="required">Статус заказа</label>
+                    <md-select name="status" ng-model="order.status.id" required>
+                        <md-option ng-repeat="status in statuses" ng-value="status.id">{{status.value}}</md-option>
                     </md-select>
+                    <div ng-messages="orderCard.status.$error" ng-if="!showHints">
+                        <div ng-message="required">Не указан статус заказа</div>
+                    </div>
                 </md-input-container>
 
                 <md-input-container flex="30" class="no-errors" style="margin-left:1%">
-                    <label>Тип доставки</label>
-                    <md-select ng-model="currentOrder.delivery" empty-validate>
+                    <label class="required">Тип доставки</label>
+                    <md-select name="delivery" ng-model="order.delivery" required>
                         <md-option ng-repeat="delivery in deliveries" ng-value="delivery.id">{{delivery.value}}</md-option>
                     </md-select>
+                    <div ng-messages="orderCard.delivery.$error" ng-if="!showHints">
+                        <div ng-message="required">Не указан тип доставки</div>
+                    </div>
                 </md-input-container>
             </div>
 
             <md-input-container>
                 <label class="required">Адрес</label>
-                <input name="address" ng-model="currentOrder.recipientAddress" required>
+                <input name="address" ng-model="order.recipientAddress" required>
                 <div ng-messages="orderCard.address.$error" ng-if="!showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
 
             <md-input-container class="no-errors">
-                <label>Комментарий</label>
-                <input ng-model="currentOrder.comment">
+                <input ng-model="order.comment" placeholder="Комментарий">
             </md-input-container>
 
         </div>
@@ -59,7 +69,7 @@
 
             <md-input-container flex="20">
                 <label class="required">Имя</label>
-                <input name="firstName" ng-model="currentOrder.recipientFname" required>
+                <input name="firstName" ng-model="order.recipientFname" required>
                 <div ng-messages="orderCard.firstName.$error" ng-if="!showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
@@ -67,19 +77,19 @@
 
             <md-input-container flex="20" style="margin-left:1%">
                 <label class="required">Фамилия</label>
-                <input name="lastName" ng-model="currentOrder.recipientLname" required>
+                <input name="lastName" ng-model="order.recipientLname" required>
                 <div ng-messages="orderCard.lastName.$error" ng-if="!showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="20" class="no-errors" style="margin-left:1%">
-                <input ng-model="currentOrder.recipientMname" placeholder="Отчество">
+                <input ng-model="order.recipientMname" placeholder="Отчество">
             </md-input-container>
 
             <md-input-container flex="20" style="margin-left:1%">
                 <label>Email</label>
-                <input name="email" ng-model="currentOrder.recipientEmail" ng-pattern="/^.+@.+\..+$/">
+                <input name="email" ng-model="order.recipientEmail" ng-pattern="/^.+@.+\..+$/">
                 <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
                 <div ng-messages="orderCard.email.$error" ng-if="!showHints">
                     <div ng-message-exp="['pattern']">Не корректный e-mail</div>
@@ -88,14 +98,14 @@
 
             <md-input-container flex="20" style="margin-left:1%">
                 <label>Телефон</label>
-                <input ng-model="currentOrder.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+                <input ng-model="order.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
                 <div class="hint">Пример: (915) 343-43-45</div>
             </md-input-container>
         </div>
     </div>
 
     <h4>Содержимое заказа</h4>
-    <div class="table-container" ng-if="currentOrder.items.length>0">
+    <div class="table-container" ng-if="items.length>0">
 
         <div class="table-result">
             <table class="bordered table-result" style="line-height: 1.5;">
@@ -109,14 +119,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="item in currentOrder.items" id="{{item.id}}" class="row" ng-class="{'no-bottom-border':$last}">
+                <tr ng-repeat="item in items" id="{{item.id}}" class="row" ng-class="{'no-bottom-border':$last}">
                     <td class="col s6 non-float" style="text-align: center">{{item.name}}</td>
                     <td class="col s1 non-float" style="text-align: center">{{item.article}}</td>
-                    <td class="col s2 non-float" style="text-align: center">{{item.price}}р.</td>
+                    <td class="col s2 non-float" style="text-align: center">{{item.price| number}}р.</td>
                     <td class="col s2 non-float" style="text-align: center">
                         <div>
-                            <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.cou<1}"></i>
-                            <span>{{item.cou}}</span>
+                            <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="decrementCou($index)" ng-class="{'disabled':item.count<1}"></i>
+                            <span>{{item.count}}</span>
                             <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="incrementCou($index)"></i>
                         </div>
                     </td>
@@ -132,17 +142,17 @@
 
     </div>
 
-    <div class="card" ng-if="currentOrder.items.length==0">
+    <div class="card" ng-if="items.length==0">
         <div class="card-content">
             <span>Не добавлено ни одного товара</span>
         </div>
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItemsInOrder()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 115px; right: 24px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItemsInOrder()" style="bottom: 115px; right: 24px;">
         <md-icon>add</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':(currentOrder.items.length==0 || haveEmptyItems() || _order.$invalid), 'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 45px; right: 24px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!orderCard.$dirty}" style="bottom: 45px; right: 24px;">
         <md-icon>save</md-icon>
     </md-button>
 </div>

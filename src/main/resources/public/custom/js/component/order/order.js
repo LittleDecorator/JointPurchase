@@ -24,7 +24,9 @@
                 //    });
                 //});
             } else {
-                $scope.orders = dataResources.order.query(function (data) {});
+                dataResources.order.all().$promise.then(function (data) {
+                    $scope.orders = data
+                });
             }
 
             $scope.editOrder = function (id) {
@@ -45,10 +47,7 @@
 
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
-                    if($scope.width < 361) {
-                        return templatePath + "order-sm.html"
-                    }
-                    return templatePath + "order-sm-l.html"
+                    return templatePath + "order-sm.html"
                 }
                 if($scope.width > 600){
                     if($scope.width < 1025){
@@ -66,30 +65,28 @@
 
             $scope.statuses = statusMap;
             $scope.deliveries = deliveryMap;
-
             $scope.showHints = true;
+            $scope.order = order;
+            $scope.items = items.map(function(element){
+                var item = element.item;
+                item.count = element.cou;
+                return item
+            });
 
-            $scope.currentOrder = order;
-            $scope.currentOrder.items = [];
-
-            if (order) {
-                angular.forEach(items, function(orderItem){
-                    var item = orderItem.item;
-                    item.cou = orderItem.cou;
-                    $scope.currentOrder.items.push(item);
-                });
-            } else {
+            if(!$scope.order) {
                 var time = new Date().getTime();
-                $scope.currentOrder = {status:null,items:[],payment:0,uid:time,dateAdd:time,delivery:null};
+                $scope.order = {status:null,payment:0,uid:time,dateAdd:time,delivery:null};
             }
 
             $scope.save = function () {
+
+                console.log($scope);
 
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
                 function haveEmptyItems(){
                     var result = false;
-                    $scope.currentOrder.items.some(function(item){
+                    $scope.items.some(function(item){
                         if(item.cou==0){
                             return result = true;
                         } else {
@@ -110,43 +107,30 @@
 
                 if($scope.orderCard.$dirty) {
                     if ($scope.orderCard.$valid) {
-                        if($scope.currentOrder.items.length!=0 && !haveEmptyItems()){
+                        if($scope.items.length!=0 && !haveEmptyItems()){
 
-                            var cleanOrderItems = [];
+                            var orderItems = [];
 
-                            $scope.currentOrder.items.forEach(function (item) {
-                                if(item.cou>0){
-                                    cleanOrderItems.push({
+                            $scope.items.forEach(function (item) {
+                                if(item.count>0){
+                                    orderItems.push({
                                         id:null,
-                                        orderId: $scope.currentOrder.id,
+                                        orderId: $scope.order.id,
                                         itemId: item.id,
-                                        cou: item.cou
+                                        cou: item.count
                                     })
                                 }
                             });
 
-                            var correctOrder = angular.copy($scope.currentOrder);
-                            correctOrder.status = correctOrder.status.value;
-                            correctOrder.delivery = correctOrder.delivery.value;
-
-                            var respData = {
-                                order: correctOrder,
-                                items: cleanOrderItems
-                            };
-                            //TODO: try handle order after save
-                            var items = angular.copy($scope.currentOrder.items);
-                            dataResources.order.save(respData,function(data){
-                                $scope.currentOrder = data;
-                                $scope.currentOrder.items = items;
-
-                                if($scope.currentOrder.id){
-                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.currentOrder.uid +'] успешно изменён').theme('success'));
+                            dataResources.order.post({order:$scope.order, items:orderItems}).$promise.then(function(data){
+                                if($scope.order.id){
+                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.order.uid +'] успешно изменён').theme('success'));
                                 } else {
-                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.currentOrder.uid +'] успешно создан').theme('success'));
-                                    refreshState({result:$scope.currentOrder.id});
+                                    $mdToast.show(toast.textContent('Заказ #['+ $scope.order.uid +'] успешно создан').theme('success'));
+                                    refreshState({result:$scope.order.id});
                                 }
                             }, function(error){
-                                if($scope.currentOrder.id){
+                                if($scope.order.id){
                                     $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
                                 } else {
                                     $mdToast.show(toast.textContent('Неудалось создать новый заказ').theme('error'));
@@ -163,14 +147,42 @@
 
             //add item to order
             $scope.addItemsInOrder = function () {
-                var dialog = modal({templateUrl:"pages/modal/itemModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"itemClssController",data:$scope.currentOrder.items});
+                var dialog = modal({templateUrl:"pages/modal/itemModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"itemClssController",data:$scope.items});
                 dialog.closePromise.then(function(output) {
+
+                    // филтрация массива
+                    function itemFilter(array, onlyMiss){
+                        return function(item){
+                            //ищем елемент по id
+                            var elem = helpers.findInArrayById(array,item.id);
+                            var result;
+
+                            // ищем элементы присутствующие в наборе
+                            if(helpers.isEmptyObject(elem)){
+                                result = false;
+                            } else {
+                                result = true;
+                            }
+                            // инвертируем результат, если ищем отсутствующие
+                            if(onlyMiss) result=!result;
+                            return result;
+                        }
+
+                    }
+
                     if(output.value && output.value != '$escape'){
-                        $scope.currentOrder.items = output.value;
-                        angular.forEach($scope.currentOrder.items, function (item) {
-                            item.cou = 1;
+                        // сперва фильтруем исходный массив чтобы убрать все старые товары
+                        $scope.items = $scope.items.filter(itemFilter(output.value,false));
+                        // теперь фильтруем новые товары, оставляя только те, что добавились
+                        output.value = output.value.filter(itemFilter($scope.items,true));
+                        // зададим кол-во для новых товаров
+                        angular.forEach(output.value, function(elem){
+                            elem.count = 1;
                         });
+                        // перенесём новые товары
+                        $scope.items.push.apply($scope.items,output.value);
                         recalculatePayment();
+                        // пометим форму как грязную
                         $scope.orderCard.$setDirty(true);
                     }
                 });
@@ -178,30 +190,30 @@
 
             //remove item from order
             $scope.remItemsFromOrder = function (idx) {
-                $scope.currentOrder.items.splice(idx,1);
+                $scope.items.splice(idx,1);
                 recalculatePayment();
             };
 
             //increment item cou in order
             $scope.incrementCou = function (idx) {
-                var item = $scope.currentOrder.items[idx];
-                item.cou++;
+                var item = $scope.items[idx];
+                item.count++;
                 recalculatePayment();
             };
 
             //decrement item cou in order
             $scope.decrementCou = function (idx) {
-                var item = $scope.currentOrder.items[idx];
-                if (item.cou > 0) {
-                    item.cou--;
+                var item = $scope.items[idx];
+                if (item.count > 0) {
+                    item.count--;
                     recalculatePayment();
                 }
             };
 
             function recalculatePayment(){
-                $scope.currentOrder.payment = 0;
-                angular.forEach($scope.currentOrder.items,function(item){
-                    $scope.currentOrder.payment = $scope.currentOrder.payment + (item.cou * item.price);
+                $scope.order.payment = 0;
+                angular.forEach($scope.items,function(item){
+                    $scope.order.payment = $scope.order.payment + (item.count * item.price);
                 })
             }
 

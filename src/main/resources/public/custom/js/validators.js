@@ -6,33 +6,33 @@
     'use strict';
 
     angular.module('purchase.validators')
-        .directive('select', function(){
-            return {
-                restrict: 'E',
-                require: '?ngModel',
-                link: function (scope, element, attrs, ngModel) {
-
-                    var post = function(selector){
-                        angular.element($('#'+selector+' .select-wrapper')).addClass('inactive');
-                        angular.element($('#'+selector+' ul li:first span')).addClass('inactive');
-                    };
-
-                    /* сделан упор на callback пустой модели и условие не пустого списка в элементе */
-                    if(ngModel) {
-                        ngModel.$isEmpty = function(){
-                            if(element[0].length > 1  && !ngModel.$pristine){
-                                element.material_select();
-                                post('company');
-                                post('category');
-                                if(attrs.postInit){
-                                    scope[attrs.postInit]();        //вызов метода через имя указанное в атрибуте post-init
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-        })
+        //.directive('select', function(){
+        //    return {
+        //        restrict: 'E',
+        //        require: '?ngModel',
+        //        link: function (scope, element, attrs, ngModel) {
+        //
+        //            var post = function(selector){
+        //                angular.element($('#'+selector+' .select-wrapper')).addClass('inactive');
+        //                angular.element($('#'+selector+' ul li:first span')).addClass('inactive');
+        //            };
+        //
+        //            /* сделан упор на callback пустой модели и условие не пустого списка в элементе */
+        //            if(ngModel) {
+        //                ngModel.$isEmpty = function(){
+        //                    if(element[0].length > 1  && !ngModel.$pristine){
+        //                        element.material_select();
+        //                        post('company');
+        //                        post('category');
+        //                        if(attrs.postInit){
+        //                            scope[attrs.postInit]();        //вызов метода через имя указанное в атрибуте post-init
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    };
+        //})
 
         .directive('passwordValidate', function() {
             return {

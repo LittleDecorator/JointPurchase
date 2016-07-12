@@ -203,7 +203,7 @@ public class Mappers {
         order.setRecipientId(rs.getString("recipient_id"));
         order.setRecipientName(rs.getString("recipient_name"));
         order.setCreateDate(rs.getTimestamp("create_order_date"));
-        order.setCloseDate(rs.getTimestamp("close_order_date"));
+        order.setDelivery(rs.getString("delivery"));
         order.setStatus(OrderStatus.getByName(rs.getString("status")));
         order.setPayment(rs.getInt("payment"));
         return order;

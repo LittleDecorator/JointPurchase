@@ -4,6 +4,7 @@ import com.acme.constant.Queue;
 import com.acme.model.PurchaseOrder;
 import com.acme.model.dto.OrderView;
 import com.acme.repository.mapper.Mappers;
+import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,96 +56,96 @@ public class PurchaseOrderRepository {
         List<String> values = Lists.newArrayList();
 
         // for id property
-        into.add(" ID ");
-        values.add(" :id ");
+        into.add("ID");
+        values.add(":id");
         namedParameters.put("id", UUID.randomUUID());
 
         if(order.getSubjectId() != null){
-            into.add(" SUBJECT_ID ");
-            values.add(" :subjectId ");
+            into.add("SUBJECT_ID");
+            values.add(":subjectId");
             namedParameters.put("subjectId",order.getSubjectId());
         }
 
         if(order.getCloseOrderDate() != null){
-            into.add(" CLOSE_ORDER_DATE ");
-            values.add(" :closeOrderDate ");
+            into.add("CLOSE_ORDER_DATE");
+            values.add(":closeOrderDate");
             namedParameters.put("closeOrderDate",order.getCloseOrderDate());
         }
 
         if(order.getUid() != null){
-            into.add(" UID ");
-            values.add(" :uid ");
+            into.add("UID");
+            values.add(":uid");
             namedParameters.put("uid",order.getUid());
         }
 
         if(order.getRecipientFname() != null){
-            into.add(" RECIPIENT_FNAME ");
-            values.add(" :fname ");
+            into.add("RECIPIENT_FNAME");
+            values.add(":fname");
             namedParameters.put("fname",order.getRecipientFname());
         }
 
         if(order.getRecipientLname() != null){
-            into.add(" RECIPIENT_LNAME ");
-            values.add(" :lname ");
+            into.add("RECIPIENT_LNAME");
+            values.add(":lname");
             namedParameters.put("lname",order.getRecipientLname());
         }
 
         if(order.getRecipientMname() != null){
-            into.add(" RECIPIENT_MNAME ");
-            values.add(" :mname ");
+            into.add("RECIPIENT_MNAME");
+            values.add(":mname");
             namedParameters.put("mname",order.getRecipientMname());
         }
 
         if(order.getRecipientAddress() != null){
-            into.add(" RECIPIENT_ADDRESS ");
-            values.add(" :recipientAddress ");
+            into.add("RECIPIENT_ADDRESS");
+            values.add(":recipientAddress");
             namedParameters.put("recipientAddress",order.getRecipientAddress());
         }
 
         if(order.getRecipientEmail() != null){
-            into.add(" RECIPIENT_EMAIL ");
-            values.add(" :recipientEmail ");
+            into.add("RECIPIENT_EMAIL");
+            values.add(":recipientEmail");
             namedParameters.put("recipientEmail",order.getRecipientEmail());
         }
 
         if(order.getRecipientPhone() != null){
-            into.add(" RECIPIENT_PHONE ");
-            values.add(" :recipientPhone ");
+            into.add("RECIPIENT_PHONE");
+            values.add(":recipientPhone");
             namedParameters.put("recipientPhone",order.getRecipientPhone());
         }
 
         if(order.getComment() != null){
-            into.add(" COMMENT ");
-            values.add(" :comment ");
+            into.add("COMMENT");
+            values.add(":comment");
             namedParameters.put("comment",order.getComment());
         }
 
         if(order.getStatus() != null){
-            into.add(" STATUS ");
-            values.add(" :status ");
-            namedParameters.put("status",order.getStatus());
+            into.add("STATUS");
+            values.add(":status");
+            namedParameters.put("status",CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getStatus().name()));
         }
 
         if(order.getPayment() != null){
-            into.add(" PAYMENT ");
-            values.add(" :payment ");
+            into.add("PAYMENT");
+            values.add(":payment");
             namedParameters.put("payment",order.getPayment());
         }
 
         if(order.getDelivery() != null){
-            into.add(" DELIVERY ");
-            values.add(" :delivery ");
+            into.add("DELIVERY_ID");
+            values.add(":delivery");
             namedParameters.put("delivery",order.getDelivery());
         }
 
         if(order.getDateAdd() != null){
-            into.add(" DATE_ADD ");
-            values.add(" :dateAdd ");
+            into.add("DATE_ADD");
+            values.add(":dateAdd");
             namedParameters.put("dateAdd",order.getDateAdd());
         }
 
         if(values.size()>0){
-            int res = parameterJdbcTemplate.update(" insert into PURCHASE_ORDER ( " + String.join(",", into) + " )" + " values ( " + String.join(",", values) + " )",namedParameters);
+            int res = parameterJdbcTemplate.update(" insert into public.purchase_order ( " + String.join(",", into) + " ) values ( " + String.join(",", values) + " )",namedParameters);
             result = res == 1 ? Boolean.TRUE : Boolean.FALSE;
         }
 
@@ -153,7 +154,6 @@ public class PurchaseOrderRepository {
 
     public boolean updateSelectiveById(PurchaseOrder order){
         Map<String,Object> namedParameters = Maps.newHashMap();
-
         String queue = updateSelective(order,namedParameters);
         int res = parameterJdbcTemplate.update(queue + " WHERE id = :id",namedParameters);
         return res == 1;
@@ -164,62 +164,62 @@ public class PurchaseOrderRepository {
         namedParameters.put("id", order.getId());
 
         if(order.getSubjectId() != null){
-            query.add(" SUBJECT_ID = :subjectId ");
+            query.add(" subject_id = :subjectId ");
             namedParameters.put("subjectId",order.getSubjectId());
         }
 
         if(order.getCloseOrderDate() != null){
-            query.add(" CLOSE_ORDER_DATE = :closeDate ");
+            query.add(" close_order_date = :closeDate ");
             namedParameters.put("closeDate",order.getCloseOrderDate());
         }
 
-        if(order.getUid() != null){
-            query.add(" UID = :uid ");
-            namedParameters.put("uid",order.getUid());
-        }
+//        if(order.getUid() != null){
+//            query.add(" UID = :uid ");
+//            namedParameters.put("uid",order.getUid());
+//        }
 
         if(order.getRecipientFname() != null){
-            query.add(" RECIPIENT_FNAME = :fname ");
+            query.add(" recipient_fname = :fname ");
             namedParameters.put("fname",order.getRecipientFname());
         }
 
         if(order.getRecipientLname() != null){
-            query.add(" RECIPIENT_LNAME = :lname ");
+            query.add(" recipient_lname = :lname ");
             namedParameters.put("lname",order.getRecipientLname());
         }
 
         if(order.getRecipientMname() != null){
-            query.add(" RECIPIENT_MNAME = :mname ");
+            query.add(" recipient_mname = :mname ");
             namedParameters.put("mname",order.getRecipientMname());
         }
 
         if(order.getRecipientAddress() != null){
-            query.add(" RECIPIENT_ADDRESS = :recipientAddress ");
+            query.add(" recipient_address = :recipientAddress ");
             namedParameters.put("recipientAddress",order.getRecipientAddress());
         }
 
         if(order.getRecipientEmail() != null){
-            query.add(" RECIPIENT_EMAIL = :recipientEmail ");
+            query.add(" recipient_email = :recipientEmail ");
             namedParameters.put("recipientEmail",order.getRecipientEmail());
         }
 
         if(order.getRecipientPhone() != null){
-            query.add(" RECIPIENT_PHONE = :recipientPhone ");
+            query.add(" recipient_phone = :recipientPhone ");
             namedParameters.put("recipientPhone",order.getRecipientPhone());
         }
 
         if(order.getComment() != null){
-            query.add(" COMMENT = :comment ");
+            query.add(" comment = :comment ");
             namedParameters.put("comment",order.getComment());
         }
 
         if(order.getStatus() != null){
-            query.add(" STATUS = :status ");
-            namedParameters.put("status",order.getStatus());
+            query.add(" status = :status ");
+            namedParameters.put("status", CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, order.getStatus().name()));
         }
 
         if(order.getPayment() != null){
-            query.add(" PAYMENT = :payment ");
+            query.add(" payment = :payment ");
             namedParameters.put("payment",order.getPayment());
         }
 
@@ -228,12 +228,12 @@ public class PurchaseOrderRepository {
             namedParameters.put("delivery",order.getDelivery());
         }
 
-        if(order.getDateAdd() != null){
-            query.add(" DATE_ADD = :dateAdd ");
-            namedParameters.put("dateAdd",order.getDateAdd());
-        }
+//        if(order.getDateAdd() != null){
+//            query.add(" DATE_ADD = :dateAdd ");
+//            namedParameters.put("dateAdd",order.getDateAdd());
+//        }
 
-        return "update PURCHASE_ORDER set" + String.join(",",query);
+        return "update public.purchase_order set" + String.join(",",query);
     }
 
 

@@ -1,10 +1,13 @@
 package com.acme.enums;
 
-import com.acme.util.StatusSerializer;
+import com.acme.util.OrderStatusDeserializer;
+import com.acme.util.OrderStatusSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.CaseFormat;
 
-//@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonSerialize(using = StatusSerializer.class)
+@JsonSerialize(using = OrderStatusSerializer.class)
+@JsonDeserialize(using = OrderStatusDeserializer.class)
 public enum OrderStatus {
 
     NEW("Новый"),
@@ -25,7 +28,8 @@ public enum OrderStatus {
 
     public static OrderStatus getByName(String text){
         for(OrderStatus status : values()){
-            if(status.name().equalsIgnoreCase(text)){
+            if(status.name().equalsIgnoreCase(text) || CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, status.name()).equalsIgnoreCase(text)){
+                System.out.println(status);
                 return status;
             }
         }

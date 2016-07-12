@@ -12,7 +12,7 @@ public class OrderView {
     String recipientId;
     String recipientName;
     Timestamp createDate;
-    Timestamp closeDate;
+    String delivery;
     OrderStatus status;
     Integer payment;
 
@@ -56,12 +56,12 @@ public class OrderView {
         this.createDate = createDate;
     }
 
-    public Timestamp getCloseDate() {
-        return closeDate;
+    public String getDelivery() {
+        return delivery;
     }
 
-    public void setCloseDate(Timestamp closeDate) {
-        this.closeDate = closeDate;
+    public void setDelivery(String delivery) {
+        this.delivery = delivery;
     }
 
     public OrderStatus getStatus() {
@@ -84,11 +84,11 @@ public class OrderView {
     public String toString() {
         return "OrderView{" +
                 "id='" + id + '\'' +
-                ", uid='" + uid + '\'' +
+                ", uid=" + uid +
                 ", recipientId='" + recipientId + '\'' +
                 ", recipientName='" + recipientName + '\'' +
                 ", createDate=" + createDate +
-                ", closeDate=" + closeDate +
+                ", delivery='" + delivery + '\'' +
                 ", status=" + status +
                 ", payment=" + payment +
                 '}';

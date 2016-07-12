@@ -156,7 +156,16 @@
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
                 image: $resource('/content/remove',{},{remove:{method:'DELETE'}}),
-                order:$resource('/order/:id'),
+                order:$resource('/order/:id',{},{
+                    all:{method:'GET',isArray:true},
+                    get:{method:'GET',isArray:false},
+                    post:{method:'POST',isArray:false, transformRequest:function(data){
+                        data.order.recipientPhone = data.order.recipientPhone.replace(/[^0-9]/g,'');
+                        console.log(data.order);
+                        return angular.toJson(data);
+                    }},
+                    delete:{method:'DELETE',isArray:false}
+                }),
                 orderPrivate:$resource('/order/personal',{},{post:{method:'POST',isArray:false}}),
                 orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
                 orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),

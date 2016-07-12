@@ -8,7 +8,7 @@ import com.google.common.base.CaseFormat;
 
 import java.io.IOException;
 
-public class StatusSerializer extends JsonSerializer<OrderStatus> {
+public class OrderStatusSerializer extends JsonSerializer<OrderStatus> {
 
     @Override
     public void serialize(OrderStatus status, JsonGenerator generator, SerializerProvider serializerProvider) throws IOException {
