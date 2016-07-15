@@ -98,7 +98,6 @@
                             var result = angular.copy(data);
                             result.price= result.price.replace(/[^0-9]/g,'');
                             return angular.toJson(result);
-                            //return data;
                         }
                     }
                 }),
@@ -189,7 +188,20 @@
                 notForSale:$resource('item/set/sale',{},{
                     toggle:{method:'POST',isArray:false}
                 }),
-                statusMap:$resource('clss/order/status/map',{},{
+                itemStatusMap:$resource('clss/item/status/map',{},{
+                    get:{method:'GET',isArray:true,transformResponse: function(data){
+                        var result = [];
+                        console.log(data);
+                        angular.forEach(angular.fromJson(data), function(value, key){
+                            console.log(key);
+                            console.log(value);
+                            result.push({id:key,value:value})
+                        });
+                        console.log(result);
+                        return result;
+                    }}
+                }),
+                orderStatusMap:$resource('clss/order/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         var result = [{id:null,value:"Выберите статус заказа ..."}];
                         angular.forEach(angular.fromJson(data), function(value, key){
@@ -198,11 +210,11 @@
                         return result;
                     }}
                 }),
-                deliveryMap:$resource('clss/order/delivery/map',{},{
+                deliveryMap:$resource('clss/order/delivery',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         var result = [{id:null,value:"Укажите тип доставки ..."}];
-                        angular.forEach(angular.fromJson(data), function(value, key){
-                            result.push({id:key,value:value})
+                        angular.forEach(angular.fromJson(data), function(value){
+                            result.push({id:value.id,value:value.name,hint:value.hint})
                         });
                         return result;
                     }}

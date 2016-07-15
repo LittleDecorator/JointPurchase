@@ -15,7 +15,7 @@
                 <md-button style="width: 30px;min-width: 30px"><md-icon ng-click="openSearch($event)">search</md-icon></md-button>
                 <md-button ng-if="auth.isAuth()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>account_circle</md-icon></md-button>
                 <md-button ng-if="auth.isAuth()" ng-click="logout()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>exit_to_app</md-icon></md-button>
-                <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn light-green lighten-2" style="margin: auto;margin-left: 15px;" >Вход</a>
+                <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn btn-small light-green lighten-2" style="margin: auto;margin-left: 10px;" >Вход</a>
 
             </div>
 
@@ -31,6 +31,10 @@
                     </li>
                     <li id="contact" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
                         <a ng-click="goto('contact')" style="cursor: pointer">Контакты</a>
+                        <!--<a ui-sref="contact" style="cursor: pointer">Контакты</a>-->
+                    </li>
+                    <li id="delivery" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
+                        <a ng-click="goto('delivery')" style="cursor: pointer">Доставка</a>
                         <!--<a ui-sref="contact" style="cursor: pointer">Контакты</a>-->
                     </li>
                     <li id="stock" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">

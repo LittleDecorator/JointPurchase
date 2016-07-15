@@ -9,6 +9,13 @@
             </div>
         </md-input-container>
 
+        <md-input-container class="no-errors">
+            <label class="required">Статус</label>
+            <md-select name="status" ng-model="selected.status" required ng-model-options="{trackBy: '$value.id'}">
+                <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+            </md-select>
+        </md-input-container>
+
         <md-input-container class="md-block">
             <label class="required">Производитель</label>
             <md-select ng-model="selected.companyId" required>

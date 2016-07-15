@@ -1,4 +1,4 @@
-package com.acme.util;
+package com.acme.enums.serializer;
 
 import com.acme.enums.OrderStatus;
 import com.fasterxml.jackson.core.JsonParser;

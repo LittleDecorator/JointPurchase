@@ -58,7 +58,11 @@ td > a > .material-icons{
 /* CHIPS */
 
  .category-chips .md-chip {
-    position: relative; }
+    position: relative;
+ }
+.md-chips:not(.md-readonly) .md-chip:not(.md-readonly) {
+    padding-right: 25px;
+}
  .category-chips .md-chip .md-chip-remove-container {
     position: absolute;
     right: 4px;
@@ -98,4 +102,33 @@ td > a > .material-icons{
 }
 md-chips[readonly=false] div.md-chip-input-container {
     display: none!important;
+}
+
+/* ICONS IN CATALOG CARD TITLE */
+md-card md-icon.material-icons{
+    height: 25px;
+    width: 32px;
+    font-size: 30px;
+    line-height:inherit;
+}
+
+md-card button.md-button.md-icon-button{
+    border-radius: 3px;
+}
+
+md-card button.md-button.md-icon-button:focus{
+    background-color: transparent;
+    outline:none;
+}
+
+md-card .md-icon-button:hover{
+    background-color: rgba(158,158,158,0.2)!important;
+}
+
+.btn.btn-small {
+    width: 70px;
+    height: 30px;
+    padding: 0 5px;
+    font-size: 17px;
+    line-height: 30px;
 }

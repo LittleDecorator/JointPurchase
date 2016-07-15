@@ -43,26 +43,20 @@
 
         }])
 
-        .controller('cartCheckoutController',['$scope','$state','authService','dataResources',function($scope,$state,authService,dataResources){
+        .controller('cartCheckoutController',['$scope','$state','authService','dataResources','deliveries',function($scope,$state,authService,dataResources,deliveries){
 
-            $scope.postDelivery = function(){
-                console.log("Post delivery method triggered!");
-            };
+            $scope.showHints = true;
+            $scope.deliveries = deliveries;
 
-            $scope.deliveries = [];
-
-            dataResources.orderDelivery.get(function(data){
-                angular.forEach(data,function(del){
-                    $scope.deliveries.push(del);
-                });
-
+            dataResources.deliveryMap.get(function(data){
+                $scope.deliveries = data;
             });
 
             $scope.current = {
                 recipientFname:null,
                 recipientLname:null,
                 recipientMname:null,
-                delivery:null,
+                delivery: {id:null,value:"Укажите тип доставки ..."},
                 recipientPhone:null,
                 recipientEmail:null,
                 recipientAddress:null,
@@ -70,7 +64,6 @@
             };
 
             $scope.createOrder = function(){
-                console.log($scope);
                 if(!$scope.checkout.$invalid){
 
                     var cleanOrderItems = [];
@@ -91,18 +84,16 @@
                     $scope.current.delivery = $scope.current.delivery.value;
                     dataResources.orderPrivate.post({items:cleanOrderItems,order:$scope.current})
                         .$promise.then(function(data){
-                            console.log("Fine");
                             $scope.$parent.cart = {cou:0,content:[]};
                             $state.go("cart.checkout.done", {id: data});
                         }, function(error){
-                            console.log("Error");
-                            console.log("Some fail happen: "+error);
                             $state.go("home");
                         });
 
-                    console.log($scope);
                 }
             };
+
+            console.log($scope)
 
         }])
 

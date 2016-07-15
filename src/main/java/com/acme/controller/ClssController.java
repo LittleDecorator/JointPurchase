@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.enums.ItemStatus;
 import com.acme.enums.OrderStatus;
 import com.acme.model.Delivery;
 import com.acme.repository.ClssRepository;
@@ -24,6 +25,11 @@ public class ClssController {
     @RequestMapping(method = RequestMethod.GET,value = "/order/status/map")
     public Map<String,String> getOrderStatus(){
         return Arrays.stream(OrderStatus.values()).collect(Collectors.toMap( e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),OrderStatus::getText));
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/item/status/map")
+    public Map<String,String> getItemStatus(){
+        return Arrays.stream(ItemStatus.values()).collect(Collectors.toMap( e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),ItemStatus::getText));
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/delivery")

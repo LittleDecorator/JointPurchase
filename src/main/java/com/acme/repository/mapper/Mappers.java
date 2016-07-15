@@ -1,5 +1,6 @@
 package com.acme.repository.mapper;
 
+import com.acme.enums.ItemStatus;
 import com.acme.enums.OrderStatus;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
@@ -22,6 +23,7 @@ public class Mappers {
         item.setArticle(rs.getString("article"));
         item.setDescription(rs.getString("description"));
         item.setPrice(rs.getInt("price"));
+        item.setStatus(ItemStatus.getByName(rs.getString("status")));
         item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         item.setInStock(rs.getInt("in_stock"));
         item.setDateAdd(rs.getDate("date_add"));
@@ -38,6 +40,7 @@ public class Mappers {
         item.setArticle(rs.getString("article"));
         item.setDescription(rs.getString("description"));
         item.setPrice(rs.getInt("price"));
+        item.setStatus(ItemStatus.getByName(rs.getString("status")));
         item.setNotForSale(rs.getString("not_for_sale").charAt(0)=='Y');
         item.setInStock(rs.getInt("in_stock"));
         item.setDateAdd(rs.getDate("date_add"));
@@ -132,10 +135,11 @@ public class Mappers {
         product.setId(rs.getString("id"));
         product.setName(rs.getString("name"));
         product.setCompanyId(rs.getString("company_id"));
-        product.setCompanyName(MapperHelper.getExistString(rs,"company_name"));
+        product.setCompanyName(MapperHelper.getExistString(rs, "company_name"));
         product.setArticle(rs.getString("article"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getInt("price"));
+        product.setStatus(ItemStatus.getByName(rs.getString("status")));
         product.setNotForSale(rs.getString("not_for_sale").charAt(0) == 'Y');
         product.setInStock(rs.getInt("in_stock"));
         product.setDateAdd(rs.getDate("date_add"));

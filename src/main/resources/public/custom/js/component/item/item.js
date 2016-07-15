@@ -105,33 +105,33 @@
                     return templatePath + "items-lg.html"
                 }
             };
-
-            $timeout(function(){
-                $('select').material_select();
-            },10);
         }])
 
-        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter){
-            $scope.selected = item;
+        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses){
+            $scope.item = item;
             $scope.companyNames = companies;
+            $scope.statuses = statuses;
             $scope.showHints = true;
 
-            if($scope.selected.price){
-                $scope.selected.price = $filter('number')($scope.selected.price);
+            var elem = helpers.findInArrayById(statuses,$scope.item.status.id);
+            console.log(elem);
+
+            if($scope.item.price){
+                $scope.item.price = $filter('number')($scope.item.price);
             }
 
-            if(!$scope.selected.categories){
-                $scope.selected.categories = [];
+            if(!$scope.item.categories){
+                $scope.item.categories = [];
             }
 
-            if(!$scope.selected.inStock){
-                $scope.selected.inStock = 0;
+            if(!$scope.item.inStock){
+                $scope.item.inStock = 0;
             }
 
             /* Удаление категории из товара */
             $scope.removeCategory = function(idx){
-                $scope.selected.categories.splice(idx,1);
-                if($scope.selected.categories.length == 0){
+                $scope.item.categories.splice(idx,1);
+                if($scope.item.categories.length == 0){
                     $scope.itemCard.categories.$error.required = true;
                     $scope.itemCard.categories.$setValidity("required", false);
                     $('md-chips-wrap').addClass('md-chips-invalid');
@@ -141,15 +141,15 @@
             /* Открытие модального окна для выбора категории */
             $scope.showCategoryModal = function(){
                 var selected = [];
-                if($scope.selected.categories && $scope.selected.categories.length > 0){
-                    selected = $scope.selected.categories.map(function(category){
+                if($scope.item.categories && $scope.item.categories.length > 0){
+                    selected = $scope.item.categories.map(function(category){
                         return category['id'];
                     })
                 }
                 var dialog = modal({templateUrl:"pages/modal/categoryModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"categoryClssController",data:selected});
                 dialog.closePromise.then(function(output) {
                     if(output.value && output.value != '$escape'){
-                        $scope.selected.categories = output.value;
+                        $scope.item.categories = output.value;
                         $scope.itemCard.categories.$error = {};
                         $scope.itemCard.categories.$setValidity("required", true);
                         $('md-chips-wrap').removeClass('md-chips-invalid');
@@ -165,23 +165,23 @@
                     $scope.itemCard.$setPristine();
                     /* refresh state because name can be changed */
                     $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                        $scope.selected.id = data.result;
+                        $scope.item.id = data.result;
                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                     });
                 }
 
                 if($scope.itemCard.$dirty){
                     if($scope.itemCard.$valid){
-                        if($scope.selected.id){
-                            dataResources.item.put($scope.selected).$promise.then(function(data){
-                                $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно изменён').theme('success'));
-                                refreshState({result:$scope.selected.id});
+                        if($scope.item.id){
+                            dataResources.item.put($scope.item).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Товар ['+ $scope.item.name +'] успешно изменён').theme('success'));
+                                refreshState({result:$scope.item.id});
                             }, function(error){
                                 $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
                             })
                         } else {
-                            dataResources.item.post($scope.selected).$promise.then(function(data){
-                                $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно создан').theme('success'));
+                            dataResources.item.post($scope.item).$promise.then(function(data){
+                                $mdToast.show(toast.textContent('Товар ['+ $scope.item.name +'] успешно создан').theme('success'));
                                 refreshState(data);
                             }, function(error){
                                 $mdToast.show(toast.textContent('Неудалось создать новый товар').theme('error'));
@@ -196,7 +196,7 @@
 
             /* Переход в галерею данного товара */
             $scope.showGallery = function () {
-                $state.go("item.detail.gallery", {id: $scope.selected.id});
+                $state.go("item.detail.gallery", {id: $scope.item.id});
             };
 
             /* Получения шаблона страницы */
@@ -208,8 +208,6 @@
                     return templatePath + "item-card-lg.html";
                 }
             };
-
-            console.log($scope)
 
         }])
 

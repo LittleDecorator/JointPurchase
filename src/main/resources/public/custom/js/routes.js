@@ -41,6 +41,11 @@ var route = {
                 data: {
                     requireLogin: false,
                     displayName: 'Детали заказа'
+                },
+                resolve:{
+                    deliveries: function(resolveService){
+                        return resolveService.getDeliveryMap()
+                    }
                 }
             },
             {
@@ -268,7 +273,7 @@ var route = {
                         return resolveService.getOrderItems($stateParams.id);
                     },
                     statusMap:function(resolveService) {
-                        return resolveService.getStatusMap();
+                        return resolveService.getOrderStatusMap();
                     },
                     deliveryMap:function(resolveService) {
                         return resolveService.getDeliveryMap();
@@ -382,6 +387,9 @@ var route = {
                 resolve: {
                     item: function($stateParams, resolveService) {
                         return resolveService.getItemDetail($stateParams.id);
+                    },
+                    statuses: function($stateParams, resolveService){
+                        return resolveService.getItemStatusMap();
                     }
                 }
             },

@@ -144,6 +144,7 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public CategorizeItem getItemDetail(@PathVariable("id") String id) {
         CategorizeItem item = new CategorizeItem(itemRepository.getById(id));
+        System.out.println(item);
         item.setCategories(categoryRepository.getByItemId(item.getId()));
         return item;
     }

@@ -5,6 +5,7 @@ import com.acme.model.Item;
 import com.acme.model.dto.ItemView;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.mapper.Mappers;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -115,7 +116,11 @@ public class ItemRepository {
 
         into.add(" NOT_FOR_SALE ");
         values.add(" :forSale ");
-        namedParameters.put("forSale",item.isNotForSale()?'Y':'N');
+        namedParameters.put("forSale", item.isNotForSale() ? 'Y' : 'N');
+
+        into.add(" STATUS ");
+        values.add(" :status ");
+        namedParameters.put("status", CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, item.getStatus().name()));
 
         if(item.getInStock() != null){
             into.add(" IN_STOCK ");
@@ -167,6 +172,9 @@ public class ItemRepository {
 
         querySB.add(" NOT_FOR_SALE = :forSale ");
         namedParameters.addValue("forSale", item.isNotForSale() ? 'Y' : 'N');
+
+        querySB.add(" STATUS = :status ");
+        namedParameters.addValue("status", CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, item.getStatus().name()));
 
         if(item.getInStock() != null){
             querySB.add(" IN_STOCK = :inStock ");

@@ -8,14 +8,14 @@
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
                     <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img"/>
                     <a class="btn-price btn-floating btn-large pink accent-2">{{::item.price}}р</a>
-                    <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">В наличие</div>
+                    <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
                 </div>
 
                     <md-card-actions layout="row" layout-align="end center" style="margin: 5px 10px;">
                         <span class="md-headline">{{::item.name}}</span>
                         <span flex></span>
-                        <md-button class="md-icon-button" style="padding: 0;margin-left: 0"><md-icon>favorite_outline</md-icon></md-button>
-                        <md-button class="md-icon-button" style="padding: 0;margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
+                        <md-button class="md-icon-button" md-no-ink="true" style="padding: 0;margin-left: 0; margin-right: 0"><md-icon>favorite_outline</md-icon></md-button>
+                        <md-button class="md-icon-button" md-no-ink="true" style="padding: 0;margin-left: 0; margin-right: 0" ng-click="addToCart(item)" title="Добавить в корзину"><md-icon>shopping_basket</md-icon></md-button>
                     </md-card-actions>
 
             </md-card>

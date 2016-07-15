@@ -16,7 +16,7 @@
                     <div class="input-field row" style="margin: auto; line-height: 30px; width: 30%">
                         <input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria" maxlength="50">
                         <md-button style="position: absolute;right: 0;min-width: 30px;margin: 0;    min-height: initial;    line-height: inherit;">
-                            <md-icon style="color:#86A8A8!important">search</md-icon>
+                            <md-icon style="color:#846C63;!important">search</md-icon>
                         </md-button>
                     </div>
 
@@ -33,6 +33,7 @@
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="catalog">Каталог</a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="about">О нас</a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Контакты</a></li>
+                        <li class="menu-item" ui-sref-active="active"><a ui-sref="delivery">Доставка</a></li>
                         <li class="menu-item" ui-sref-active="active"><a ui-sref="stock">Акции</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="order">Заказы</a></li>
                         <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="person">Клиенты</a></li>

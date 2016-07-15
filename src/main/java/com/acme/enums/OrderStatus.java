@@ -1,7 +1,7 @@
 package com.acme.enums;
 
-import com.acme.util.OrderStatusDeserializer;
-import com.acme.util.OrderStatusSerializer;
+import com.acme.enums.serializer.OrderStatusDeserializer;
+import com.acme.enums.serializer.OrderStatusSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.CaseFormat;

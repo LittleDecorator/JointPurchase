@@ -168,8 +168,6 @@
             console.log("in resolver");
             
             this.getItemDetail = function(id){
-                console.log("Get Item Detail for id -> ");
-                console.log(id);
                 var deferred = $q.defer();
                 if(id){
                     dataResources.item.get({id:id},function(item){
@@ -234,9 +232,17 @@
                 return deferred.promise;
             };
 
-            this.getStatusMap = function(){
+            this.getItemStatusMap = function(){
                 var deferred = $q.defer();
-                dataResources.statusMap.get(function(res){
+                dataResources.itemStatusMap.get(function(res){
+                    deferred.resolve(res);
+                });
+                return deferred.promise;
+            };
+
+            this.getOrderStatusMap = function(){
+                var deferred = $q.defer();
+                dataResources.orderStatusMap.get(function(res){
                     deferred.resolve(res);
                 });
                 return deferred.promise;

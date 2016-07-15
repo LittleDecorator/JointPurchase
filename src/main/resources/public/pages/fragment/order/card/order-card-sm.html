@@ -24,7 +24,7 @@
 
         <md-input-container>
             <label class="required">Статус заказа</label>
-            <md-select name="status" ng-model="order.status" required ng-model-options="{trackBy: '$value.id'}">
+            <md-select name="status" ng-model="order.status" required ng-model-options="{trackBy: '$value.id'}" >
                 <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
             </md-select>
             <div ng-messages="orderCard.status.$error" ng-if="!showHints">

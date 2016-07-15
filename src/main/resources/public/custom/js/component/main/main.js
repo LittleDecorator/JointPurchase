@@ -86,23 +86,19 @@
                     localStorage.removeItem('token');
                     localStorage.removeItem('menus');
                     localStorage.removeItem('subMenus');
-                    store.remove('cart');
+
                     $rootScope.currentUser = {};
                     $rootScope.menus = [];
                     $rootScope.subMenus = [];
-                    $scope.cart = {cou:0,content:[]};
+
                     $rootScope.currentUser = {};
                 }
 
                 //явный logout через меню
                 $scope.logout = function(){
-                    /*dataResources.authLogout.post().$promise.then(function(data){
-                        /!* clear all data *!/
-                        clearCookieInfo();
-                        /!* go to main page *!/
-                        // $state.transitionTo("home");
-                    });*/
                     clearCookieInfo();
+                    store.remove('cart');
+                    $scope.cart = {cou:0,content:[]};
                 };
 
                 //удаление всех promises для login из сервиса, отмена login'а
@@ -114,7 +110,6 @@
                         function (response) {
                             if(response && response.token){
                                 var token = response.token;
-                                console.log(token);
                                 var decodedToken = jwtHelper.decodeToken(token);
 
                                 /* clear old menu */

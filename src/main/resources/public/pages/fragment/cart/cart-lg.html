@@ -1,4 +1,4 @@
-<div class="table-result" >
+<div class="card" >
     <table  class="bordered" >
         <thead>
             <tr>
@@ -14,30 +14,33 @@
         <tr ng-repeat="item in cart.content" class="row cart-item" ng-style="$last && {'border':'none'}">
 
             <td class="col s2 non-float" style="text-align: center;padding: 5px 0;">
-                <!--<img height="110" ng-src="{{item.media?ORIG_URL+item.media[0]:item.url}}" />-->
-                <img height="110" ng-src="{{item.imageUrl}}" />
+                <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 120px!important; height: 120px!important;">
+                    <a ng-href="media/image/{{::item.contentId}}" class="swipebox">
+                        <img ng-src="{{item.imageUrl}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                    </a>
+                </div>
             </td>
-            <td class="col s5 non-float">
+            <td class="col s4 non-float">
                 <a ng-click="itemView(item.id)" style="cursor: pointer">
                     <span style="font-size: 20px;">{{::item.name}}</span>
                 </a>
             </td>
             <td class="col s1 non-float" style="text-align: center; width: 12%;">
-                <span class="price">{{::item.price}} руб</span>
+                <span class="price">{{::item.price|number}} руб</span>
             </td>
             <td class="col s2 non-float" style="text-align: center;">
                 <div>
-                    <md-icon ng-click="decrementCou($index)" style="cursor: pointer">chevron_left</md-icon>
-                    <span>{{item.cou}}</span>
-                    <md-icon ng-click="incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
+                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
+                    <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
+                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
                 </div>
             </td>
-            <td class="col s1 non-float" style="text-align: center; center; width: 12%;">
-                <span class="price">{{item.price * item.cou}} руб</span>
+            <td class="col s1 non-float" style="text-align: center; width: 12%;">
+                <span class="price">{{(item.price * item.cou)|number}} руб</span>
             </td>
-            <td class="col s1 non-float" style="text-align: center">
+            <td class="col s2 non-float" style="text-align: center">
                 <div style="cursor: pointer" ng-click="removeFromCart($index)">
-                    <md-icon style="color: #ee6e73">clear</md-icon>
+                    <md-icon style="color: darksalmon">delete</md-icon>
                 </div>
             </td>
         </tr>
@@ -46,9 +49,9 @@
     </table>
 </div>
 
-<div class="gray-row table-result" style="margin-top:20px">
-    <div class="col s6 offset-s6 table-total">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey}} руб</span>
+<div class="gray-row card" style="margin-top:20px">
+    <div class="col s6 offset-s6 table-total" style="margin: 10px 15px">
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey| number}} руб</span>
     </div>
 </div>
 

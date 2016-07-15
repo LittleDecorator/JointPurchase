@@ -6,14 +6,17 @@
 
                 <md-input-container flex="auto">
                     <label class="required">Название</label>
-                    <input name="name" ng-model="selected.name" required>
+                    <input name="name" ng-model="item.name" required>
                     <div ng-messages="itemCard.name.$error" ng-if="!showHints">
                         <div ng-message="required">Поле не может быть пустым</div>
                     </div>
                 </md-input-container>
 
-                <md-input-container class="no-errors" style="margin-left:2%">
-                    <md-checkbox ng-model="selected.notForSale">Исключён из продажи</md-checkbox>
+                <md-input-container flex=25" class="no-errors" style="margin-left:2%">
+                    <label class="required">Статус</label>
+                    <md-select ng-model="item.status" required ng-model-options="{trackBy: '$value.id'}">
+                        <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+                    </md-select>
                 </md-input-container>
 
             </div>
@@ -23,7 +26,7 @@
             <div layout="row">
                 <md-input-container class="md-block" flex="25" class="no-errors">
                     <label class="required">Производитель</label>
-                    <md-select name="company" ng-model="selected.companyId" required>
+                    <md-select name="company" ng-model="item.companyId" required>
                         <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
                     </md-select>
                     <div ng-messages="itemCard.company.$error" ng-if="!showHints">
@@ -33,7 +36,7 @@
 
                 <md-input-container flex="25">
                     <label class="required">Артикул</label>
-                    <input name="article" ng-model="selected.article" required only-number>
+                    <input name="article" ng-model="item.article" required only-number>
                     <div ng-messages="itemCard.article.$error" ng-if="!showHints">
                         <div ng-message="required">Поле не может быть пустым</div>
                     </div>
@@ -41,7 +44,7 @@
 
                 <md-input-container flex="25">
                     <label class="required">Цена (руб)</label>
-                    <input name="price" ng-model="selected.price" required currency-mask >
+                    <input name="price" ng-model="item.price" required currency-mask >
                     <div ng-messages="itemCard.price.$error" ng-if="!showHints">
                         <div ng-message-exp="['parse']">Поле не может быть пустым</div>
                     </div>
@@ -49,7 +52,7 @@
 
                 <md-input-container flex="25">
                     <label class="required">Кол-во в наличие</label>
-                    <input name="inStock" ng-model="selected.inStock" only-number>
+                    <input name="inStock" ng-model="item.inStock" only-number>
                     <div ng-messages="itemCard.inStock.$error" ng-if="!showHints">
                         <div ng-message-exp="['parse']">Поле не может быть пустым</div>
                     </div>
@@ -59,7 +62,7 @@
 
         <md-input-container style="width: 100%;">
             <label class="required">Категории</label>
-            <md-chips name="categories" ng-model="selected.categories" class="category-chips" md-on-remove="removeCategory($index)">
+            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)">
                 <md-chip-template>
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
@@ -75,9 +78,13 @@
         <md-content>
             <md-input-container class="md-block">
                 <label>Описание</label>
-                <textarea ng-model="selected.description"></textarea>
+                <textarea ng-model="item.description"></textarea>
             </md-input-container>
         </md-content>
+
+        <md-input-container class="no-errors">
+            <md-checkbox ng-model="item.notForSale">Исключён из продажи</md-checkbox>
+        </md-input-container>
     </div>
 
 </div>
