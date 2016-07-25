@@ -68,6 +68,7 @@
             $scope.clear = function () {
                 portion = 0;
                 $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
+                $scope.confirmedFilter = angular.copy($scope.filter);
                 localStorage.removeItem($state.current.name);
                 $scope.stopLoad = false;
                 $scope.loadData(true);

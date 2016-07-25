@@ -144,8 +144,6 @@
             <version>0.5.8</version>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-material</artifactId>
@@ -157,12 +155,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.webjars</groupId>-->
-            <!--<artifactId>font-awesome</artifactId>-->
-            <!--<version>4.6.2</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.webjars</groupId>
@@ -200,12 +192,6 @@
             <version>1.5.7</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.webjars.npm</groupId>-->
-            <!--<artifactId>ng-infinite-scroll</artifactId>-->
-            <!--<version>1.2.1</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-router</artifactId>
@@ -217,12 +203,6 @@
             <artifactId>angular-resource</artifactId>
             <version>1.5.7</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.webjars.bower</groupId>-->
-            <!--<artifactId>materialize</artifactId>-->
-            <!--<version>0.97.6</version>-->
-        <!--</dependency>-->
 
         <!-- TEST -->
         <dependency>
@@ -240,7 +220,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

@@ -67,10 +67,9 @@
                     localStorage.removeItem('subMenus');
                     $rootScope.currentUser = {};
                     $rootScope.menus = [];
-                    $rootScope.subMenus = [];
                     if (toState.data.requireLogin ) {
                         event.preventDefault();
-                        $state.transitionTo('home');
+                        $state.transitionTo('login');
                     }
                 } else {
                     if(fromState.name!=toState.parent){

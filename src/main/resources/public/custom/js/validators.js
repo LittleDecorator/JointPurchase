@@ -168,7 +168,7 @@
                         if (text) {
                             console.log('text present');
                             var transformedInput = text.replace(/[^0-9]/g,'');
-                            transformedInput = transformedInput.replace(/\s+/g,'');
+                            //transformedInput = transformedInput.replace(/\s+/g,'');
                             console.log(transformedInput);
                             if (transformedInput !== text) {
                                 ngModelCtrl.$setViewValue(transformedInput);

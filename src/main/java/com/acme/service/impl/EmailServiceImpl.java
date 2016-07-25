@@ -1,21 +1,20 @@
 package com.acme.service.impl;
 
+import com.acme.constant.Constants;
 import com.acme.model.Email;
 import com.acme.service.EmailService;
-import com.acme.constant.Constants;
 import com.acme.util.EmailBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service
+@PropertySource("classpath:mail.properties")
 public class EmailServiceImpl implements EmailService {
 
     @Autowired
@@ -51,6 +50,11 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public Session createSession(String user, String pass) {
         System.out.println(mailProperties.stringPropertyNames());
+        Set<String> names = mailProperties.stringPropertyNames();
+        for(String str : names) {
+            System.out.println(mailProperties.getProperty(str));
+        }
+
         Session session = Session.getInstance(mailProperties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {

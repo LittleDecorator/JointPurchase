@@ -96,6 +96,12 @@
 
                 //явный logout через меню
                 $scope.logout = function(){
+                    /*dataResources.authLogout.post().$promise.then(function(data){
+                        /!* clear all data *!/
+                        clearCookieInfo();
+                        /!* go to main page *!/
+                        // $state.transitionTo("home");
+                    });*/
                     clearCookieInfo();
                     store.remove('cart');
                     $scope.cart = {cou:0,content:[]};

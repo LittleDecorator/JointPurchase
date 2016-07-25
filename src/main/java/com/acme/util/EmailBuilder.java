@@ -8,6 +8,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
@@ -54,6 +55,19 @@ public class EmailBuilder {
                 messageBodyPart.setFileName(file.getName());
                 multipart.addBodyPart(messageBodyPart);
             }
+        }
+        return this;
+    }
+
+    public EmailBuilder setAttachment(byte[] attachment, String mime, String id) throws MessagingException {
+        if (attachment != null) {
+            if(multipart == null){
+                multipart = new MimeMultipart();
+            }
+            ByteArrayDataSource dataSource = new ByteArrayDataSource( attachment, mime );
+            messageBodyPart.setDataHandler( new DataHandler( dataSource ) );
+            messageBodyPart.setHeader("Content-ID", id);
+            multipart.addBodyPart(messageBodyPart);
         }
         return this;
     }
