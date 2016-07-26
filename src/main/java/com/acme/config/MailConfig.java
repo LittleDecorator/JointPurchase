@@ -8,26 +8,26 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:mail.properties")
+//@PropertySource("classpath:mail.properties")
 public class MailConfig {
 
 //    @Value("${mail.protocol}")
 //    private String protocol;
 
-    @Value("${mail.smtp.host}")
-    private String host;
-
-    @Value("${mail.smtp.port}")
-    private int port;
-
-    @Value("${mail.smtp.auth}")
-    private boolean auth;
-
-    @Value("${mail.debug}")
-    private boolean debug;
-
-    @Value("${mail.smtp.starttls.enable}")
-    private boolean starttls;
+//    @Value("${mail.smtp.host}")
+//    private String host;
+//
+//    @Value("${mail.smtp.port}")
+//    private int port;
+//
+//    @Value("${mail.smtp.auth}")
+//    private boolean auth;
+//
+//    @Value("${mail.debug}")
+//    private boolean debug;
+//
+//    @Value("${mail.smtp.starttls.enable}")
+//    private boolean starttls;
 
 //    @Value("${mail.smtp.ssl.trust}")
 //    private String ssl;
@@ -41,18 +41,18 @@ public class MailConfig {
 //    @Value("${mail.store.protocol}")
 //    private String store;
 
-    @Bean
-    public Properties mailProperties(){
-        Properties props = new Properties();
-        props.put("mail.debug", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
-        props.put("mail.smtp.auth", auth);
-        props.put("mail.smtp.starttls.enable", starttls);
-//        props.put("mail.smtp.ssl.trust", ssl);
-//        props.put("mail.store.protocol", store);
-        return props;
-    }
+//    @Bean
+//    public Properties mailProperties(){
+//        Properties props = new Properties();
+//        props.put("mail.debug", "true");
+//        props.put("mail.smtp.host", host);
+//        props.put("mail.smtp.port", port);
+//        props.put("mail.smtp.auth", auth);
+//        props.put("mail.smtp.starttls.enable", starttls);
+////        props.put("mail.smtp.ssl.trust", ssl);
+////        props.put("mail.store.protocol", store);
+//        return props;
+//    }
 
 //    @Bean
 //    public Session robotMailSession(){

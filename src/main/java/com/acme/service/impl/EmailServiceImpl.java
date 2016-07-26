@@ -14,10 +14,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
-@PropertySource("classpath:mail.properties")
+//@PropertySource("classpath:mail.properties")
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
+//    @Autowired
     Properties mailProperties;
 
     /**
