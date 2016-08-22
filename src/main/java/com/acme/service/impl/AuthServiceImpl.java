@@ -32,8 +32,8 @@ public class AuthServiceImpl implements AuthService{
     @Autowired
     TokenService tokenService;
 
-    @Autowired
-    EmailServiceImpl emailService;
+//    @Autowired
+//    EmailServiceImpl emailService;
 
     @Override
     public Subject getSubject(String login) {
@@ -109,7 +109,8 @@ public class AuthServiceImpl implements AuthService{
 
         //send email
         String html = "<a href='http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
-        return emailService.sendRegistrationToken(data.getMail(),html);
+//        return emailService.sendRegistrationToken(data.getMail(),html);
+        return false;
     }
 
     @Override
@@ -124,7 +125,7 @@ public class AuthServiceImpl implements AuthService{
 
             //send email
             String html = "<a href='http://grimmstory.ru/public/auth/restore?jwt="+tmpToken+"'>Change password</a>";
-            emailService.sendRegistrationToken(subject.getEmail(),html);
+//            emailService.sendRegistrationToken(subject.getEmail(),html);
 //            return subject.getEmail();
         } else {
             System.out.println("Subject not found");

@@ -34,13 +34,14 @@ var route = {
                 url: '/private/cartCheckout',
                 views: {
                     'main@': {
-                        templateUrl: 'pages/cartCheckout.html',
+                        templateUrl: 'pages/confirm.html',
                         controller: 'cartCheckoutController'
                     }
                 },
                 data: {
                     requireLogin: false,
-                    displayName: 'Детали заказа'
+                    //displayName: 'Детали заказа'
+                    displayName: 'Оформление заказа'
                 },
                 resolve:{
                     deliveries: function(resolveService){
@@ -48,25 +49,25 @@ var route = {
                     }
                 }
             },
-            {
-                name: 'cart.checkout.done',
-                url: '/order/done',
-                views: {
-                    'main@': {
-                        templateUrl: 'pages/OrderingDone.html',
-                        controller: 'cartPurchaseDoneController'
-                    }
-                },
-                data: {
-                    requireLogin: false
-                    //base:true
-                },
-                resolve: {
-                    purchase: function($stateParams, resolveService) {
-                        return resolveService.getOrder($stateParams.id);
-                    }
-                }
-            },
+            //{
+            //    name: 'cart.checkout.done',
+            //    url: '/order/done',
+            //    views: {
+            //        'main@': {
+            //            templateUrl: 'pages/OrderingDone.html',
+            //            controller: 'cartPurchaseDoneController'
+            //        }
+            //    },
+            //    data: {
+            //        requireLogin: false
+            //        //base:true
+            //    },
+            //    resolve: {
+            //        purchase: function($stateParams, resolveService) {
+            //            return resolveService.getOrder($stateParams.id);
+            //        }
+            //    }
+            //},
             {
                 name: 'about',
                 url:'/about',

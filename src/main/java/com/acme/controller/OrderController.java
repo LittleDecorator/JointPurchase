@@ -9,7 +9,6 @@ import com.acme.repository.ItemRepository;
 import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.service.AuthService;
-import com.acme.service.EmailService;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,8 +39,8 @@ public class OrderController{
     @Autowired
     AuthService authService;
 
-    @Autowired
-    EmailService emailService;
+//    @Autowired
+//    EmailService emailService;
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -71,7 +70,7 @@ public class OrderController{
         System.out.println(servletRequest != null ? "NOT NULL" : "NULL");
         System.out.println("Claims -> " + authService.getClaims(servletRequest));
         PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
-        emailService.sendOrderDone(purchaseOrder.getRecipientEmail());
+//        emailService.sendOrderDone(purchaseOrder.getRecipientEmail());
         return purchaseOrder.getId();
     }
 

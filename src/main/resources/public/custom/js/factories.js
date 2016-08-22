@@ -212,7 +212,8 @@
                 }),
                 deliveryMap:$resource('clss/order/delivery',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
-                        var result = [{id:null,value:"Укажите тип доставки ..."}];
+                        //var result = [{id:null,value:"Укажите тип доставки ..."}];
+                        var result = [];
                         angular.forEach(angular.fromJson(data), function(value){
                             result.push({id:value.id,value:value.name,hint:value.hint})
                         });

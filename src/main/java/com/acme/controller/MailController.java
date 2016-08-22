@@ -1,30 +1,24 @@
 package com.acme.controller;
 
-import com.acme.model.Email;
-import com.acme.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.mail.MessagingException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/mail")
 public class MailController {
 
-    @Autowired
-    private EmailService emailService;
+//    @Autowired
+//    private EmailService emailService;
 
-    @RequestMapping("/inbox")
-    public List<Email> receivedEmail() throws MessagingException {
-        return emailService.getInboxEmail();
-    }
-
-    @RequestMapping("/send")
-    public List<Email> sendEMail() throws MessagingException {
-        return emailService.getSendEmail();
-    }
+//    @RequestMapping("/inbox")
+//    public List<Email> receivedEmail() throws MessagingException {
+//        return emailService.getInboxEmail();
+//    }
+//
+//    @RequestMapping("/send")
+//    public List<Email> sendEMail() throws MessagingException {
+//        return emailService.getSendEmail();
+//    }
 
 //    @RequestMapping("/mail/registration/done")
 //    @ResponseStatus(HttpStatus.CREATED)

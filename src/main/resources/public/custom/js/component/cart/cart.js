@@ -43,57 +43,109 @@
 
         }])
 
-        .controller('cartCheckoutController',['$scope','$state','authService','dataResources','deliveries',function($scope,$state,authService,dataResources,deliveries){
+        .controller('cartCheckoutController',['$scope','$state','authService','dataResources','deliveries','$q','$timeout',function($scope,$state,authService,dataResources,deliveries,$q, $timeout){
 
             $scope.showHints = true;
-            $scope.deliveries = deliveries;
 
-            dataResources.deliveryMap.get(function(data){
-                $scope.deliveries = data;
-            });
-
-            $scope.current = {
-                recipientFname:null,
-                recipientLname:null,
-                recipientMname:null,
-                delivery: {id:null,value:"Укажите тип доставки ..."},
-                recipientPhone:null,
-                recipientEmail:null,
-                recipientAddress:null,
-                comment:null
-            };
+            ////dataResources.deliveryMap.get(function(data){
+            ////    $scope.deliveries = data;
+            ////});
+            //
 
             $scope.createOrder = function(){
-                if(!$scope.checkout.$invalid){
+                //if(!$scope.checkout.$invalid){
 
-                    var cleanOrderItems = [];
-                    var orderPaymnet = 0;
+                    //var cleanOrderItems = [];
+                    //var orderPaymnet = 0;
+                    //
+                    //$scope.cart.content.forEach(function (item) {
+                    //    if(item.cou>0){
+                    //        orderPaymnet = orderPaymnet + (item.cou * item.price);
+                    //        cleanOrderItems.push({
+                    //            id:null,
+                    //            orderId: null,
+                    //            itemId: item.id,
+                    //            cou: item.cou
+                    //        })
+                    //    }
+                    //});
+                    //$scope.current.payment = orderPaymnet;
+                    //$scope.current.delivery = $scope.current.delivery.value;
+                    //dataResources.orderPrivate.post({items:cleanOrderItems,order:$scope.current})
+                    //    .$promise.then(function(data){
+                    //        $scope.$parent.cart = {cou:0,content:[]};
+                    //        $state.go("cart.checkout.done", {id: data});
+                    //    }, function(error){
+                    //        $state.go("home");
+                    //    });
 
-                    $scope.cart.content.forEach(function (item) {
-                        if(item.cou>0){
-                            orderPaymnet = orderPaymnet + (item.cou * item.price);
-                            cleanOrderItems.push({
-                                id:null,
-                                orderId: null,
-                                itemId: item.id,
-                                cou: item.cou
-                            })
-                        }
-                    });
-                    $scope.current.payment = orderPaymnet;
-                    $scope.current.delivery = $scope.current.delivery.value;
-                    dataResources.orderPrivate.post({items:cleanOrderItems,order:$scope.current})
-                        .$promise.then(function(data){
-                            $scope.$parent.cart = {cou:0,content:[]};
-                            $state.go("cart.checkout.done", {id: data});
-                        }, function(error){
-                            $state.go("home");
-                        });
+                //}
+            };
+            //
+            //console.log($scope)
 
+            $scope.selectedStep = 0;
+            $scope.stepProgress = 1;
+            $scope.maxStep = 3;
+            $scope.showBusyText = false;
+            $scope.stepData = [
+                { step: 1, completed: false, optional: false,
+                    data: {
+                        recipientFname:null,
+                        recipientLname:null,
+                        recipientMname:null,
+                        recipientPhone:null,
+                        recipientEmail:null,
+                        recipientAddress:null,
+                        comment:null
+                    }
+                },
+                { step: 2, completed: false, optional: false,
+                    data: {
+                        deliveries : deliveries,
+                        delivery: deliveries[0]
+                    }
+                },
+                { step: 3, completed: false, optional: false, data: {} }
+            ];
+
+            $scope.enableNextStep = function nextStep() {
+                //do not exceed into max step
+                if ($scope.selectedStep >= $scope.maxStep) {
+                    return;
+                }
+                //do not increment vm.stepProgress when submitting from previously completed step
+                if ($scope.selectedStep === $scope.stepProgress - 1) {
+                    $scope.stepProgress = $scope.stepProgress + 1;
+                }
+                $scope.selectedStep = $scope.selectedStep + 1;
+            };
+
+            $scope.moveToPreviousStep = function moveToPreviousStep() {
+                if ($scope.selectedStep > 0) {
+                    $scope.selectedStep = $scope.selectedStep - 1;
                 }
             };
 
-            console.log($scope)
+            $scope.submitCurrentStep = function submitCurrentStep(stepData, isSkip) {
+                var deferred = $q.defer();
+                $scope.showBusyText = true;
+                console.log('On before submit');
+                if (!stepData.completed && !isSkip) {
+                    //simulate $http
+                    $timeout(function () {
+                        $scope.showBusyText = false;
+                        console.log('On submit success');
+                        deferred.resolve({ status: 200, statusText: 'success', data: {} });
+                        //move to next step when success
+                        stepData.completed = true;
+                        $scope.enableNextStep();
+                    }, 1000)
+                } else {
+                    $scope.showBusyText = false;
+                    $scope.enableNextStep();
+                }
+            }
 
         }])
 
