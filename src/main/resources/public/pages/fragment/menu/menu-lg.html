@@ -20,7 +20,7 @@
                         </md-button>
                     </div>
 
-                    <md-button ng-if="auth.isAuth()" style="padding: 0"><md-icon>account_circle</md-icon> {{::currentUser.name}}</md-button>
+                    <md-button ng-if="auth.isAuth()" ng-click="goto('cabinet')" style="padding: 0"><md-icon>account_circle</md-icon> {{::currentUser.name}}</md-button>
                     <md-button ng-if="auth.isAuth()" ng-click="logout()" style="padding: 0"><md-icon>exit_to_app</md-icon> Выход</md-button>
                     <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn light-green lighten-2" style="margin: auto;margin-left: 15px;height: 30px; line-height: 30px;font-size: 1rem;" >Вход</a>
                 </div>

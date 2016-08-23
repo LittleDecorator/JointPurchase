@@ -83,6 +83,31 @@ var route = {
                 }
             },
             {
+                name: 'cabinet',
+                url:'/cabinet',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/cabinet.html',
+                        controller: 'cabinetController'
+                    }
+                },
+                data:{
+                    requireLogin: true,
+                    //base:true
+                },
+                resolve: {
+                    //items: function($stateParams,resolveService) {
+                    //    return resolveService.getOrderItems($stateParams.id);
+                    //},
+                    statusMap:function(resolveService) {
+                        return resolveService.getOrderStatusMap();
+                    },
+                    deliveryMap:function(resolveService) {
+                        return resolveService.getDeliveryMap();
+                    }
+                }
+            },
+            {
                 name: 'email',
                 url:'/email',
                 views: {

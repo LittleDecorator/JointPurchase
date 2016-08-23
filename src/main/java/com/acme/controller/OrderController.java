@@ -5,6 +5,7 @@ import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 import com.acme.model.dto.OrderRequest;
 import com.acme.model.dto.OrderView;
+import com.acme.model.filter.OrderFilter;
 import com.acme.repository.ItemRepository;
 import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -51,8 +53,15 @@ public class OrderController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<OrderView> getOrders() {
-        return purchaseOrderRepository.getAll();
+    public List<OrderView> getOrders(OrderFilter filter) {
+        return purchaseOrderRepository.getAll(filter);
+    }
+
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    public List<OrderView> getOrderHistory(OrderFilter filter, HttpServletRequest request) {
+        filter.setSubjectId(authService.getClaims(request).getId());
+        System.out.println(filter);
+        return purchaseOrderRepository.getAll(filter);
     }
 
     /**
@@ -66,12 +75,13 @@ public class OrderController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/personal")
-    public String privateOrderProcess(@RequestBody OrderRequest request,ServletRequest servletRequest) throws ParseException, IOException {
+    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request,ServletRequest servletRequest) throws ParseException, IOException {
         System.out.println(servletRequest != null ? "NOT NULL" : "NULL");
         System.out.println("Claims -> " + authService.getClaims(servletRequest));
+        System.out.println(request);
         PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
 //        emailService.sendOrderDone(purchaseOrder.getRecipientEmail());
-        return purchaseOrder.getId();
+        return purchaseOrder;
     }
 
     /**
@@ -90,7 +100,9 @@ public class OrderController{
                 purchaseOrderRepository.updateSelectiveById(order);
             } else {
                 order.setUid(System.currentTimeMillis());
+                System.out.println("insert " + order);
                 purchaseOrderRepository.insertSelective(order);
+                System.out.println(order);
             }
 
             //delete old links
@@ -103,6 +115,7 @@ public class OrderController{
             transactionManager.commit(status);
             return order;
         } catch (Exception e){
+            System.out.println("ERROR HAPPEN");
             transactionManager.rollback(status);
             return null;
         }

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="official/css/ngDialog-theme-flat.css">
     <link rel="stylesheet" href="official/css/ngDialog-theme-wide.css">
     <link rel="stylesheet" href="official/stepper/md-steppers.min.css">
+    <link rel="stylesheet" href="official/css/mdPickers.min.css">
 
     <!-- build:css custom/css/all.css -->
     <link rel="stylesheet" href="custom/css/app.css">
@@ -57,7 +58,7 @@
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
     </header>
 
-    <main class="main-wrapper">
+    <main class="main-wrapper" id="main-wrapper">
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main"></div>
@@ -78,6 +79,7 @@
     <script src="/webjars/angular-aria/1.5.7/angular-aria.js"></script>
     <script src="/webjars/angular-touch/1.5.7/angular-touch.min.js"></script>
     <script src="/webjars/angular-messages/1.5.7/angular-messages.js"></script>
+    <script src="/webjars/momentjs/2.14.1/min/moment.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
     <script src="official/ng-infinite-scroll.min.js"></script>
@@ -95,6 +97,7 @@
     <script src="official/auth0/angular-jwt.min.js"></script>
     <script src="official/mask.js"></script>
     <script src="official/ngMask.min.js"></script>
+    <script src="official/mdPickers.min.js"></script>
 
     <!-- build:js custom/js/all.js -->
     <script src="custom/js/libs/ngBreadcrumbs.js"></script>
@@ -130,6 +133,7 @@
     <script src="custom/js/component/email/email.js"></script>
     <script src="custom/js/component/address/address.js"></script>
     <script src="custom/js/component/search/search.js"></script>
+    <script src="custom/js/component/cabinet.js"></script>
     <!-- endbuild -->
 
 </body>

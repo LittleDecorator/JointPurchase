@@ -16,8 +16,8 @@
             <tbody>
             <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
                 <td class="center-align">{{::order.uid}}</td>
-                <td class="center-align">{{::order.personName}}</td>
-                <td class="center-align">{{::order.dateAdd | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+                <td class="center-align">{{::order.recipientName}}</td>
+                <td class="center-align">{{::order.createDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
                 <td class="center-align">{{::order.delivery}}</td>
                 <td class="center-align">{{::order.status.name}}</td>
                 <td class="center-align">{{::order.payment}} руб</td>

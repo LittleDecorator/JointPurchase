@@ -47,47 +47,40 @@
 
             $scope.showHints = true;
 
-            ////dataResources.deliveryMap.get(function(data){
-            ////    $scope.deliveries = data;
-            ////});
-            //
+            $scope.createOrder = function(deferred){
+                var cleanOrderItems = [];
+                var orderPaymnet = 0;
+                console.log($scope);
+                $scope.$parent.cart.content.forEach(function (item) {
+                    if(item.cou>0){
+                        orderPaymnet = orderPaymnet + (item.cou * item.price);
+                        cleanOrderItems.push({
+                            id:null,
+                            orderId: null,
+                            itemId: item.id,
+                            cou: item.cou
+                        })
+                    }
+                });
 
-            $scope.createOrder = function(){
-                //if(!$scope.checkout.$invalid){
-
-                    //var cleanOrderItems = [];
-                    //var orderPaymnet = 0;
-                    //
-                    //$scope.cart.content.forEach(function (item) {
-                    //    if(item.cou>0){
-                    //        orderPaymnet = orderPaymnet + (item.cou * item.price);
-                    //        cleanOrderItems.push({
-                    //            id:null,
-                    //            orderId: null,
-                    //            itemId: item.id,
-                    //            cou: item.cou
-                    //        })
-                    //    }
-                    //});
-                    //$scope.current.payment = orderPaymnet;
-                    //$scope.current.delivery = $scope.current.delivery.value;
-                    //dataResources.orderPrivate.post({items:cleanOrderItems,order:$scope.current})
-                    //    .$promise.then(function(data){
-                    //        $scope.$parent.cart = {cou:0,content:[]};
-                    //        $state.go("cart.checkout.done", {id: data});
-                    //    }, function(error){
-                    //        $state.go("home");
-                    //    });
-
-                //}
+                var order = $.extend({},$scope.stepData[0].data);
+                order.payment = orderPaymnet;
+                order.delivery = $scope.stepData[1].data.delivery.id;
+                dataResources.orderPrivate.post({items:cleanOrderItems,order:order}).$promise.then(function(data){
+                    deferred.resolve(data);
+                    //$state.go("cart.checkout.done", {id: data});
+                }, function(error){
+                    //$state.go("home");
+                    deferred.reject(error);
+                });
+                return deferred.promise;
             };
-            //
-            //console.log($scope)
 
             $scope.selectedStep = 0;
             $scope.stepProgress = 1;
             $scope.maxStep = 3;
             $scope.showBusyText = false;
+
             $scope.stepData = [
                 { step: 1, completed: false, optional: false,
                     data: {
@@ -106,7 +99,11 @@
                         delivery: deliveries[0]
                     }
                 },
-                { step: 3, completed: false, optional: false, data: {} }
+                { step: 3, completed: false, optional: false,
+                    data: {
+
+                    }
+                }
             ];
 
             $scope.enableNextStep = function nextStep() {
@@ -114,7 +111,7 @@
                 if ($scope.selectedStep >= $scope.maxStep) {
                     return;
                 }
-                //do not increment vm.stepProgress when submitting from previously completed step
+                //do not increment stepProgress when submitting from previously completed step
                 if ($scope.selectedStep === $scope.stepProgress - 1) {
                     $scope.stepProgress = $scope.stepProgress + 1;
                 }
@@ -127,22 +124,24 @@
                 }
             };
 
-            $scope.submitCurrentStep = function submitCurrentStep(stepData, isSkip) {
+            $scope.submitCurrentStep = function submitCurrentStep(stepData) {
                 var deferred = $q.defer();
-                $scope.showBusyText = true;
-                console.log('On before submit');
-                if (!stepData.completed && !isSkip) {
-                    //simulate $http
-                    $timeout(function () {
+                if($scope.maxStep  - 1 == $scope.stepProgress){
+                    $scope.showBusyText = true;
+                    $scope.createOrder(deferred).then(function(data){
+                        $scope.$parent.cart = {cou:0,content:[]};
+                        console.log(data);
+                        $scope.stepData[2].data = data;
                         $scope.showBusyText = false;
-                        console.log('On submit success');
-                        deferred.resolve({ status: 200, statusText: 'success', data: {} });
-                        //move to next step when success
                         stepData.completed = true;
                         $scope.enableNextStep();
-                    }, 1000)
+                    }, function(error){
+                        $scope.$parent.cart = {cou:0,content:[]};
+                        $state.go("home");
+                    });
                 } else {
                     $scope.showBusyText = false;
+                    stepData.completed = true;
                     $scope.enableNextStep();
                 }
             }

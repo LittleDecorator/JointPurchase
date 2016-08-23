@@ -1,5 +1,5 @@
 (function(){
-    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'ngMessages','angularBootstrapNavTree', 'ngResource',/*'ui.mask',*/'ngMask', 'angularFileUpload', 'angular-jwt','md-steppers',
+    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'ngMessages','angularBootstrapNavTree', 'ngResource','mdPickers','ngMask', 'angularFileUpload', 'angular-jwt','md-steppers',
         'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators']);
 })();
 
@@ -16,6 +16,7 @@
             angular.forEach(route.getRoutes(),function(route){
                 $stateProvider.state(route);
             });
+
             //
             //$locationProvider.html5Mode({
             //    enabled: true,

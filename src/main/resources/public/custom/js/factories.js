@@ -165,6 +165,7 @@
                     }},
                     delete:{method:'DELETE',isArray:false}
                 }),
+                orderHistory: $resource('/order/history',{},{all:{method:'GET',isArray:true}}),
                 orderPrivate:$resource('/order/personal',{},{post:{method:'POST',isArray:false}}),
                 orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
                 orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),

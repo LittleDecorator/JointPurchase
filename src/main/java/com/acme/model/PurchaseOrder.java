@@ -8,47 +8,19 @@ import java.util.Date;
 public class PurchaseOrder extends Base {
 
     private String id;
-
-
     private String subjectId;
-
-
     private Long uid;
-
-
     private String recipientFname;
-
-
     private String recipientLname;
-
-
     private String recipientMname;
-
-
     private String recipientEmail;
-
-
     private String recipientPhone;
-
-
     private String recipientAddress;
-
-
     private Date dateAdd;
-
-
     private Date closeOrderDate;
-
-
     private String comment;
-
-
     private OrderStatus status;
-
-
     private String delivery;
-
-
     private Integer payment;
 
 

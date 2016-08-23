@@ -3,6 +3,7 @@ package com.acme.repository;
 import com.acme.constant.Queue;
 import com.acme.model.PurchaseOrder;
 import com.acme.model.dto.OrderView;
+import com.acme.model.filter.OrderFilter;
 import com.acme.repository.mapper.Mappers;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
@@ -25,8 +26,38 @@ public class PurchaseOrderRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
-    public List<OrderView> getAll(){
-        return jdbcTemplate.query(Queue.PURCHASE_ORDER_FIND_ALL, Mappers.orderViewMapper);
+    public List<OrderView> getAll(OrderFilter filter){
+
+        List<String> queryParams = Lists.newArrayList();
+        List<Object> parameters = Lists.newArrayList();
+
+        if(filter.getDateFrom() != null){
+            queryParams.add("create_order_date >= ?");
+            parameters.add(filter.getDateFrom());
+        }
+
+        if(filter.getDateTo() != null){
+            queryParams.add("create_order_date <= ?");
+            parameters.add(filter.getDateTo());
+        }
+
+        if(filter.getStatus() != null){
+            queryParams.add("status >= ?");
+            parameters.add(filter.getStatus().name());
+        }
+
+        if(filter.getSubjectId() != null){
+            queryParams.add("recipient_id = ?");
+            parameters.add(filter.getSubjectId());
+        }
+
+        String queue = Queue.PURCHASE_ORDER_FIND_ALL;
+        if(!queryParams.isEmpty()){
+            queue += " WHERE "+ String.join(" AND ", queryParams);
+        }
+        queue += " order by create_order_date offset "+ filter.getOffset() + " limit "+ filter.getLimit();
+
+        return jdbcTemplate.query(queue , parameters.toArray(), Mappers.orderViewMapper);
     }
 
     public PurchaseOrder getById(String id){
@@ -58,7 +89,9 @@ public class PurchaseOrderRepository {
         // for id property
         into.add("ID");
         values.add(":id");
-        namedParameters.put("id", UUID.randomUUID());
+        order.setId(UUID.randomUUID().toString());
+        namedParameters.put("id", order.getId());
+
 
         if(order.getSubjectId() != null){
             into.add("SUBJECT_ID");
@@ -145,8 +178,11 @@ public class PurchaseOrderRepository {
         }
 
         if(values.size()>0){
-            int res = parameterJdbcTemplate.update(" insert into public.purchase_order ( " + String.join(",", into) + " ) values ( " + String.join(",", values) + " )",namedParameters);
+            String sql = " insert into public.purchase_order ( " + String.join(",", into) + " ) values ( " + String.join(",", values) + " )";
+            System.out.println(sql);
+            int res = parameterJdbcTemplate.update(sql,namedParameters);
             result = res == 1 ? Boolean.TRUE : Boolean.FALSE;
+            System.out.println(result);
         }
 
         return result;
