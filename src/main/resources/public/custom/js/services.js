@@ -357,4 +357,16 @@
                 }
             }
         }])
+
+        .service('cryptoService',['$rootScope',function(){
+
+            var rkEncryptionKey = CryptoJS.enc.Base64.parse('ZQiPJvvwFlfa9IxXj+F+eJCST+XvFr6nWYS0rloQZdQ=');
+            var rkEncryptionIv = CryptoJS.enc.Base64.parse('ksgfrrfixQ4xLk/qV5CmRg==');
+
+            this.encryptString = function(stringToEncrypt){
+                var encrypted = CryptoJS.AES.encrypt(stringToEncrypt, rkEncryptionKey, {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv: rkEncryptionIv});
+                return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+            }
+
+        }])
 })();

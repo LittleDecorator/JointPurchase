@@ -19,8 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
@@ -58,8 +60,10 @@ public class OrderController{
     }
 
     @RequestMapping(value = "/history", method = RequestMethod.GET)
-    public List<OrderView> getOrderHistory(OrderFilter filter, HttpServletRequest request) {
-        filter.setSubjectId(authService.getClaims(request).getId());
+    public List<OrderView> getOrderHistory(OrderFilter filter) {
+        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+        filter.setSubjectId(authService.getClaims(servletRequest).getId());
         System.out.println(filter);
         return purchaseOrderRepository.getAll(filter);
     }
@@ -75,10 +79,10 @@ public class OrderController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/personal")
-    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request,ServletRequest servletRequest) throws ParseException, IOException {
-        System.out.println(servletRequest != null ? "NOT NULL" : "NULL");
-        System.out.println("Claims -> " + authService.getClaims(servletRequest));
-        System.out.println(request);
+    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException {
+        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+        request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
         PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
 //        emailService.sendOrderDone(purchaseOrder.getRecipientEmail());
         return purchaseOrder;

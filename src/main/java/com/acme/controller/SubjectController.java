@@ -3,9 +3,14 @@ package com.acme.controller;
 import com.acme.model.Subject;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.repository.SubjectRepository;
+import com.acme.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +26,9 @@ public class SubjectController{
     @Autowired
     PurchaseOrderRepository purchaseOrderRepository;
 
+    @Autowired
+    AuthService authService;
+
     @RequestMapping(method = RequestMethod.GET)
     public List<Subject> getSubjects() {
         return subjectRepository.getAll();
@@ -29,6 +37,13 @@ public class SubjectController{
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public Subject getSubject(@PathVariable("id") String id) {
         return subjectRepository.getById(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/private")
+    public Subject getCurrentSubject() {
+        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+        return subjectRepository.getById(authService.getClaims(servletRequest).getId());
     }
 
     @RequestMapping(method = RequestMethod.POST)

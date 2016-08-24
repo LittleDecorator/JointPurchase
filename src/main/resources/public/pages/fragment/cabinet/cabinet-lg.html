@@ -1,6 +1,6 @@
-<md-tabs md-dynamic-height md-border-bottom>
-    <md-tab label="Заказы">
-        <md-content class="md-padding" ng-form="history" ng-controller="cabinetHistoryController">
+<md-tabs md-dynamic-height md-border-bottom md-autoselect="false" id="tabs" md-selected="filter.selectedTab">
+    <md-tab label="Заказы" md-on-select="remember(0);">
+        <md-content class="md-padding">
 
             <div>
                 <div layout="row">
@@ -53,30 +53,30 @@
 
         </md-content>
     </md-tab>
-    <md-tab label="Персональная информаия">
-        <md-content class="md-padding" ng-form="private" ng-controller="cabinetPrivateController">
+    <md-tab label="Персональная информаия" md-on-select="remember(1);">
+        <md-content class="md-padding" ng-form="personInfo">
 
             <div layout="column">
 
                 <div layout="row">
 
-                    <md-input-container flex="33">
+                    <md-input-container flex>
                         <label class="required">Имя</label>
                         <input name="firstName" ng-model="person.firstName">
-                        <div ng-messages="personCard.firstName.$error" ng-if="!showHints">
+                        <div ng-messages="person.firstName.$error" ng-if="!showHints">
                             <div ng-message="required">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
-                    <md-input-container flex="33" class="no-errors">
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label class="required">Фамилия</label>
                         <input name="lastName" ng-model="person.lastName">
-                        <div ng-messages="personCard.lastName.$error" ng-if="!showHints">
+                        <div ng-messages="person.lastName.$error" ng-if="!showHints">
                             <div ng-message="required">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
-                    <md-input-container flex="33" class="no-errors">
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label>Отчество</label>
                         <input name="middleName" ng-model="person.middleName">
                     </md-input-container>
@@ -85,22 +85,22 @@
 
                 <div layout="row">
 
-                    <md-input-container flex="33">
+                    <md-input-container flex>
                         <label>Номер телефона</label>
                         <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
                         <div class="hint">Пример: (915) 343-43-45</div>
                     </md-input-container>
 
-                    <md-input-container flex="33">
-                        <label>Почта</label>
+                    <md-input-container flex style="margin-left: 1%">
+                        <label class="required">Почта</label>
                         <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/">
                         <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
-                        <div ng-messages="personCard.email.$error" ng-if="!showHints">
+                        <div ng-messages="person.email.$error" ng-if="!showHints">
                             <div ng-message-exp="['pattern']">Не корректный e-mail</div>
                         </div>
                     </md-input-container>
 
-                    <md-input-container flex="33" class="no-errors">
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label>Индекс</label>
                         <input ng-model="person.postAddress" mask="999 999" mask-restrict="reject">
                     </md-input-container>

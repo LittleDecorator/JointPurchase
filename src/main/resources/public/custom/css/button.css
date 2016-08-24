@@ -132,3 +132,13 @@ md-card .md-icon-button:hover{
     font-size: 17px;
     line-height: 30px;
 }
+
+.md-button.btn {
+    padding: 0 1.5rem;
+}
+
+.md-button.btn > span {
+    font-family: Ubuntu Condensed;
+    font-size: 1.1rem;
+    letter-spacing: .5px;
+}

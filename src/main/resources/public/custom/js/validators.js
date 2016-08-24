@@ -6,33 +6,6 @@
     'use strict';
 
     angular.module('purchase.validators')
-        //.directive('select', function(){
-        //    return {
-        //        restrict: 'E',
-        //        require: '?ngModel',
-        //        link: function (scope, element, attrs, ngModel) {
-        //
-        //            var post = function(selector){
-        //                angular.element($('#'+selector+' .select-wrapper')).addClass('inactive');
-        //                angular.element($('#'+selector+' ul li:first span')).addClass('inactive');
-        //            };
-        //
-        //            /* сделан упор на callback пустой модели и условие не пустого списка в элементе */
-        //            if(ngModel) {
-        //                ngModel.$isEmpty = function(){
-        //                    if(element[0].length > 1  && !ngModel.$pristine){
-        //                        element.material_select();
-        //                        post('company');
-        //                        post('category');
-        //                        if(attrs.postInit){
-        //                            scope[attrs.postInit]();        //вызов метода через имя указанное в атрибуте post-init
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    };
-        //})
 
         .directive('passwordValidate', function() {
             return {
@@ -41,39 +14,9 @@
                 link: function (scope, elm, attrs, ctrl) {
                     ctrl.$parsers.push(function(value) {
 
-                        if(!scope.$validation){
-                            scope.$validation = {};
-                        }
-
-                        var valid = true;
-                        var errText = null;
-
-                        if (/[A-Z]/.test(value)) {
-                            ctrl.$setValidity('uppercaseValidator', true);
-                        } else {
-                            ctrl.$setValidity('uppercaseValidator', false);
-                            valid = false;
-                            errText = "Strong secret has to contain at least 1 uppercase";
-                        }
-
-                        if (/[0-9]/.test(value)) {
-                            ctrl.$setValidity('numberValidator', true);
-                        } else {
-                            ctrl.$setValidity('numberValidator', false);
-                            valid = false;
-                            errText = "Strong secret has to contain at least 1 number";
-                        }
-
-                        if (value.length === 6) {
-                            ctrl.$setValidity('sixCharactersValidator', true);
-                        } else {
-                            ctrl.$setValidity('sixCharactersValidator', false);
-                            valid = false;
-                            errText = "Strong secret has to be exactly 6 characters long";
-                        }
-
-                        scope.$validation[attrs.name] = {valid:valid,errorText:errText};
-                        console.log(scope);
+                        ctrl.$setValidity('uppercaseValidator',/[A-Z]/.test(value));
+                        ctrl.$setValidity('numberValidator', /[0-9]/.test(value));
+                        ctrl.$setValidity('sixCharactersValidator', value.length === 6);
 
                         return value;
 
@@ -206,6 +149,56 @@
                     ngModelCtrl.$parsers.push(format);
                 }
             };
+        }])
+
+        .directive('match', ['$parse',function($parse) {
+            return {
+                require: '?ngModel',
+                restrict: 'A',
+                link: function (scope, elem, attrs, ctrl) {
+                    if (!ctrl || !attrs.match) {
+                        return;
+                    }
+
+                    var matchGetter = $parse(attrs.match);
+                    var caselessGetter = $parse(attrs.matchCaseless);
+                    var noMatchGetter = $parse(attrs.notMatch);
+                    var matchIgnoreEmptyGetter = $parse(attrs.matchIgnoreEmpty);
+
+                    scope.$watch(getMatchValue, function () {
+                        ctrl.$$parseAndValidate();
+                    });
+
+                    ctrl.$validators.match = function (modelValue, viewValue) {
+                        var matcher = modelValue || viewValue;
+                        var match = getMatchValue();
+                        var notMatch = noMatchGetter(scope);
+                        var value;
+
+                        if (matchIgnoreEmptyGetter(scope) && !viewValue) {
+                            return true;
+                        }
+
+                        if (caselessGetter(scope)) {
+                            value = angular.lowercase(matcher) === angular.lowercase(match);
+                        } else {
+                            value = matcher === match;
+                        }
+                        /*jslint bitwise: true */
+                        value ^= notMatch;
+                        /*jslint bitwise: false */
+                        return !!value;
+                    };
+
+                    function getMatchValue() {
+                        var match = matchGetter(scope);
+                        if (angular.isObject(match) && match.hasOwnProperty('$viewValue')) {
+                            match = match.$viewValue;
+                        }
+                        return match;
+                    }
+                }
+            }
         }])
 
 })();

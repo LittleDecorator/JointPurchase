@@ -42,15 +42,15 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public Credential validate(SubjectCredential subjectCredential) {
-        if (Strings.isNullOrEmpty(subjectCredential.name) || Strings.isNullOrEmpty(subjectCredential.password)) {
+        if (Strings.isNullOrEmpty(subjectCredential.getName()) || Strings.isNullOrEmpty(subjectCredential.getPassword())) {
             return null;
         }
-        Subject subject = getSubject(subjectCredential.name);
+        Subject subject = getSubject(subjectCredential.getName());
         if (!(subject != null && subject.isEnabled())) {
             return null;
         }
         Credential credential = credentialRepository.getById(subject.getId());
-        if(credential != null && PasswordHashing.validatePassword(subjectCredential.password, credential.getPassword())){
+        if(credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())){
             return credential;
         } else {
             return null;

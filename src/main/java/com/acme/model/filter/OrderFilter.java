@@ -1,15 +1,20 @@
 package com.acme.model.filter;
 
-import com.acme.enums.OrderStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+//TODO: В дальнейшем нужно перевесить на LocalDateTime (может нужно другой драйвер? Может запрос изменить? )
 public class OrderFilter {
 
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
     LocalDateTime dateFrom;
+//    Date dateFrom;
+    @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
     LocalDateTime dateTo;
+//    Date dateTo;
     String delivery;
-    OrderStatus status;
+    String status;
     String subjectId;
     Integer limit;
     Integer offset;
@@ -38,11 +43,11 @@ public class OrderFilter {
         this.delivery = delivery;
     }
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

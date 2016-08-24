@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,17 +35,17 @@ public class PurchaseOrderRepository {
 
         if(filter.getDateFrom() != null){
             queryParams.add("create_order_date >= ?");
-            parameters.add(filter.getDateFrom());
+            parameters.add(Date.from(filter.getDateFrom().atZone(ZoneId.of("UTC")).toInstant()));
         }
 
         if(filter.getDateTo() != null){
             queryParams.add("create_order_date <= ?");
-            parameters.add(filter.getDateTo());
+            parameters.add(Date.from(filter.getDateTo().atZone(ZoneId.of("UTC")).toInstant()));
         }
 
         if(filter.getStatus() != null){
-            queryParams.add("status >= ?");
-            parameters.add(filter.getStatus().name());
+            queryParams.add("status = ?");
+            parameters.add(filter.getStatus());
         }
 
         if(filter.getSubjectId() != null){
@@ -56,7 +58,7 @@ public class PurchaseOrderRepository {
             queue += " WHERE "+ String.join(" AND ", queryParams);
         }
         queue += " order by create_order_date offset "+ filter.getOffset() + " limit "+ filter.getLimit();
-
+        System.out.println(parameters);
         return jdbcTemplate.query(queue , parameters.toArray(), Mappers.orderViewMapper);
     }
 

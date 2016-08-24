@@ -151,6 +151,9 @@
                 authLogin: $resource('/auth/login',{},{
                     post:{method:'POST'}
                 }),
+                authChange: $resource('/auth/change',{},{
+                    post:{method:'POST'}
+                }),
 
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
@@ -175,6 +178,7 @@
                 }),
                 contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
                 customer: $resource('/customer/:id'),
+                customerPrivate: $resource('/customer/private'),
 
                 previewItems: $resource('/item/preview',{},{
                     filter:{method:'POST',isArray:false}

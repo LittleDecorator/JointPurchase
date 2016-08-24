@@ -4,11 +4,9 @@ import com.acme.helper.LoginResponse;
 import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
-import com.acme.model.Subject;
 import com.acme.repository.CredentialRepository;
 import com.acme.service.AuthService;
 import com.acme.service.TokenService;
-import com.acme.util.PasswordHashing;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -63,12 +61,15 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/change",method = RequestMethod.POST)
-    public LoginResponse changePassword(@RequestBody SubjectCredential subjectCredential) throws ServletException, ParseException, UnsupportedEncodingException {
-        Subject subject = authService.getSubject(subjectCredential.name);
-        Credential credential = credentialRepository.getById(subject.getId());
-        credential.setPassword(PasswordHashing.hashPassword(subjectCredential.password));
-        credentialRepository.update(credential);
-        return new LoginResponse(tokenService.createToken(credential));
+//    public LoginResponse changePassword(@RequestBody SubjectCredential subjectCredential) throws ServletException, ParseException, UnsupportedEncodingException {
+    public void changePassword(String oldPassword, String newPassword) throws ServletException, ParseException, UnsupportedEncodingException {
+        System.out.println(oldPassword);
+        System.out.println(newPassword);
+//        Subject subject = authService.getSubject(subjectCredential.getName());
+//        Credential credential = credentialRepository.getById(subject.getId());
+//        credential.setPassword(PasswordHashing.hashPassword(subjectCredential.getNewPassword()));
+//        credentialRepository.update(credential);
+//        return new LoginResponse(tokenService.createToken(credential));
     }
 
 }
