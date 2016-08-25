@@ -1,6 +1,7 @@
 package com.acme;
 
 import com.acme.servlet.PublicServlet;
+import com.acme.util.CustomResolver;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,9 +13,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.List;
 import java.util.Locale;
+
+//import com.acme.util.CustomResolver;
 
 @ComponentScan("com.acme")
 @Configurable
@@ -43,6 +48,12 @@ public class Application extends WebMvcConfigurerAdapter {
         registrationBean.setServlet(new PublicServlet());
         registrationBean.addUrlMappings("/public/auth/*");
         return registrationBean;
+    }
+
+    //TODO: так мы можем резолвить входящие параметры
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new CustomResolver());
     }
 
     public static void main(String[] args) {

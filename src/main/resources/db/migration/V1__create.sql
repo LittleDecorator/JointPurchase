@@ -80,8 +80,8 @@ create table purchase_order (
   recipient_fname varchar(37) not null,     -- имя получателя
   recipient_lname varchar(37) not null,     -- фамилия получателя
   recipient_mname varchar(37),     -- отчество получателя
-  recipient_email varchar(37),     -- email получателя
-  recipient_phone varchar(37) not null,              -- телефон получателя
+  recipient_email varchar(37) not null,     -- email получателя
+  recipient_phone varchar(37),              -- телефон получателя
   recipient_address varchar(255) not null,        -- адрес доставки
   date_add timestamp default current_timestamp,    --дата создания заказа
   close_order_date timestamp,     --дата закрытия заказа

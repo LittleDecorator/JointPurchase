@@ -72,6 +72,19 @@ var helpers = {
         return res;
     },
 
+    findIdxInArrayById: function(array,id){
+        var res = null;
+        array.some(function(elem, index){
+            if(elem.id == id){
+                res = index;
+                return true;
+            } else {
+                return false;
+            }
+        });
+        return res;
+    },
+
     findInArrayByValue: function(array,value){
         var res = {};
         array.some(function(elem){

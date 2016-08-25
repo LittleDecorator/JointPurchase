@@ -48,12 +48,13 @@ public class SubjectController{
 
     @RequestMapping(method = RequestMethod.POST)
     public Subject createSubject(@RequestBody Subject subject) {
-        if(subject.getId() != null){
-            subjectRepository.updateSelectiveById(subject);
-        } else {
-            subjectRepository.insertSelective(subject);
-        }
+        subjectRepository.insertSelective(subject);
         return subject;
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public void updateSubject(@RequestBody Subject subject) {
+        subjectRepository.updateSelectiveById(subject);
     }
 
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")

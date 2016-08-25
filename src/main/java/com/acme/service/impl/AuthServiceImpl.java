@@ -14,11 +14,17 @@ import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.security.spec.AlgorithmParameterSpec;
 
 @Service
 public class AuthServiceImpl implements AuthService{
@@ -51,9 +57,29 @@ public class AuthServiceImpl implements AuthService{
         }
         Credential credential = credentialRepository.getById(subject.getId());
         if(credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())){
-            return credential;
+                return credential;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Decrypt User password that came from client
+     * @param password
+     * @return
+     */
+    @Override
+    public String decryptPassword(String password){
+        try {
+            SecretKey key = new SecretKeySpec(Base64.decodeBase64("ZQiPJvvwFlfa9IxXj+F+eJCST+XvFr6nWYS0rloQZdQ="), "AES");
+            AlgorithmParameterSpec iv = new IvParameterSpec(Base64.decodeBase64("ksgfrrfixQ4xLk/qV5CmRg=="));
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, key, iv);
+
+            return new String(cipher.doFinal(Base64.decodeBase64(password)), "UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException("This should not happen in production.", e);
         }
     }
 

@@ -44,62 +44,58 @@ public class SubjectRepository {
         Map<String,Object> namedParameters = Maps.newHashMap();
 
         String queue = updateSelective(subject,namedParameters);
-        int res = parameterJdbcTemplate.update(queue + " WHERE id = "+ subject.getId(), namedParameters);
+        namedParameters.put("id", subject.getId());
+        int res = parameterJdbcTemplate.update("update SUBJECT set " +queue+ " WHERE id = :id", namedParameters);
         return res == 1;
     }
 
     private String updateSelective(Subject subject, Map<String,Object> namedParameters){
-        StringBuilder querySB = new StringBuilder("update SUBJECT set");
+        List<String> query = Lists.newArrayList();
 
-        querySB.append(" ENABLED = :enabled ");
-        namedParameters.put("enabled", subject.isEnabled());
-
-        if(subject.getId() != null){
-            querySB.append(" ID = :id ");
-            namedParameters.put("id", subject.getId());
-        }
+        query.add(" ENABLED = :enabled ");
+        namedParameters.put("enabled", subject.isEnabled() ? 'Y' : 'N');
 
         if(subject.getFirstName() != null){
-            querySB.append(" FIRST_NAME = :firstName ");
+            query.add(" FIRST_NAME = :firstName ");
             namedParameters.put("firstName",subject.getFirstName());
         }
 
         if (subject.getMiddleName() != null){
-            querySB.append(" MIDDLE_NAME = :middleName ");
+            query.add(" MIDDLE_NAME = :middleName ");
             namedParameters.put("middleName",subject.getMiddleName());
         }
 
         if(subject.getLastName() != null){
-            querySB.append(" LAST_NAME = :lastName ");
+            query.add(" LAST_NAME = :lastName ");
             namedParameters.put("lastName",subject.getLastName());
         }
 
         if (subject.getPhoneNumber() != null){
-            querySB.append(" PHONE_NUMBER = :phoneNumber ");
-            namedParameters.put("phoneNumber",subject.getPhoneNumber());
+            query.add(" PHONE_NUMBER = :phoneNumber ");
+            namedParameters.put("phoneNumber",subject.getPhoneNumber().replaceAll("[\\p{P}\\s+]", ""));
         }
 
         if(subject.getEmail() != null){
-            querySB.append(" EMAIL = :email ");
+            query.add(" EMAIL = :email ");
             namedParameters.put("email",subject.getEmail());
         }
 
         if(subject.getAddress() != null){
-            querySB.append(" ADDRESS = :address ");
+            query.add(" ADDRESS = :address ");
             namedParameters.put("address",subject.getAddress());
         }
 
         if(subject.getPostAddress() != null){
-            querySB.append(" POST_ADDRESS = :postAddress ");
+            query.add(" POST_ADDRESS = :postAddress ");
             namedParameters.put("postAddress",subject.getPostAddress());
         }
 
         if(subject.getDateAdd() != null){
-            querySB.append(" DATE_ADD = :dateAdd ");
+            query.add(" DATE_ADD = :dateAdd ");
             namedParameters.put("dateAdd",subject.getDateAdd());
         }
 
-        return querySB.toString();
+        return String.join(" , ",query);
     }
 
     public boolean insertSelective(Subject subject){
@@ -112,11 +108,12 @@ public class SubjectRepository {
         // for id property
         into.add(" ID ");
         values.add(" :id ");
-        namedParameters.put("id", UUID.randomUUID());
+        subject.setId(UUID.randomUUID().toString());
+        namedParameters.put("id", subject.getId());
 
         into.add(" ENABLED ");
         values.add(" :enabled ");
-        namedParameters.put("enabled", subject.isEnabled());
+        namedParameters.put("enabled", subject.isEnabled() ? 'Y' : 'N');
 
         if(subject.getFirstName() != null){
             into.add(" FIRST_NAME ");
@@ -139,7 +136,7 @@ public class SubjectRepository {
         if(subject.getPhoneNumber() != null){
             into.add(" PHONE_NUMBER ");
             values.add(" :phoneNumber ");
-            namedParameters.put("phoneNumber",subject.getPhoneNumber());
+            namedParameters.put("phoneNumber",subject.getPhoneNumber().replaceAll("[\\p{P}\\s+]",""));
         }
 
         if(subject.getEmail() != null){

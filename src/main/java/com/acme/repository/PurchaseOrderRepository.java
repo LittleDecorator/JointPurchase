@@ -57,7 +57,7 @@ public class PurchaseOrderRepository {
         if(!queryParams.isEmpty()){
             queue += " WHERE "+ String.join(" AND ", queryParams);
         }
-        queue += " order by create_order_date offset "+ filter.getOffset() + " limit "+ filter.getLimit();
+        queue += " order by create_order_date desc offset "+ filter.getOffset() + " limit "+ filter.getLimit();
         System.out.println(parameters);
         return jdbcTemplate.query(queue , parameters.toArray(), Mappers.orderViewMapper);
     }

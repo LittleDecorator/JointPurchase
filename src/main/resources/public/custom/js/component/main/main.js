@@ -6,9 +6,11 @@
     'use strict';
 
     angular.module('main')
-        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout','$mdSidenav','$log','modal',
-            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log,modal) {
+        .controller('mainController',['$scope','$rootScope','$window','$state','authService','dataResources','jwtHelper','store','eventService','$timeout','$mdSidenav','$log','modal','$mdToast',
+            function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log,modal, $mdToast) {
                 console.log("Enter main controller");
+
+                $rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
                 var templatePath = "pages/fragment/menu/";
 
@@ -105,6 +107,7 @@
                     clearCookieInfo();
                     store.remove('cart');
                     $scope.cart = {cou:0,content:[]};
+                    $state.go('home');
                 };
 
                 //удаление всех promises для login из сервиса, отмена login'а

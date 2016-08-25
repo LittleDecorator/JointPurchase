@@ -152,7 +152,13 @@
                     post:{method:'POST'}
                 }),
                 authChange: $resource('/auth/change',{},{
-                    post:{method:'POST'}
+                    post:{
+                        method:'POST',
+                        isArray:false,
+                        transformResponse: function(data){
+                            return {result:angular.fromJson(data)}
+                        }
+                    }
                 }),
 
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
@@ -177,7 +183,14 @@
                     update: {method:'POST'}
                 }),
                 contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
-                customer: $resource('/customer/:id'),
+                customer: $resource('/customer/:id',{},{
+                        all:{method:'GET',isArray:true},
+                        get:{method:'GET',isArray:false},
+                        put:{method:'PUT',isArray:false},
+                        post:{method:'POST',isArray:false},
+                        delete:{method:'DELETE',isArray:false}
+                    }
+                ),
                 customerPrivate: $resource('/customer/private'),
 
                 previewItems: $resource('/item/preview',{},{

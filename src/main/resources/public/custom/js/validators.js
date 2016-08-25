@@ -201,4 +201,20 @@
             }
         }])
 
+        .directive('postValidate', function() {
+            return {
+                restrict:'A',
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.push(function(value) {
+
+                        ctrl.$setValidity('length', value.replace(" ","").length === 6);
+
+                        return value;
+
+                    });
+                }
+            };
+        })
+
 })();

@@ -10,7 +10,7 @@
 
             var templatePath = "pages/fragment/person/";
             
-            $scope.customers = dataResources.customer.query();
+            $scope.customers = dataResources.customer.all();
 
             $scope.editPerson = function (id) {
                 $state.transitionTo("person.detail",{id:id});
@@ -46,7 +46,7 @@
 
         }])
 
-        .controller('personDetailController',['$scope','$state','dataResources','person','companies','$mdToast', function ($scope, $state, dataResources, person, companies,$mdToast) {
+        .controller('personDetailController',['$scope','$state','dataResources','person','companies','$mdToast','$rootScope','$stateParams', function ($scope, $state, dataResources, person, companies,$mdToast, $rootScope, $stateParams) {
             var templatePath = "pages/fragment/person/card/";
             $scope.person = person ? person : {};
             $scope.companies = companies;
@@ -67,39 +67,38 @@
             };
 
             $scope.save = function () {
-                // if ($scope.selectedCompany != null) {
-                //     $scope.current.companyId = $scope.selectedCompany.id;
-                // }
-                // dataResources.customer.save($scope.current);
 
-
-                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+                console.log($scope);
+                $scope.showHints = false;
 
                 function refreshState(data){
-                    // $scope.itemCard.$setPristine();
-                    // /* refresh state because name can be changed */
-                    // $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                    //     $scope.selected.id = data.result;
-                    //     $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                    // });
+                    console.log(data);
+                     $scope.personCard.$setPristine();
+                     /* refresh state because name can be changed */
+                     $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                         $scope.person.id = data.result;
+                         $stateParams.id = data.result;
+                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                     });
                 }
 
                 if($scope.personCard.$dirty){
                     if($scope.personCard.$valid){
-                        if($scope.selected.id){
-                            // dataResources.item.put($scope.selected).$promise.then(function(data){
-                            //     $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно изменён').theme('success'));
-                            //     refreshState({result:$scope.selected.id});
-                            // }, function(error){
-                            //     $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
-                            // })
+                        var fullName = $scope.person.firstName + ' ' + $scope.person.middleName + ' '+ $scope.person.lastName;
+                        if($scope.person.id){
+                             dataResources.customer.put($scope.person).$promise.then(function(data){
+                                 $mdToast.show($rootScope.toast.textContent('Клиент ['+ fullName +'] успешно изменён').theme('success'));
+                                 refreshState({result:$scope.person.id});
+                             }, function(error){
+                                 $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
+                             })
                         } else {
-                            // dataResources.item.post($scope.selected).$promise.then(function(data){
-                            //     $mdToast.show(toast.textContent('Товар ['+ $scope.selected.name +'] успешно создан').theme('success'));
-                            //     refreshState(data);
-                            // }, function(error){
-                            //     $mdToast.show(toast.textContent('Неудалось создать новый товар').theme('error'));
-                            // })
+                             dataResources.customer.post($scope.person).$promise.then(function(data){
+                                 $mdToast.show($scope.toast.textContent('Клиент ['+ fullName +'] успешно создан').theme('success'));
+                                 refreshState({result:data.id});
+                             }, function(error){
+                                 $mdToast.show($rootScope.toast.textContent('Неудалось создать нового клиента').theme('error'));
+                             })
                         }
                         $scope.showHints = true;
                     } else {

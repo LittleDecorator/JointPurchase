@@ -25,7 +25,8 @@
             //});
 
             $mdThemingProvider.theme('success','default').dark();
-            $mdThemingProvider.theme('success','default').dark();
+            $mdThemingProvider.theme('error','default').dark();
+            $mdThemingProvider.theme('warn','default').dark();
         }])
 
         .run(['$state', '$rootScope', '$location','$timeout','modal',function ($state, $rootScope, $location,$timeout,modal) {

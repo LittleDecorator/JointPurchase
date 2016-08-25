@@ -30,12 +30,12 @@ var route = {
                 }
             },
             {
-                name: 'cart.checkout',
+                name: 'cart.confirm',
                 url: '/private/cartCheckout',
                 views: {
                     'main@': {
                         templateUrl: 'pages/confirm.html',
-                        controller: 'cartCheckoutController'
+                        controller: 'confirmController'
                     }
                 },
                 data: {
@@ -317,7 +317,7 @@ var route = {
                     }
                 },
                 data: {
-                    displayName:'{{(person.firstName + person.lastName + person.middleName)|nvl:"Создание"}}',
+                    displayName:'{{(person.firstName + " " + person.lastName)|nvl:"Создание"}}',
                     requireLogin: true
                 },
                 resolve: {

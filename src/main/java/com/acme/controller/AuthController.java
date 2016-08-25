@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.annotation.JsonAttribute;
 import com.acme.helper.LoginResponse;
 import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
@@ -7,6 +8,7 @@ import com.acme.model.Credential;
 import com.acme.repository.CredentialRepository;
 import com.acme.service.AuthService;
 import com.acme.service.TokenService;
+import com.acme.util.PasswordHashing;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @RestController
@@ -61,15 +67,17 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/change",method = RequestMethod.POST)
-//    public LoginResponse changePassword(@RequestBody SubjectCredential subjectCredential) throws ServletException, ParseException, UnsupportedEncodingException {
-    public void changePassword(String oldPassword, String newPassword) throws ServletException, ParseException, UnsupportedEncodingException {
-        System.out.println(oldPassword);
-        System.out.println(newPassword);
-//        Subject subject = authService.getSubject(subjectCredential.getName());
-//        Credential credential = credentialRepository.getById(subject.getId());
-//        credential.setPassword(PasswordHashing.hashPassword(subjectCredential.getNewPassword()));
-//        credentialRepository.update(credential);
-//        return new LoginResponse(tokenService.createToken(credential));
+    public Boolean changePassword(@JsonAttribute("oldPassword") String oldPassword, @JsonAttribute("newPassword")String newPassword) throws ServletException, ParseException, UnsupportedEncodingException {
+        Boolean result = Boolean.FALSE;
+        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+        Credential credential = credentialRepository.getById(authService.getClaims(servletRequest).getId());
+        System.out.println(credential);
+        if(credential != null && PasswordHashing.validatePassword(oldPassword, credential.getPassword())){
+            credential.setPassword(PasswordHashing.hashPassword(authService.decryptPassword(newPassword)));
+            result = credentialRepository.update(credential);
+        }
+        return result;
     }
 
 }

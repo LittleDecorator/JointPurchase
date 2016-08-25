@@ -20,6 +20,7 @@ public interface AuthService {
 
     Claims getClaims(ServletRequest servletRequest);
 
-//    String restore(String login);
     void restore(String login);
+
+    String decryptPassword(String password);
 }

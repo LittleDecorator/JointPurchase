@@ -6,7 +6,8 @@
     'use strict';
 
     angular.module('cabinet')
-        .controller('cabinetController',['$scope','$state','$stateParams','dataResources','$timeout','statusMap','deliveryMap','modal', function ($scope, $state, $stateParams, dataResources, $timeout, statusMap, deliveryMap, modal) {
+        .controller('cabinetController',['$scope','$state','$stateParams','dataResources','$timeout','statusMap','deliveryMap','modal','$mdToast','$rootScope',
+            function ($scope, $state, $stateParams, dataResources, $timeout, statusMap, deliveryMap, modal, $mdToast,$rootScope) {
 
             var templatePath = "pages/fragment/cabinet/";
             $scope.history = [];
@@ -99,8 +100,29 @@
                 });
             };
 
+            $scope.save = function(){
+                $scope.showHints = false;
+                console.log($scope);
+                if($scope.personInfo.$valid){
+                    console.log('All data valid');
+                    dataResources.customer.put($scope.person).$promise.then(function(data){
+                        $mdToast.show($rootScope.toast.textContent('Ваши данные успешно изменены').theme('success'));
+                        $scope.showHints = true;
+                    }, function(error){
+                        $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
+                    });
+                } else {
+                    console.log('Some error present')
+                }
+            };
+
             $scope.changePassword = function(){
-                modal({templateUrl:"pages/modal/passwordModal.html",className:'ngdialog-theme-default small-width',closeByEscape:true,controller:"passwordModalController",data:null});
+                var dialog = modal({templateUrl:"pages/modal/passwordModal.html",className:'ngdialog-theme-default small-width',closeByEscape:true,controller:"passwordModalController",data:null});
+                dialog.closePromise.then(function(output) {
+                    if(output.value && output.value != '$escape'){
+                        $mdToast.show($scope.toast.textContent('ваш пароль успешно изменён').theme('success'));
+                    }
+                });
             };
 
             $timeout(function(){
@@ -111,7 +133,7 @@
 
         }])
 
-        .controller('passwordModalController',['$scope','dataResources','resolved','cryptoService',function($scope,dataResources,resolved,cryptoService){
+        .controller('passwordModalController',['$scope','dataResources','resolved','cryptoService','$mdToast',function($scope,dataResources,resolved,cryptoService,$mdToast){
 
             $scope.showHints = true;
 
@@ -119,7 +141,16 @@
                 $scope.showHints = false;
                 if($scope.pswChange.$valid){
                     console.log("Validation passed");
-                    dataResources.authChange.post({oldPassword:$scope.oldPassword, newPassword:cryptoService.encryptString($scope.newPassword)});
+                    dataResources.authChange.post({oldPassword:$scope.oldPassword, newPassword:cryptoService.encryptString($scope.newPassword)}).$promise.then(function(data){
+                        console.log(data.result);
+                        if(data.result){
+                            $scope.closeThisDialog(data);
+                        } else {
+                            $mdToast.show($scope.toast.textContent('Не удалось изменить пароль').theme('error'));
+                        }
+                    }, function(error){
+                        $mdToast.show($scope.toast.textContent('Не удалось изменить пароль').theme('error'));
+                    });
                 }
             };
 

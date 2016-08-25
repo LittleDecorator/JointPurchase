@@ -223,8 +223,9 @@ public class Mappers {
         subject.setPhoneNumber(rs.getString("phone_number"));
         subject.setEmail(rs.getString("email"));
         subject.setAddress(rs.getString("address"));
-        subject.setPhoneNumber(rs.getString("post_address"));
+        subject.setPostAddress((Integer)rs.getObject("post_address"));
         subject.setDateAdd(rs.getDate("date_add"));
+        System.out.println(subject);
         return subject;
     };
 

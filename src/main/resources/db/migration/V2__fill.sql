@@ -20,7 +20,7 @@ insert into role(id,description,parent_role_id)
 insert into subject(id,first_name,last_name,middle_name,phone_number,email,address,enabled)
         values ('4e426c7a-402b-4f63-914a-a558d65b30bf','test', 'customer', 'name','1234567','test@email.ru','Some where on the north','N');
 insert into subject(id,first_name,last_name,phone_number,email,address,enabled)
-        values ('424991ea-031a-4383-8924-ec7694ed9a2d','Guzel', 'Kobzeva', '+79258552096','fazylovagz@mail.ru','Moscow','Y');
+        values ('424991ea-031a-4383-8924-ec7694ed9a2d','Guzel', 'Kobzeva', '9258552096','fazylovagz@mail.ru','Moscow','Y');
 insert into subject(id,first_name,last_name,email,enabled)
         values ('587ccc2a-a912-41ab-8edf-abf8eb986b86','Nikolay','Kobzev','npkobzev@mail.ru','Y');
 insert into subject(id,first_name,last_name,email,enabled)
