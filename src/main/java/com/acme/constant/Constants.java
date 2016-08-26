@@ -13,6 +13,8 @@ public interface Constants {
     String ROBOT_NAME = "no-reply";
 
     String REGISTRATION_CONFIRM = "<a href='http://grimmstory.ru/public/auth/confirm'>Confirm your registration</a>";
+//    String CABINET_LINK = "<a href='http://grimmstory.ru/public/auth/confirm'>Confirm your registration</a>";
+    String CABINET_LINK = "<a href='http://192.168.86.196:7777/#/cabinet/history/0cfd5029-0f0d-47d1-b66b-09f4e853b09e' style=\"text-decoration: none;\">Личном кабинете</a>";
     String REGISTRATION_DONE = "Congrats with registration. Here will be link to your Private-Cabinet and link to Catalog";
     String ORDER_CREATE = "Thank you for purchase! Here will be your order details";
 
