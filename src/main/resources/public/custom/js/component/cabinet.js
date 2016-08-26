@@ -125,6 +125,11 @@
                 });
             };
 
+                $scope.viewOrder = function(id){
+                    console.log(id);
+                    $state.go("cabinet.historyDetail",{id:id});
+                };
+
             $timeout(function(){
                 $scope.apply();
                 $scope.getPerson();
@@ -156,4 +161,33 @@
 
         }])
 
+        .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap',
+            function ($scope, order, items, deliveryMap) {
+
+                var templatePath = "pages/fragment/cabinet/history/";
+
+
+                $scope.order = order;
+                $scope.order.delivery = helpers.findInArrayById(deliveryMap, $scope.order.delivery)
+                $scope.items = items.map(function(element){
+                    var item = element.item;
+                    item.count = element.cou;
+                    return item
+                });
+
+                $scope.getTemplateUrl = function(){
+                    if($scope.width < 601){
+                        return templatePath + "history-sm.html"
+                    }
+                    if($scope.width > 600){
+                        if($scope.width < 1025){
+                            return templatePath + "history-md.html"
+                        }
+                        return templatePath + "history-lg.html"
+                    }
+                };
+
+                console.log($scope)
+
+            }])
 })();

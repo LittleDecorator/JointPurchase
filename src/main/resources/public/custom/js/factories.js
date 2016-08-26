@@ -168,8 +168,10 @@
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false, transformRequest:function(data){
-                        data.order.recipientPhone = data.order.recipientPhone.replace(/[^0-9]/g,'');
-                        console.log(data.order);
+                        console.log(data);
+                        if(data.order.recipientPhone){
+                            data.order.recipientPhone = data.order.recipientPhone.replace(/[^0-9]/g,'');
+                        }
                         return angular.toJson(data);
                     }},
                     delete:{method:'DELETE',isArray:false}
@@ -191,7 +193,9 @@
                         delete:{method:'DELETE',isArray:false}
                     }
                 ),
-                customerPrivate: $resource('/customer/private'),
+                customerPrivate: $resource('/customer/private',{},{
+                    get:{method:'GET',isArray:false},
+                }),
 
                 previewItems: $resource('/item/preview',{},{
                     filter:{method:'POST',isArray:false}

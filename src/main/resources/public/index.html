@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="custom/css/select.css">
     <link rel="stylesheet" href="custom/css/input.css">
     <link rel="stylesheet" href="custom/css/message.css">
+    <link rel="stylesheet" href="custom/css/radio.css">
     <!-- endbuild -->
 
     <link rel="stylesheet" href="custom/css/searchInput.css">
@@ -59,7 +60,7 @@
         <div ng-include="'pages/template/sideMenuNew.html'"></div>
     </header>
 
-    <main class="main-wrapper" id="main-wrapper">
+    <main class="main-wrapper">
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main"></div>
@@ -81,18 +82,19 @@
     <script src="/webjars/angular-touch/1.5.7/angular-touch.min.js"></script>
     <script src="/webjars/angular-messages/1.5.7/angular-messages.js"></script>
     <script src="/webjars/momentjs/2.14.1/min/moment.min.js"></script>
+    <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
     <script src="official/ng-infinite-scroll.min.js"></script>
     <script src="official/nav-tree/abn-tree.js"></script>
-    <script src="official/stepper/md-steppers.min.js"></script>
+    <script src="official/stepper/md-steppers.js"></script>
 
     <!-- 2gis maps -->
     <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=basic"></script>
 
     <!--materialize-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
-    <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
+
 
     <script src="official/jquery.swipebox.min.js"></script>
     <script src="official/auth0/angular-jwt.min.js"></script>
@@ -137,6 +139,8 @@
     <script src="custom/js/component/search/search.js"></script>
     <script src="custom/js/component/cabinet.js"></script>
     <script src="custom/js/component/confirm.js"></script>
+    <script src="custom/js/component/settings.js"></script>
+    <script src="custom/js/component/delivery.js"></script>
     <!-- endbuild -->
 
 </body>

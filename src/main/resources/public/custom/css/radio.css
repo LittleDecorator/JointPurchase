@@ -1,0 +1,9 @@
+md-radio-button.delivery > div.md-label span{
+    font-size: 14px;
+}
+
+md-radio-button.delivery > div.md-label span:first-child{
+    color: #846C63;
+    font-size: 1.5rem;
+    text-decoration: underline;
+}

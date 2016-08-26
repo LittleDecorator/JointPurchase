@@ -1,0 +1,104 @@
+<div>
+
+    <h4>Информация о заказе</h4>
+    <div class="card">
+        <div class="card-content" layout="column">
+
+            <!-- Main Order Info -->
+            <div layout="row">
+                <md-input-container flex class="no-errors">
+                    <label>Номер заказа</label>
+                    <input value="{{::order.uid}}" disabled>
+                </md-input-container>
+
+                <md-input-container flex class="no-errors" style="margin-left:1%">
+                    <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания" disabled>
+                </md-input-container>
+
+                <md-input-container flex class="no-errors" style="margin-left:1%">
+                    <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата закрытия" disabled>
+                </md-input-container>
+
+                <md-input-container flex class="no-errors" style="margin-left:1%">
+                    <input value="{{order.payment | number}}" placeholder="Сумма к оплате" disabled>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+
+                <md-input-container flex=50">
+                    <input value="{{::order.status.name}}" placeholder="Статус заказа" disabled>
+                </md-input-container>
+
+                <md-input-container flex="50" style="margin-left:1%">
+                    <input value="{{::order.delivery.value}}" placeholder="Тип доставки" disabled>
+                </md-input-container>
+
+            </div>
+
+            <md-input-container>
+                <input name="address" value="{{::order.recipientAddress}}" placeholder="Адрес" disabled>
+            </md-input-container>
+
+            <md-input-container class="no-errors">
+                <input name="comment" value="{{::order.comment}}" placeholder="Комментарий" disabled>
+            </md-input-container>
+
+        </div>
+    </div>
+
+
+    <h4>Информация о заказчике</h4>
+    <div class="card">
+        <div layout="row" class="card-content">
+
+            <md-input-container flex="20">
+                <input name="firstName" value="{{::order.recipientFname}}" placeholder="Имя" disabled>
+            </md-input-container>
+
+            <md-input-container flex="20" style="margin-left:1%">
+                <label>Фамилия</label>
+                <input name="lastName" value="{{::order.recipientLname}}" disabled>
+            </md-input-container>
+
+            <md-input-container flex="20" class="no-errors" style="margin-left:1%">
+                <input value="{{::order.recipientMname}}" placeholder="Отчество" disabled>
+            </md-input-container>
+
+            <md-input-container flex="20" style="margin-left:1%">
+                <label>Email</label>
+                <input name="email" value="{{::order.recipientEmail}}" ng-pattern="/^.+@.+\..+$/" disabled>
+            </md-input-container>
+
+            <md-input-container flex="20" style="margin-left:1%">
+                <label>Телефон</label>
+                <input value="{{::order.recipientPhone}}" mask="(999) 999-99-99" mask-restrict="reject" disabled>
+            </md-input-container>
+        </div>
+    </div>
+
+    <h4>Содержимое заказа</h4>
+
+        <md-card class="md-padding" style="margin: 0">
+            <table class="table table-bordered table-hover adm-table collection">
+                <thead>
+                <tr>
+                    <th style="text-align: center">Название</th>
+                    <th style="text-align: center">Артикул</th>
+                    <th style="text-align: center">Цена</th>
+                    <th style="text-align: center">Кол-во</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in items" id="{{::item.id}}" class="row" ng-class="{'no-bottom-border':$last}" style="line-height: 40px;">
+                    <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
+                    <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
+                    <td class="col s2 non-float" style="text-align: center">{{::item.price| number}}р.</td>
+                    <td class="col s2 non-float" style="text-align: center">{{::item.count}}
+                </tr>
+                </tbody>
+            </table>
+        </md-card>
+
+
+</div>

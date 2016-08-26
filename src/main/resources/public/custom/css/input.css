@@ -1,3 +1,7 @@
 md-checkbox span {
     color: #846C63;
 }
+
+md-input-container.md-default-theme .md-input[disabled], md-input-container .md-input[disabled], md-input-container.md-default-theme .md-input [disabled], md-input-container .md-input [disabled]{
+    color: inherit;
+}

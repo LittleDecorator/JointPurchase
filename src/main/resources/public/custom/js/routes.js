@@ -12,7 +12,7 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false,
+                    requireLogin: false
                 }
             },
             {
@@ -31,7 +31,8 @@ var route = {
             },
             {
                 name: 'cart.confirm',
-                url: '/private/cartCheckout',
+                url: '/private/confirm',
+                parent:'cart',
                 views: {
                     'main@': {
                         templateUrl: 'pages/confirm.html',
@@ -40,7 +41,6 @@ var route = {
                 },
                 data: {
                     requireLogin: false,
-                    //displayName: 'Детали заказа'
                     displayName: 'Оформление заказа'
                 },
                 resolve:{
@@ -49,25 +49,6 @@ var route = {
                     }
                 }
             },
-            //{
-            //    name: 'cart.checkout.done',
-            //    url: '/order/done',
-            //    views: {
-            //        'main@': {
-            //            templateUrl: 'pages/OrderingDone.html',
-            //            controller: 'cartPurchaseDoneController'
-            //        }
-            //    },
-            //    data: {
-            //        requireLogin: false
-            //        //base:true
-            //    },
-            //    resolve: {
-            //        purchase: function($stateParams, resolveService) {
-            //            return resolveService.getOrder($stateParams.id);
-            //        }
-            //    }
-            //},
             {
                 name: 'about',
                 url:'/about',
@@ -92,18 +73,38 @@ var route = {
                     }
                 },
                 data:{
-                    requireLogin: true,
-                    //base:true
+                    displayName: 'Личный кабинет',
+                    requireLogin: true
                 },
                 resolve: {
-                    //items: function($stateParams,resolveService) {
-                    //    return resolveService.getOrderItems($stateParams.id);
-                    //},
                     statusMap:function(resolveService) {
                         return resolveService.getOrderStatusMap();
                     },
                     deliveryMap:function(resolveService) {
                         return resolveService.getDeliveryMap();
+                    }
+                }
+            },
+            {
+                name: 'cabinet.historyDetail',
+                url: '/history/:id',
+                parent:'cabinet',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/history.html',
+                        controller: 'cabinetHistoryDetailController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Заказ #{{order.uid}}'
+                },
+                resolve: {
+                    order: function($stateParams, resolveService) {
+                        return resolveService.getOrder($stateParams.id);
+                    },
+                    items: function($stateParams,resolveService) {
+                        return resolveService.getOrderItems($stateParams.id);
                     }
                 }
             },
@@ -118,7 +119,35 @@ var route = {
                 },
                 data:{
                     requireLogin: false,
-                    //base:true
+                    displayName: 'Почта'
+                }
+            },
+            {
+                name: 'settings',
+                url:'/settings',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/settings.html',
+                        controller: 'settingsController'
+                    }
+                },
+                data:{
+                    requireLogin: false,
+                    displayName: 'Настройки'
+                }
+            },
+            {
+                name: 'delivery',
+                url:'/delivery',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/delivery.html',
+                        controller: 'deliveryController'
+                    }
+                },
+                data:{
+                    requireLogin: false,
+                    displayName: 'Доставка'
                 }
             },
             {
@@ -131,8 +160,7 @@ var route = {
                     }
                 },
                 data:{
-                    requireLogin: false,
-                    //base:true
+                    requireLogin: false
                 }
             },
             {
@@ -142,12 +170,10 @@ var route = {
                     'main@': {
                         templateUrl : 'pages/contact.html',
                         controller: 'contactController'
-                        //controller: 'wrapperController'
                     }
                 },
                 data: {
-                    requireLogin: false,
-                    //base:true
+                    requireLogin: false
                 }
             },
             {
@@ -160,7 +186,7 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false,
+                    requireLogin: false
                 }
             },
             {
@@ -212,7 +238,6 @@ var route = {
                     }
                 }
             },
-
             {
                 name: 'catalog.type',
                 url:'/:type?id',
@@ -238,7 +263,6 @@ var route = {
                     }
                 }
             },
-
             {
                 name:'catalog.detail',
                 url:'/card/:itemId',
@@ -259,7 +283,6 @@ var route = {
                     }
                 }
             },
-
             {
                 name: 'order',
                 url: '/order?customerId',
@@ -272,7 +295,6 @@ var route = {
                 data: {
                     displayName: 'Заказы',
                     requireLogin: true
-                    //base:true
                 },
                 resolve: {
                 }

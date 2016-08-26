@@ -39,7 +39,7 @@ public class SubjectController{
         return subjectRepository.getById(id);
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/private")
+    @RequestMapping(method = RequestMethod.GET, value = "/private")
     public Subject getCurrentSubject() {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();

@@ -43,8 +43,8 @@
                         <td class="center-align">{{::record.status.name}}</td>
                         <td class="center-align">{{::record.createDate|date:'dd-MM-yyyy'}}</td>
                         <td class="center-align">{{::record.payment|number}} руб</td>
-                        <td class="right-align">
-                            <a class="btn btn-floating btn-sm waves-effect waves-light" ><md-icon>search</md-icon></a>
+                        <td>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
                         </td>
                     </tr>
                     </tbody>

@@ -20,11 +20,7 @@
                 $scope.width = $window.innerWidth;
                 
                 angular.element($window).bind('resize', function(){
-                
                     $scope.width = $window.innerWidth;
-                
-                    // manuall $digest required as resize event
-                    // is outside of angular
                     $scope.$digest();
                 });
 
@@ -32,10 +28,14 @@
                 $scope.showContent = false;
 
                 $scope.initCart = function(){
+                    console.log('init cart');
                     $scope.cart = {cou:0,content:[]};
                     var c = store.get("cart");
+                    console.log(c);
+                    console.log(store);
                     if(!helpers.isArray(c)) {
-                        $scope.cart = store.get("cart");
+                        //$scope.cart = store.get("cart");
+                        $scope.cart = c;
                     }
                     console.log($scope.cart)
                 };
@@ -44,6 +44,7 @@
                 if(localStorage.getItem('token')){
                     var decodedToken = jwtHelper.decodeToken(localStorage.getItem('token'));
                     dataResources.customer.get({id:decodedToken.jti},function(data){
+                        $rootScope.currentUser = data;
                         $rootScope.currentUser.name = data.firstName;
                     });
                     $rootScope.currentUser.roles = decodedToken.roles;
@@ -98,12 +99,6 @@
 
                 //явный logout через меню
                 $scope.logout = function(){
-                    /*dataResources.authLogout.post().$promise.then(function(data){
-                        /!* clear all data *!/
-                        clearCookieInfo();
-                        /!* go to main page *!/
-                        // $state.transitionTo("home");
-                    });*/
                     clearCookieInfo();
                     store.remove('cart');
                     $scope.cart = {cou:0,content:[]};
