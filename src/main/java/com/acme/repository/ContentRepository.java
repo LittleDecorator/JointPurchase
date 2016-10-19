@@ -26,7 +26,6 @@ public class ContentRepository {
     @Autowired
     NamedParameterJdbcTemplate parameterJdbcTemplate;
 
-//    @Cacheable
     @Cacheable(value = "content")
     public Content getById(String id){
         return jdbcTemplate.queryForObject(Queue.CONTENT_FIND_BY_ID,Mappers.contentMapper,id);

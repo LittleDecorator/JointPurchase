@@ -24,7 +24,7 @@ public class ClssController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/status/map")
     public Map<String,String> getOrderStatus(){
-        return Arrays.stream(OrderStatus.values()).collect(Collectors.toMap( e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),OrderStatus::getText));
+        return Arrays.stream(OrderStatus.values()).collect(Collectors.toMap(e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),OrderStatus::getText));
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/item/status/map")

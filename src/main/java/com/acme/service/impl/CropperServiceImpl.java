@@ -13,7 +13,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 @Service
-public class CropperServiceImpl implements CropperService{
+public class CropperServiceImpl implements CropperService {
 
     private final int PREVIEW_SIDE = 500;
     private final int GALLERY_SIDE = 500;

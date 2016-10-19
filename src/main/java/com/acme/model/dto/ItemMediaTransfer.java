@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class ItemMediaTransfer extends Item{
+public class ItemMediaTransfer extends Item {
 
     List<String> media = Lists.newArrayList();
 

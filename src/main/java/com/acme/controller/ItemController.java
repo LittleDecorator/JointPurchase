@@ -1,11 +1,22 @@
 package com.acme.controller;
 
-import com.acme.model.*;
+import com.acme.model.CategorizeItem;
+import com.acme.model.CategoryItem;
+import com.acme.model.OrderItem;
 import com.acme.model.dto.ItemView;
 import com.acme.model.filter.ItemFilter;
-import com.acme.repository.*;
+import com.acme.repository.CategoryItemRepository;
+import com.acme.repository.ContentRepository;
+import com.acme.repository.ItemCategoryLinkRepository;
+import com.acme.repository.ItemContentRepository;
+import com.acme.repository.ItemRepository;
+import com.acme.repository.OrderItemRepository;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
+import com.acme.model.Category;
+import com.acme.model.Item;
+import com.acme.repository.CategoryRepository;
+import com.acme.repository.CompanyRepository;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,25 +36,25 @@ import java.util.stream.Collectors;
 public class ItemController{
 
     @Autowired
-    ItemRepository itemRepository;
+	ItemRepository itemRepository;
 
     @Autowired
-    OrderItemRepository orderItemRepository;
+	OrderItemRepository orderItemRepository;
 
     @Autowired
     CompanyRepository companyRepository;
 
     @Autowired
-    ContentRepository contentRepository;
+	ContentRepository contentRepository;
 
     @Autowired
-    ItemContentRepository itemContentRepository;
+	ItemContentRepository itemContentRepository;
 
     @Autowired
-    CategoryItemRepository categoryItemRepository;
+	CategoryItemRepository categoryItemRepository;
 
     @Autowired
-    ItemCategoryLinkRepository itemCategoryLinkRepository;
+	ItemCategoryLinkRepository itemCategoryLinkRepository;
 
     @Autowired
     CategoryRepository categoryRepository;

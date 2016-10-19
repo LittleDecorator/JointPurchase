@@ -143,13 +143,13 @@ public class EmailTest {
 
     @Test
     public void sendOrderConformationWithImageHtml() throws MessagingException {
-        Content content = contentRepository.getById("c8eda490-7cb3-4655-9480-aee92a5f5473");
+        Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
         Multipart multipart = new MimeMultipart("related");
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo("npkobzev@mail.ru");
-        helper.setFrom("knpdeveloper@gmail.com");
+        helper.setFrom("robot.grimmstory@gmail.com");
         helper.setSubject("Your order");
 
 

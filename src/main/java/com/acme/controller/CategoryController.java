@@ -1,7 +1,7 @@
 package com.acme.controller;
 
 import com.acme.exception.PersistException;
-import com.acme.model.*;
+import com.acme.model.Node;
 import com.acme.model.dto.CategoryTransfer;
 import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CategoryRepository;
@@ -9,13 +9,16 @@ import com.acme.repository.CompanyRepository;
 import com.acme.repository.ItemRepository;
 import com.acme.service.CategoryService;
 import com.acme.service.TreeService;
-import com.acme.service.impl.TreeServiceImpl;
+
+import com.acme.model.Category;
+import com.acme.model.CategoryItem;
+import com.acme.model.Company;
+import com.acme.model.Item;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

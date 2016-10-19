@@ -54,7 +54,7 @@ public class CategoryItemRepository {
     }
 
     public List<CategoryItem> getByItemId(String itemId){
-        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_ITEM_ID,Mappers.categoryItemMapper,itemId);
+        return jdbcTemplate.query(Queue.CATEGORY_ITEM_FIND_BY_ITEM_ID, Mappers.categoryItemMapper,itemId);
     }
 
     public List<CategoryItem> getByCategoryId(String categoryId){

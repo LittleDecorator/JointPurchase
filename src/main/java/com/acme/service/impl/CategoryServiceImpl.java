@@ -1,6 +1,5 @@
 package com.acme.service.impl;
 
-import com.acme.model.Category;
 import com.acme.model.CategoryItem;
 import com.acme.model.Node;
 import com.acme.repository.CategoryRepository;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     TreeService treeService;

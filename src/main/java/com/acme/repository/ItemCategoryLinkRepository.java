@@ -3,12 +3,8 @@ package com.acme.repository;
 import com.acme.constant.Queue;
 import com.acme.model.CategorizeItem;
 import com.acme.model.CategoryItem;
-import com.acme.model.dto.Product;
-import com.acme.model.filter.ItemFilter;
 import com.acme.repository.mapper.Mappers;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ItemCategoryLinkRepository {

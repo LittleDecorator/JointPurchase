@@ -3,11 +3,22 @@ package com.acme.repository.mapper;
 import com.acme.enums.ItemStatus;
 import com.acme.enums.OrderStatus;
 import com.acme.handlers.Base64BytesSerializer;
-import com.acme.model.*;
+import com.acme.model.CategorizeItem;
+import com.acme.model.CategoryItem;
+import com.acme.model.Company;
+import com.acme.model.Credential;
+import com.acme.model.ItemContent;
+import com.acme.model.OrderItem;
+import com.acme.model.PurchaseOrder;
+import com.acme.model.Subject;
 import com.acme.model.dto.ItemView;
 import com.acme.model.dto.OrderView;
 import com.acme.model.dto.Product;
 import com.acme.util.MapperHelper;
+import com.acme.model.Category;
+import com.acme.model.Content;
+import com.acme.model.Delivery;
+import com.acme.model.Item;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.io.IOException;
@@ -15,7 +26,7 @@ import java.util.Objects;
 
 public class Mappers {
 
-    public final static RowMapper<Item> itemMapper = (rs,num) -> {
+    public final static RowMapper<Item> itemMapper = (rs, num) -> {
         Item item = new Item();
         item.setId(rs.getString("id"));
         item.setName(rs.getString("name"));
@@ -30,7 +41,7 @@ public class Mappers {
         return item;
     };
 
-    public final static RowMapper<ItemView> itemViewMapper = (rs,num) -> {
+    public final static RowMapper<ItemView> itemViewMapper = (rs, num) -> {
         ItemView item = new ItemView();
         item.setId(rs.getString("id"));
         item.setName(rs.getString("name"));
@@ -67,7 +78,7 @@ public class Mappers {
 //        return searchResult;
 //    };
 
-    public final static RowMapper<CategoryItem> categoryItemMapper = (rs,num) -> {
+    public final static RowMapper<CategoryItem> categoryItemMapper = (rs, num) -> {
         CategoryItem categoryItem = new CategoryItem();
         categoryItem.setId(rs.getString("id"));
         categoryItem.setCategoryId(rs.getString("category_id"));
@@ -77,7 +88,7 @@ public class Mappers {
         return categoryItem;
     };
 
-    public final static RowMapper<Category> categoryMapper = (rs,num) -> {
+    public final static RowMapper<Category> categoryMapper = (rs, num) -> {
         Category category = new Category();
         category.setId(rs.getString("id"));
         category.setName(rs.getString("name"));
@@ -86,7 +97,7 @@ public class Mappers {
         return category;
     };
 
-    public final static RowMapper<Company> companyMapper = (rs,num) -> {
+    public final static RowMapper<Company> companyMapper = (rs, num) -> {
         Company company = new Company();
         company.setId(rs.getString("id"));
         company.setName(rs.getString("name"));
@@ -103,7 +114,7 @@ public class Mappers {
         return company;
     };
 
-    public final static RowMapper<Content> contentMapper = (rs,num) -> {
+    public final static RowMapper<Content> contentMapper = (rs, num) -> {
         Content content = new Content();
         try {
             content.setId(rs.getString("id"));
@@ -120,7 +131,7 @@ public class Mappers {
         return content;
     };
 
-    public final static RowMapper<Credential> credentialMapper = (rs,num) -> {
+    public final static RowMapper<Credential> credentialMapper = (rs, num) -> {
         Credential credential = new Credential();
         credential.setSubjectId(rs.getString("subject_id"));
         credential.setPassword(rs.getString("password"));
@@ -129,7 +140,7 @@ public class Mappers {
         return credential;
     };
 
-    public final static RowMapper<Product> productMapper = (rs,num) -> {
+    public final static RowMapper<Product> productMapper = (rs, num) -> {
         Product product = new Product();
         product.setContentId(rs.getString("content_id"));
         product.setId(rs.getString("id"));
@@ -146,7 +157,7 @@ public class Mappers {
         return product;
     };
 
-    public final static RowMapper<CategorizeItem> itemCategoryLinkMapper = (rs,num) -> {
+    public final static RowMapper<CategorizeItem> itemCategoryLinkMapper = (rs, num) -> {
         CategorizeItem link = new CategorizeItem();
         link.setId(rs.getString("id"));
         link.setArticle(rs.getString("article"));
@@ -170,7 +181,7 @@ public class Mappers {
         return itemContent;
     };
 
-    public final static RowMapper<OrderItem> orderItemMapper = (rs,num) -> {
+    public final static RowMapper<OrderItem> orderItemMapper = (rs, num) -> {
         OrderItem orderItem = new OrderItem();
         orderItem.setId(rs.getString("id"));
         orderItem.setCou(rs.getInt("cou"));
@@ -180,7 +191,7 @@ public class Mappers {
         return orderItem;
     };
 
-    public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs,num) -> {
+    public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs, num) -> {
         PurchaseOrder order = new PurchaseOrder();
         order.setId(rs.getString("id"));
         order.setSubjectId(rs.getString("subject_id"));
@@ -213,7 +224,7 @@ public class Mappers {
         return order;
     };
 
-    public final static RowMapper<Subject> subjectMapper = (rs,num) -> {
+    public final static RowMapper<Subject> subjectMapper = (rs, num) -> {
         Subject subject = new Subject();
         subject.setId(rs.getString("id"));
         subject.setEnabled(Objects.equals(rs.getString("enabled"), "Y"));
@@ -229,7 +240,7 @@ public class Mappers {
         return subject;
     };
 
-    public final static RowMapper<Delivery> deliveryMapper = (rs,num) -> {
+    public final static RowMapper<Delivery> deliveryMapper = (rs, num) -> {
         Delivery delivery = new Delivery();
         delivery.setId(rs.getString("id"));
         delivery.setName(rs.getString("name"));
