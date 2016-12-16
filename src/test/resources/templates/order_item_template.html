@@ -1,0 +1,55 @@
+<tr>
+    <td style="padding:0;text-align:center;font-size:0;padding-top:10px;padding-bottom:10px;">
+        <hr style="width: 100px; margin-bottom: 5px;">
+        {{#item}}
+        <table style="border-spacing:0;color:#333333;width:100%;max-width:300px;display:inline-table;vertical-align:top;">
+            <tr>
+                <td style="padding:0;padding:5px;width:100%;font-size:14px;text-align:center;">
+                    <div style="padding: 0 10px;display: flex;">
+                        <div style="float:left;position:relative;width:20%;box-shadow:0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);margin:3px;background-color:white;width: 80px; height: 80px; border-radius: 50%; overflow: hidden;padding-bottom:0;">
+                            <img src="{{imageName}}" style="height: 100%; width: auto; left: 50%; transform: translateX(-50%); position: relative;">
+                        </div>
+                        <table style="border-spacing:0;color:#333333;width: inherit;margin: auto auto auto 10px;">
+                            <tr>
+                                <td style="padding:0;">
+                                    <table width="100%" style="border-spacing:0;color:#333333;">
+                                        <tr>
+                                            <td style="padding:0;width:100%;font-size:12px;text-align:center;padding: 3px;">
+                                                <div style="flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: start;">
+                                                    <p style="Margin:0;font-size:12px;Margin-bottom:10px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;">
+                                                        <span style="box-sizing: inherit;color: #846C63;">{{itemName}}</span>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:0;width:100%;font-size:12px;text-align:center;padding: 3px;">
+                                                <div style="flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: start;">
+                                                    <p style="Margin:0;font-size:12px;Margin-bottom:10px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;">
+                                                        Цена:
+                                                        <span style="box-sizing: inherit;color: slategrey;">{{itemCost}}</span>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;">
+                                                <div style="flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: start;">
+                                                    <p style="Margin:0;font-size:12px;Margin-bottom:10px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;">
+                                                        Кол-во:
+                                                        <span style="box-sizing: inherit;color: slategrey;">{{itemCount}}</span>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        {{/item}}
+    </td>
+</tr>

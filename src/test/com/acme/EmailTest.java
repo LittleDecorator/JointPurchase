@@ -19,10 +19,12 @@ import javax.activation.DataHandler;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import java.io.UnsupportedEncodingException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = TestApplication.class)
@@ -40,76 +42,245 @@ public class EmailTest {
     @Autowired
     JavaMailSender mailSender;
 
-    String orderTemplate ="<html style=\"line-height: 1.5;font-weight: normal;font-size: 15px;\">\n" +
-            "  <head>\n" +
-            "\t<title></title>\n" +
-            "  </head>\n" +
-            "  <body class=\"question-page new-topbar\" style=\"font-family: Ubuntu Condensed;letter-spacing: 0.5pt;color: #846C63;background-color: rgb(246, 244, 241);\">\n" +
-            "    <div style=\"margin-top: 25px;padding-bottom: 30px;width: 85%;margin: auto;max-width: 1280px;\">\n" +
-            "      <div style=\"padding: 16px;box-sizing: border-box;display: flex;flex-direction: column;margin: 8px;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);background-color: rgb(255,255,255);border-radius: 2px;\">\n" +
-
-            "        <div style=\"display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;\"></div>\n" +
-
-            "        <div style=\"display: block; position: relative; overflow: auto; color: rgba(0,0,0,0.87); background-color: rgb(255,255,255);border-left: 1px solid rgba(221, 221, 221, 0.52);border-right: 1px solid rgba(221, 221, 221, 0.52);\">\n" +
-            "          <div layout=\"column\" style=\"flex-direction: column;box-sizing: border-box;display: flex;margin-top: 20px;\">\n" +
-            "            <h5 style=\"text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.5rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;\">Ваш заказ \n" +
-            "             <span style=\"text-decoration: underline;box-sizing: inherit;\">#1472199774971</span>\n" +
-            "             успешно добавлен в обработку!</h5>\n" +
-            "            <hr style=\"width: 100px; margin-bottom: 35px;\">\n" +
-            "            <span style=\"text-align: center;\">На вашу почту была выслана информация о заказе!</span>\n" +
-            "            <span style=\"text-align: center;\" ng-if=\"auth.isAuth()\">Состояние заказа вы можете отслеживать в "+Constants.CABINET_LINK+"</span>\n" +
-            "          </div>\n" +
-
-            "<div layout=\"column\" style=\"flex-direction: column;box-sizing: border-box;display: flex;padding-top: 50px;\">\n" +
-            "            <h5 style=\"text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.5rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;\">Детализация заказа</h5>\n" +
-            "            <hr style=\"width: 100px; margin-bottom: 35px;\">\n" +
-            "            <div>\n" +
-            "  <div style=\"-webkit-box-flex: 1;flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;-webkit-box-direction: normal;-webkit-box-orient: vertical;flex-direction: column;box-sizing: border-box;display: flex;text-align: center;\">\n" +
-            "  <p style=\"line-height: 2.6em;font-size: 16px;font-weight: 500;letter-spacing: .01em;margin: 0;\">Дата заказа: {{orderDate}} Способ доставки: {{orderDelivery}} Сумма к оплате: {{orderPayment}}</p>\n" +
-            "  <hr style=\"width: 100px; margin-bottom: 35px;\">\n" +
-            "</div>\n" +
-            "              <div style=\"display: block;width: 80%;margin: auto;border: 1px solid #ddd;border-radius: 5px;margin-bottom: 20px;\">\n" +
-            "  <div style=\"position: relative;height: auto;min-height: 88px;-webkit-box-align: start;align-items: flex-start;-webkit-box-pack: center;justify-content: center;display: flex;\">\n" +
-            "  \t<div style=\"width: 100%;height: auto;min-height: 88px;padding: 0 16px;margin: 0;font-weight: 400;border: medium none;display: flex;align-items: center;\">\n" +
-            "  \t\t<img src=\"cid:image\" class=\"md-avatar\" alt=\"item_image\" style=\"-webkit-box-flex: 0;flex: none;width: 80px;height: 80px;margin-top: 8px;margin-bottom: 8px;margin-right: 16px;border-radius: 50%;box-sizing: content-box;\">\n" +
-            "  \t\t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemName}}</p>\n" +
-            "\t\t</div>\n" +
-            "      \t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemCost}}</p>\n" +
-            "\t\t</div>\n" +
-            "  \t\t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemCount}}</p>\n" +
-            "\t\t</div>\n" +
-            "  \t</div>\n" +
-            "  </div>\n" +
-            "  <div style=\"position: relative;height: auto;min-height: 88px;align-items: flex-start;justify-content: center;display: flex;\">\n" +
-            "    <div style=\"width: 100%;height: auto;min-height: 88px;justify-content: flex-start;padding: 0 16px;margin: 0;font-weight: 400;text-align: left;border: medium none;display: flex;align-items: center;\">\n" +
-            "  \t\t<img src=\"cid:image\" class=\"md-avatar\" alt=\"item_image\" style=\"-webkit-box-flex: 0;flex: none;width: 80px;height: 80px;margin-top: 8px;margin-bottom: 8px;margin-right: 16px;border-radius: 50%;box-sizing: content-box;\">\n" +
-            "  \t\t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemName}}</p>\n" +
-            "\t\t</div>\n" +
-            "      \t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemCost}}</p>\n" +
-            "\t\t</div>\n" +
-            "  \t\t<div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
-            "  \t\t\t<p style=\"font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">{{itemCount}}</p>\n" +
-            "\t\t</div>\n" +
-            "      <div>\n" +
-            "  </div>\n" +
-            "</div></div></div>\n" +
-            "              \n" +
-            "              \n" +
-            "  \t\t\t</div>\n" +
-            "          </div>" +
-
-            "       </div>\n" +
-            "       <div style=\"display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;\"></div>" +
-            "       </div>"+
-            "   </div>"+
-            " </body>"+
-            "</html>";
-
+    String orderTemplate ="<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n" +
+                     "<html style=\"line-height: 1.5;font-weight: normal;font-size: 15px;\">\n" +
+                     "  <head>\n" +
+                     "    <title></title>\n" +
+                     "  </head>\n" +
+                     "  <body style=\"Margin:0;padding:0;min-width:100%;background-color:#ffffff;font-family: Ubuntu Condensed;letter-spacing: 0.5pt;color: #846C63;background-color: rgb(246, 244, 241);\">\n" +
+                     "    <div style=\"display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;\"></div>\n" +
+                     "    <div style=\"max-width:1280px;display: block; position: relative; overflow: auto; color: rgba(0,0,0,0.87); background-color: rgb(255,255,255);border-left: 1px solid rgba(221, 221, 221, 0.52);border-right: 1px solid rgba(221, 221, 221, 0.52);\">\n" +
+                     "      <table align=\"center\" style=\"border-spacing:0;color:#333333;Margin:0 auto;width:100%;max-width:1280px;\">\n" +
+                     "        <tr>\n" +
+                     "          <td style=\"padding:0;\">\n" +
+                     "            <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;text-align:center;\">\n" +
+                     "                  <h5 style=\"text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.5rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;\">\n" +
+                     "                    Ваш заказ\n" +
+                     "                                <span style=\"text-decoration: underline;box-sizing: inherit;\">#1472199774971</span>\n" +
+                     "                    успешно добавлен в обработку!</h5>\n" +
+                     "                  <hr style=\"width: 100px;\">\n" +
+                     "                  <span style=\"text-align: center;\" ng-if=\"auth.isAuth()\">Состояние заказа вы можете отслеживать в "+Constants.CABINET_LINK+"</span>\n" +
+                     "                  <hr style=\"width: 100px;\">\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "          </td>\n" +
+                     "        </tr>\n" +
+                     "        <tr>\n" +
+                     "          <td style=\"padding:0;text-align:center;font-size:0;padding-top:10px;padding-bottom:10px;padding: 0;\">\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;padding: 0;\">\n" +
+                     "                  <p style=\"Margin:0;line-height: 2.6em;font-size: 16px;font-weight: 500;letter-spacing: .01em;margin: 0;\">\n" +
+                     "                    Дата заказа: $orderDate\n" +
+                     "                            </p>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;padding: 0;\">\n" +
+                     "                  <p style=\"Margin:0;line-height: 2.6em;font-size: 16px;font-weight: 500;letter-spacing: .01em;margin: 0;\">\n" +
+                     "                    Способ доставки: $orderDelivery\n" +
+                     "                            </p>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;padding: 0;\">\n" +
+                     "                  <p style=\"Margin:0;line-height: 2.6em;font-size: 16px;font-weight: 500;letter-spacing: .01em;margin: 0;\">\n" +
+                     "                    Сумма к оплате: $orderPayment\n" +
+                     "                            </p>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "          </td>\n" +
+                     "        </tr>\n" +
+                     "        <tr>\n" +
+                     "          <td style=\"padding:0;\">\n" +
+                     "            <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;text-align:center;\">\n" +
+                     "                  <h5 style=\"text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.2rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;\">\n" +
+                     "                    Детализация заказа</h5>\n" +
+                     "                  <hr style=\"width: 100px; margin-bottom: 5px;\">\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "          </td>\n" +
+                     "        </tr>\n" +
+                     "        <tr>\n" +
+                     "          <td style=\"padding:0;text-align:center;font-size:0;padding-top:10px;padding-bottom:10px;\">\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;\">\n" +
+                     "                  <div style=\"padding: 0 10px;display: flex;\">\n" +
+                     "                    <div style=\"float:left;position:relative;width:20%;box-shadow:0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);margin:3px;background-color:white;width: 90px; height: 90px; border-radius: 50%; overflow: hidden;padding-bottom:0;\">\n" +
+                     "                      <img src=\"cid:image\" style=\"width: 90px;height: 90px;\">\n" +
+                     "                    </div>\n" +
+                     "                    <table style=\"border-spacing:0;color:#333333;width: inherit;margin: auto auto auto 10px;\">\n" +
+                     "                      <tr>\n" +
+                     "                        <td style=\"padding:0;\">\n" +
+                     "                          <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemName</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCost</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCount</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                          </table>\n" +
+                     "                        </td>\n" +
+                     "                      </tr>\n" +
+                     "                    </table>\n" +
+                     "                  </div>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;\">\n" +
+                     "                  <div style=\"padding: 0 10px;display: flex;\">\n" +
+                     "                    <div style=\"float:left;position:relative;width:20%;box-shadow:0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);margin:3px;background-color:white;width: 90px; height: 90px; border-radius: 50%; overflow: hidden;padding-bottom:0;\">\n" +
+                     "                      <img src=\"cid:image\" style=\"width: 90px;height: 90px;\">\n" +
+                     "                    </div>\n" +
+                     "                    <table style=\"border-spacing:0;color:#333333;width: inherit;margin: auto auto auto 10px;\">\n" +
+                     "                      <tr>\n" +
+                     "                        <td style=\"padding:0;\">\n" +
+                     "                          <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemName</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCost</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCount</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                          </table>\n" +
+                     "                        </td>\n" +
+                     "                      </tr>\n" +
+                     "                    </table>\n" +
+                     "                  </div>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;\">\n" +
+                     "                  <div style=\"padding: 0 10px;display: flex;\">\n" +
+                     "                    <div style=\"float:left;position:relative;width:20%;box-shadow:0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);margin:3px;background-color:white;width: 90px; height: 90px; border-radius: 50%; overflow: hidden;padding-bottom:0;\">\n" +
+                     "                      <img src=\"cid:image\" style=\"width: 90px;height: 90px;\">\n" +
+                     "                    </div>\n" +
+                     "                    <table style=\"border-spacing:0;color:#333333;width: inherit;margin: auto auto auto 10px;\">\n" +
+                     "                      <tr>\n" +
+                     "                        <td style=\"padding:0;\">\n" +
+                     "                          <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemName</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCost</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCount</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                          </table>\n" +
+                     "                        </td>\n" +
+                     "                      </tr>\n" +
+                     "                    </table>\n" +
+                     "                  </div>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "            <table style=\"border-spacing:0;color:#333333;width:100%;max-width:315px;display:inline-table;vertical-align:top;\">\n" +
+                     "              <tr>\n" +
+                     "                <td style=\"padding:0;padding:10px;width:100%;font-size:14px;text-align:center;\">\n" +
+                     "                  <div style=\"padding: 0 10px;display: flex;\">\n" +
+                     "                    <div style=\"float:left;position:relative;width:20%;box-shadow:0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);margin:3px;background-color:white;width: 90px; height: 90px; border-radius: 50%; overflow: hidden;padding-bottom:0;\">\n" +
+                     "                      <img src=\"cid:image\" style=\"width: 90px;height: 90px;\">\n" +
+                     "                    </div>\n" +
+                     "                    <table style=\"border-spacing:0;color:#333333;width: inherit;margin: auto auto auto 10px;\">\n" +
+                     "                      <tr>\n" +
+                     "                        <td style=\"padding:0;\">\n" +
+                     "                          <table width=\"100%\" style=\"border-spacing:0;color:#333333;\">\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemName</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCost</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                            <tr>\n" +
+                     "                              <td style=\"padding:0;width:100%;font-size:14px;text-align:center;padding: 3px;\">\n" +
+                     "                                <div style=\"flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;flex-direction: column;box-sizing: border-box;text-align: center;\">\n" +
+                     "                                  <p style=\"Margin:0;font-size:14px;Margin-bottom:10px;font-size: 14px;font-weight: 500;letter-spacing: .01em;margin: 0;line-height: 1.6em;\">$itemCount</p>\n" +
+                     "                                </div>\n" +
+                     "                              </td>\n" +
+                     "                            </tr>\n" +
+                     "                          </table>\n" +
+                     "                        </td>\n" +
+                     "                      </tr>\n" +
+                     "                    </table>\n" +
+                     "                  </div>\n" +
+                     "                </td>\n" +
+                     "              </tr>\n" +
+                     "            </table>\n" +
+                     "          </td>\n" +
+                     "        </tr>\n" +
+                     "      </table>\n" +
+                     "    </div>\n" +
+                     "    <div style=\"display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;\"></div>\n" +
+                     "  </body>\n" +
+                     "</html>";
 
 /* Comment as old working approach. It correct? but we use spring helper */
 //    @Test
@@ -142,19 +313,20 @@ public class EmailTest {
 
 
     @Test
-    public void sendOrderConformationWithImageHtml() throws MessagingException {
+    public void sendOrderConformationWithImageHtml() throws MessagingException, UnsupportedEncodingException {
         Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
         Multipart multipart = new MimeMultipart("related");
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo("npkobzev@mail.ru");
-        helper.setFrom("robot.grimmstory@gmail.com");
+        helper.setFrom(new InternetAddress("robot.grimmstory@gmail.com","GrimmStory"));
         helper.setSubject("Your order");
 
 
         BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(orderTemplate, "text/html; charset=utf-8");
+
         multipart.addBodyPart(messageBodyPart);
 
         messageBodyPart = new MimeBodyPart();

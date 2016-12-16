@@ -6,6 +6,11 @@ import java.util.UUID;
 public class UuidTest {
 
     public static void main(String[] args){
+        createUUID();
+//        checkUUID();
+    }
+
+    private static void checkUUID(){
         System.out.println(UUID.randomUUID().toString());
 
         String token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1ODdjY2MyYS1hOTEyLTQxYWItOGVkZi1hYmY4ZWI5ODZiODYiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE0NzE5NDI0OTh9.2du3QzCfkvxYyHUG-jtioiPFBCJPyfwafNL1YjQNxsc";
@@ -15,4 +20,7 @@ public class UuidTest {
         System.out.println(uuid.replace("-", "").toUpperCase());
     }
 
+    private static void createUUID(){
+        System.out.println(UUID.randomUUID().toString());
+    }
 }

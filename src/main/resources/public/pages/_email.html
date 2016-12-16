@@ -1,0 +1,76 @@
+<body class="question-page new-topbar" style="font-family: Ubuntu Condensed;letter-spacing: 0.5pt;color: #846C63;background-color: rgb(246, 244, 241);">
+
+<!--<div style="margin-top: 25px;padding-bottom: 30px;width: 85%;margin: auto;max-width: 1280px;">-->
+<div style="padding-bottom: 30px;margin: auto;max-width: 1280px;">
+    <div style="padding: 10px;box-sizing: border-box;display: flex;flex-direction: column;margin: 8px;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);background-color: rgb(255,255,255);border-radius: 2px;">
+
+        <div style="display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;"></div>
+
+        <div style="display: block; position: relative; overflow: auto; color: rgba(0,0,0,0.87); background-color: rgb(255,255,255);border-left: 1px solid rgba(221, 221, 221, 0.52);border-right: 1px solid rgba(221, 221, 221, 0.52);">
+            <div layout="column" style="flex-direction: column;box-sizing: border-box;display: flex;margin-top: 20px;">
+                <h5 style="text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.5rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;">
+                    Ваш заказ
+                    <span style="text-decoration: underline;box-sizing: inherit;">#1472199774971</span>
+                    <!--успешно добавлен в обработку!-->
+                </h5>
+                <hr style="width: 100px; margin-bottom: 20px;">
+                <!--<span style="text-align: center;">На вашу почту была выслана информация о заказе!</span>-->
+                <span style="text-align: center; margin-bottom: 20px;" ng-if="auth.isAuth()">Состояние заказа вы можете отслеживать в
+                    <a href='http://192.168.86.196:7777/#/cabinet/history/0cfd5029-0f0d-47d1-b66b-09f4e853b09e' style="text-decoration: none;">Личном кабинете</a>
+                </span>
+            </div>
+            <!--<hr style="width: 100px; margin-bottom: 20px;margin-top: 20px;">-->
+            <div layout="column" style="flex-direction: column;box-sizing: border-box;display: flex;margin-bottom: 20px">
+                <h4 style="text-align: center;text-transform: uppercase;margin-bottom: 15px;font-size: 1.2rem;margin: 0.82rem 0 0.656rem 0;font-weight: 400;line-height: 1.1;color: #846C63;">
+                    Детализация заказа</h4>
+                <hr style="width: 100px; margin-bottom: 20px;margin-top: 20px;">
+                <div layout="row" layout-align="center center" layout-wrap layout-fill>
+                    <!--<div style="-webkit-box-flex: 1;flex: 1 1 auto;margin: auto;text-overflow: ellipsis;overflow: hidden;-webkit-box-direction: normal;-webkit-box-orient: vertical;flex-direction: column;box-sizing: border-box;display: flex;text-align: center;">-->
+                    <div style="padding: 0 10px;">Дата заказа:<span style="text-decoration: underline;padding-left: 5px;"><!--Дата заказа: {{orderDate}} -->12.10.2016 11:24:36</span></div>
+                    <div style="padding: 0 10px;">Способ доставки:<span style="text-decoration: underline;padding-left: 5px;"><!--Способ доставки: {{orderDelivery}} -->Cамовывоз</span></div>
+                    <div style="padding: 0 10px;">Сумма к оплате:<span style="text-decoration: underline;padding-left: 5px;"><!--Сумма к оплате: {{orderPayment}}-->14 543 руб</span></div>
+                </div>
+
+                <hr style="width: 100px; margin-bottom: 20px;margin-top: 20px;">
+
+                <div layout="row" layout-align="center center" layout-wrap layout-fill>
+
+                    <!--<div ng-repeat="item in cart.content" layout="row" style="width: 325px;">-->
+                    <div ng-repeat="item in cart.content" layout="row" style="width: 260px;margin: 5px 10px;" class="card">
+
+                        <!--<div class="boxInner md-avatar" style="margin-right: 10px;width: 160px!important; margin-left: 5px;margin-top: 10px; margin-bottom: 10px;">-->
+                        <div class="boxInner md-avatar" style="margin-right: 10px;width: 110px!important; margin-left: 5px;margin-top: 10px; margin-bottom: 10px;">
+                            <!-- Here must be link to item card -->
+                            <a ng-href="media/image/{{::item.contentId}}">
+                                <!--<img ng-src="media/image/d54be40a-143e-4a7f-8a18-a234b30d7c82" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">-->
+                                <img ng-src="media/image/{{::item.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 80%;">
+                            </a>
+                        </div>
+                        <div layout="column" style="width:100%;margin: 5px;">
+
+                        <div layout="row" style="margin: 3px 0;">
+                            <span style="font-size: 14px;"></span>
+                            <span style="color: #846C63;">{{::item.name}}</span>
+                        </div>
+
+                        <div layout="row" style="margin: 3px 0;">
+                            <span style="font-size: 14px;">Цена:</span>
+                            <span style="padding-left: 5px;">{{ ::item.price|number}} руб</span>
+                        </div>
+
+                        <div layout="row" style="margin: 3px 0;">
+                            <span style="font-size: 14px;">Кол-во:</span>
+                            <span style="padding-left: 5px;">{{ item.cou}} шт</span>
+                        </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div style="display: block;position: relative;overflow: auto;color: rgba(0,0,0,0.87);background-color: rgba(76, 175, 80, 0.18);min-height: 100px;"></div>
+    </div>
+</div>
+</body>
