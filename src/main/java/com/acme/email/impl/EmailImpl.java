@@ -41,13 +41,11 @@ public class EmailImpl implements Email, Serializable {
 
 	private Collection<InternetAddress> bcc;
 
-	private
 	@NonNull
-	String subject;
+	private String subject;
 
-	private
 	@NonNull
-	String body;
+	private String body;
 
 	private Collection<EmailAttachmentImpl> attachments;
 

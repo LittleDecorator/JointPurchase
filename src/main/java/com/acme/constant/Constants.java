@@ -18,4 +18,7 @@ public interface Constants {
     String REGISTRATION_DONE = "Congrats with registration. Here will be link to your Private-Cabinet and link to Catalog";
     String ORDER_CREATE = "Thank you for purchase! Here will be your order details";
 
+    /* TEMPLATES */
+    String ORDER_EMAIL_TEMPLATE = "order_email_template.html";
+
 }

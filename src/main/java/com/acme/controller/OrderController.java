@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.exception.TemplateException;
 import com.acme.model.Item;
 import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
@@ -10,6 +11,7 @@ import com.acme.repository.ItemRepository;
 import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.service.AuthService;
+import com.acme.service.EmailService;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,6 +25,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
@@ -43,8 +46,8 @@ public class OrderController{
     @Autowired
     AuthService authService;
 
-//    @Autowired
-//    EmailService emailService;
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     private PlatformTransactionManager transactionManager;
@@ -79,12 +82,12 @@ public class OrderController{
     }
 
     @RequestMapping(method = RequestMethod.POST,value = "/personal")
-    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException {
+    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
         PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
-//        emailService.sendOrderDone(purchaseOrder.getRecipientEmail());
+        emailService.sendOrderAccepted(purchaseOrder);
         return purchaseOrder;
     }
 

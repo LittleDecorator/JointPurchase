@@ -1,90 +1,90 @@
 package com.acme.util;
 
+import com.acme.email.InlinePicture;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 public class EmailBuilder {
 
-    private static MimeMessage message;
-    private Multipart multipart;
-    private BodyPart messageBodyPart;
+    private MimeMessage message;
+    private List<InlinePicture> inlinePictures;
+    private String emailContent;
 
-    public EmailBuilder setFrom(String fromEmail) throws MessagingException {
-        message.setFrom(new InternetAddress(fromEmail));
+    public EmailBuilder setMessage(MimeMessage message) throws MessagingException {
+        this.message = message;
         return this;
     }
 
-    public EmailBuilder setTo(String toEmail) throws MessagingException {
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+    public EmailBuilder setInlinePictures(List<InlinePicture> inlinePictures) throws MessagingException {
+        this.inlinePictures = inlinePictures;
         return this;
     }
 
-    public EmailBuilder setSubject(String subject) throws MessagingException {
-        message.setSubject(subject);
+    public EmailBuilder setEmailContent(String emailContent) throws MessagingException {
+        this.emailContent = emailContent;
         return this;
     }
 
-    public EmailBuilder setHtmlContent(String content) throws MessagingException, UnsupportedEncodingException {
-        if(multipart == null){
-            multipart = new MimeMultipart();
+    /**
+     * Собираем сообщение для отправки
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public MimeMessage build() throws MessagingException, IOException {
+        //получим mime из email
+        Multipart multipart = new MimeMultipart("related");
+        /* делаем inline если изображения присутствуют */
+        if(inlinePictures != null && !inlinePictures.isEmpty()){
+            addImages(multipart);
         }
-        messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setContent(content, "text/html; charset=utf-8");
-        multipart.addBodyPart(messageBodyPart);
-        return this;
-    }
-
-    public EmailBuilder setAttachments(File... attachements) throws MessagingException {
-        if (attachements != null) {
-            if(multipart == null){
-                multipart = new MimeMultipart();
-            }
-            for (File file : attachements) {
-                messageBodyPart = new MimeBodyPart();
-                DataSource source = new FileDataSource(file);
-                messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName(file.getName());
-                multipart.addBodyPart(messageBodyPart);
-            }
-        }
-        return this;
-    }
-
-    public EmailBuilder setAttachment(byte[] attachment, String mime, String id) throws MessagingException {
-        if (attachment != null) {
-            if(multipart == null){
-                multipart = new MimeMultipart();
-            }
-            ByteArrayDataSource dataSource = new ByteArrayDataSource( attachment, mime );
-            messageBodyPart.setDataHandler( new DataHandler( dataSource ) );
-            messageBodyPart.setHeader("Content-ID", id);
-            multipart.addBodyPart(messageBodyPart);
-        }
-        return this;
-    }
-
-    public MimeMessage build() throws MessagingException {
-        if(multipart != null){
-            message.setContent(multipart);
-        }
+        final MimeBodyPart textPart = new MimeBodyPart();
+        textPart.setText(emailContent, "utf-8", "html");
+        multipart.addBodyPart(textPart);
+        message.setContent(multipart);
         return message;
     }
 
     private EmailBuilder() {}
 
-    public static EmailBuilder getBuilder(Session mailSession){
-        message = new MimeMessage(mailSession);
-        System.out.println("message created");
+    public static EmailBuilder getBuilder(){
+        log.info("message created");
         return new EmailBuilder();
     }
 
+    /**
+     * Делаем Inlining изображений в тело письма
+     * @param multipart
+     * @throws IOException
+     * @throws MessagingException
+     */
+    private void addImages(Multipart multipart) throws IOException, MessagingException{
+        for (final InlinePicture inlinePicture : inlinePictures) {
+            final String cid = UUID.randomUUID().toString();
+
+            //Set the cid in the template
+            emailContent = emailContent.replace(inlinePicture.getTemplateName(), "cid:" + cid);
+
+            //Set the image part
+            final MimeBodyPart imagePart = new MimeBodyPart();
+//			imagePart.attachFile(inlinePicture.getFile());
+            ByteArrayDataSource dataSource = new ByteArrayDataSource( inlinePicture.getContent(), "image/jpg" );
+            imagePart.setDataHandler(new DataHandler(dataSource));
+            imagePart.setContentID('<' + cid + '>');
+            imagePart.setDisposition(MimeBodyPart.INLINE);
+            imagePart.setHeader("Content-Type", inlinePicture.getImageType().getContentType());
+            multipart.addBodyPart(imagePart);
+        }
+    }
 }
