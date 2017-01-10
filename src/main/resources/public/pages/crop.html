@@ -1,0 +1,81 @@
+
+<link rel="stylesheet" href="custom/css/crop.css">
+
+    <div layout="row" layout-xs="column">
+
+        <div flex="70" class="img-container">
+            <img alt="Picture" ng-src="{{dataUrl}}" include-callback="loadCallback()" style="max-width:100%">
+
+            <div layout="column">
+                <!-- <h3 class="page-header">Preview:</h3> -->
+                <div class="docs-preview clearfix">
+                    <div class="img-preview preview-lg" style="width: 127.111px; height: 143px;"></div>
+                    <div class="img-preview preview-md" style="width: 64px; height: 72px;"></div>
+                    <div class="img-preview preview-sm" style="width: 36.4444px; height: 41px;"></div>
+                    <div class="img-preview preview-xs" style="width: 21.3333px; height: 24px;"></div>
+                </div>
+
+                <div class="row" id="actions">
+                    <div class="col-md-3 docs-toggles">
+                        <div class="btn-group docs-aspect-ratios" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1.7777777777777777">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 16 / 9">16:9</span>
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" class="sr-only" id="aspectRatio2" name="aspectRatio" value="1.3333333333333333">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 4 / 3">4:3</span>
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" class="sr-only" id="aspectRatio3" name="aspectRatio" value="1">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 1 / 1">1:1</span>
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" class="sr-only" id="aspectRatio4" name="aspectRatio" value="0.6666666666666666">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: 2 / 3">2:3</span>
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" class="sr-only" id="aspectRatio5" name="aspectRatio" value="NaN">
+                                <span class="docs-tooltip" data-toggle="tooltip" title="aspectRatio: NaN">Free</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div flex="20" style="padding-left: 30px; padding-top: 30px;">
+
+            <!-- <h3 class="page-header">Data:</h3> -->
+            <div class="docs-data">
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataX">X(px)</label>
+                    <input type="text" class="form-control" id="dataX" placeholder="x">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataY">Y(px)</label>
+                    <input type="text" class="form-control" id="dataY" placeholder="y">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataWidth">Width(px)</label>
+                    <input type="text" class="form-control" id="dataWidth" placeholder="width">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataHeight">Height(px)</label>
+                    <input type="text" class="form-control" id="dataHeight" placeholder="height">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataRotate">Rotate(deg)</label>
+                    <input type="text" class="form-control" id="dataRotate" placeholder="rotate">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataScaleX">ScaleX</label>
+                    <input type="text" class="form-control" id="dataScaleX" placeholder="scaleX">
+                </div>
+                <div class="input-group">
+                    <label class="input-group-addon" for="dataScaleY">ScaleY</label>
+                    <input type="text" class="form-control" id="dataScaleY" placeholder="scaleY">
+                </div>
+            </div>
+        </div>
+    </div>

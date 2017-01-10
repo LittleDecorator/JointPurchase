@@ -3,6 +3,7 @@
 var route = {
     getRoutes: function(){
         return [
+            /* домашняя страница */
             {
                 name: 'home',
                 url: '/',
@@ -15,6 +16,7 @@ var route = {
                     requireLogin: false
                 }
             },
+                /* корзина покупателя */
             {
                 name: 'cart',
                 url: '/cart',
@@ -29,6 +31,7 @@ var route = {
                     displayName: 'Корзина'
                 }
             },
+                /* Оформление заказа */
             {
                 name: 'cart.confirm',
                 url: '/private/confirm',
@@ -49,6 +52,7 @@ var route = {
                     }
                 }
             },
+                /* страница О нас */
             {
                 name: 'about',
                 url:'/about',
@@ -63,6 +67,7 @@ var route = {
                     //base:true
                 }
             },
+                /* Личный кабинет */
             {
                 name: 'cabinet',
                 url:'/cabinet',
@@ -85,6 +90,7 @@ var route = {
                     }
                 }
             },
+                /* Просмотр заказа в личном кабинете */
             {
                 name: 'cabinet.historyDetail',
                 url: '/history/:id',
@@ -108,6 +114,7 @@ var route = {
                     }
                 }
             },
+                /* Почта */
             {
                 name: 'email',
                 url:'/email',
@@ -122,6 +129,7 @@ var route = {
                     displayName: 'Почта'
                 }
             },
+                /* Настройки приложения */
             {
                 name: 'settings',
                 url:'/settings',
@@ -136,6 +144,7 @@ var route = {
                     displayName: 'Настройки'
                 }
             },
+                /* Страница с условиями доставки */
             {
                 name: 'delivery',
                 url:'/delivery',
@@ -163,6 +172,7 @@ var route = {
                     requireLogin: false
                 }
             },
+                /* Страца с контактами для связи с нами */
             {
                 name: 'contact',
                 url:'/contact',
@@ -176,6 +186,7 @@ var route = {
                     requireLogin: false
                 }
             },
+                /* Страница регистрации покупателя */
             {
                 name:'registration',
                 url:'/registration',
@@ -189,6 +200,7 @@ var route = {
                     requireLogin: false
                 }
             },
+                /* Страница восстановления доступа */
             {
                 name:'restore',
                 url:'/restore',
@@ -202,6 +214,7 @@ var route = {
                     requireLogin: false
                 }
             },
+                /* Страница результата регистрации */
             {
                 name:'registration.result',
                 url:'/result?confirmed',
@@ -215,7 +228,7 @@ var route = {
                     requireLogin: false,
                 }
             },
-
+                /* Каталог товаров */
             {
                 name: 'catalog',
                 url:'/catalog',
@@ -454,6 +467,22 @@ var route = {
                 data: {
                     requireLogin: true,
                     displayName: 'Изображения',
+                }
+            },
+                /* Страница редактирования конкретного изображения */
+            {
+                name:'item.detail.gallery.crop',
+                parent:'item.detail.gallery',
+                url:'/:imageId/crop',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/crop.html',
+                        controller: 'cropController'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Редактирование изображения',
                 }
             },
             {

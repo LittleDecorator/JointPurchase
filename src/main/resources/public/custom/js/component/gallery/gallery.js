@@ -133,6 +133,10 @@
                     dataResources.galleryShow.toggle(itemContent);
                 };
 
+                $scope.showCrop = function($event,id){
+                    $state.go("item.detail.gallery.crop", {imageId: id});
+                };
+
                 // FILTERS
                 uploader.filters.push({
                     name: 'imageFilter',
