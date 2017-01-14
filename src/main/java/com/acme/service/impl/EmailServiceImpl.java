@@ -9,16 +9,12 @@ import com.acme.email.impl.EmailImpl;
 import com.acme.email.impl.InlinePictureImpl;
 import com.acme.exception.EmailConversionException;
 import com.acme.exception.TemplateException;
-import com.acme.model.Content;
-import com.acme.model.Item;
-import com.acme.model.OrderItem;
-import com.acme.model.PurchaseOrder;
+import com.acme.model.*;
 import com.acme.service.EmailService;
 import com.acme.service.OrderService;
 import com.acme.service.SubjectService;
 import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
-import com.acme.util._EmailBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -46,12 +42,8 @@ import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
 @Service
-//@PropertySource("classpath:mail.properties")
 @Slf4j
 public class EmailServiceImpl implements EmailService {
-
-//    @Autowired
-//    Properties mailProperties;
 
     @Value("${app.name}")
     private String senderName;
@@ -71,90 +63,139 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private TemplateService templateService;
 
+    @Override
+    public boolean sendRegistrationToken(String mailTo, String tokenLink) {
+        boolean result = true;
 
-    public void sendOrderDone(String mailTo){
-//        EmailBuilder builder = getBuilder(createSession("bobby", "12345678"));
-//        try{
-//            MimeMessage message = builder.setTo(mailTo).setFrom(getRobotCredential()).setHtmlContent(Constants.ORDER_CREATE).setSubject("Your purchase accepted").build();
-//            send(message);
-//        } catch (MessagingException | UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
+        try{
+            EmailBuilder builder = EmailBuilder.getBuilder();
+            /* получаем клиента */
+            Subject subject = subjectService.getSubjectByEmail(mailTo);
+            /* берем его полное имя */
+            String subjectFullName = subject.getLastName() + " "+ subject.getFirstName();
+            /* Получим объект сообщения */
+            Email email = EmailImpl.builder()
+                    .from(new InternetAddress(senderAddress, senderName))
+                    .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
+                    .subject("Registration confirmation")
+                    .sentAt(new Date())
+                    .body("")
+                    .encoding(Charset.forName("UTF-8"))
+                    .build();
+
+            /* Параметры */
+            Map<String, Object> paramMap = Maps.newHashMap();
+            paramMap.put("fullName",subjectFullName);
+            paramMap.put("site", Constants.HOME);
+            paramMap.put("confirm", tokenLink);
+
+            /* Конвертим его в Message */
+            MimeMessage message = builder.setMessage(convert(email))
+                    .setEmailContent(templateService.mergeTemplateIntoString(Constants.REGISTRATION_REQUEST, paramMap))
+                    .build();
+
+            /* отправляем */
+            mailSender.send(message);
+        } catch (MessagingException | IOException | TemplateException ex){
+            log.error("Faild send registration email");
+            result = false;
+        }
+        return result;
     }
 
     @Override
-    public boolean sendRegistrationToken(String mailTo,String content) {
-//        EmailBuilder builder = getBuilder(createSession("bobby", "12345678"));
-//        try{
-//            MimeMessage message = builder.setTo(mailTo).setFrom(getRobotCredential()).setHtmlContent(content).setSubject("Registration confirmation").build();
-//            send(message);
-//        } catch (MessagingException | UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
-        return false;
+    public void sendRegistrationConfirm(String mailTo) throws IOException, MessagingException, TemplateException {
+        EmailBuilder builder = EmailBuilder.getBuilder();
+        /* получаем клиента */
+        Subject subject = subjectService.getSubjectByEmail(mailTo);
+        /* берем его полное имя */
+        String subjectFullName = subject.getLastName() + " "+ subject.getFirstName();
+        /* Получим объект сообщения */
+        Email email = EmailImpl.builder()
+                .from(new InternetAddress(senderAddress, senderName))
+                .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
+                .subject("Registration confirmation")
+                .sentAt(new Date())
+                .body("")
+                .encoding(Charset.forName("UTF-8"))
+                .build();
+
+        /* Параметры */
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("fullName",subjectFullName);
+        paramMap.put("site", Constants.HOME);
+
+        /* Конвертим его в Message */
+        MimeMessage message = builder.setMessage(convert(email))
+                .setEmailContent(templateService.mergeTemplateIntoString(Constants.REGISTRATION_CONFIRM, paramMap))
+                .build();
+
+        /* отправляем */
+        mailSender.send(message);
     }
 
-//    @Override
-//    public List<Email> getInboxEmail() throws MessagingException {
-//        List<Email> emails = null;
-//        MimeMessage msg;
-//        Email email;
-//
-//        Store store = createSession("bobby", "12345678").getStore("pop3");
-//        store.connect("80.78.247.250", null, null);
-//        Folder inbox = store.getFolder("INBOX");
-//
-//        inbox.open(Folder.READ_ONLY);
-//        int cou = inbox.getMessageCount();
-//        if(cou>0){
-//            emails = new ArrayList<>();
-//            for(int i=1;i<=cou;i++){
-//                msg = (MimeMessage) inbox.getMessage(i);
-//                email = new Email();
-//
-//                String subFrom = Arrays.toString(msg.getFrom());
-//                subFrom = subFrom.substring(subFrom.indexOf('<')+1,subFrom.length()-2);
-//                email.setId(msg.getMessageID());
-//                email.setFrom(subFrom);
-//                email.setDate(msg.getSentDate());
-//                email.setIsNew(msg.isSet(Flags.Flag.RECENT));
-//                email.setSubject(msg.getSubject());
-//                emails.add(email);
-//            }
-//        }
-//        System.out.println(emails);
-//        return emails;
-//    }
+    @Override
+    public void sendOrderStatus(PurchaseOrder order) {
+        log.info("Тут будет отправка при изменении заказа");
+    }
 
-//    @Override
-//    public List<Email> getSendEmail() throws MessagingException {
-//        List<Email> emails = null;
-//        MimeMessage msg;
-//        Email email;
-//
-//        Store store = createSession("bobby", "12345678").getStore("pop3");
-//        store.connect("80.78.247.250", null, null);
-//        Folder inbox = store.getFolder("SEND");
-//
-//        inbox.open(Folder.READ_ONLY);
-//        int cou = inbox.getMessageCount();
-//        if(cou>0){
-//            emails = new ArrayList<>();
-//            for(int i=1;i<=cou;i++){
-//                msg = (MimeMessage) inbox.getMessage(i);
-//                email = new Email();
-//                email.setId(msg.getMessageID());
-//                email.setTo(Arrays.asList(msg.getRecipients(Message.RecipientType.TO)).toString());
-//                email.setDate(msg.getSentDate());
-//                email.setSubject(msg.getSubject());
-//                emails.add(email);
-//            }
-//        }
-//        System.out.println(emails);
-//        return emails;
-//    }
+    /**
+     * Отправка токена для подтверждения изменения пароля. Используется, если не указан тел
+     * @param mailTo
+     * @param tokenLink
+     * @throws IOException
+     * @throws TemplateException
+     * @throws MessagingException
+     */
+    @Override
+    public void sendPassChangeConfirm(String mailTo, String tokenLink) throws IOException, TemplateException, MessagingException {
+        EmailBuilder builder = EmailBuilder.getBuilder();
+            /* получаем клиента */
+        Subject subject = subjectService.getSubjectByEmail(mailTo);
+            /* берем его полное имя */
+        String subjectFullName = subject.getLastName() + " "+ subject.getFirstName();
+            /* Получим объект сообщения */
+        Email email = EmailImpl.builder()
+                .from(new InternetAddress(senderAddress, senderName))
+                .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
+                .subject("Password change confirmation")
+                .sentAt(new Date())
+                .body("")
+                .encoding(Charset.forName("UTF-8"))
+                .build();
+
+            /* Параметры */
+        Map<String, Object> paramMap = Maps.newHashMap();
+        paramMap.put("fullName",subjectFullName);
+        paramMap.put("confirm", tokenLink);
+
+            /* Конвертим его в Message */
+        MimeMessage message = builder.setMessage(convert(email))
+                .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_REQUEST, paramMap))
+                .build();
+
+            /* отправляем */
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendNews(String mailTo) {
+        log.info("Тут будет отправка новостей и акций");
+    }
+
+    @Override
+    public List<Email> getInbox(){
+        List<Email> emails = null;
+        log.info("Тут будет получение всех входящих писем");
+        return emails;
+    }
+
+    @Override
+    public List<Email> getOutbox(){
+        List<Email> emails = null;
+        log.info("Тут будет получение всех отправленных писем");
+        return emails;
+    }
 
     public void sendOrderAccepted(PurchaseOrder order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
@@ -189,9 +230,19 @@ public class EmailServiceImpl implements EmailService {
                 .put("item", list)
                 .build();
 
-        MimeMessage message = builder.setMessage(convert(createEmail(order)))
+        /* Создадим сообщение */
+        Email email = EmailImpl.builder()
+                .from(new InternetAddress(senderAddress, senderName))
+                .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
+                .subject("Thanks for your order, "+order.getRecipientFname())
+                .sentAt(new Date())
+                .body("")
+                .encoding(Charset.forName("UTF-8"))
+                .build();
+
+        MimeMessage message = builder.setMessage(convert(email))
                 .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
-                .setEmailContent(templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL_TEMPLATE, data))
+                .setEmailContent(templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data))
                 .build();
         mailSender.send(message);
     }
@@ -279,17 +330,6 @@ public class EmailServiceImpl implements EmailService {
         }
 
         return mimeMessage;
-    }
-
-    private Email createEmail(PurchaseOrder order) throws UnsupportedEncodingException {
-        return EmailImpl.builder()
-                .from(new InternetAddress(senderAddress, senderName))
-                .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
-                .subject("Thanks for your order, "+order.getRecipientFname())
-                .sentAt(new Date())
-                .body("")
-                .encoding(Charset.forName("UTF-8"))
-                .build();
     }
 
     /**

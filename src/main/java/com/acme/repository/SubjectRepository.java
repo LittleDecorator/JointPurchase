@@ -175,7 +175,7 @@ public class SubjectRepository {
         subject.setId(UUID.randomUUID().toString());
         Map<String,Object> namedParameters = Maps.newHashMap();
         namedParameters.put("id", subject.getId());
-        namedParameters.put("enabled", subject.isEnabled());
+        namedParameters.put("enabled", subject.isEnabled() ? 'Y' : 'N');
         namedParameters.put("firstName", subject.getFirstName());
         namedParameters.put("middleName", subject.getMiddleName());
         namedParameters.put("lastName", subject.getLastName());

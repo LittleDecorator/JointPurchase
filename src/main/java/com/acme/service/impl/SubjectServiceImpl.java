@@ -19,4 +19,9 @@ public class SubjectServiceImpl implements SubjectService {
 	public Subject getSubject(String subjectId) {
 		return subjectRepository.getById(subjectId);
 	}
+
+	@Override
+	public Subject getSubjectByEmail(String email) {
+		return subjectRepository.getByEmail(email);
+	}
 }

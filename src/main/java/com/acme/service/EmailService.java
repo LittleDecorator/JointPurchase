@@ -1,24 +1,65 @@
 package com.acme.service;
 
+import com.acme.email.Email;
 import com.acme.exception.TemplateException;
-import com.acme.model.Email;
 import com.acme.model.PurchaseOrder;
-import com.acme.util.EmailBuilder;
-import com.acme.util._EmailBuilder;
 
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface EmailService {
 
+    /**
+     * Отправка сообщения о формировании заказа
+     * @param order - заказ клиента
+     * @throws IOException
+     * @throws MessagingException
+     * @throws TemplateException
+     */
     void sendOrderAccepted(PurchaseOrder order) throws IOException, MessagingException, TemplateException;
-    boolean sendRegistrationToken(String mailTo, String content);
 
-//    List<Email> getInboxEmail() throws MessagingException;
-//    List<Email> getSendEmail() throws MessagingException;
+    /**
+     * Отправка ссылки для подтверждения регистрации
+     * @param mailTo - получатель
+     * @param tokenLink - token регистрации
+     * @return
+     */
+    boolean sendRegistrationToken(String mailTo, String tokenLink);
+
+    /**
+     * Оповещение о смене статуса заказа
+     */
+    void sendOrderStatus(PurchaseOrder order);
+
+    /**
+     * Сообщение об успешной регистрации
+     */
+    void sendRegistrationConfirm(String mailTo) throws IOException, MessagingException, TemplateException;
+
+    /**
+     * Сообщение об успешном изменении пароля
+     */
+    void sendPassChangeConfirm(String mailTo, String tokenLink) throws IOException, TemplateException, MessagingException;
+
+    /**
+     * Рассылка новостей и инфо про акции
+     */
+    void sendNews(String mailTo);
+
+    /**
+     * Получение списка входящих сообщений
+     * @return - список писем
+     * @throws MessagingException
+     */
+    List<Email> getInbox() throws MessagingException;
+
+    /**
+     * Получение списка отправленных сообщений
+     * @return - список отправленных сообщений
+     * @throws MessagingException
+     */
+    List<Email> getOutbox() throws MessagingException;
 
 }

@@ -9,4 +9,6 @@ public interface SubjectService {
 
 	Subject getSubject(String subjectId);
 
+	Subject getSubjectByEmail(String email);
+
 }

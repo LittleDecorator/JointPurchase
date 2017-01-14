@@ -1,6 +1,7 @@
 package com.acme.service.impl;
 
 import com.acme.exception.InvalidRequestException;
+import com.acme.exception.TemplateException;
 import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
@@ -8,6 +9,8 @@ import com.acme.model.Subject;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
+import com.acme.service.EmailService;
+import com.acme.service.SmsService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
 import com.google.common.base.Strings;
@@ -22,8 +25,10 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.mail.MessagingException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.spec.AlgorithmParameterSpec;
 
 @Service
@@ -38,14 +43,27 @@ public class AuthServiceImpl implements AuthService{
     @Autowired
     TokenService tokenService;
 
-//    @Autowired
-//    EmailServiceImpl emailService;
+    @Autowired
+    EmailService emailService;
 
+    @Autowired
+    SmsService smsService;
+
+    /**
+     * Получение пользователя по логину
+     * @param login
+     * @return
+     */
     @Override
     public Subject getSubject(String login) {
         return subjectRepository.getByEmail(login);
     }
 
+    /**
+     * Проверка корректности указанных пользователем логина/пароля
+     * @param subjectCredential
+     * @return
+     */
     @Override
     public Credential validate(SubjectCredential subjectCredential) {
         if (Strings.isNullOrEmpty(subjectCredential.getName()) || Strings.isNullOrEmpty(subjectCredential.getPassword())) {
@@ -64,7 +82,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     /**
-     * Decrypt User password that came from client
+     * Дешифровка пароля пользователя, пришедшего с клиента
      * @param password
      * @return
      */
@@ -88,6 +106,11 @@ public class AuthServiceImpl implements AuthService{
         return false;
     }
 
+    /**
+     * Получение полезной информации из token'а
+     * @param servletRequest
+     * @return
+     */
     @Override
     public Claims getClaims(ServletRequest servletRequest) {
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -101,7 +124,6 @@ public class AuthServiceImpl implements AuthService{
 
             try {
                 final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
-                System.out.println("JWT FIlter -> "+claims.toString());
                 return claims;
             }
             catch (final SignatureException e) {
@@ -111,6 +133,12 @@ public class AuthServiceImpl implements AuthService{
         }
     }
 
+    /**
+     * Регистрация нового пользователя.
+     * Новый пользователь будет не активированным, поэтому он не сможет авторизовываться.
+     * @param data
+     * @return
+     */
     @Override
     public boolean register(RegistrationData data) {
         //create subject
@@ -131,32 +159,31 @@ public class AuthServiceImpl implements AuthService{
 
         //create temp token
         String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
-        System.out.println(tmpToken);
-
-        //send email
-        String html = "<a href='http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken+"'>Confirm registration</a>";
-//        return emailService.sendRegistrationToken(data.getMail(),html);
-        return false;
+//        String tokenLink = "http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken;
+        String tokenLink = "http://192.168.1.88:7777/public/auth/confirm?jwt="+tmpToken;
+        return emailService.sendRegistrationToken(data.getMail(), tokenLink);
     }
 
+    /**
+     * Обработка запроса пользователя на изменение пароля
+     * @param login
+     */
     @Override
-    public void restore(String login) {
-        //TODO: Need update exception handler. Add custom error interface and different implementations for all situations
-        System.out.println("In restore");
+    public void restore(String login) throws TemplateException, IOException, MessagingException {
         Subject subject = getSubject(login);
         if(subject!=null){
-            System.out.println(subject.getEmail()+" "+subject.getFirstName());
-            String tmpToken = tokenService.createExpToken(credentialRepository.getById(subject.getId()), (long) (24 * 60 * 60 * 1000));
-            System.out.println(tmpToken);
-
-            //send email
-            String html = "<a href='http://grimmstory.ru/public/auth/restore?jwt="+tmpToken+"'>Change password</a>";
-//            emailService.sendRegistrationToken(subject.getEmail(),html);
-//            return subject.getEmail();
+            if(!Strings.isNullOrEmpty(subject.getPhoneNumber())){
+                /* будем использовать смс если есть тел номер у клиента */
+                smsService.passChangeConfirm();
+            } else {
+                /* будем использовать почту */
+                String tmpToken = tokenService.createExpToken(credentialRepository.getById(subject.getId()), (long) (24 * 60 * 60 * 1000));
+                String tokenLink = "http://grimmstory.ru/public/auth/restore?jwt="+tmpToken;
+                emailService.sendPassChangeConfirm(subject.getEmail(), tokenLink);
+            }
         } else {
             System.out.println("Subject not found");
             throw new InvalidRequestException("Subject not found", login);
-//            return null;
         }
     }
 }

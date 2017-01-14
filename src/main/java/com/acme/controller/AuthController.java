@@ -45,26 +45,24 @@ public class AuthController {
         if (credential!=null){
             return new LoginResponse(tokenService.createToken(credential));
         }
-//        throw new ServletException("Invalid login");
         return null;
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public boolean registrationConfirm(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
-        System.out.println(input);
         return authService.register(input);
     }
 
-    @RequestMapping(value = "/restore",method = RequestMethod.POST)
-//    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
-    public void restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
-        System.out.println(login);
-        JSONParser parser = new JSONParser();
-        String elogin = ((JSONObject)parser.parse(login)).get("data").toString();
-        System.out.println(elogin);
-//        return authService.restore(elogin);
-        authService.restore(elogin);
-    }
+//    @RequestMapping(value = "/restore",method = RequestMethod.POST)
+////    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
+//    public void restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, UnsupportedEncodingException {
+//        System.out.println(login);
+//        JSONParser parser = new JSONParser();
+//        String elogin = ((JSONObject)parser.parse(login)).get("data").toString();
+//        System.out.println(elogin);
+////        return authService.restore(elogin);
+//        authService.restore(elogin);
+//    }
 
     @RequestMapping(value = "/change",method = RequestMethod.POST)
     public Boolean changePassword(@JsonAttribute("oldPassword") String oldPassword, @JsonAttribute("newPassword")String newPassword) throws ServletException, ParseException, UnsupportedEncodingException {

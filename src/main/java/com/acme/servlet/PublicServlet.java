@@ -1,8 +1,10 @@
 package com.acme.servlet;
 
 import com.acme.constant.Settings;
+import com.acme.exception.TemplateException;
 import com.acme.model.Subject;
 import com.acme.repository.SubjectRepository;
+import com.acme.service.EmailService;
 import com.acme.service.TokenService;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +35,9 @@ public class PublicServlet extends HttpServlet {
 
     @Autowired
     SubjectRepository subjectRepository;
+
+    @Autowired
+    EmailService emailService;
 
 //    @Autowired
 //    CredentialRepository credentialRepository;
@@ -81,6 +87,8 @@ public class PublicServlet extends HttpServlet {
                         } else {
                             subject.setEnabled(true);
                             subjectRepository.updateSelectiveById(subject);
+                            /* если регистрация прошла успешно, то отправим письмо о результате */
+                            emailService.sendRegistrationConfirm(subject.getEmail());
                             res.sendRedirect(Settings.registrationResultPage + "?confirmed=true");
                         }
                     }
@@ -88,6 +96,8 @@ public class PublicServlet extends HttpServlet {
             }
         } catch (ExpiredJwtException e) {
             res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
+        } catch (MessagingException | TemplateException e) {
+            e.printStackTrace();
         }
 
     }

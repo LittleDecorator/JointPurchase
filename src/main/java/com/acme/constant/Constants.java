@@ -12,13 +12,15 @@ public interface Constants {
 
     String ROBOT_NAME = "no-reply";
 
-    String REGISTRATION_CONFIRM = "<a href='http://grimmstory.ru/public/auth/confirm'>Confirm your registration</a>";
-//    String CABINET_LINK = "<a href='http://grimmstory.ru/public/auth/confirm'>Confirm your registration</a>";
-    String CABINET_LINK = "http://192.168.86.196:7777/#/cabinet/history/0cfd5029-0f0d-47d1-b66b-09f4e853b09e";
-    String REGISTRATION_DONE = "Congrats with registration. Here will be link to your Private-Cabinet and link to Catalog";
-    String ORDER_CREATE = "Thank you for purchase! Here will be your order details";
+//    String HOME = "http://grimmstory.ru";
+    String HOME = "http://192.168.1.88:7777/#";
+    String CABINET_LINK = "http://192.168.1.88:7777/#/cabinet/history/0cfd5029-0f0d-47d1-b66b-09f4e853b09e";
+//    String REGISTRATION_DONE = "Congrats with registration. Here will be link to your Private-Cabinet and link to Catalog";
 
     /* TEMPLATES */
-    String ORDER_EMAIL_TEMPLATE = "order_email_template.html";
+    String ORDER_EMAIL = "order_email_template.html";
+    String REGISTRATION_REQUEST = "registration_request_template.html";
+    String REGISTRATION_CONFIRM = "registration_confirm_template.html";
+    String PASSWORD_CHANGE_REQUEST = "password_change_request_template.html";
 
 }
