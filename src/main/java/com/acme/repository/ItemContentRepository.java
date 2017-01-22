@@ -1,11 +1,14 @@
 package com.acme.repository;
 
 import com.acme.constant.Queue;
+import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.repository.mapper.Mappers;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -50,54 +53,72 @@ public class ItemContentRepository {
         return result == 0 ? Boolean.FALSE : Boolean.TRUE;
     }
 
+    public ItemContent getByItemIdAndImageId(String contentId,String itemId){
+        return jdbcTemplate.queryForObject(Queue.ITEM_CONTENT_FIND_BY_ITEM_ID_AND_IMAGE_ID, Mappers.itemContentMapper, itemId, contentId);
+    }
+
     public boolean updateSelective(ItemContent itemContent, Map<String,Object> whereClause){
         Map<String,Object> namedParameters = Maps.newHashMap();
         Boolean result = Boolean.FALSE;
 
-        StringBuilder querySB = new StringBuilder("update ITEM_CONTENT set");
+        List<String> querySB = Lists.newArrayList();
         if(itemContent.getId() != null){
-            querySB.append(" ID = :id ");
+            querySB.add(" ID = :id ");
             namedParameters.put("id",itemContent.getId());
         }
         if(itemContent.getItemId() != null){
-            querySB.append(" ITEM_ID = :itemId ");
+            querySB.add(" ITEM_ID = :itemId ");
             namedParameters.put("itemId",itemContent.getItemId());
         }
-        if(itemContent.getItemId() != null){
-            querySB.append(" CONTENT_ID = :contentId ");
+        if(itemContent.getContentId() != null){
+            querySB.add(" CONTENT_ID = :contentId ");
             namedParameters.put("contentId",itemContent.getContentId());
         }
-        if(itemContent.getItemId() != null){
-            querySB.append(" SHOW = :show");
+        if(itemContent.isShow()){
+            querySB.add(" SHOW = :show");
             namedParameters.put("show",itemContent.isShow());
         }
-        if(itemContent.getItemId() != null){
-            querySB.append(" MAIN = :main");
+        if(itemContent.isMain()){
+            querySB.add(" MAIN = :main");
             namedParameters.put("main",itemContent.isMain());
         }
-        if(itemContent.getItemId() != null){
-            querySB.append(" DATE_ADD = :dateAdd");
+        if(itemContent.getDateAdd() != null){
+            querySB.add(" DATE_ADD = :dateAdd");
             namedParameters.put("dateAdd",itemContent.getDateAdd());
         }
+        if(itemContent.getCropId() != null){
+            querySB.add(" CROP_ID = :cropId");
+            namedParameters.put("cropId",itemContent.getCropId());
+        }
+
+        String query = "update ITEM_CONTENT set" + String.join(",",querySB);
+        StringBuilder whereBuilder = new StringBuilder();
 
         if(namedParameters.size() > 0 && whereClause.size()>0){
-            querySB.append(" where ");
+            whereBuilder.append(" where ");
             List<String> keys = whereClause.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList());
             IntStream.range(0,keys.size())
                     .forEach(idx -> {
                                 String key = keys.get(idx);
                                 Object value = whereClause.get(key);
-                                querySB.append(keys.get(idx)).append(" = ").append(value);
-                                if(idx != keys.size()){
-                                    querySB.append(" AND ");
+                                whereBuilder.append(keys.get(idx)).append(" = ").append(value);
+                                if(idx != keys.size()-1){
+                                    whereBuilder.append(" AND ");
                                 }
                             }
                     );
-            int res = parameterJdbcTemplate.update(querySB.toString(),namedParameters);
+            int res = parameterJdbcTemplate.update(query + whereBuilder.toString(),namedParameters);
             result = res == 1 ? Boolean.TRUE : Boolean.FALSE;
         }
 
         return result;
+    }
+
+    public boolean updateSelectiveById(ItemContent itemContent){
+        Map<String,Object> parameters = Maps.newHashMap();
+//        parameters.put("id",itemContent.getId());
+        parameters.put("id", ":id");
+        return updateSelective(itemContent, parameters);
     }
 
     public boolean insert(ItemContent itemContent){

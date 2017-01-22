@@ -77,4 +77,8 @@ public class SmsServiceImpl implements SmsService {
         }
     }
 
+    @Override
+    public void passChangeConfirm() {
+        System.out.println("passChangeConfirm call");
+    }
 }

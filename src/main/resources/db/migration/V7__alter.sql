@@ -1,0 +1,1 @@
+alter table item_content add column crop_id character varying(37), add constraint crop_content_fkey foreign key (crop_id) references content ON UPDATE CASCADE ON DELETE CASCADE;

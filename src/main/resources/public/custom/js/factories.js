@@ -79,6 +79,14 @@
                         isArray : true
                     }
                 }),
+                itemCrop: $resource('/content/upload/crop',{},{
+                    upload:{
+                        method:'POST',
+                        transformRequest: function(data) { return data; },
+                        headers : { 'Content-Type' : undefined },
+                        isArray : true
+                    }
+                }),
 
                 item: $resource('/item/:id',{},{
                     all:{method:'GET',isArray:true},

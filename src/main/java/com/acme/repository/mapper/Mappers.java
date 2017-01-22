@@ -175,6 +175,7 @@ public class Mappers {
         itemContent.setId(rs.getString("id"));
         itemContent.setItemId(rs.getString("item_id"));
         itemContent.setContentId(rs.getString("content_id"));
+        itemContent.setCropId(rs.getString("crop_id"));
         itemContent.setShow(rs.getBoolean("show"));
         itemContent.setMain(rs.getBoolean("main"));
         itemContent.setDateAdd(rs.getDate("date_add"));

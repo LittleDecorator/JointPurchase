@@ -10,6 +10,7 @@
 			.controller('cropController',['$scope','dataResources','$timeout','$stateParams', function($scope,dataResources, $timeout, $stateParams) {
 
 				$scope.dataUrl = 'media/image/'+ $stateParams.imageId;
+				console.log($stateParams);
 
 				var image;
 				var options;
@@ -29,21 +30,10 @@
 					cropper.getCroppedCanvas().toBlob(function (blob) {
 						var formData = new FormData();
 
-						formData.append('croppedImage', blob);
-
-						// Use `jQuery.ajax` method
-						// $.ajax('/path/to/upload', {
-						// 	method: "POST",
-						// 	data: formData,
-						// 	processData: false,
-						// 	contentType: false,
-						// 	success: function () {
-						// 		console.log('Upload success');
-						// 	},
-						// 	error: function () {
-						// 		console.log('Upload error');
-						// 	}
-						// });
+						formData.append('file', blob);
+						formData.append("itemId", $stateParams.id);
+						formData.append("imageId", $stateParams.imageId);
+						dataResources.itemCrop.upload(formData);
 					});
 				};
 

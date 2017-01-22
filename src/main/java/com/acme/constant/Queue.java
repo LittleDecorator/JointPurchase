@@ -69,6 +69,7 @@ public interface Queue {
     String ITEM_CONTENT_INSERT = "INSERT INTO public.item_content (id, item_id, content_id, show, main, date_add) " +
             " values (:id, :itemId, :contentId, :show, :main, :dateAdd) ";
     String ITEM_CONTENT_FIND_BY_ITEM_ID = "SELECT * FROM public.item_content WHERE item_id = ? ORDER BY date_add ASC";
+    String ITEM_CONTENT_FIND_BY_ITEM_ID_AND_IMAGE_ID = "SELECT * FROM public.item_content WHERE item_id = ? AND content_id= ? ORDER BY date_add ASC";
     String ITEM_CONTENT_FIND_MAIN = "SELECT * FROM public.item_content WHERE main = 'Y' ORDER BY date_add ASC";
     String ITEM_CONTENT_DELETE_BY_ITEM_ID_AND_CONTENT_ID = "DELETE FROM public.item_content WHERE item_id = ? AND content_id = ? ";
     String ITEM_CONTENT_DELETE_BY_ITEM_ID = "DELETE FROM public.item_content WHERE item_id = ? ";

@@ -27,8 +27,38 @@ public class ContentController{
     @Autowired
     ContentRepository contentRepository;
 
+    @RequestMapping(value = "/upload/crop", method = RequestMethod.POST)
+    public void itemImageUpload(MultipartHttpServletRequest request ,
+                                     @RequestParam(value = "itemId") String itemId,
+                                     @RequestParam(value = "imageId") String imageId) throws Exception {
+        //TODO: MAYBE NEED HASH CHECK
+        Content content;
+        ItemContent itemContent;
+
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+
+        for(MultipartFile file : fileMap.values()) {
+            if (!file.isEmpty()) {
+
+                String fileName = file.getOriginalFilename();
+                String type = fileName.substring(fileName.indexOf(".") + 1);
+
+                content = new Content();
+                content.setFileName(file.getOriginalFilename());
+                content.setContent(file.getBytes());
+                content.setType(type);
+                content.setMime("image/" + type);
+                contentRepository.insert(content);
+
+                itemContent = itemContentRepository.getByItemIdAndImageId(imageId, itemId);
+                itemContent.setCropId(content.getId());
+                itemContentRepository.updateSelectiveById(itemContent);
+            }
+        }
+    }
+
     @RequestMapping(value = "/upload/item", method = RequestMethod.POST)
-    public JSONArray itemImageUpload(MultipartHttpServletRequest request ,@RequestParam(value = "itemId", required = true) String itemId) throws Exception {
+    public JSONArray itemImageUpload(MultipartHttpServletRequest request, @RequestParam(value = "itemId") String itemId) throws Exception {
         //TODO: MAYBE NEED HASH CHECK
         JSONArray array = new JSONArray();
         JSONObject object;
@@ -80,13 +110,13 @@ public class ContentController{
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public JSONArray getPreviewImages(@RequestParam(value = "itemId", required = true) String itemId) throws Exception {
+    public JSONArray getPreviewImages(@RequestParam(value = "itemId") String itemId) throws Exception {
         JSONArray array = new JSONArray();
         JSONObject jsonObject;
 
         for(ItemContent item : itemContentRepository.getByItemId(itemId)){
             jsonObject = new JSONObject();
-            jsonObject.put("url", Constants.GALLERY_URL+item.getContentId());
+            jsonObject.put("url", Constants.GALLERY_URL+ (item.getCropId()== null ? item.getContentId() : item.getCropId()));
             jsonObject.put("id", item.getContentId());
             jsonObject.put("main", item.isMain());
             jsonObject.put("show", item.isShow());

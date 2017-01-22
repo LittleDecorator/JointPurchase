@@ -156,10 +156,6 @@ create table item_content(
   foreign key (content_id) references content
 );
 
-
-
-
-
 --список email аккаунтов
 create table email (
 	id varchar(37) not null,

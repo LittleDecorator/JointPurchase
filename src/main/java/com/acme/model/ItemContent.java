@@ -6,6 +6,7 @@ public class ItemContent {
     private String id;
     private String itemId;
     private String contentId;
+    private String cropId;
     private boolean show;
     private boolean main;
     private Date dateAdd;
@@ -46,12 +47,21 @@ public class ItemContent {
         this.dateAdd = dateAdd;
     }
 
+    public String getCropId() {
+        return cropId;
+    }
+
+    public void setCropId(String cropId) {
+        this.cropId = cropId;
+    }
+
     @Override
     public String toString() {
         return "ItemContent{" +
                 "id='" + id + '\'' +
                 ", itemId='" + itemId + '\'' +
                 ", contentId='" + contentId + '\'' +
+                ", cropId='" + cropId + '\'' +
                 ", show=" + show +
                 ", main=" + main +
                 ", dateAdd=" + dateAdd +

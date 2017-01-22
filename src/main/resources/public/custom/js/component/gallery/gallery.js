@@ -134,7 +134,7 @@
                 };
 
                 $scope.showCrop = function($event,id){
-                    $state.go("item.detail.gallery.crop", {imageId: id});
+                    $state.go("item.detail.gallery.crop", {imageId: id, itemId:$stateParams.id});
                 };
 
                 // FILTERS
