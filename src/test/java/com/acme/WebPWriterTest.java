@@ -48,8 +48,12 @@ public class WebPWriterTest {
 	public Object[][] createBasicImages() throws IOException {
 		return new Object[][]{
 				new Object[]{loadImage("./img/orig.jpg"), "orig.webp"},
-				new Object[]{loadImage("./img/view.jpg"), "view.webp"},
-				new Object[]{loadImage("./img/small.jpg"), "small.webp"},
+				new Object[]{loadImage("./img/output.jpg"), "orig_70.webp"},
+				new Object[]{loadImage("./img/output2.jpg"), "orig_70_2.webp"}
+//				new Object[]{loadImage("./img/view.jpg"), "view.webp"},
+//				new Object[]{loadImage("./img/small.jpg"), "small.webp"},
+//				new Object[]{loadImage("./img/IMG_3217.JPG"), "head.webp"},
+//				new Object[]{loadImage("./img/IMG_3287.JPG"), "toys.webp"}
 		};
 	}
 
