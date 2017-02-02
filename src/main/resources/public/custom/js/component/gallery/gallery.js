@@ -142,7 +142,7 @@
                     name: 'imageFilter',
                     fn: function(item /*{File|FileLikeObject}*/, options) {
                         var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-                        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+                        return '|webp|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                     }
                 });
 
