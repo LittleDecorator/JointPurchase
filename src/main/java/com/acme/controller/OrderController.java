@@ -87,7 +87,7 @@ public class OrderController{
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
         PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
-        emailService.sendOrderAccepted(purchaseOrder);
+        emailService.sendOrderStatus(purchaseOrder);
         return purchaseOrder;
     }
 

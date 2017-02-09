@@ -18,6 +18,10 @@ public interface ImageService {
 
     BufferedImage writeToStream (String path, OutputStream stream) throws IOException;
 
+    void writeToStream (BufferedImage image, String type, OutputStream stream) throws IOException;
+
+    byte[] toBytes(BufferedImage image, String type) throws IOException;
+
     String encodeToString(BufferedImage image, String type) throws IOException;
 
     ImageWriter getWriter(String type);

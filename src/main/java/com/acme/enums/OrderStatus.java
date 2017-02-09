@@ -10,20 +10,27 @@ import com.google.common.base.CaseFormat;
 @JsonDeserialize(using = OrderStatusDeserializer.class)
 public enum OrderStatus {
 
-    NEW("Новый"),
-    IN_PROCESS("Обрабатывается"),
-    READY("Собран"),
-    DONE("Выполнен"),
-    CANCELED("Отменен");
+    NEW("Новый","создан"),
+    ACCEPTED("Принят", "добавлен в обработку"),
+    IN_PROCESS("Обрабатывается","собирается"),
+    READY("Собран","готов к выдаче"),
+    DONE("Выполнен","выполнен"),
+    CANCELED("Отменен","отменен");
 
     String text;
+    String notifyText;
 
-    OrderStatus(String text) {
+    OrderStatus(String text, String notifyText) {
         this.text = text;
+        this.notifyText = notifyText;
     }
 
     public String getText() {
         return text;
+    }
+
+    public String getNotifyText() {
+        return notifyText;
     }
 
     public static OrderStatus getByName(String text){

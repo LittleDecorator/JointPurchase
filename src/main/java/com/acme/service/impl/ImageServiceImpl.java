@@ -17,8 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
+/**
+ * Сервис предоставляющий api для чтения и записи изображения
+ */
 @Service
-public class ImageServcieImpl implements ImageService {
+public class ImageServiceImpl implements ImageService {
 
     private static final String BASE = "data:image/jpeg;base64,";
 
@@ -59,6 +62,12 @@ public class ImageServcieImpl implements ImageService {
         return writeToStream(binary,type,stream);
     }
 
+    @Cacheable(value = "write")
+    public void writeToStream (BufferedImage image, String type, OutputStream stream) throws IOException {
+        ImageIO.write(image, type, stream);
+        stream.close();
+    }
+
     @Cacheable(value = "encode")
     public String encodeToString(BufferedImage image, String type) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
@@ -69,6 +78,13 @@ public class ImageServcieImpl implements ImageService {
         return imageString;
     }
 
+    @Cacheable(value = "read")
+    public byte[] toBytes(BufferedImage image, String type) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
+        ImageIO.write(image, type, bos);
+        return bos.toByteArray();
+    }
+
     public ImageWriter getWriter(String type) {
         Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName(type);
         if (!writers.hasNext())
@@ -77,7 +93,8 @@ public class ImageServcieImpl implements ImageService {
     }
 
     public ImageWriteParam getDefaultWriterParam(ImageWriter writer) {
-        float quality = 0.5f;
+//        float quality = 0.5f;
+        float quality = .8f;
         ImageWriteParam param = writer.getDefaultWriteParam();
         if (param.canWriteCompressed()) {
             param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

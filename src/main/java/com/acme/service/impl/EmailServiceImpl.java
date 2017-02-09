@@ -133,11 +133,6 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
     }
 
-    @Override
-    public void sendOrderStatus(PurchaseOrder order) {
-        log.info("Тут будет отправка при изменении заказа");
-    }
-
     /**
      * Отправка токена для подтверждения изменения пароля. Используется, если не указан тел
      * @param mailTo
@@ -196,7 +191,7 @@ public class EmailServiceImpl implements EmailService {
         return emails;
     }
 
-    public void sendOrderAccepted(PurchaseOrder order) throws IOException, MessagingException, TemplateException {
+    public void sendOrderStatus(PurchaseOrder order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
 
         /* get all info */
@@ -219,6 +214,7 @@ public class EmailServiceImpl implements EmailService {
         final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
 				/* основной текст письма */
                 .put("order_number", order.getUid())
+                .put("order_status", order.getStatus().getNotifyText())
                 .put("isAuth", true)
                 .put("cabinet_link", Constants.CABINET_LINK)
 				/* информация о заказе */
@@ -233,7 +229,7 @@ public class EmailServiceImpl implements EmailService {
         Email email = EmailImpl.builder()
                 .from(new InternetAddress(senderAddress, senderName))
                 .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
-                .subject("Thanks for your order, "+order.getRecipientFname())
+                .subject("Информация о заказе, "+order.getRecipientFname())
                 .sentAt(new Date())
                 .body("")
                 .encoding(Charset.forName("UTF-8"))
