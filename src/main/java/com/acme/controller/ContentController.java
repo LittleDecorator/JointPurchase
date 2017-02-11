@@ -5,6 +5,8 @@ import com.acme.model.ItemContent;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.constant.Constants;
+import com.acme.service.ImageService;
+import com.acme.service.ResizeService;
 import com.google.common.collect.Maps;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,6 +29,12 @@ public class ContentController{
     @Autowired
     ContentRepository contentRepository;
 
+    @Autowired
+    ResizeService resizeService;
+
+    @Autowired
+    ImageService imageService;
+
     @RequestMapping(value = "/upload/crop", method = RequestMethod.POST)
     public void itemImageUpload(MultipartHttpServletRequest request ,
                                      @RequestParam(value = "itemId") String itemId,
@@ -45,7 +53,8 @@ public class ContentController{
 
                 content = new Content();
                 content.setFileName(file.getOriginalFilename());
-                content.setContent(file.getBytes());
+                //TODO: нужно инкапсулировать ресайз в сервисе изображения, чтобы можно было конвертить
+                content.setContent(imageService.toBytes(resizeService.forOrign(file.getBytes()), type));
                 content.setType(type);
                 content.setMime("image/" + type);
                 contentRepository.insert(content);

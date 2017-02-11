@@ -1,30 +1,45 @@
 package com.acme.model;
 
 import com.acme.enums.ItemStatus;
+import com.acme.enums.converters.ItemStatusConverter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Entity
+@Table(name = "item")
 public class Item {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private String companyId;
 
+    @NotNull
     private String article;
 
+    @NotNull
     private String description;
 
+    @NotNull
     private Integer price;
 
-    private Date dateAdd;
+    private Date dateAdd = new Date();
 
-    private boolean notForSale;
+    private boolean notForSale = true;
 
     private Integer inStock;
 
-    private ItemStatus status;
+    @Convert(converter = ItemStatusConverter.class)
+    private ItemStatus status = ItemStatus.AVAILABLE;
 
     public Item() {}
 
