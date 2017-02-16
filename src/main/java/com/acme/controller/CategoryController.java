@@ -11,7 +11,6 @@ import com.acme.service.CategoryService;
 import com.acme.service.TreeService;
 
 import com.acme.model.Category;
-import com.acme.model.CategoryItem;
 import com.acme.model.Company;
 import com.acme.model.Item;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -70,8 +69,8 @@ public class CategoryController {
                 category.setParentId(transfer.getParentId());
                 categoryRepository.insert(category);
                 if(!transfer.getItems().isEmpty()){
-                    List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
-                    categoryItemRepository.insertBulk(categoryItems);
+//                    List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
+//                    categoryItemRepository.insertBulk(categoryItems);
                 }
                 transactionManager.commit(status);
             } catch (Exception ex){
@@ -92,10 +91,10 @@ public class CategoryController {
                 categoryRepository.update(category);
 
                 categoryItemRepository.deleteByCategoryAndExcludedItemIdList(category.getId(), transfer.getItems());
-                transfer.getItems().removeAll(categoryItemRepository.getByCategoryId(category.getId()).stream().map(CategoryItem::getItemId).collect(Collectors.toList()));
+//                transfer.getItems().removeAll(categoryItemRepository.getByCategoryId(category.getId()).stream().map(CategoryItem::getItemId).collect(Collectors.toList()));
 
-                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
-                categoryItemRepository.insertBulk(categoryItems);
+//                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Category(category.getId(),transfer.getItems());
+//                categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex){
                 System.out.println(ex);
@@ -168,7 +167,7 @@ public class CategoryController {
             List<Node> newNodes = mapper.readValue(newArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             Category category;
-            CategoryItem categoryItem;
+//            CategoryItem categoryItem;
 
             for(Node node: newNodes){
                 //create category
@@ -179,10 +178,10 @@ public class CategoryController {
                 categoryRepository.insert(category);
                 for(Item item : node.getItems()){
                     //link with type
-                    categoryItem = new CategoryItem();
-                    categoryItem.setCategoryId(category.getId());
-                    categoryItem.setItemId(item.getId());
-                    categoryItemRepository.insert(categoryItem);
+//                    categoryItem = new CategoryItem();
+//                    categoryItem.setCategoryId(category.getId());
+//                    categoryItem.setItemId(item.getId());
+//                    categoryItemRepository.insert(categoryItem);
                 }
             }
         }
@@ -192,7 +191,7 @@ public class CategoryController {
             List<Node> updateNodes = mapper.readValue(updateArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             Category category;
-            CategoryItem categoryItem;
+//            CategoryItem categoryItem;
 
             for(Node node: updateNodes){
                 //create category
@@ -203,7 +202,8 @@ public class CategoryController {
                 categoryRepository.update(category);
 
                 //get linked types
-                List<String> oldLinks = Lists.transform(categoryItemRepository.getByCategoryId(category.getId()), CategoryItem::getItemId);
+                List<String> oldLinks = Lists.newArrayList();
+//                List<String> oldLinks = Lists.transform(categoryItemRepository.getByCategoryId(category.getId()), CategoryItem::getItemId);
                 List<String> newLinks = Lists.transform(node.getItems(), Item::getId);
 
                 Iterator<String> oldIt = oldLinks.iterator();
@@ -220,12 +220,12 @@ public class CategoryController {
                 }
 
                 //add new link with type
-                for(String itemId : newLinks){
-                    categoryItem = new CategoryItem();
-                    categoryItem.setCategoryId(category.getId());
-                    categoryItem.setItemId(itemId);
-                    categoryItemRepository.insert(categoryItem);
-                }
+//                for(String itemId : newLinks){
+//                    categoryItem = new CategoryItem();
+//                    categoryItem.setCategoryId(category.getId());
+//                    categoryItem.setItemId(itemId);
+//                    categoryItemRepository.insert(categoryItem);
+//                }
             }
         }
 
@@ -248,19 +248,19 @@ public class CategoryController {
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
     public JSONArray getCategoryItems(@PathVariable("id") String categoryId){
-        List<String> list = Lists.transform(categoryItemRepository.getByCategoryId(categoryId), CategoryItem::getItemId);
+//        List<String> list = Lists.transform(categoryItemRepository.getByCategoryId(categoryId), CategoryItem::getItemId);
 
         JSONArray array = new JSONArray();
-        if(list.size()>0){
-            JSONObject object;
-            for(Item item : itemRepository.getByIdList(list)){
-                object = new JSONObject(new HashMap(3));
-                object.put("id",item.getId());
-                object.put("name",item.getName());
-                object.put("article",item.getArticle());
-                array.add(object);
-            }
-        }
+//        if(list.size()>0){
+//            JSONObject object;
+//            for(Item item : itemRepository.findByIdIn(list)){
+//                object = new JSONObject(new HashMap(3));
+//                object.put("id",item.getId());
+//                object.put("name",item.getName());
+//                object.put("article",item.getArticle());
+//                array.add(object);
+//            }
+//        }
         return array;
     }
 

@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "item")
@@ -20,8 +21,8 @@ public class Item {
     @NotNull
     private String name;
 
-    @NotNull
-    private String companyId;
+    @OneToOne
+    private Company company;
 
     @NotNull
     private String article;
@@ -32,29 +33,20 @@ public class Item {
     @NotNull
     private Integer price;
 
+    @Column(name = "date_add")
     private Date dateAdd = new Date();
 
+    @Column(name = "not_for_sale")
     private boolean notForSale = true;
 
+    @Column(name = "in_stock")
     private Integer inStock;
+
+    @OneToMany
+    private List<Category> categories;
 
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
-
-    public Item() {}
-
-    public Item(Item item) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.companyId = item.getCompanyId();
-        this.article = item.getArticle();
-        this.description = item.getDescription();
-        this.price = item.getPrice();
-        this.dateAdd = item.getDateAdd();
-        this.notForSale = item.isNotForSale();
-        this.inStock = item.getInStock();
-        this.status = item.getStatus();
-    }
 
     public String getId() {
         return id;
@@ -70,13 +62,6 @@ public class Item {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId == null ? null : companyId.trim();
     }
 
     public String getArticle() {
@@ -135,19 +120,36 @@ public class Item {
         this.status = status;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", companyId='" + companyId + '\'' +
-                ", article='" + article + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", dateAdd=" + dateAdd +
-                ", notForSale=" + notForSale +
-                ", inStock=" + inStock +
-                ", status=" + status +
-                '}';
+               "id='" + id + '\'' +
+               ", name='" + name + '\'' +
+               ", company=" + company +
+               ", article='" + article + '\'' +
+               ", description='" + description + '\'' +
+               ", price=" + price +
+               ", dateAdd=" + dateAdd +
+               ", notForSale=" + notForSale +
+               ", inStock=" + inStock +
+               ", categories=" + categories +
+               ", status=" + status +
+               '}';
     }
 }

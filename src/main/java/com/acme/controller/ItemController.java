@@ -1,13 +1,9 @@
 package com.acme.controller;
 
-import com.acme.model.CategorizeItem;
-import com.acme.model.CategoryItem;
 import com.acme.model.OrderItem;
-import com.acme.model.dto.ItemView;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.ContentRepository;
-import com.acme.repository.ItemCategoryLinkRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.repository.ItemRepository;
 import com.acme.repository.OrderItemRepository;
@@ -53,8 +49,8 @@ public class ItemController{
     @Autowired
 	CategoryItemRepository categoryItemRepository;
 
-    @Autowired
-	ItemCategoryLinkRepository itemCategoryLinkRepository;
+//    @Autowired
+//	ItemCategoryLinkRepository itemCategoryLinkRepository;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -72,8 +68,10 @@ public class ItemController{
      * Get all items
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<ItemView> getItems(ItemFilter filter){
-        return itemRepository.getFilteredItems(filter);
+    public List<Item> getItems(ItemFilter filter){
+        //TODO: переделать
+//        return itemRepository.getFilteredItems(filter);
+        return itemRepository.findAllByOrderByDateAddAsc();
     }
 
     /**
@@ -85,16 +83,16 @@ public class ItemController{
      * @throws IOException
      */
     @RequestMapping(method = RequestMethod.POST)
-    public String addItem(@RequestBody CategorizeItem item) throws ParseException, IOException {
+    public String addItem(@RequestBody Item item) throws ParseException, IOException {
         String itemId = null;
         if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
                 itemId = UUID.randomUUID().toString();
                 item.setId(itemId);
-                itemRepository.insertSelective(item);
+//                itemRepository.insertSelective(item);
                 /* add new linked categories */
-                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(itemId, item.getCategories().stream().map(Category::getId).collect(Collectors.toList())));
+//                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(itemId, item.getCategories().stream().map(Category::getId).collect(Collectors.toList())));
                 transactionManager.commit(status);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -110,16 +108,16 @@ public class ItemController{
      * @param item
      */
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateItem(@RequestBody CategorizeItem item){
+    public void updateItem(@RequestBody Item item){
         if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
-                itemRepository.updateSelectiveById(item);
+//                itemRepository.updateSelectiveById(item);
                 List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
                 categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
-                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
-                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
-                categoryItemRepository.insertBulk(categoryItems);
+//                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
+//                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
+//                categoryItemRepository.insertBulk(categoryItems);
                 transactionManager.commit(status);
             } catch (Exception ex) {
                 transactionManager.rollback(status);
@@ -138,7 +136,7 @@ public class ItemController{
             orderItemRepository.deleteByItemId(id);
             itemContentRepository.deleteByItemId(id);
             categoryItemRepository.deleteByItemId(id);
-            itemRepository.deleteById(id);
+//            itemRepository.deleteById(id);
             transactionManager.commit(status);
         } catch (Exception ex){
             System.out.println(Arrays.toString(ex.getStackTrace()));
@@ -153,8 +151,9 @@ public class ItemController{
      * @return Item info with Categories
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public CategorizeItem getItemDetail(@PathVariable("id") String id) {
-        CategorizeItem item = new CategorizeItem(itemRepository.getById(id));
+//    public CategorizeItem getItemDetail(@PathVariable("id") String id) {
+    public Item getItemDetail(@PathVariable("id") String id) {
+        Item item = itemRepository.findOne(id);
         System.out.println(item);
         item.setCategories(categoryRepository.getByItemId(item.getId()));
         return item;
@@ -168,7 +167,7 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
     public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
         List<String> itemIdList = Lists.transform(orderItemRepository.getByOrderId(orderId), OrderItem::getItemId);
-        return itemRepository.getByIdList(itemIdList);
+        return itemRepository.findByIdIn(itemIdList);
     }
 
     /**
@@ -178,7 +177,7 @@ public class ItemController{
      */
     @RequestMapping(method = RequestMethod.GET,value = "/company/{id}")
     public List<Item> getAllByCompanyId(@PathVariable("id")String companyId) {
-        return itemRepository.getByCompanyId(companyId);
+        return itemRepository.findByCompanyId(companyId);
     }
 
     /**
@@ -188,7 +187,7 @@ public class ItemController{
     public List<Map<String,Object>> getItemMap() {
         List<Map<String,Object>> list = new ArrayList<>();
         Map<String,Object> map;
-        for(Item i : itemRepository.getAll()){
+        for(Item i : itemRepository.findAllByOrderByDateAddAsc()){
             map = new HashMap<>();
             map.put("id",i.getId());
             map.put("name",i.getName());
@@ -215,7 +214,7 @@ public class ItemController{
         Item item = new Item();
         item.setId(itemId);
         item.setNotForSale(notForSale);
-        itemRepository.updateSelectiveById(item);
+//        itemRepository.updateSelectiveById(item);
     }
 
 

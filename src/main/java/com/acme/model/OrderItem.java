@@ -1,21 +1,32 @@
 package com.acme.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "order_item")
 public class OrderItem {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-
+    @Column(name="order_id")
     private String orderId;
 
-
+    @Column(name = "item_id")
     private String itemId;
-
 
     private Integer cou;
 
-
+    @Column(name = "date_add")
     private Date dateAdd;
 
 

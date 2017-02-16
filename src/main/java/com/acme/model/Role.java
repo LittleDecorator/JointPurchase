@@ -1,19 +1,24 @@
 package com.acme.model;
 
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
-public class Role extends Base {
+@Entity
+@Table(name = "role")
+public class Role {
 
+	@Id
     private String id;
-
 
     private String description;
 
-
+	@Column(name = "parent_role_id")
     private String parentRoleId;
 
-
+	@Column(name = "date_add")
     private Date dateAdd;
 
 

@@ -43,12 +43,12 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Map<String, Object> getOrderInfo(String orderId) {
 		Map<String, Object> result = Maps.newHashMap();
-		PurchaseOrder order = orderRepository.getById(orderId);
+		PurchaseOrder order = orderRepository.findOne(orderId);
 		result.put("order",order);
 		List<OrderItem> orderItems = orderItemRepository.getByOrderId(orderId);
 		Map<String, OrderItem> orderItemsMap = orderItems.stream().collect(Collectors.toMap(OrderItem::getItemId, Function.identity()));
 		result.put("orderItems",orderItemsMap);
-		List<Item> items = itemRepository.getByIdList(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
 		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
 		result.put("items", itemsMap);
 		Map<String, Content> contentMap = Maps.newHashMap();

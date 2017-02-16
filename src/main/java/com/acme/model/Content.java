@@ -1,16 +1,34 @@
 package com.acme.model;
 
-import java.util.Arrays;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "content")
 public class Content {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Column(name = "file_name")
     private String fileName;
+
     private String mime;
+
     private String type;
+
+    @Column(name = "is_default")
     private boolean isDefault;
 
+    @Column(name = "date_add")
     private Date dateAdd;
 
     private byte[] content;

@@ -2,7 +2,7 @@ package com.acme;
 
 import com.acme.enums.ItemStatus;
 import com.acme.model.Item;
-import com.acme.repository.ItemRepositoryJpa;
+import com.acme.repository.ItemRepository;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class RepositoryTest {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @Autowired
-    ItemRepositoryJpa repository;
+    ItemRepository repository;
 
     @Test
     @Transactional(rollbackFor=RuntimeException.class)
@@ -73,7 +73,7 @@ public class RepositoryTest {
         log.info("-------------------------------");
         Item newItem = new Item();
         newItem.setName("15 друзей Васечки");
-        newItem.setCompanyId("40636ca3-6c19-4ecb-83a2-9027dcd5b22f");
+//        newItem.setCompanyId("40636ca3-6c19-4ecb-83a2-9027dcd5b22f");
         newItem.setArticle("10580");
         newItem.setDescription("Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.");
         newItem.setPrice(1000);

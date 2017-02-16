@@ -1,20 +1,41 @@
-package com.acme.model.dto;
-
+package com.acme.model;
 
 import com.acme.enums.OrderStatus;
+import com.acme.enums.converters.ItemStatusConverter;
+import com.acme.enums.converters.OrderStatusConverter;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "order_view")
 public class OrderView {
+    @Id
+    private String id;
 
-    String id;
-    Long uid;
-    String recipientId;
-    String recipientName;
-    Timestamp createDate;
-    String delivery;
-    OrderStatus status;
-    Integer payment;
+    private Long uid;
+
+    @Column(name = "recipient_id")
+    private String recipientId;
+
+    @Column(name = "recipient_name")
+    private String recipientName;
+
+    @Column(name = "create_order_date")
+    private Timestamp createDate;
+
+    private String delivery;
+
+    @Convert(converter = OrderStatusConverter.class)
+    private OrderStatus status;
+
+    private Integer payment;
 
     public String getId() {
         return id;

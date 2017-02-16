@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by nikolay on 11.02.17.
+ *
  */
 public interface ItemRepository extends CrudRepository<Item, String> {
 

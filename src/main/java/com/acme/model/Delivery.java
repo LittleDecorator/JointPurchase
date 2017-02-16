@@ -1,12 +1,28 @@
 package com.acme.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "delivery")
 public class Delivery {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
+
     String name;
+
     String hint;
+
+    @Column(name = "date_add")
     Date dateAdd;
 
     public String getId() {

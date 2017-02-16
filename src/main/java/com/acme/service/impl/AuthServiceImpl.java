@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService{
      */
     @Override
     public Subject getSubject(String login) {
-        return subjectRepository.getByEmail(login);
+        return subjectRepository.findByEmail(login);
     }
 
     /**
@@ -148,7 +148,7 @@ public class AuthServiceImpl implements AuthService{
         subject.setLastName(data.getLastName());
         subject.setMiddleName(data.getMiddleName());
         subject.setPhoneNumber(data.getPhone());
-        subjectRepository.insert(subject);
+        subjectRepository.save(subject);
 
         //create credential
         Credential credential = new Credential();

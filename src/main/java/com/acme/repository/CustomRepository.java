@@ -37,31 +37,31 @@ public class CustomRepository {
 //        return jdbcTemplate.queryForList(Queue.ITEM_BY_CATEGORY_AND_CHILDREN_NOT_FOR_SALE, String.class, parentId);
 //    }
 
-    public List<Product> getCatalog(CatalogFilter catalogFilter){
-        String queue = Queue.GET_CATALOG;
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("limit", catalogFilter.getLimit());
-        parameters.addValue("offset", catalogFilter.getOffset());
+//    public List<Product> getCatalog(CatalogFilter catalogFilter){
+//        String queue = Queue.GET_CATALOG;
+//        MapSqlParameterSource parameters = new MapSqlParameterSource();
+//        parameters.addValue("limit", catalogFilter.getLimit());
+//        parameters.addValue("offset", catalogFilter.getOffset());
+//
+//        if(!Strings.isNullOrEmpty(catalogFilter.getCategory())){
+//            queue = Queue.ITEM_BY_CATEGORY_FOR_SALE;
+//            parameters.addValue("categoryId", catalogFilter.getCategory());
+//        }
+//
+//        if(!Strings.isNullOrEmpty(catalogFilter.getCompany())){
+//            queue = Queue.ITEM_BY_COMPANY_FOR_SALE;
+//            parameters.addValue("companyId", catalogFilter.getCompany());
+//        }
+//
+//        queue += " limit :limit offset :offset";
+//        return parameterJdbcTemplate.query(queue, parameters, Mappers.productMapper);
+//    }
 
-        if(!Strings.isNullOrEmpty(catalogFilter.getCategory())){
-            queue = Queue.ITEM_BY_CATEGORY_FOR_SALE;
-            parameters.addValue("categoryId", catalogFilter.getCategory());
-        }
-
-        if(!Strings.isNullOrEmpty(catalogFilter.getCompany())){
-            queue = Queue.ITEM_BY_COMPANY_FOR_SALE;
-            parameters.addValue("companyId", catalogFilter.getCompany());
-        }
-
-        queue += " limit :limit offset :offset";
-        return parameterJdbcTemplate.query(queue, parameters, Mappers.productMapper);
-    }
-
-    public List<Product> getBySearch(String criteria){
-        Map<String,Object> namedParameters = Maps.newHashMap();
-        namedParameters.put("criteria", "%"+criteria+"%");
-        return parameterJdbcTemplate.query(Queue.FIND_BY_SEARCH,namedParameters, Mappers.productMapper);
-    }
+//    public List<Product> getBySearch(String criteria){
+//        Map<String,Object> namedParameters = Maps.newHashMap();
+//        namedParameters.put("criteria", "%"+criteria+"%");
+//        return parameterJdbcTemplate.query(Queue.FIND_BY_SEARCH,namedParameters, Mappers.productMapper);
+//    }
 
 
 

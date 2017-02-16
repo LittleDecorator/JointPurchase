@@ -2,24 +2,51 @@ package com.acme.model;
 
 
 import com.acme.enums.OrderStatus;
+import com.acme.enums.converters.OrderStatusConverter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
-public class PurchaseOrder extends Base {
+@Entity
+@Table(name = "purchase_order")
+public class PurchaseOrder {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Column(name = "subject_id")
     private String subjectId;
+
     private Long uid;
+
+    @Column(name = "recipient_fname")
     private String recipientFname;
+    @Column(name = "recipient_lname")
     private String recipientLname;
+    @Column(name = "recipient_mname")
     private String recipientMname;
+    @Column(name = "recipient_email")
     private String recipientEmail;
+    @Column(name = "recipient_phone")
     private String recipientPhone;
+    @Column(name = "recipient_address")
     private String recipientAddress;
+    @Column(name = "date_add")
     private Date dateAdd;
+    @Column(name = "close_order_date")
     private Date closeOrderDate;
     private String comment;
+    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
+    @Column(name = "delivery_id")
     private String delivery;
     private Integer payment;
 
