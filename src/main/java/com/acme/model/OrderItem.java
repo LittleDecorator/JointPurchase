@@ -1,11 +1,15 @@
 package com.acme.model;
 
+import com.acme.model.embedded.OrderItemId;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -13,62 +17,67 @@ import java.util.Date;
 @Table(name = "order_item")
 public class OrderItem {
 
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @EmbeddedId
+    private OrderItemId id = new OrderItemId();
 
-    @Column(name="order_id")
-    private String orderId;
+    @ManyToOne
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    private PurchaseOrder order;
 
-    @Column(name = "item_id")
-    private String itemId;
+    @ManyToOne
+    @JoinColumn(name = "item_id", insertable = false, updatable = false)
+    private Item item;
 
-    private Integer cou;
+    private Integer count;
 
     @Column(name = "date_add")
     private Date dateAdd;
 
+    public OrderItem(PurchaseOrder order, Item item, Integer count) {
+        // create primary key
+        this.id = new OrderItemId(order.getId(), item.getId());
 
-    public String getId() {
+        // initialize attributes
+        this.order = order;
+        this.item = item;
+        this.count = count;
+
+        // update relationships to assure referential integrity
+        item.getOrderItems().add(this);
+        order.getOrderItems().add(this);
+    }
+
+    public OrderItemId getId() {
         return id;
     }
 
-
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+    public void setId(OrderItemId id) {
+        this.id = id;
     }
 
-
-    public String getOrderId() {
-        return orderId;
+    public PurchaseOrder getOrder() {
+        return order;
     }
 
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+    public void setOrder(PurchaseOrder order) {
+        this.order = order;
     }
 
-
-    public String getItemId() {
-        return itemId;
+    public Item getItem() {
+        return item;
     }
 
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
+    public void setItem(Item item) {
+        this.item = item;
     }
 
-
-    public Integer getCou() {
-        return cou;
+    public Integer getCount() {
+        return count;
     }
 
-
-    public void setCou(Integer cou) {
-        this.cou = cou;
+    public void setCount(Integer count) {
+        this.count = count;
     }
-
 
     public Date getDateAdd() {
         return dateAdd;
@@ -82,11 +91,11 @@ public class OrderItem {
     @Override
     public String toString() {
         return "OrderItem{" +
-                "id='" + id + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", itemId='" + itemId + '\'' +
-                ", cou=" + cou +
-                ", dateAdd=" + dateAdd +
-                '}';
+               "id='" + id + '\'' +
+               ", order=" + order +
+               ", item=" + item +
+               ", count=" + count +
+               ", dateAdd=" + dateAdd +
+               '}';
     }
 }

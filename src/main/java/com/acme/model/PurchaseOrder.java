@@ -5,13 +5,19 @@ import com.acme.enums.OrderStatus;
 import com.acme.enums.converters.OrderStatusConverter;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "purchase_order")
@@ -25,30 +31,44 @@ public class PurchaseOrder {
     @Column(name = "subject_id")
     private String subjectId;
 
-    private Long uid;
+    private Long uid = System.currentTimeMillis();
 
     @Column(name = "recipient_fname")
     private String recipientFname;
+
     @Column(name = "recipient_lname")
     private String recipientLname;
+
     @Column(name = "recipient_mname")
     private String recipientMname;
+
     @Column(name = "recipient_email")
     private String recipientEmail;
+
     @Column(name = "recipient_phone")
     private String recipientPhone;
+
     @Column(name = "recipient_address")
     private String recipientAddress;
+
     @Column(name = "date_add")
     private Date dateAdd;
+
     @Column(name = "close_order_date")
     private Date closeOrderDate;
+
     private String comment;
+
     @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
+
     @Column(name = "delivery_id")
     private String delivery;
+
     private Integer payment;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.order", cascade=CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
 
     public String getId() {
@@ -191,6 +211,14 @@ public class PurchaseOrder {
 
     public void setPayment(Integer payment) {
         this.payment = payment;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override

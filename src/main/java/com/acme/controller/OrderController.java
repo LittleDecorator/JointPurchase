@@ -4,7 +4,6 @@ import com.acme.exception.TemplateException;
 import com.acme.model.Item;
 import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
-import com.acme.model.dto.OrderRequest;
 import com.acme.model.OrderView;
 import com.acme.model.filter.OrderFilter;
 import com.acme.model.filter.OrderViewSpecifications;
@@ -125,20 +124,23 @@ public class OrderController {
 	public PurchaseOrder persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
-			PurchaseOrder order = request.getOrder();
-			if (order.getId() == null) {
-				order.setUid(System.currentTimeMillis());
-			}
-			purchaseOrderRepository.save(order);
-			System.out.println(order);
 
-			//delete old links
-			orderItemRepository.deleteByOrderId(order.getId());
-			//insert new links
-			for (OrderItem orderItem : request.getItems()) {
-				orderItem.setOrderId(order.getId());
-				orderItemRepository.insertSelective(orderItem);
+			List<Item> items = Lists.newArrayList();
+
+			/* сохраним заказ из запроса. */
+			PurchaseOrder order = purchaseOrderRepository.save(request.getOrder());
+
+			/* добавим записи в таблицу связи заказ-товар */
+			for (OrderItemsList itemsList : request.getItems()) {
+				// собираем товар для дальнейшей обработки
+				items.add(itemsList.getItem());
+				OrderItem orderItem = new OrderItem(order, itemsList.getItem(), itemsList.getCount());
+				orderItemRepository.save(orderItem);
 			}
+
+			//удаляем записи, где заказ совпадает, а товар нет.
+			orderItemRepository.deleteByOrderAndItemsNotIn(order, items);
+
 			transactionManager.commit(status);
 			return order;
 		} catch (Exception e) {
@@ -153,8 +155,9 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public void deleteOrder(@PathVariable("id") String id) {
+		PurchaseOrder order = purchaseOrderRepository.findOne(id);
 		//delete order bind items
-		orderItemRepository.deleteByOrderId(id);
+		orderItemRepository.deleteByOrder(order);
 		//delete order itself
 		purchaseOrderRepository.delete(id);
 	}
@@ -170,30 +173,45 @@ public class OrderController {
 	}
 
 	/**
-	 * Get Items list in order
+	 * Получение товара из заказа
 	 * @param id - order ID
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}/items")
 	public List<OrderItemsList> getOrderItems(@PathVariable("id") String id) {
 		List<OrderItemsList> result = Lists.newArrayList();
-
-		//get link info
-		List<OrderItem> orderItems = orderItemRepository.getByOrderId(id);
-		List<String> itemIdList = Lists.transform(orderItems, OrderItem::getItemId);
-
-		//get items
-		if (!itemIdList.isEmpty()) {
-			List<Item> items = itemRepository.findByIdIn(itemIdList);
-			for (OrderItem orderItem : orderItems) {
-				result.addAll(items.stream().filter(item -> orderItem.getItemId().contentEquals(item.getId())).map(item -> new OrderItemsList(item, orderItem.getCou())).collect(Collectors.toList()));
-			}
-		}
-
+		// получим заказ
+		PurchaseOrder order = purchaseOrderRepository.findOne(id);
+		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
 	}
 
     /* ------ NESTED CLASSES ------ */
+
+	/**
+	 * Класс представляет собой содержимое заказа.
+	 */
+	private class OrderRequest {
+
+		private PurchaseOrder order;
+		private List<OrderItemsList> items;
+
+		public PurchaseOrder getOrder() {
+			return order;
+		}
+
+		public void setOrder(PurchaseOrder order) {
+			this.order = order;
+		}
+
+		public List<OrderItemsList> getItems() {
+			return items;
+		}
+
+		public void setItems(List<OrderItemsList> items) {
+			this.items = items;
+		}
+	}
 
 	/**
 	 * Класс представляет собой содержимое заказа.
@@ -206,6 +224,22 @@ public class OrderController {
 
 		OrderItemsList(Item item, Integer count) {
 			this.item = item;
+			this.count = count;
+		}
+
+		public Item getItem() {
+			return item;
+		}
+
+		public void setItem(Item item) {
+			this.item = item;
+		}
+
+		public Integer getCount() {
+			return count;
+		}
+
+		public void setCount(Integer count) {
 			this.count = count;
 		}
 	}

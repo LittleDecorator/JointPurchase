@@ -9,4 +9,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  *
  * Репозиторий доступа к заказам
  */
-public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, String>, JpaSpecificationExecutor {}
+public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, String>, JpaSpecificationExecutor<PurchaseOrder> {}

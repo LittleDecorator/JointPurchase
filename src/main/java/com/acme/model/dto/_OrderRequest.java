@@ -1,14 +1,15 @@
 package com.acme.model.dto;
 
+import com.acme.model.Item;
 import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 
 import java.util.List;
 
-public class OrderRequest {
+public class _OrderRequest {
 
-    PurchaseOrder order;
-    List<OrderItem> items;
+    private PurchaseOrder order;
+    private List<Item> items;
 
     public PurchaseOrder getOrder() {
         return order;
@@ -18,11 +19,11 @@ public class OrderRequest {
         this.order = order;
     }
 
-    public List<OrderItem> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 
