@@ -1,10 +1,6 @@
 package com.acme.model;
 
 import com.acme.model.embedded.OrderItemId;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -21,11 +17,11 @@ public class OrderItem {
     private OrderItemId id = new OrderItemId();
 
     @ManyToOne
-    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_order", insertable = false, updatable = false)
     private PurchaseOrder order;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", insertable = false, updatable = false)
+    @JoinColumn(name = "fk_item", insertable = false, updatable = false)
     private Item item;
 
     private Integer count;

@@ -66,13 +66,13 @@ public class ItemContentRepository {
             querySB.add(" ID = :id ");
             namedParameters.put("id",itemContent.getId());
         }
-        if(itemContent.getItemId() != null){
+        if(itemContent.getItem().getId() != null){
             querySB.add(" ITEM_ID = :itemId ");
-            namedParameters.put("itemId",itemContent.getItemId());
+            namedParameters.put("itemId",itemContent.getItem().getId());
         }
-        if(itemContent.getContentId() != null){
+        if(itemContent.getContent().getId() != null){
             querySB.add(" CONTENT_ID = :contentId ");
-            namedParameters.put("contentId",itemContent.getContentId());
+            namedParameters.put("contentId",itemContent.getContent().getId());
         }
         if(itemContent.isShow()){
             querySB.add(" SHOW = :show");
@@ -122,11 +122,11 @@ public class ItemContentRepository {
     }
 
     public boolean insert(ItemContent itemContent){
-        itemContent.setId(UUID.randomUUID().toString());
+//        itemContent.setId(UUID.randomUUID().toString());
         Map<String,Object> namedParameters = Maps.newHashMap();
         namedParameters.put("id", itemContent.getId());
-        namedParameters.put("itemId", itemContent.getItemId());
-        namedParameters.put("contentId", itemContent.getContentId());
+//        namedParameters.put("itemId", itemContent.getItemId());
+//        namedParameters.put("contentId", itemContent.getContentId());
         namedParameters.put("show", itemContent.isShow()?'Y':'N');
         namedParameters.put("main", itemContent.isMain()?'Y':'N');
         namedParameters.put("dateAdd", itemContent.getDateAdd());

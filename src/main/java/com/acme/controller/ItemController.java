@@ -133,7 +133,7 @@ public class ItemController{
     public void deleteItem(@PathVariable("id") String id) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
-            orderItemRepository.deleteByItemId(id);
+//            orderItemRepository.deleteByItemId(id);
             itemContentRepository.deleteByItemId(id);
             categoryItemRepository.deleteByItemId(id);
 //            itemRepository.deleteById(id);
@@ -166,8 +166,9 @@ public class ItemController{
      */
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
     public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
-        List<String> itemIdList = Lists.transform(orderItemRepository.getByOrderId(orderId), OrderItem::getItemId);
-        return itemRepository.findByIdIn(itemIdList);
+//        List<String> itemIdList = Lists.transform(orderItemRepository.getByOrderId(orderId), OrderItem::getItemId);
+//        return itemRepository.findByIdIn(itemIdList);
+        return null;
     }
 
     /**

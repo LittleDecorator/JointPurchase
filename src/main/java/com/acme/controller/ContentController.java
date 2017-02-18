@@ -94,8 +94,8 @@ public class ContentController{
                 contentRepository.insert(content);
 
                 itemContent = new ItemContent();
-                itemContent.setItemId(itemId);
-                itemContent.setContentId(content.getId());
+//                itemContent.setItemId(itemId);
+//                itemContent.setContentId(content.getId());
                 itemContent.setShow(true);
                 if(i==0){
                     itemContent.setMain(true);
@@ -125,8 +125,8 @@ public class ContentController{
 
         for(ItemContent item : itemContentRepository.getByItemId(itemId)){
             jsonObject = new JSONObject();
-            jsonObject.put("url", Constants.GALLERY_URL+ (item.getCropId()== null ? item.getContentId() : item.getCropId()));
-            jsonObject.put("id", item.getContentId());
+//            jsonObject.put("url", Constants.GALLERY_URL+ (item.getCropId()== null ? item.getContentId() : item.getCropId()));
+//            jsonObject.put("id", item.getContentId());
             jsonObject.put("main", item.isMain());
             jsonObject.put("show", item.isShow());
             array.add(jsonObject);

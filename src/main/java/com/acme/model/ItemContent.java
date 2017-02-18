@@ -1,11 +1,15 @@
 package com.acme.model;
 
+import com.acme.model.embedded.ItemContentId;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -13,16 +17,16 @@ import java.util.Date;
 @Table(name = "item_content")
 public class ItemContent {
 
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @EmbeddedId
+    private ItemContentId id = new ItemContentId();
 
-    @Column(name = "item_id")
-    private String itemId;
+    @ManyToOne
+    @JoinColumn(name = "fk_item", insertable = false, updatable = false)
+    private Item item;
 
-    @Column(name = "content_id")
-    private String contentId;
+    @ManyToOne
+    @JoinColumn(name = "fk_content", insertable = false, updatable = false)
+    private Content content;
 
     @Column(name = "crop_id")
     private String cropId;
@@ -34,24 +38,30 @@ public class ItemContent {
     @Column(name = "date_add")
     private Date dateAdd;
 
-    public String getId() {
+    public ItemContentId getId() {
         return id;
     }
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+
+    public void setId(ItemContentId id) {
+        this.id = id;
     }
-    public String getItemId() {
-        return itemId;
+
+    public Item getItem() {
+        return item;
     }
-    public void setItemId(String itemId) {
-        this.itemId = itemId == null ? null : itemId.trim();
+
+    public void setItem(Item item) {
+        this.item = item;
     }
-    public String getContentId() {
-        return contentId;
+
+    public Content getContent() {
+        return content;
     }
-    public void setContentId(String contentId) {
-        this.contentId = contentId == null ? null : contentId.trim();
+
+    public void setContent(Content content) {
+        this.content = content;
     }
+
     public boolean isShow() {
         return show;
     }
@@ -82,13 +92,13 @@ public class ItemContent {
     @Override
     public String toString() {
         return "ItemContent{" +
-                "id='" + id + '\'' +
-                ", itemId='" + itemId + '\'' +
-                ", contentId='" + contentId + '\'' +
-                ", cropId='" + cropId + '\'' +
-                ", show=" + show +
-                ", main=" + main +
-                ", dateAdd=" + dateAdd +
-                '}';
+               "id=" + id +
+               ", item=" + item +
+               ", content=" + content +
+               ", cropId='" + cropId + '\'' +
+               ", show=" + show +
+               ", main=" + main +
+               ", dateAdd=" + dateAdd +
+               '}';
     }
 }

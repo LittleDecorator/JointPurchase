@@ -33,20 +33,20 @@ public class ItemServiceImpl implements ItemService{
         if(items !=null && !items.isEmpty()){
             Content defContent = contentRepository.getDefault();
             String noImage = Constants.PREVIEW_URL+defContent.getId();
-            HashMap<String,String> itemContents = Maps.newHashMap(itemContentRepository.getMain().stream().collect(Collectors.toMap(ItemContent::getItemId,ItemContent::getContentId)));
-            for(Item item : items){
-                ItemUrlTransfer transfer = new ItemUrlTransfer();
-                transfer.setId(item.getId());
-                transfer.setName(item.getName());
-                transfer.setPrice(item.getPrice());
-                transfer.setDescription(item.getDescription());
-                if(itemContents.containsKey(item.getId())){
-                    transfer.setUrl(Constants.ORIG_URL+ (itemContents.remove(item.getId())));
-                } else {
-                    transfer.setUrl(noImage);
-                }
-                result.add(transfer);
-            }
+//            HashMap<String,String> itemContents = Maps.newHashMap(itemContentRepository.getMain().stream().collect(Collectors.toMap(ItemContent::getItemId,ItemContent::getContentId)));
+//            for(Item item : items){
+//                ItemUrlTransfer transfer = new ItemUrlTransfer();
+//                transfer.setId(item.getId());
+//                transfer.setName(item.getName());
+//                transfer.setPrice(item.getPrice());
+//                transfer.setDescription(item.getDescription());
+//                if(itemContents.containsKey(item.getId())){
+//                    transfer.setUrl(Constants.ORIG_URL+ (itemContents.remove(item.getId())));
+//                } else {
+//                    transfer.setUrl(noImage);
+//                }
+//                result.add(transfer);
+//            }
         }
         return result;
     }
@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService{
             Content defContent = contentRepository.getDefault();
             List<ItemContent> itemContents = itemContentRepository.getShowedByItemId(item.getId());
             if(!itemContents.isEmpty()){
-                transfer.getMedia().addAll(itemContents.stream().map(ItemContent::getContentId).collect(Collectors.toList()));
+//                transfer.getMedia().addAll(itemContents.stream().map(ItemContent::getContentId).collect(Collectors.toList()));
             } else {
                 transfer.getMedia().add(defContent.getId());
             }

@@ -45,16 +45,16 @@ public class OrderServiceImpl implements OrderService {
 		Map<String, Object> result = Maps.newHashMap();
 		PurchaseOrder order = orderRepository.findOne(orderId);
 		result.put("order",order);
-		List<OrderItem> orderItems = orderItemRepository.getByOrderId(orderId);
-		Map<String, OrderItem> orderItemsMap = orderItems.stream().collect(Collectors.toMap(OrderItem::getItemId, Function.identity()));
-		result.put("orderItems",orderItemsMap);
-		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
-		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
-		result.put("items", itemsMap);
+//		List<OrderItem> orderItems = orderItemRepository.getByOrderId(orderId);
+//		Map<String, OrderItem> orderItemsMap = orderItems.stream().collect(Collectors.toMap(OrderItem::getItemId, Function.identity()));
+//		result.put("orderItems",orderItemsMap);
+//		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+//		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+//		result.put("items", itemsMap);
 		Map<String, Content> contentMap = Maps.newHashMap();
-		for(String itemId : itemsMap.keySet()){
-			contentMap.put(itemId,contentRepository.getById(itemContentRepository.getShowedByItemId(itemId).get(0).getContentId()));
-		}
+//		for(String itemId : itemsMap.keySet()){
+//			contentMap.put(itemId,contentRepository.getById(itemContentRepository.getShowedByItemId(itemId).get(0).getContentId()));
+//		}
 		result.put("contents", contentMap);
 		return result;
 	}

@@ -169,9 +169,9 @@ public class Mappers {
 
     public final static RowMapper<ItemContent> itemContentMapper = (rs, num) -> {
         ItemContent itemContent = new ItemContent();
-        itemContent.setId(rs.getString("id"));
-        itemContent.setItemId(rs.getString("item_id"));
-        itemContent.setContentId(rs.getString("content_id"));
+//        itemContent.setId(rs.getString("id"));
+//        itemContent.setItemId(rs.getString("item_id"));
+//        itemContent.setContentId(rs.getString("content_id"));
         itemContent.setCropId(rs.getString("crop_id"));
         itemContent.setShow(rs.getBoolean("show"));
         itemContent.setMain(rs.getBoolean("main"));
@@ -180,13 +180,14 @@ public class Mappers {
     };
 
     public final static RowMapper<OrderItem> orderItemMapper = (rs, num) -> {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setId(rs.getString("id"));
-        orderItem.setCou(rs.getInt("cou"));
-        orderItem.setItemId(rs.getString("item_id"));
-        orderItem.setOrderId(rs.getString("order_id"));
-        orderItem.setDateAdd(rs.getDate("date_add"));
-        return orderItem;
+//        OrderItem orderItem = new OrderItem();
+//        orderItem.setId(rs.getString("id"));
+//        orderItem.setCou(rs.getInt("cou"));
+//        orderItem.setItemId(rs.getString("item_id"));
+//        orderItem.setOrderId(rs.getString("order_id"));
+//        orderItem.setDateAdd(rs.getDate("date_add"));
+//        return orderItem;
+        return null;
     };
 
     public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs, num) -> {

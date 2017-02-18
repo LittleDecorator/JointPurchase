@@ -206,7 +206,7 @@ public class EmailServiceImpl implements EmailService {
 						.put("imageName", contentMap.get(itemId).getId())
 						.put("itemName", itemMap.get(itemId).getName())
 						.put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
-						.put("itemCount", orderItemMap.get(itemId).getCou() + " шт")
+//						.put("itemCount", orderItemMap.get(itemId).getCou() + " шт")
 				.build()));
 
 

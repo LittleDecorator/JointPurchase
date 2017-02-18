@@ -48,8 +48,11 @@ public class Item {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.item")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<OrderItem> orderItems;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    private List<ItemContent> itemContents;
 
 
     public String getId() {
@@ -146,6 +149,14 @@ public class Item {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public List<ItemContent> getItemContents() {
+        return itemContents;
+    }
+
+    public void setItemContents(List<ItemContent> itemContents) {
+        this.itemContents = itemContents;
     }
 
     @Override

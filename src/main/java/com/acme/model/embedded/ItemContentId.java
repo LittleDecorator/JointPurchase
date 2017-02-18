@@ -5,26 +5,26 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
- * Created by kobzev on 17.02.17.
+ * Created by kobzev on 18.02.17.
  *
- * Составной ключ таблицы связи между "PurchaseOrder" и "Item"
+ * Составной ключ таблицы связи между "Item" и "Content"
  */
 
 @Embeddable
-public class OrderItemId implements Serializable {
-
-	@Column(name = "fk_order")
-	private String orderId;
+public class ItemContentId implements Serializable {
 
 	@Column(name = "fk_item")
 	private String itemId;
 
-	public OrderItemId() {
+	@Column(name = "fk_content")
+	private String contentId;
+
+	public ItemContentId() {
 	}
 
-	public OrderItemId(String orderId, String itemId) {
-		this.orderId = orderId;
+	public ItemContentId(String itemId, String contentId) {
 		this.itemId = itemId;
+		this.contentId = contentId;
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class OrderItemId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				 + ((orderId == null) ? 0 : orderId.hashCode());
+				 + ((itemId == null) ? 0 : itemId.hashCode());
 		result = prime * result
 				 + ((itemId == null) ? 0 : itemId.hashCode());
 		return result;
@@ -47,13 +47,7 @@ public class OrderItemId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 
-		OrderItemId other = (OrderItemId) obj;
-
-		if (orderId == null) {
-			if (other.orderId != null)
-				return false;
-		} else if (!orderId.equals(other.orderId))
-			return false;
+		ItemContentId other = (ItemContentId) obj;
 
 		if (itemId == null) {
 			if (other.itemId != null)
@@ -61,6 +55,13 @@ public class OrderItemId implements Serializable {
 		} else if (!itemId.equals(other.itemId))
 			return false;
 
+		if (contentId == null) {
+			if (other.contentId != null)
+				return false;
+		} else if (!contentId.equals(other.contentId))
+			return false;
+
 		return true;
 	}
+
 }

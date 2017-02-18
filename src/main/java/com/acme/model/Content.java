@@ -2,12 +2,17 @@ package com.acme.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "content")
@@ -31,7 +36,11 @@ public class Content {
     @Column(name = "date_add")
     private Date dateAdd;
 
+    @Transient
     private byte[] content;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "content", cascade= CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
     public String getId() {
         return id;

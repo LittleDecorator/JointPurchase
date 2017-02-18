@@ -67,7 +67,7 @@ public class PurchaseOrder {
 
     private Integer payment;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.order", cascade=CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade=CascadeType.ALL)
     private List<OrderItem> orderItems;
 
 
