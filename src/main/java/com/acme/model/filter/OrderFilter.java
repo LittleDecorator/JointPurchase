@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 public class OrderFilter {
 
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    LocalDateTime dateFrom;
+    private LocalDateTime dateFrom;
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    LocalDateTime dateTo;
-    String delivery;
-    String status;
-    String subjectId;
-    Integer limit;
-    Integer offset;
+    private LocalDateTime dateTo;
+    private String delivery;
+    private String status;
+    private String subjectId;
+    private Integer limit;
+    private Integer offset;
 
     public LocalDateTime getDateFrom() {
         return dateFrom;

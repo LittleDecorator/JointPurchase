@@ -17,15 +17,19 @@ import java.util.Date;
 @Table(name = "item_content")
 public class ItemContent {
 
-    @EmbeddedId
-    private ItemContentId id = new ItemContentId();
+//    @EmbeddedId
+//    private ItemContentId id = new ItemContentId();
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_item", insertable = false, updatable = false)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "fk_content", insertable = false, updatable = false)
+    @JoinColumn(name = "content_id")
     private Content content;
 
     @Column(name = "crop_id")
@@ -38,11 +42,11 @@ public class ItemContent {
     @Column(name = "date_add")
     private Date dateAdd;
 
-    public ItemContentId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ItemContentId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -89,16 +93,4 @@ public class ItemContent {
         this.cropId = cropId;
     }
 
-    @Override
-    public String toString() {
-        return "ItemContent{" +
-               "id=" + id +
-               ", item=" + item +
-               ", content=" + content +
-               ", cropId='" + cropId + '\'' +
-               ", show=" + show +
-               ", main=" + main +
-               ", dateAdd=" + dateAdd +
-               '}';
-    }
 }

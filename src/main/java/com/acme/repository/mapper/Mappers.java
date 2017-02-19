@@ -6,7 +6,7 @@ import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Company;
 import com.acme.model.Credential;
 import com.acme.model.ItemContent;
-import com.acme.model.OrderItem;
+
 import com.acme.model.PurchaseOrder;
 import com.acme.model.Subject;
 //import com.acme.model.dto.ItemView;
@@ -179,7 +179,7 @@ public class Mappers {
         return itemContent;
     };
 
-    public final static RowMapper<OrderItem> orderItemMapper = (rs, num) -> {
+//    public final static RowMapper<OrderItem> orderItemMapper = (rs, num) -> {
 //        OrderItem orderItem = new OrderItem();
 //        orderItem.setId(rs.getString("id"));
 //        orderItem.setCou(rs.getInt("cou"));
@@ -187,8 +187,8 @@ public class Mappers {
 //        orderItem.setOrderId(rs.getString("order_id"));
 //        orderItem.setDateAdd(rs.getDate("date_add"));
 //        return orderItem;
-        return null;
-    };
+//        return null;
+//    };
 
     public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs, num) -> {
         PurchaseOrder order = new PurchaseOrder();

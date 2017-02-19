@@ -2,7 +2,6 @@ package com.acme.repository;
 
 import com.acme.constant.Queue;
 import com.acme.model.dto.Product;
-import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.mapper.Mappers;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;

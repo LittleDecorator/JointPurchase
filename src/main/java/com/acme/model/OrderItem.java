@@ -1,27 +1,27 @@
 package com.acme.model;
 
-import com.acme.model.embedded.OrderItemId;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "order_item")
-public class OrderItem {
+public class OrderItem implements Serializable{
 
-    @EmbeddedId
-    private OrderItemId id = new OrderItemId();
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_order", insertable = false, updatable = false)
+    @JoinColumn(name = "order_id")
     private PurchaseOrder order;
 
     @ManyToOne
-    @JoinColumn(name = "fk_item", insertable = false, updatable = false)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     private Integer count;
@@ -29,25 +29,11 @@ public class OrderItem {
     @Column(name = "date_add")
     private Date dateAdd;
 
-    public OrderItem(PurchaseOrder order, Item item, Integer count) {
-        // create primary key
-        this.id = new OrderItemId(order.getId(), item.getId());
-
-        // initialize attributes
-        this.order = order;
-        this.item = item;
-        this.count = count;
-
-        // update relationships to assure referential integrity
-        item.getOrderItems().add(this);
-        order.getOrderItems().add(this);
-    }
-
-    public OrderItemId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(OrderItemId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -79,19 +65,7 @@ public class OrderItem {
         return dateAdd;
     }
 
-
     public void setDateAdd(Date dateAdd) {
         this.dateAdd = dateAdd;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-               "id='" + id + '\'' +
-               ", order=" + order +
-               ", item=" + item +
-               ", count=" + count +
-               ", dateAdd=" + dateAdd +
-               '}';
     }
 }

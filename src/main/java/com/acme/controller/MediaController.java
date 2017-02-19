@@ -59,7 +59,8 @@ public class MediaController {
 		long start = System.currentTimeMillis();
 		BufferedImage image;
 		System.out.println("Request: " + size.name());
-		Content content = contentRepository.getById(contentId);
+//		Content content = contentRepository.getById(contentId);
+		Content content = null;
 		System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
 		String type = asWebp ? "webp" : content.getType();
 		switch (size) {

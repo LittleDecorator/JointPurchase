@@ -2,12 +2,10 @@ package com.acme.service.impl;
 
 import com.acme.model.Content;
 import com.acme.model.Item;
-import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.repository.ItemRepository;
-import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.service.OrderService;
 import com.google.common.collect.Maps;
@@ -28,8 +26,8 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	PurchaseOrderRepository orderRepository;
 
-	@Autowired
-	OrderItemRepository orderItemRepository;
+//	@Autowired
+//	OrderItemRepository orderItemRepository;
 
 	@Autowired
 	ItemRepository itemRepository;

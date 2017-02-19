@@ -314,7 +314,8 @@ public class EmailTest {
 
     @Test
     public void sendOrderConformationWithImageHtml() throws MessagingException, UnsupportedEncodingException {
-        Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
+//        Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
+        Content content = null;
         Multipart multipart = new MimeMultipart("related");
 
         MimeMessage message = mailSender.createMimeMessage();

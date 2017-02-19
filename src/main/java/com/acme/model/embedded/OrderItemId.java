@@ -1,7 +1,12 @@
 package com.acme.model.embedded;
 
+import com.acme.model.Item;
+import com.acme.model.PurchaseOrder;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**
@@ -13,18 +18,18 @@ import java.io.Serializable;
 @Embeddable
 public class OrderItemId implements Serializable {
 
-	@Column(name = "fk_order")
+	@Column(name = "order_id")
 	private String orderId;
 
-	@Column(name = "fk_item")
+	@Column(name = "item_id")
 	private String itemId;
 
 	public OrderItemId() {
 	}
 
-	public OrderItemId(String orderId, String itemId) {
-		this.orderId = orderId;
+	public OrderItemId(String itemId, String orderId) {
 		this.itemId = itemId;
+		this.orderId = orderId;
 	}
 
 	@Override
@@ -32,9 +37,9 @@ public class OrderItemId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				 + ((orderId == null) ? 0 : orderId.hashCode());
+				+ ((itemId == null) ? 0 : itemId.hashCode());
 		result = prime * result
-				 + ((itemId == null) ? 0 : itemId.hashCode());
+				+ ((itemId == null) ? 0 : itemId.hashCode());
 		return result;
 	}
 
@@ -49,16 +54,16 @@ public class OrderItemId implements Serializable {
 
 		OrderItemId other = (OrderItemId) obj;
 
-		if (orderId == null) {
-			if (other.orderId != null)
-				return false;
-		} else if (!orderId.equals(other.orderId))
-			return false;
-
 		if (itemId == null) {
 			if (other.itemId != null)
 				return false;
 		} else if (!itemId.equals(other.itemId))
+			return false;
+
+		if (orderId == null) {
+			if (other.orderId != null)
+				return false;
+		} else if (!orderId.equals(other.orderId))
 			return false;
 
 		return true;

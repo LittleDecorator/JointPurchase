@@ -5,17 +5,7 @@ import com.acme.enums.OrderStatus;
 import com.acme.enums.converters.OrderStatusConverter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -67,7 +57,7 @@ public class PurchaseOrder {
 
     private Integer payment;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 
 
@@ -219,26 +209,5 @@ public class PurchaseOrder {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    @Override
-    public String toString() {
-        return "PurchaseOrder{" +
-                "id='" + id + '\'' +
-                ", subjectId='" + subjectId + '\'' +
-                ", uid=" + uid +
-                ", recipientFname='" + recipientFname + '\'' +
-                ", recipientLname='" + recipientLname + '\'' +
-                ", recipientMname='" + recipientMname + '\'' +
-                ", recipientEmail='" + recipientEmail + '\'' +
-                ", recipientPhone='" + recipientPhone + '\'' +
-                ", recipientAddress='" + recipientAddress + '\'' +
-                ", dateAdd=" + dateAdd +
-                ", closeOrderDate=" + closeOrderDate +
-                ", comment='" + comment + '\'' +
-                ", status='" + status + '\'' +
-                ", delivery='" + delivery + '\'' +
-                ", payment=" + payment +
-                '}';
     }
 }

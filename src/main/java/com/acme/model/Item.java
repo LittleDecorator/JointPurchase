@@ -2,6 +2,7 @@ package com.acme.model;
 
 import com.acme.enums.ItemStatus;
 import com.acme.enums.converters.ItemStatusConverter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,44 +17,48 @@ public class Item {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name = "id")
     private String id;
 
-    @NotNull
+    @Column(name = "name")
     private String name;
 
     @OneToOne
     private Company company;
 
-    @NotNull
+    @Column(name = "article")
     private String article;
 
-    @NotNull
+    @Column(name = "description")
     private String description;
 
-    @NotNull
+    @Column(name = "price")
     private Integer price;
 
     @Column(name = "date_add")
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
     @Column(name = "not_for_sale")
-    private boolean notForSale = true;
+    private boolean notForSale;
 
     @Column(name = "in_stock")
     private Integer inStock;
 
-    @OneToMany
-    private List<Category> categories;
-
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
-    private List<OrderItem> orderItems;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "category_item",
+            joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    )
+    private List<Category> categories;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    @OneToMany(mappedBy = "item")
     private List<ItemContent> itemContents;
 
+    @OneToMany(mappedBy = "item")
+    private List<OrderItem> orderItems;
 
     public String getId() {
         return id;
@@ -143,14 +148,6 @@ public class Item {
         this.categories = categories;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
-
     public List<ItemContent> getItemContents() {
         return itemContents;
     }
@@ -159,20 +156,11 @@ public class Item {
         this.itemContents = itemContents;
     }
 
-    @Override
-    public String toString() {
-        return "Item{" +
-               "id='" + id + '\'' +
-               ", name='" + name + '\'' +
-               ", company=" + company +
-               ", article='" + article + '\'' +
-               ", description='" + description + '\'' +
-               ", price=" + price +
-               ", dateAdd=" + dateAdd +
-               ", notForSale=" + notForSale +
-               ", inStock=" + inStock +
-               ", categories=" + categories +
-               ", status=" + status +
-               '}';
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }

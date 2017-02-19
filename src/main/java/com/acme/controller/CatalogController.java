@@ -1,57 +1,83 @@
 package com.acme.controller;
 
 import com.acme.constant.Constants;
+import com.acme.model.Content;
 import com.acme.model.Item;
-import com.acme.model.dto.ItemMediaTransfer;
-import com.acme.model.dto.Product;
+import com.acme.model.ItemContent;
 import com.acme.model.dto.SearchResultElement;
-import com.acme.model.filter.CatalogFilter;
-import com.acme.repository.CategoryRepository;
-import com.acme.repository.CustomRepository;
-import com.acme.repository.ItemRepository;
+import com.acme.model.filter.ItemFilter;
+import com.acme.model.specification.ItemSpecifications;
+import com.acme.repository.*;
 import com.acme.service.ItemService;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.pushtorefresh.javac_warning_annotation.Warning;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/catalog")
 public class CatalogController {
 
     @Autowired
-    CustomRepository customRepository;
-
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
     ItemRepository itemRepository;
 
-//    @Autowired
-//    ItemCategoryLinkRepository itemCategoryLinkRepository;
+    @Autowired
+    ContentRepository contentRepository;
 
     @Autowired
     ItemService itemService;
 
-
+    /**
+     * Получение списка товаров по фильтру, для отображения на странице каталога.
+     * Используемый фильтр в будующем должн быть расширен для учета цен и прочих характеристик
+     *
+     * @param filter
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(method = RequestMethod.POST)
-    public List<Product> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
-        //TODO: add filter reference to select
-//        List<Product> list = customRepository.getCatalog(filter);
-//        for(Product product : list){
-//            product.setImageUrl(Constants.PREVIEW_URL+product.getContentId());
-//        }
-
-//        return list;
-        return null;
+    public List<Item> getCategoriesPreviewItems(@RequestBody ItemFilter filter) throws Exception {
+        Content defContent = contentRepository.findOneByIsDefault(true);
+        /* зачистим ссылки */
+        defContent.setItemContents(null);
+        defContent.setUrl(Constants.PREVIEW_URL+defContent.getId());
+        /* выставляем offset, limit и order by */
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
+        Page<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter), pageable);
+        for (Item item : items){
+            List<ItemContent> contentList = item.getItemContents();
+            if(!contentList.isEmpty()){
+                for(ItemContent itemContent : item.getItemContents()){
+                    Content content = itemContent.getContent();
+                    content.setUrl(Constants.PREVIEW_URL+content.getId());
+                }
+            } else {
+                ItemContent itemContent = new ItemContent();
+                itemContent.setContent(defContent);
+                itemContent.setMain(true);
+                itemContent.setShow(true);
+                contentList.add(itemContent);
+            }
+        }
+        return Lists.newArrayList(items);
     }
 
+    /**
+     * Полнотекстный поиск.
+     * Сечас не работает, должен возвращать результат через
+     * Elasticsearch
+     *
+     * @param criteria
+     * @return
+     */
+    @Warning(value = "Not working temporary")
     @RequestMapping(method = RequestMethod.GET,value = "search")
     public Collection<SearchResultElement> searchItem(@RequestParam(value = "criteria") String criteria) {
 //        List<Product> items = customRepository.getBySearch(criteria);
@@ -76,10 +102,27 @@ public class CatalogController {
         return stash.values();
     }
 
+    /**
+     * Получение детальной информации по конкретному товару
+     * @param itemId
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
-    public ItemMediaTransfer getItemDetail(@PathVariable("id") String itemId) throws Exception {
+    public Item getItemDetail(@PathVariable("id") String itemId) throws Exception {
+        Content defContent = contentRepository.findOneByIsDefault(true);
+        /* зачистим ссылки */
+        defContent.setItemContents(null);
+        defContent.setUrl(Constants.PREVIEW_URL+defContent.getId());
         Item item = itemRepository.findOne(itemId);
-        return itemService.getItemMediaTransfers(item);
+        if(item.getItemContents().isEmpty()){
+            ItemContent itemContent = new ItemContent();
+            itemContent.setContent(defContent);
+            itemContent.setMain(true);
+            itemContent.setShow(true);
+            item.getItemContents().add(itemContent);
+        }
+        return item;
     }
 
 }

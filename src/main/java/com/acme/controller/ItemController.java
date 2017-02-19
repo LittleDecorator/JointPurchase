@@ -1,12 +1,10 @@
 package com.acme.controller;
 
-import com.acme.model.OrderItem;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.repository.ItemRepository;
-import com.acme.repository.OrderItemRepository;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.acme.model.Category;
@@ -34,8 +32,8 @@ public class ItemController{
     @Autowired
 	ItemRepository itemRepository;
 
-    @Autowired
-	OrderItemRepository orderItemRepository;
+//    @Autowired
+//	OrderItemRepository orderItemRepository;
 
     @Autowired
     CompanyRepository companyRepository;
@@ -113,8 +111,8 @@ public class ItemController{
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
 //                itemRepository.updateSelectiveById(item);
-                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
-                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
+//                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
+//                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
 //                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
 //                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
 //                categoryItemRepository.insertBulk(categoryItems);
@@ -155,7 +153,7 @@ public class ItemController{
     public Item getItemDetail(@PathVariable("id") String id) {
         Item item = itemRepository.findOne(id);
         System.out.println(item);
-        item.setCategories(categoryRepository.getByItemId(item.getId()));
+//        item.setCategories(categoryRepository.getByItemId(item.getId()));
         return item;
     }
 

@@ -1,7 +1,6 @@
 package com.acme.model.dto;
 
 import com.acme.model.Item;
-import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 
 import java.util.List;

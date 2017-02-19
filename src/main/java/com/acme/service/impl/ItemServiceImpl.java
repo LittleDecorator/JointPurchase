@@ -31,8 +31,8 @@ public class ItemServiceImpl implements ItemService{
     public List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items) {
         List<ItemUrlTransfer> result = Lists.newArrayList();
         if(items !=null && !items.isEmpty()){
-            Content defContent = contentRepository.getDefault();
-            String noImage = Constants.PREVIEW_URL+defContent.getId();
+//            Content defContent = contentRepository.getDefault();
+//            String noImage = Constants.PREVIEW_URL+defContent.getId();
 //            HashMap<String,String> itemContents = Maps.newHashMap(itemContentRepository.getMain().stream().collect(Collectors.toMap(ItemContent::getItemId,ItemContent::getContentId)));
 //            for(Item item : items){
 //                ItemUrlTransfer transfer = new ItemUrlTransfer();
@@ -56,12 +56,12 @@ public class ItemServiceImpl implements ItemService{
         ItemMediaTransfer transfer = null;
         if(item!=null){
             transfer = new ItemMediaTransfer();
-            Content defContent = contentRepository.getDefault();
+//            Content defContent = contentRepository.getDefault();
             List<ItemContent> itemContents = itemContentRepository.getShowedByItemId(item.getId());
             if(!itemContents.isEmpty()){
 //                transfer.getMedia().addAll(itemContents.stream().map(ItemContent::getContentId).collect(Collectors.toList()));
             } else {
-                transfer.getMedia().add(defContent.getId());
+//                transfer.getMedia().add(defContent.getId());
             }
             transfer.setId(item.getId());
             transfer.setName(item.getName());

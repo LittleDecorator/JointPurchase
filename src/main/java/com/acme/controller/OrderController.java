@@ -2,14 +2,14 @@ package com.acme.controller;
 
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
-import com.acme.model.OrderItem;
+//import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 import com.acme.model.OrderView;
 import com.acme.model.filter.OrderFilter;
-import com.acme.model.filter.OrderViewSpecifications;
+import com.acme.model.specification.OrderViewSpecifications;
 import com.acme.repository.ItemRepository;
 import com.acme.repository.OffsetBasePage;
-import com.acme.repository.OrderItemRepository;
+//import com.acme.repository.OrderItemRepository;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.repository.PurchaseOrderViewRepository;
 import com.acme.service.AuthService;
@@ -44,8 +44,8 @@ public class OrderController {
 	@Autowired
 	PurchaseOrderViewRepository purchaseOrderViewRepository;
 
-	@Autowired
-	OrderItemRepository orderItemRepository;
+//	@Autowired
+//	OrderItemRepository orderItemRepository;
 
 	@Autowired
 	ItemRepository itemRepository;
@@ -134,12 +134,12 @@ public class OrderController {
 			for (OrderItemsList itemsList : request.getItems()) {
 				// собираем товар для дальнейшей обработки
 				items.add(itemsList.getItem());
-				OrderItem orderItem = new OrderItem(order, itemsList.getItem(), itemsList.getCount());
-				orderItemRepository.save(orderItem);
+//				OrderItem orderItem = new OrderItem(order, itemsList.getItem(), itemsList.getCount());
+//				orderItemRepository.save(orderItem);
 			}
 
 			//удаляем записи, где заказ совпадает, а товар нет.
-			orderItemRepository.deleteByOrderAndItemsNotIn(order, items);
+//			orderItemRepository.deleteByOrderAndItemNotIn(order, items);
 
 			transactionManager.commit(status);
 			return order;
@@ -157,7 +157,7 @@ public class OrderController {
 	public void deleteOrder(@PathVariable("id") String id) {
 		PurchaseOrder order = purchaseOrderRepository.findOne(id);
 		//delete order bind items
-		orderItemRepository.deleteByOrder(order);
+//		orderItemRepository.deleteByOrder(order);
 		//delete order itself
 		purchaseOrderRepository.delete(id);
 	}
@@ -182,7 +182,7 @@ public class OrderController {
 		List<OrderItemsList> result = Lists.newArrayList();
 		// получим заказ
 		PurchaseOrder order = purchaseOrderRepository.findOne(id);
-		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
+//		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
 	}
 

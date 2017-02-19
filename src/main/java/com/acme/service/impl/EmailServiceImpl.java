@@ -196,7 +196,7 @@ public class EmailServiceImpl implements EmailService {
 
         /* get all info */
         Map<String, Object> info = orderService.getOrderInfo(order.getId());
-        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
+//        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
         Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
         Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
         List<Map<String, String>> list = Lists.newArrayList();

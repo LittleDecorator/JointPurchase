@@ -2,15 +2,8 @@ package com.acme.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,8 +32,11 @@ public class Content {
     @Transient
     private byte[] content;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "content", cascade= CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    @Transient
+    private String url;
+
+    @OneToMany(mappedBy = "content")
+    private List<ItemContent> itemContents;
 
     public String getId() {
         return id;
@@ -98,6 +94,30 @@ public class Content {
         this.content = content;
     }
 
+    public List<ItemContent> getItemContents() {
+        return itemContents;
+    }
+
+    public void setItemContents(List<ItemContent> itemContents) {
+        this.itemContents = itemContents;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public String toString() {
         return "Content{" +
@@ -107,6 +127,9 @@ public class Content {
                 ", type='" + type + '\'' +
                 ", isDefault=" + isDefault +
                 ", dateAdd=" + dateAdd +
+                ", content=" + Arrays.toString(content) +
+                ", url='" + url + '\'' +
+                ", itemContents=" + itemContents +
                 '}';
     }
 }

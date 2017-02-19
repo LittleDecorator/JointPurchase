@@ -57,7 +57,7 @@ public class ContentController{
                 content.setContent(imageService.toBytes(resizeService.forOrign(file.getBytes()), type));
                 content.setType(type);
                 content.setMime("image/" + type);
-                contentRepository.insert(content);
+//                contentRepository.insert(content);
 
                 itemContent = itemContentRepository.getByItemIdAndImageId(imageId, itemId);
                 itemContent.setCropId(content.getId());
@@ -91,7 +91,7 @@ public class ContentController{
                 content.setContent(file.getBytes());
                 content.setType(type);
                 content.setMime("image/" + type);
-                contentRepository.insert(content);
+//                contentRepository.insert(content);
 
                 itemContent = new ItemContent();
 //                itemContent.setItemId(itemId);
@@ -139,7 +139,7 @@ public class ContentController{
                               @RequestParam(value = "itemId", required = true) String itemId){
         itemContentRepository.deleteByContentIdAndItemId(contentId,itemId);
         //delete content
-        contentRepository.deleteByID(contentId);
+//        contentRepository.deleteByID(contentId);
     }
 
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)

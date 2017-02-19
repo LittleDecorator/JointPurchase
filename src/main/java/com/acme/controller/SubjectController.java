@@ -29,16 +29,32 @@ public class SubjectController{
     @Autowired
     AuthService authService;
 
+    /**
+     * Получение списка клиентов (без фильтра)
+     *
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     public List<Subject> getSubjects() {
         return (List<Subject>) subjectRepository.findAll();
     }
 
+    /**
+     * Получение конкретного клиента
+     *
+     * @param id
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public Subject getSubject(@PathVariable("id") String id) {
         return subjectRepository.findOne(id);
     }
 
+    /**
+     * Получение пользователя на заголовку запроса
+     *
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/private")
     public Subject getCurrentSubject() {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
@@ -46,21 +62,37 @@ public class SubjectController{
         return subjectRepository.findOne(authService.getClaims(servletRequest).getId());
     }
 
+    /**
+     * Добавление нового клиента
+     *
+     * @param subject
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST)
     public Subject createSubject(@RequestBody Subject subject) {
-        subjectRepository.save(subject);
-        return subject;
+        return subjectRepository.save(subject);
     }
 
+    /**
+     * Обновление существующего клиента
+     *
+     * @param subject
+     */
     @RequestMapping(method = RequestMethod.PUT)
     public void updateSubject(@RequestBody Subject subject) {
         subjectRepository.save(subject);
     }
 
+    /**
+     * Удаление клиента по ID
+     *
+     * @param id
+     * @return
+     */
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public boolean deleteSubject(@PathVariable("id") String id) {
         //delete from orders
-//        purchaseOrderRepository.delete(id);
+        purchaseOrderRepository.delete(id);
         //delete subject itself
         subjectRepository.delete(id);
         return true;

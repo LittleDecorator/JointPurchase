@@ -2,12 +2,12 @@ package com.acme.model.filter;
 
 public class ItemFilter {
 
-    String name;
-    String companyId;
-    String article;
-    int limit;
-    int offset;
-    String categoryId;
+    private String name;
+    private String article;
+    private String company;
+    private String category;
+    private int limit;
+    private int offset;
 
     public String getName() {
         return name;
@@ -17,12 +17,12 @@ public class ItemFilter {
         this.name = name;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCompany() {
+        return company;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getArticle() {
@@ -49,19 +49,19 @@ public class ItemFilter {
         this.offset = offset;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
     public String toString() {
         return "ItemFilter{" +
                 "name='" + name + '\'' +
-                ", companyId='" + companyId + '\'' +
+                ", company='" + company + '\'' +
                 ", article='" + article + '\'' +
                 '}';
     }

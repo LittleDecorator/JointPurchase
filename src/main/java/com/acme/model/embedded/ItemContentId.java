@@ -13,10 +13,10 @@ import java.io.Serializable;
 @Embeddable
 public class ItemContentId implements Serializable {
 
-	@Column(name = "fk_item")
+	@Column(name = "item_id")
 	private String itemId;
 
-	@Column(name = "fk_content")
+	@Column(name = "content_id")
 	private String contentId;
 
 	public ItemContentId() {
