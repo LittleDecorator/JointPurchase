@@ -1,4 +1,4 @@
-package com.acme.model.specification;
+package com.acme.repository.specification;
 
 import com.acme.enums.OrderStatus;
 import com.acme.model.OrderView;

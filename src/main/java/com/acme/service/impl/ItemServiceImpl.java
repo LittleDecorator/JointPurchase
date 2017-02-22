@@ -57,12 +57,12 @@ public class ItemServiceImpl implements ItemService{
         if(item!=null){
             transfer = new ItemMediaTransfer();
 //            Content defContent = contentRepository.getDefault();
-            List<ItemContent> itemContents = itemContentRepository.getShowedByItemId(item.getId());
-            if(!itemContents.isEmpty()){
+//            List<ItemContent> itemContents = itemContentRepository.getShowedByItemId(item.getId());
+//            if(!itemContents.isEmpty()){
 //                transfer.getMedia().addAll(itemContents.stream().map(ItemContent::getContentId).collect(Collectors.toList()));
-            } else {
+//            } else {
 //                transfer.getMedia().add(defContent.getId());
-            }
+//            }
             transfer.setId(item.getId());
             transfer.setName(item.getName());
             transfer.setPrice(item.getPrice());

@@ -2,16 +2,12 @@ package com.acme.controller;
 
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
-//import com.acme.model.OrderItem;
+import com.acme.model.OrderItem;
 import com.acme.model.PurchaseOrder;
 import com.acme.model.OrderView;
 import com.acme.model.filter.OrderFilter;
-import com.acme.model.specification.OrderViewSpecifications;
-import com.acme.repository.ItemRepository;
-import com.acme.repository.OffsetBasePage;
-//import com.acme.repository.OrderItemRepository;
-import com.acme.repository.PurchaseOrderRepository;
-import com.acme.repository.PurchaseOrderViewRepository;
+import com.acme.repository.specification.OrderViewSpecifications;
+import com.acme.repository.*;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
 import com.google.common.collect.Lists;
@@ -44,9 +40,6 @@ public class OrderController {
 	@Autowired
 	PurchaseOrderViewRepository purchaseOrderViewRepository;
 
-//	@Autowired
-//	OrderItemRepository orderItemRepository;
-
 	@Autowired
 	ItemRepository itemRepository;
 
@@ -57,6 +50,9 @@ public class OrderController {
 	EmailService emailService;
 
 	@Autowired
+	OrderItemRepository  orderItemRepository;
+
+	@Autowired
 	private PlatformTransactionManager transactionManager;
 
 
@@ -65,27 +61,24 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Page<OrderView> getOrders(OrderFilter filter) {
+	public List<OrderView> getOrders(OrderFilter filter) {
 		/* выставляем offset, limit и order by */
 		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
-		return purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+		return Lists.newArrayList(purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
 	}
 
 	/**
-	 * Получение истории заказов авторизованного клиента
+	 * Получение заказа по ID
+	 * @param id - order ID
 	 * @return
 	 */
-	@RequestMapping(value = "/history", method = RequestMethod.GET)
-	public Page<OrderView> getOrderHistory(OrderFilter filter) {
-		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
-		filter.setSubjectId(authService.getClaims(servletRequest).getId());
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
-		return purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public PurchaseOrder getOrder(@PathVariable("id") String id) {
+		return purchaseOrderRepository.findOne(id);
 	}
 
 	/**
-	 * Получение заказа по ID клиента
+	 * Получение заказов по ID клиента
 	 * @param id - customer ID
 	 * @return
 	 */
@@ -95,7 +88,9 @@ public class OrderController {
 	}
 
 	/**
-	 * Создание заказа авторизованного клиента
+	 * Создание заказа авторизованного клиента.
+	 * Клиенту также будет отправлено уведомление (sms|email) о создание заказа
+	 *
 	 * @param request
 	 * @return
 	 * @throws ParseException
@@ -114,6 +109,19 @@ public class OrderController {
 	}
 
 	/**
+	 * Получение истории заказов авторизованного клиента
+	 * @return
+	 */
+	@RequestMapping(value = "/history", method = RequestMethod.GET)
+	public Page<OrderView> getOrderHistory(OrderFilter filter) {
+		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+		filter.setSubjectId(authService.getClaims(servletRequest).getId());
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
+		return purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+	}
+
+	/**
 	 * Создание заказа
 	 * @param request
 	 * @return
@@ -125,21 +133,22 @@ public class OrderController {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
 
-			List<Item> items = Lists.newArrayList();
-
 			/* сохраним заказ из запроса. */
 			PurchaseOrder order = purchaseOrderRepository.save(request.getOrder());
 
 			/* добавим записи в таблицу связи заказ-товар */
 			for (OrderItemsList itemsList : request.getItems()) {
 				// собираем товар для дальнейшей обработки
-				items.add(itemsList.getItem());
-//				OrderItem orderItem = new OrderItem(order, itemsList.getItem(), itemsList.getCount());
-//				orderItemRepository.save(orderItem);
+				OrderItem orderItem = new OrderItem();
+				orderItem.setItem(itemsList.getItem());
+				orderItem.setOrder(order);
+				orderItem.setCount(orderItem.getCount());
+				orderItemRepository.save(orderItem);
 			}
 
 			//удаляем записи, где заказ совпадает, а товар нет.
-//			orderItemRepository.deleteByOrderAndItemNotIn(order, items);
+			List<Item> items = request.getItems().stream().map(OrderItemsList::getItem).collect(Collectors.toList());
+			orderItemRepository.deleteByOrderAndItemNotIn(order, items);
 
 			transactionManager.commit(status);
 			return order;
@@ -157,20 +166,12 @@ public class OrderController {
 	public void deleteOrder(@PathVariable("id") String id) {
 		PurchaseOrder order = purchaseOrderRepository.findOne(id);
 		//delete order bind items
-//		orderItemRepository.deleteByOrder(order);
+		orderItemRepository.deleteByOrder(order);
 		//delete order itself
 		purchaseOrderRepository.delete(id);
 	}
 
-	/**
-	 * Получение заказа по ID
-	 * @param id - order ID
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public PurchaseOrder getOrder(@PathVariable("id") String id) {
-		return purchaseOrderRepository.findOne(id);
-	}
+
 
 	/**
 	 * Получение товара из заказа
@@ -182,7 +183,7 @@ public class OrderController {
 		List<OrderItemsList> result = Lists.newArrayList();
 		// получим заказ
 		PurchaseOrder order = purchaseOrderRepository.findOne(id);
-//		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
+		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
 	}
 

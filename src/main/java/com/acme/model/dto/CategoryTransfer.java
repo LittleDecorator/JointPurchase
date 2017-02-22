@@ -4,10 +4,10 @@ import java.util.List;
 
 public class CategoryTransfer {
 
-    String name;
-    String id;
-    String parentId;
-    List<String> items;
+    private String name;
+    private String id;
+    private String parentId;
+    private List<String> items;
 
     public String getName() {
         return name;

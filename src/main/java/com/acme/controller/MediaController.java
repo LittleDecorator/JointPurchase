@@ -37,10 +37,7 @@ public class MediaController {
 	public void getImageForGallery(@PathVariable(value = "contentId") String contentId,
 								   @RequestParam(name = "asWebp", required = false) Boolean asWebp,
 								   HttpServletResponse response) throws Exception {
-		if (asWebp == null) {
-			asWebp = false;
-		}
-		writeResponse(ImageSize.RAW, contentId, asWebp, response);
+		writeResponse(ImageSize.RAW, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/image/{size}/{contentId}")
@@ -48,19 +45,15 @@ public class MediaController {
 						 @PathVariable(value = "contentId") String contentId,
 						 @RequestParam(name = "asWebp", required = false) Boolean asWebp,
 						 HttpServletResponse response) throws Exception {
-		if (asWebp == null) {
-			asWebp = false;
-		}
 		ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
-		writeResponse(imageSize, contentId, asWebp, response);
+		writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
 	private void writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
 		long start = System.currentTimeMillis();
 		BufferedImage image;
 		System.out.println("Request: " + size.name());
-//		Content content = contentRepository.getById(contentId);
-		Content content = null;
+		Content content = contentRepository.findOne(contentId);
 		System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
 		String type = asWebp ? "webp" : content.getType();
 		switch (size) {

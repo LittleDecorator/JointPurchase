@@ -54,11 +54,18 @@ public class Item {
     )
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
     private List<ItemContent> itemContents;
 
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems;
+
+//    @PreRemove
+//    private void removeGroupsFromUsers() {
+//        for (Category category: categories) {
+//            category.rgetItem().remove(this);
+//        }
+//    }
 
     public String getId() {
         return id;

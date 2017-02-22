@@ -23,6 +23,9 @@ public class Category {
     @Column(name = "date_add")
     private Date dateAdd;
 
+    @ManyToMany(mappedBy = "categories")
+    private List<Item> items;
+
     public String getId() {
         return id;
     }
@@ -55,12 +58,11 @@ public class Category {
         this.dateAdd = dateAdd;
     }
 
-//    public List<Item> getItems() {
-//        return items;
-//    }
-//
-//    public void setItems(List<Item> items) {
-//        this.items = items;
-//    }
+    public List<Item> getItems() {
+        return items;
+    }
 
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
 }

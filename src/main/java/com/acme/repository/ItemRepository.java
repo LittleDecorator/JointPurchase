@@ -3,7 +3,8 @@ package com.acme.repository;
 import com.acme.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -22,5 +23,7 @@ public interface ItemRepository extends JpaRepository<Item, String>, JpaSpecific
     List<Item> findByCompanyId(String companyId);
 
     List<Item> findByIdIn(List<String> ids);
+
+    List<Item> findByOrderId(@Param("ID") String ID);
 
 }

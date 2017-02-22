@@ -6,7 +6,7 @@ import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.dto.SearchResultElement;
 import com.acme.model.filter.ItemFilter;
-import com.acme.model.specification.ItemSpecifications;
+import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
 import com.acme.service.ItemService;
 import com.google.common.collect.Lists;

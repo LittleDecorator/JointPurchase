@@ -4,6 +4,7 @@ import com.acme.model.Subject;
 import com.acme.repository.PurchaseOrderRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
@@ -99,16 +100,44 @@ public class SubjectController{
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<Map<String,String>> getSubjectMap() {
-        List<Map<String,String>> list = new ArrayList<>();
-        Map<String,String> map;
-        for(Subject p : subjectRepository.findAll()){
-            map = new HashMap<>();
-            map.put("id",p.getId());
-            map.put("name",p.getFirstName()+ " "+ p.getLastName() + " "+ p.getMiddleName());
-            list.add(map);
+    public List<SubjectMap> getSubjectMap() {
+        List<SubjectMap> list = Lists.newArrayList();
+        for(Subject subject : subjectRepository.findAll()){
+            list.add(new SubjectMap(subject.getId(), subject.getFirstName()+ " "+ subject.getLastName() + " "+ subject.getMiddleName()));
         }
         return list;
     }
 
+
+    /*---------- NESTED ----------*/
+
+    /**
+     * Класс предоставляющий данные для списка слиентов
+     */
+    private class SubjectMap {
+
+        String id;
+        String name;
+
+        SubjectMap(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 }

@@ -6,7 +6,7 @@ import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
 import com.acme.model.Subject;
-import com.acme.repository.CredentialRepository;
+import com.acme.repository._CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService{
     SubjectRepository subjectRepository;
 
     @Autowired
-    CredentialRepository credentialRepository;
+    _CredentialRepository credentialRepository;
 
     @Autowired
     TokenService tokenService;
