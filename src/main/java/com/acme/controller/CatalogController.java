@@ -1,6 +1,8 @@
 package com.acme.controller;
 
 import com.acme.constant.Constants;
+import com.acme.elasticsearch.repository.CatalogRepository;
+import com.acme.model.CategoryItem;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
@@ -12,14 +14,19 @@ import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.pushtorefresh.javac_warning_annotation.Warning;
+import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping(value = "/catalog")
@@ -29,10 +36,25 @@ public class CatalogController {
     ItemRepository itemRepository;
 
     @Autowired
+    CatalogRepository catalogRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     ContentRepository contentRepository;
 
     @Autowired
+    ItemContentRepository itemContentRepository;
+
+    @Autowired
+    CategoryItemRepository categoryItemRepository;
+
+    @Autowired
     ItemService itemService;
+
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     /**
      * Получение списка товаров по фильтру, для отображения на странице каталога.
@@ -45,41 +67,60 @@ public class CatalogController {
     @RequestMapping(method = RequestMethod.POST)
     public List<Item> getCategoriesPreviewItems(@RequestBody ItemFilter filter) throws Exception {
         Content defContent = contentRepository.findOneByIsDefault(true);
-        /* зачистим ссылки */
-        defContent.setItemContents(null);
-        defContent.setUrl(Constants.PREVIEW_URL+defContent.getId());
         /* выставляем offset, limit и order by */
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
         Page<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter), pageable);
         for (Item item : items){
-            List<ItemContent> contentList = item.getItemContents();
-            if(!contentList.isEmpty()){
-                for(ItemContent itemContent : item.getItemContents()){
-                    Content content = itemContent.getContent();
-                    content.setUrl(Constants.PREVIEW_URL+content.getId());
-                }
+            List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
+            if(itemContents.isEmpty()){
+                item.setUrl(Constants.PREVIEW_URL+defContent.getId());
             } else {
-                ItemContent itemContent = new ItemContent();
-                itemContent.setContent(defContent);
-                itemContent.setMain(true);
-                itemContent.setShow(true);
-                contentList.add(itemContent);
+                item.setItemContents(itemContents);
+                item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
             }
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         }
         return Lists.newArrayList(items);
     }
 
     /**
+     * индексация документов
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "index")
+    public void indexItem() {
+        List<IndexQuery> indexQueries = Lists.newArrayList();
+        /* найдем все документы из "Товар" для включения в индекс */
+        for(Item item : itemRepository.findAll()){
+            IndexQuery indexQuery = new IndexQueryBuilder().withId(item.getId()).withObject(item).build();
+            indexQueries.add(indexQuery);
+        }
+        /* Добавление документов в индекс */
+        elasticsearchTemplate.bulkIndex(indexQueries);
+    }
+
+    /**
      * Полнотекстный поиск.
-     * Сечас не работает, должен возвращать результат через
+     *
+     * Сейчас осуществляет поиск только по полю NAME.
+     * Необходимо довавить not_analyze поиск по категориям.
      * Elasticsearch
      *
      * @param criteria
      * @return
      */
     @Warning(value = "Not working temporary")
-    @RequestMapping(method = RequestMethod.GET,value = "search")
-    public Collection<SearchResultElement> searchItem(@RequestParam(value = "criteria") String criteria) {
+    @RequestMapping(method = RequestMethod.GET, value = "search")
+//    public Collection<SearchResultElement> searchItem(@RequestParam(value = "criteria") String criteria) {
+    public List<Item> searchItem(@RequestParam(value = "criteria") String criteria) {
+
+        /* Указываем в каких полях с каким приоритетом */
+        SimpleQueryStringBuilder builder = new SimpleQueryStringBuilder(criteria);
+        builder.field("name",4).field("title",3).field("tags",2).field("content");
+
+        /* ищем документы */
+        List<Item> itemsList = Lists.newArrayList(catalogRepository.search(builder));
+
+
 //        List<Product> items = customRepository.getBySearch(criteria);
 //        Map<String,Product> productMap = items.stream().collect(Collectors.toMap(Product::getId, Function.<Product>identity()));
 //        List<CategoryItem> categoryItems = itemCategoryLinkRepository.getByItemIdList(items.stream().map(Product::getId).collect(Collectors.toList()));
@@ -99,7 +140,8 @@ public class CatalogController {
 //                stash.put(entry.getCategoryId(),resultElement);
 //            }
 //        }
-        return stash.values();
+//        return stash.values();
+        return itemsList;
     }
 
     /**
@@ -111,17 +153,15 @@ public class CatalogController {
     @RequestMapping(method = RequestMethod.GET,value = "{id}/detail")
     public Item getItemDetail(@PathVariable("id") String itemId) throws Exception {
         Content defContent = contentRepository.findOneByIsDefault(true);
-        /* зачистим ссылки */
-        defContent.setItemContents(null);
-        defContent.setUrl(Constants.PREVIEW_URL+defContent.getId());
         Item item = itemRepository.findOne(itemId);
-        if(item.getItemContents().isEmpty()){
-            ItemContent itemContent = new ItemContent();
-            itemContent.setContent(defContent);
-            itemContent.setMain(true);
-            itemContent.setShow(true);
-            item.getItemContents().add(itemContent);
+        List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
+        if(itemContents.isEmpty()){
+            item.setUrl(Constants.PREVIEW_URL+defContent.getId());
+        } else {
+            item.setItemContents(itemContents);
+            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
         }
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         return item;
     }
 

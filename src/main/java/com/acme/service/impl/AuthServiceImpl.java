@@ -6,7 +6,7 @@ import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
 import com.acme.model.Subject;
-import com.acme.repository._CredentialRepository;
+import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService{
     SubjectRepository subjectRepository;
 
     @Autowired
-    _CredentialRepository credentialRepository;
+    CredentialRepository credentialRepository;
 
     @Autowired
     TokenService tokenService;
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService{
         if (!(subject != null && subject.isEnabled())) {
             return null;
         }
-        Credential credential = credentialRepository.getById(subject.getId());
+        Credential credential = credentialRepository.findOne(subject.getId());
         if(credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())){
                 return credential;
         } else {
@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService{
         credential.setSubjectId(subject.getId());
         credential.setRoleId("user");
         credential.setPassword(PasswordHashing.hashPassword(data.getPassword()));
-        credentialRepository.insert(credential);
+        credentialRepository.save(credential);
 
         //create temp token
         String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
@@ -177,7 +177,7 @@ public class AuthServiceImpl implements AuthService{
                 smsService.passChangeConfirm();
             } else {
                 /* будем использовать почту */
-                String tmpToken = tokenService.createExpToken(credentialRepository.getById(subject.getId()), (long) (24 * 60 * 60 * 1000));
+                String tmpToken = tokenService.createExpToken(credentialRepository.findOne(subject.getId()), (long) (24 * 60 * 60 * 1000));
                 String tokenLink = "http://grimmstory.ru/public/auth/restore?jwt="+tmpToken;
                 emailService.sendPassChangeConfirm(subject.getEmail(), tokenLink);
             }

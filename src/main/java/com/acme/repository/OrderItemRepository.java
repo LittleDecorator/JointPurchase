@@ -1,8 +1,6 @@
 package com.acme.repository;
 
-import com.acme.model.Item;
 import com.acme.model.OrderItem;
-import com.acme.model.PurchaseOrder;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -14,8 +12,12 @@ import java.util.List;
  */
 public interface OrderItemRepository extends CrudRepository<OrderItem, String> {
 
-	void deleteByOrderAndItemNotIn(PurchaseOrder order, List<Item> itemList);
+	void deleteByOrderIdAndItemIdNotIn(String orderId, List<String> itemIdList);
 
-	void deleteByOrder(PurchaseOrder order);
+	void deleteByOrderId(String orderId);
+
+	void deleteByItemId(String itemId);
+
+	List<OrderItem> findAllByOrderId(String orderId);
 
 }

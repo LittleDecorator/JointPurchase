@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "order_view")
 public class OrderView {
+
     @Id
     private String id;
 
@@ -101,17 +102,4 @@ public class OrderView {
         this.payment = payment;
     }
 
-    @Override
-    public String toString() {
-        return "OrderView{" +
-                "id='" + id + '\'' +
-                ", uid=" + uid +
-                ", recipientId='" + recipientId + '\'' +
-                ", recipientName='" + recipientName + '\'' +
-                ", createDate=" + createDate +
-                ", delivery='" + delivery + '\'' +
-                ", status=" + status +
-                ", payment=" + payment +
-                '}';
-    }
 }

@@ -23,7 +23,7 @@ public class Category {
     @Column(name = "date_add")
     private Date dateAdd;
 
-    @ManyToMany(mappedBy = "categories")
+    @Transient
     private List<Item> items;
 
     public String getId() {

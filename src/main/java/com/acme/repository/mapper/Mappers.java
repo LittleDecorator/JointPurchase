@@ -7,7 +7,6 @@ import com.acme.model.Company;
 import com.acme.model.Credential;
 import com.acme.model.ItemContent;
 
-import com.acme.model.PurchaseOrder;
 import com.acme.model.Subject;
 //import com.acme.model.dto.ItemView;
 import com.acme.model.dto.Product;
@@ -111,22 +110,22 @@ public class Mappers {
         return company;
     };
 
-    public final static RowMapper<Content> contentMapper = (rs, num) -> {
-        Content content = new Content();
-        try {
-            content.setId(rs.getString("id"));
-            content.setContent(Base64BytesSerializer.deserialize(rs.getString("content")));
-            content.setFileName(rs.getString("file_name"));
-            content.setMime(rs.getString("mime"));
-            content.setType(rs.getString("type"));
-            content.setIsDefault(rs.getBoolean("is_default"));
-            content.setDateAdd(rs.getDate("date_add"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(content);
-        return content;
-    };
+//    public final static RowMapper<Content> contentMapper = (rs, num) -> {
+//        Content content = new Content();
+//        try {
+//            content.setId(rs.getString("id"));
+//            content.setContent(Base64BytesSerializer.deserialize(rs.getString("content")));
+//            content.setFileName(rs.getString("file_name"));
+//            content.setMime(rs.getString("mime"));
+//            content.setType(rs.getString("type"));
+//            content.setIsDefault(rs.getBoolean("is_default"));
+//            content.setDateAdd(rs.getDate("date_add"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(content);
+//        return content;
+//    };
 
     public final static RowMapper<Credential> credentialMapper = (rs, num) -> {
         Credential credential = new Credential();
@@ -190,25 +189,25 @@ public class Mappers {
 //        return null;
 //    };
 
-    public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs, num) -> {
-        PurchaseOrder order = new PurchaseOrder();
-        order.setId(rs.getString("id"));
-        order.setSubjectId(rs.getString("subject_id"));
-        order.setUid(rs.getLong("uid"));
-        order.setRecipientFname(rs.getString("recipient_fname"));
-        order.setRecipientMname(rs.getString("recipient_mname"));
-        order.setRecipientLname(rs.getString("recipient_lname"));
-        order.setRecipientPhone(rs.getString("recipient_phone"));
-        order.setRecipientEmail(rs.getString("recipient_email"));
-        order.setRecipientAddress(rs.getString("recipient_address"));
-        order.setCloseOrderDate(rs.getDate("close_order_date"));
-        order.setComment(rs.getString("comment"));
-        order.setStatus(OrderStatus.getByName(rs.getString("status")));
-        order.setDelivery(rs.getString("delivery_id"));
-        order.setPayment(rs.getInt("payment"));
-        order.setDateAdd(rs.getTimestamp("date_add"));
-        return order;
-    };
+//    public final static RowMapper<PurchaseOrder> purchaseOrderMapper = (rs, num) -> {
+//        PurchaseOrder order = new PurchaseOrder();
+//        order.setId(rs.getString("id"));
+//        order.setSubjectId(rs.getString("subject_id"));
+//        order.setUid(rs.getLong("uid"));
+//        order.setRecipientFname(rs.getString("recipient_fname"));
+//        order.setRecipientMname(rs.getString("recipient_mname"));
+//        order.setRecipientLname(rs.getString("recipient_lname"));
+//        order.setRecipientPhone(rs.getString("recipient_phone"));
+//        order.setRecipientEmail(rs.getString("recipient_email"));
+//        order.setRecipientAddress(rs.getString("recipient_address"));
+//        order.setCloseOrderDate(rs.getDate("close_order_date"));
+//        order.setComment(rs.getString("comment"));
+//        order.setStatus(OrderStatus.getByName(rs.getString("status")));
+//        order.setDelivery(rs.getString("delivery_id"));
+//        order.setPayment(rs.getInt("payment"));
+//        order.setDateAdd(rs.getTimestamp("date_add"));
+//        return order;
+//    };
 
 //    public final static RowMapper<OrderView> orderViewMapper = (rs,num) -> {
 //        OrderView order = new OrderView();

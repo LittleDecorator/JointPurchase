@@ -2,8 +2,8 @@ package com.acme.controller;
 
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
+import com.acme.model.Order;
 import com.acme.model.OrderItem;
-import com.acme.model.PurchaseOrder;
 import com.acme.model.OrderView;
 import com.acme.model.filter.OrderFilter;
 import com.acme.repository.specification.OrderViewSpecifications;
@@ -28,6 +28,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,10 +37,10 @@ import java.util.stream.Collectors;
 public class OrderController {
 
 	@Autowired
-	PurchaseOrderRepository purchaseOrderRepository;
+	OrderRepository orderRepository;
 
 	@Autowired
-	PurchaseOrderViewRepository purchaseOrderViewRepository;
+	OrderViewRepository orderViewRepository;
 
 	@Autowired
 	ItemRepository itemRepository;
@@ -64,7 +66,7 @@ public class OrderController {
 	public List<OrderView> getOrders(OrderFilter filter) {
 		/* выставляем offset, limit и order by */
 		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
-		return Lists.newArrayList(purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
+		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
 	}
 
 	/**
@@ -73,8 +75,8 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
-	public PurchaseOrder getOrder(@PathVariable("id") String id) {
-		return purchaseOrderRepository.findOne(id);
+	public Order getOrder(@PathVariable("id") String id) {
+		return orderRepository.findOne(id);
 	}
 
 	/**
@@ -84,7 +86,7 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/customer/{id}")
 	public List<OrderView> getCustomerOrders(@PathVariable("id") String id) {
-		return purchaseOrderViewRepository.findAll(OrderViewSpecifications.customer(id));
+		return orderViewRepository.findAll(OrderViewSpecifications.customer(id));
 	}
 
 	/**
@@ -99,13 +101,13 @@ public class OrderController {
 	 * @throws TemplateException
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/personal")
-	public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
+	public Order privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
-		PurchaseOrder purchaseOrder = persistOrder(request);
-		emailService.sendOrderStatus(purchaseOrder);
-		return purchaseOrder;
+		Order order = persistOrder(request);
+		emailService.sendOrderStatus(order);
+		return order;
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class OrderController {
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		filter.setSubjectId(authService.getClaims(servletRequest).getId());
 		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
-		return purchaseOrderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+		return orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
 	}
 
 	/**
@@ -129,26 +131,26 @@ public class OrderController {
 	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public PurchaseOrder persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
+	public Order persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
 
 			/* сохраним заказ из запроса. */
-			PurchaseOrder order = purchaseOrderRepository.save(request.getOrder());
+			Order order = orderRepository.save(request.getOrder());
 
 			/* добавим записи в таблицу связи заказ-товар */
 			for (OrderItemsList itemsList : request.getItems()) {
 				// собираем товар для дальнейшей обработки
 				OrderItem orderItem = new OrderItem();
-				orderItem.setItem(itemsList.getItem());
-				orderItem.setOrder(order);
+				orderItem.setItemId(itemsList.getItem().getId());
+				orderItem.setOrderId(order.getId());
 				orderItem.setCount(orderItem.getCount());
 				orderItemRepository.save(orderItem);
 			}
 
 			//удаляем записи, где заказ совпадает, а товар нет.
-			List<Item> items = request.getItems().stream().map(OrderItemsList::getItem).collect(Collectors.toList());
-			orderItemRepository.deleteByOrderAndItemNotIn(order, items);
+			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
+			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
 
 			transactionManager.commit(status);
 			return order;
@@ -164,11 +166,10 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public void deleteOrder(@PathVariable("id") String id) {
-		PurchaseOrder order = purchaseOrderRepository.findOne(id);
 		//delete order bind items
-		orderItemRepository.deleteByOrder(order);
+		orderItemRepository.deleteByOrderId(id);
 		//delete order itself
-		purchaseOrderRepository.delete(id);
+		orderRepository.delete(id);
 	}
 
 
@@ -182,8 +183,10 @@ public class OrderController {
 	public List<OrderItemsList> getOrderItems(@PathVariable("id") String id) {
 		List<OrderItemsList> result = Lists.newArrayList();
 		// получим заказ
-		PurchaseOrder order = purchaseOrderRepository.findOne(id);
-		result.addAll(order.getOrderItems().stream().map(orderItem -> new OrderItemsList(orderItem.getItem(), orderItem.getCount())).collect(Collectors.toList()));
+		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(id);
+		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+        Map<String, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getItemId()), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
 	}
 
@@ -194,14 +197,14 @@ public class OrderController {
 	 */
 	private class OrderRequest {
 
-		private PurchaseOrder order;
+		private Order order;
 		private List<OrderItemsList> items;
 
-		public PurchaseOrder getOrder() {
+		public Order getOrder() {
 			return order;
 		}
 
-		public void setOrder(PurchaseOrder order) {
+		public void setOrder(Order order) {
 			this.order = order;
 		}
 

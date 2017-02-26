@@ -32,8 +32,7 @@ public final class Base64BytesSerializer {
         if (object == null) {
             return null;
         }
-        try (InputStream is = new ByteArrayInputStream(
-                DatatypeConverter.parseBase64Binary(object));
+        try (InputStream is = new ByteArrayInputStream(DatatypeConverter.parseBase64Binary(object));
              ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             decompress(is, bos);
             return bos.toByteArray();

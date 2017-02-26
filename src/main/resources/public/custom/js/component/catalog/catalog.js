@@ -113,21 +113,24 @@
 
             $scope.mainImage = null;
             $scope.item = angular.extend({},product);
+            console.log(product);
 
             $scope.THUMB_URL = "media/image/thumb/";
             $scope.PREVIEW_URL = "media/image/preview/";
             $scope.VIEW_URL = "media/image/view/";
             $scope.ORIG_URL = "media/image/";
 
-            if($scope.item.media.length>0){
-                $scope.mainImage = $scope.item.media[0];
+            if($scope.item.itemContents == null){
+                $scope.mainImage = $scope.item.url;
+            } else {
+                $scope.mainImage = $scope.ORIG_URL + $scope.item.itemContents[0].contentId;
             }
 
             $scope.show = function(id){
                 var keepGoing = true;
                 var res = null;
 
-                $scope.item.media.forEach(function(elem,index){
+                $scope.item.itemContents.forEach(function(elem,index){
                     if (keepGoing) {
                         if(elem === id) {
                             res = index;
@@ -135,7 +138,7 @@
                         }
                     }
                 });
-                $scope.mainImage = id;
+                $scope.mainImage = $scope.ORIG_URL + id;
             };
 
             $scope.showGallery = function () {

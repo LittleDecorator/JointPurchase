@@ -1,7 +1,7 @@
 package com.acme.controller;
 
 import com.acme.model.Subject;
-import com.acme.repository.PurchaseOrderRepository;
+import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
 import com.google.common.collect.Lists;
@@ -12,10 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -25,7 +22,7 @@ public class SubjectController{
     SubjectRepository subjectRepository;
 
     @Autowired
-    PurchaseOrderRepository purchaseOrderRepository;
+    OrderRepository purchaseOrderRepository;
 
     @Autowired
     AuthService authService;

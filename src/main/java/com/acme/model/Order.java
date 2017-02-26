@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_order")
-public class PurchaseOrder {
+public class Order {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -56,10 +56,6 @@ public class PurchaseOrder {
     private String delivery;
 
     private Integer payment;
-
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
-
 
     public String getId() {
         return id;
@@ -203,11 +199,4 @@ public class PurchaseOrder {
         this.payment = payment;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
 }

@@ -1,7 +1,6 @@
 package com.acme.model.embedded;
 
 import com.acme.model.Item;
-import com.acme.model.PurchaseOrder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

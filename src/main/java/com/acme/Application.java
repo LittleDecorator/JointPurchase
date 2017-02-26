@@ -24,6 +24,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ResourceUtils;
@@ -43,6 +45,7 @@ import java.util.Locale;
 @EnableScheduling
 @SpringBootApplication
 @EnableTransactionManagement(proxyTargetClass=true)
+@EnableJpaRepositories(basePackages = "com.acme.repository")
 @PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 

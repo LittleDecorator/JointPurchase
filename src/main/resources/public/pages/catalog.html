@@ -6,7 +6,7 @@
         <div class="col s12 m6 l4" ng-repeat="item in items">
             <md-card>
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
-                    <img ng-src="{{item.imageUrl}}" ng-click="itemView(item.id)" class="responsive-img"/>
+                    <img ng-src="{{item.url}}" ng-click="itemView(item.id)" class="responsive-img"/>
                     <a class="btn-price btn-floating btn-large pink accent-2">{{::item.price}}р</a>
                     <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
                 </div>

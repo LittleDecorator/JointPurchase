@@ -53,13 +53,4 @@ public class Credential {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Credential{" +
-                "subjectId='" + subjectId + '\'' +
-                ", password='" + password + '\'' +
-                ", roleId='" + roleId + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

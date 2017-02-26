@@ -1,36 +1,24 @@
 package com.acme.model;
 
-import com.acme.model.embedded.ItemContentId;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "item_content")
 public class ItemContent {
 
-//    @EmbeddedId
-//    private ItemContentId id = new ItemContentId();
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @Column(name = "item_id")
+    private String itemId;
 
-    @ManyToOne
-    @JoinColumn(name = "content_id")
-    private Content content;
+    @Column(name = "content_id")
+    private String contentId;
 
     @Column(name = "crop_id")
     private String cropId;
@@ -42,6 +30,9 @@ public class ItemContent {
     @Column(name = "date_add")
     private Date dateAdd;
 
+    @Transient
+    private String url;
+
     public String getId() {
         return id;
     }
@@ -50,39 +41,20 @@ public class ItemContent {
         this.id = id;
     }
 
-    public Item getItem() {
-        return item;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
-    public Content getContent() {
-        return content;
+    public String getContentId() {
+        return contentId;
     }
 
-    public void setContent(Content content) {
-        this.content = content;
-    }
-
-    public boolean isShow() {
-        return show;
-    }
-    public void setShow(boolean show) {
-        this.show = show;
-    }
-    public boolean isMain() {
-        return main;
-    }
-    public void setMain(boolean main) {
-        this.main = main;
-    }
-    public Date getDateAdd() {
-        return dateAdd;
-    }
-    public void setDateAdd(Date dateAdd) {
-        this.dateAdd = dateAdd;
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 
     public String getCropId() {
@@ -93,4 +65,35 @@ public class ItemContent {
         this.cropId = cropId;
     }
 
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
+    public boolean isMain() {
+        return main;
+    }
+
+    public void setMain(boolean main) {
+        this.main = main;
+    }
+
+    public Date getDateAdd() {
+        return dateAdd;
+    }
+
+    public void setDateAdd(Date dateAdd) {
+        this.dateAdd = dateAdd;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

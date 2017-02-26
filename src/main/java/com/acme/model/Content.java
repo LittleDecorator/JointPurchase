@@ -3,9 +3,7 @@ package com.acme.model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "content")
@@ -29,14 +27,7 @@ public class Content {
     @Column(name = "date_add")
     private Date dateAdd;
 
-    @Transient
-    private byte[] content;
-
-    @Transient
-    private String url;
-
-    @OneToMany(mappedBy = "content")
-    private List<ItemContent> itemContents;
+    private String content;
 
     public String getId() {
         return id;
@@ -86,20 +77,12 @@ public class Content {
         this.dateAdd = dateAdd;
     }
 
-    public byte[] getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(byte[] content) {
+    public void setContent(String content) {
         this.content = content;
-    }
-
-    public List<ItemContent> getItemContents() {
-        return itemContents;
-    }
-
-    public void setItemContents(List<ItemContent> itemContents) {
-        this.itemContents = itemContents;
     }
 
     public boolean isDefault() {
@@ -110,26 +93,5 @@ public class Content {
         isDefault = aDefault;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    @Override
-    public String toString() {
-        return "Content{" +
-                "id='" + id + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", mime='" + mime + '\'' +
-                ", type='" + type + '\'' +
-                ", isDefault=" + isDefault +
-                ", dateAdd=" + dateAdd +
-                ", content=" + Arrays.toString(content) +
-                ", url='" + url + '\'' +
-                ", itemContents=" + itemContents +
-                '}';
-    }
 }

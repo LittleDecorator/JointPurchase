@@ -16,13 +16,11 @@ public class OrderItem implements Serializable{
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private PurchaseOrder order;
+    @Column(name = "order_id")
+    private String orderId;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @Column(name = "item_id")
+    private String itemId;
 
     private Integer count;
 
@@ -37,20 +35,20 @@ public class OrderItem implements Serializable{
         this.id = id;
     }
 
-    public PurchaseOrder getOrder() {
-        return order;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(PurchaseOrder order) {
-        this.order = order;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public Item getItem() {
-        return item;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public Integer getCount() {

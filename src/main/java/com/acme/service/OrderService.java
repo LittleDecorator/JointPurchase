@@ -1,6 +1,7 @@
 package com.acme.service;
 
-import com.acme.model.PurchaseOrder;
+
+import com.acme.model.Order;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,6 @@ import java.util.Map;
 public interface OrderService {
 
 	Map<String, Object> getOrderInfo(String orderId);
-	List<PurchaseOrder> getOrders(String subjectId);
+	List<Order> getOrders(String subjectId);
 
 }

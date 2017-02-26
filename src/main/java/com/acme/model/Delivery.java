@@ -16,14 +16,14 @@ public class Delivery {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    String id;
+    private String id;
 
-    String name;
+    private String name;
 
-    String hint;
+    private String hint;
 
     @Column(name = "date_add")
-    Date dateAdd;
+    private Date dateAdd;
 
     public String getId() {
         return id;
@@ -57,13 +57,4 @@ public class Delivery {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Delivery{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", hint='" + hint + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

@@ -9,6 +9,7 @@ import com.acme.email.impl.EmailImpl;
 import com.acme.email.impl.InlinePictureImpl;
 import com.acme.exception.EmailConversionException;
 import com.acme.exception.TemplateException;
+import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
 import com.acme.service.EmailService;
 import com.acme.service.OrderService;
@@ -18,6 +19,7 @@ import com.acme.util.EmailBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,7 +193,7 @@ public class EmailServiceImpl implements EmailService {
         return emails;
     }
 
-    public void sendOrderStatus(PurchaseOrder order) throws IOException, MessagingException, TemplateException {
+    public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
 
         /* get all info */
@@ -334,10 +336,18 @@ public class EmailServiceImpl implements EmailService {
      */
     private List<InlinePicture> collectPics(List<Content> contents) throws IOException {
         List<InlinePicture> pictures = Lists.newArrayList();
-        pictures.addAll(contents.stream().map(content -> InlinePictureImpl.builder()
-                .content(content.getContent())
-                .imageType(ImageType.valueOf(content.getType().toUpperCase()))
-                .templateName(content.getId()).build()).collect(Collectors.toList()));
+        pictures.addAll(contents.stream().map(content -> {
+            InlinePicture inlinePicture = null;
+            try {
+                inlinePicture = InlinePictureImpl.builder()
+                        .content(Base64BytesSerializer.deserialize(content.getContent()))
+                        .imageType(ImageType.valueOf(content.getType().toUpperCase()))
+                        .templateName(content.getId()).build();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return inlinePicture;
+        }).collect(Collectors.toList()));
         return pictures;
     }
 

@@ -2,28 +2,32 @@ package com.acme.model;
 
 import com.acme.enums.ItemStatus;
 import com.acme.enums.converters.ItemStatusConverter;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "item")
+@Document(indexName = "item-index",type = "item-type")
+@Setting(settingPath = "/elastic/item/settings.json")
+@Mapping(mappingPath = "/elastic/item/mappings.json")
 public class Item {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @Column(name = "id")
     private String id;
 
     @Column(name = "name")
     private String name;
 
     @OneToOne
+    @JoinColumn(name="company_id")
     private Company company;
 
     @Column(name = "article")
@@ -47,25 +51,17 @@ public class Item {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "category_item",
-            joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
-    )
+    @Transient
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    @Transient
     private List<ItemContent> itemContents;
 
-    @OneToMany(mappedBy = "item")
+    @Transient
     private List<OrderItem> orderItems;
 
-//    @PreRemove
-//    private void removeGroupsFromUsers() {
-//        for (Category category: categories) {
-//            category.rgetItem().remove(this);
-//        }
-//    }
+    @Transient
+    private String url;
 
     public String getId() {
         return id;
@@ -169,5 +165,13 @@ public class Item {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

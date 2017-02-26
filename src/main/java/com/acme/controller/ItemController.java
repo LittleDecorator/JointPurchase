@@ -1,18 +1,17 @@
 package com.acme.controller;
 
+import com.acme.model.*;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
-import com.acme.model.Item;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -33,7 +32,7 @@ public class ItemController{
 	OrderItemRepository orderItemRepository;
 
     @Autowired
-    _CompanyRepository companyRepository;
+    CompanyRepository companyRepository;
 
     @Autowired
 	ContentRepository contentRepository;
@@ -43,6 +42,12 @@ public class ItemController{
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    CategoryItemRepository categoryItemRepository;
 
     @Autowired
     PlatformTransactionManager transactionManager;
@@ -59,7 +64,7 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getItems(ItemFilter filter){
         /* выставляем offset, limit и order by */
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "date_add");
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
         return Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
     }
 
@@ -78,16 +83,13 @@ public class ItemController{
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
                 itemId = itemRepository.save(item).getId();
-                //TODO: разобраться как добавлять категории  и надо ли.
-//                itemRepository.insertSelective(item);
-                /* add new linked categories */
-//                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(itemId, item.getCategories().stream().map(Category::getId).collect(Collectors.toList())));
+                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
                 /* удаление не существующих связей */
-                //                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
-//                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
-//                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
-//                categoryItemRepository.insertBulk(categoryItems);
-
+                categoryItemRepository.deleteByItemIdAndCategoryIdNotIn(item.getId(), categoryIdList);
+                /* актуализация списка сатегорий */
+                categoryIdList.removeAll(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
+                /* добавление новых связей */
+                categoryItemRepository.save(categoryService.createCategoryItemList4Item(itemId, categoryIdList));
                 transactionManager.commit(status);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -105,12 +107,13 @@ public class ItemController{
     public void deleteItem(@PathVariable("id") String id) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
-            //TODO: обязательно проверить
-            Item item = itemRepository.findOne(id);
-            orderItemRepository.delete(item.getOrderItems());
-            itemContentRepository.delete(item.getItemContents());
-//            item.getCategories()
-//            categoryItemRepository.delete(item.getCategories());
+            /* удалим записи товара в заказе */
+            orderItemRepository.deleteByItemId(id);
+            /* удалим записи товара в изображениях */
+            itemContentRepository.deleteByItemId(id);
+            /* удалим записи товара в категориях */
+            categoryItemRepository.deleteByItemId(id);
+            /* удалим товар */
             itemRepository.delete(id);
             transactionManager.commit(status);
         } catch (Exception ex){
@@ -127,7 +130,9 @@ public class ItemController{
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public Item getItemDetail(@PathVariable("id") String id) {
-        return itemRepository.findOne(id);
+        Item item = itemRepository.findOne(id);
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        return item;
     }
 
     /**
@@ -137,7 +142,13 @@ public class ItemController{
      */
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
     public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
-        return itemRepository.findByOrderId(orderId);
+        Order order = orderRepository.findOne(orderId);
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
+        List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+        for(Item item : items){
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        }
+        return items;
     }
 
     /**
@@ -147,7 +158,11 @@ public class ItemController{
      */
     @RequestMapping(method = RequestMethod.GET,value = "/company/{id}")
     public List<Item> getAllByCompanyId(@PathVariable("id")String companyId) {
-        return itemRepository.findByCompanyId(companyId);
+        List<Item> items = itemRepository.findByCompanyId(companyId);
+        for(Item item : items){
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        }
+        return items;
     }
 
     /**

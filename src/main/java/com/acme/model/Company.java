@@ -137,21 +137,4 @@ public class Company {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Company{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", url='" + url + '\'' +
-                ", bik='" + bik + '\'' +
-                ", inn='" + inn + '\'' +
-                ", ks='" + ks + '\'' +
-                ", rs='" + rs + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

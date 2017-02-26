@@ -1,0 +1,9 @@
+{
+  "item-type": {
+    "properties": {
+      "name": {
+        "type": "string"
+      }
+    }
+  }
+}

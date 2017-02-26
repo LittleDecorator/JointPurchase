@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node implements Serializable {
-    String id;
+
+    private String id;
     private int level;
     private String title;
     private boolean noLeaf = false;
     private int patternUid;
     private String parentId;
-    List<Item> items;
-    List<Node> nodes;
-    boolean isCompany = Boolean.FALSE;
+    private List<Item> items;
+    private List<Node> nodes;
+    private boolean isCompany = Boolean.FALSE;
 
     public Node(String id, String title, String parentId) {
         this.id = id;
@@ -106,15 +107,4 @@ public class Node implements Serializable {
         this.patternUid = patternUid;
     }
 
-    @Override
-    public String toString() {
-        return "Node{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", parentId='" + parentId + '\'' +
-                ", items=" + items +
-                ", nodes=" + nodes +
-                ", isCompany=" + isCompany +
-                '}';
-    }
 }

@@ -2,11 +2,10 @@ package com.acme.service;
 
 import com.acme.email.Email;
 import com.acme.exception.TemplateException;
-import com.acme.model.PurchaseOrder;
+import com.acme.model.Order;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public interface EmailService {
 	 * @throws MessagingException
 	 * @throws TemplateException
 	 */
-	void sendOrderStatus(PurchaseOrder order) throws IOException, MessagingException, TemplateException;
+	void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException;
 
 	/**
 	 * Отправка ссылки для подтверждения регистрации

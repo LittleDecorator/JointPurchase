@@ -41,7 +41,6 @@ public class Role {
         this.description = description == null ? null : description.trim();
     }
 
-
     public String getParentRoleId() {
         return parentRoleId;
     }
@@ -49,7 +48,6 @@ public class Role {
     public void setParentRoleId(String parentRoleId) {
         this.parentRoleId = parentRoleId == null ? null : parentRoleId.trim();
     }
-
 
     public Date getDateAdd() {
         return dateAdd;
@@ -59,13 +57,4 @@ public class Role {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                ", parentRoleId='" + parentRoleId + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }
