@@ -81,7 +81,6 @@ public class EmailServiceImpl implements EmailService {
     private TemplateService templateService;
 
 
-//
 
     @Override
     public boolean sendRegistrationToken(String mailTo, String tokenLink) {
