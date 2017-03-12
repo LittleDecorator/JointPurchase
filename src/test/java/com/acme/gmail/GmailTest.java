@@ -113,10 +113,10 @@ public class GmailTest {
     public static void main(String[] args) throws IOException, GeneralSecurityException {
 
         GmailHelper helper = new GmailHelper("robot.grimmstory@gmail.com");
-//        System.out.println("/* Получение используемых меток (labels) */");
-//        /* Получение используемых меток (labels) */
-//        System.out.println(helper.getLabels().stream().map(Label::getName).collect(Collectors.toList()));
-//        System.out.println("\n\n");
+        System.out.println("/* Получение используемых меток (labels) */");
+        /* Получение используемых меток (labels) */
+        System.out.println(helper.getLabels().stream().map(Label::getName).collect(Collectors.toList()));
+        System.out.println("\n\n");
 //
 //        System.out.println("/* Получение Thread'ов входящих и не прочитанных сообщений без фильтров */");
 //        /* Получение Thread'ов входящих и не прочитанных сообщений без фильтров */
@@ -157,6 +157,16 @@ public class GmailTest {
 //        System.out.println("/* Получение сообщения по ID */");
 //        /* Получение сообщения по ID */
 //        System.out.println(helper.getMessage("15ab360b3f297274", false, false));
+//        System.out.println("\n\n");
+//
+//        System.out.println("/* Получение RAW сообщение по ID */");
+//        /* Получение упрощенное сообщение по ID */
+//        System.out.println(helper.getMessage("15ab360b3f297274", true, false));
+//        System.out.println("\n\n");
+//
+//        System.out.println("/* Получение BARE сообщение по ID */");
+//        /* Получение упрощенное сообщение по ID */
+//        System.out.println(helper.getMessage("15ab360b3f297274", false, true));
 //        System.out.println("\n\n");
 
 

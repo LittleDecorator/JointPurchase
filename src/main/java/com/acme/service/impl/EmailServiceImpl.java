@@ -11,11 +11,15 @@ import com.acme.exception.EmailConversionException;
 import com.acme.exception.TemplateException;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
+import com.acme.model.gmail.SimpleDraft;
+import com.acme.model.gmail.SimpleMessage;
+import com.acme.model.gmail.SimpleThread;
 import com.acme.service.EmailService;
 import com.acme.service.OrderService;
 import com.acme.service.SubjectService;
 import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
+import com.acme.util.GmailHelper;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -31,9 +35,12 @@ import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -80,7 +87,8 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private TemplateService templateService;
 
-
+    @Autowired
+    private GmailHelper helper;
 
     @Override
     public boolean sendRegistrationToken(String mailTo, String tokenLink) {
@@ -198,17 +206,45 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public List<Email> getInbox(){
-        List<Email> emails = null;
-        log.info("Тут будет получение всех входящих писем");
-        return emails;
+    public List<SimpleThread> getInbox() throws IOException {
+        /* получим сообщения */
+        return getMessages(Collections.singletonList("INBOX"));
     }
 
     @Override
-    public List<Email> getOutbox(){
-        List<Email> emails = null;
-        log.info("Тут будет получение всех отправленных писем");
-        return emails;
+    public List<SimpleThread> getSent() throws IOException {
+        /* получим сообщения */
+        return getMessages(Collections.singletonList("SENT"));
+    }
+
+    @Override
+    public List<SimpleThread> getTrash() throws IOException {
+        /* получим сообщения */
+        return getMessages(Collections.singletonList("TRASH"));
+    }
+
+    @Override
+    public void removeMessage(String id) {
+        System.out.println(helper.trashMessage(id));
+    }
+
+    @Override
+    public void restoreMessage(String id) {
+        System.out.println(helper.untrashMessage(id));
+    }
+
+    @Override
+    public void removeThread(String id) {
+        System.out.println(helper.trashThread(id));
+    }
+
+    @Override
+    public void restoreThread(String id) {
+        System.out.println(helper.untrashThread(id));
+    }
+
+    public void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException {
+        helper.sendMessage(message.getTo(), message.getSubject(), message.getBody());
     }
 
     public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
@@ -261,6 +297,45 @@ public class EmailServiceImpl implements EmailService {
                 .build();
         mailSender.send(message);
     }
+
+    @Override
+    public void insertToInbox(SimpleMessage message) throws IOException, MessagingException {
+        helper.insertMessage(message.getTo(), message.getSubject(), message.getBody());
+    }
+
+    @Override
+    public List<SimpleDraft> getDraft() throws IOException {
+        return getDrafts();
+    }
+
+    @Override
+    public void removeDraft(String id) throws IOException {
+        helper.deleteDraft(id);
+    }
+
+    @Override
+    public void saveDraft(SimpleDraft draft) throws IOException, MessagingException {
+        SimpleMessage message = draft.getMessage();
+        if(Strings.isNullOrEmpty(draft.getId())){
+            helper.createDraft(message.getTo(), message.getSubject(), message.getBody());
+        } else {
+            helper.updateDraft(draft.getId(), message.getTo(), message.getSubject(), message.getBody());
+        }
+    }
+
+    @Override
+    public SimpleDraft getDraft(String id) throws IOException {
+        return helper.getDraft(id);
+    }
+
+    @Override
+    public void sendDraft(SimpleDraft draft) throws IOException, MessagingException {
+        SimpleMessage message = draft.getMessage();
+        helper.updateDraft(draft.getId(), message.getTo(), message.getSubject(), message.getBody());
+        helper.sendDraft(draft.getId());
+    }
+
+    /*-------------- PRIVATE METHODS --------------*/
 
     /**
      * Чтение шаблона email
@@ -369,4 +444,38 @@ public class EmailServiceImpl implements EmailService {
         return pictures;
     }
 
+    /**
+     * Получение нитий сообщений конкретных Label без фильтрации и со стандартным размером
+     * @param labels
+     * @return
+     * @throws IOException
+     */
+    private List<SimpleThread> getMessages(List<String> labels) throws IOException {
+        /* получим сообщения */
+        Multimap<String, SimpleMessage> messages = Multimaps.index(helper.getMessages(labels, null, null), SimpleMessage::getThreadId);
+
+        /* получим все нити во входящих */
+        List<SimpleThread> result = helper.getThreads(labels, 30L, null);
+        for(SimpleThread simpleThread : result){
+            simpleThread.setMessages((List<SimpleMessage>) messages.get(simpleThread.getId()));
+        }
+        return result;
+    }
+
+    /**
+     * Получение нитий сообщений конкретных Label без фильтрации и со стандартным размером
+     * @return
+     * @throws IOException
+     */
+    private List<SimpleDraft> getDrafts() throws IOException {
+        /* получим сообщения */
+        Map<String, SimpleMessage> messages = Maps.uniqueIndex(helper.getMessages(Collections.singletonList("DRAFT"), null, null), SimpleMessage::getId);
+
+        /* получим все нити во входящих */
+        List<SimpleDraft> result = helper.getDrafts();
+        for(SimpleDraft draft : result){
+            draft.setMessage(messages.get(draft.getMessage().getId()));
+        }
+        return result;
+    }
 }

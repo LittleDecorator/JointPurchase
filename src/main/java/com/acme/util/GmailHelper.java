@@ -1,5 +1,8 @@
 package com.acme.util;
 
+import com.acme.model.gmail.SimpleDraft;
+import com.acme.model.gmail.SimpleMessage;
+import com.acme.model.gmail.SimpleThread;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -13,11 +16,18 @@ import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import com.google.api.client.util.Joiner;
 import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.gmail.model.Draft;
 import com.google.api.services.gmail.model.History;
+import com.google.api.services.gmail.model.ListDraftsResponse;
 import com.google.api.services.gmail.model.ListHistoryResponse;
+import com.google.api.services.gmail.model.MessagePart;
 import com.google.api.services.gmail.model.Thread;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -35,6 +45,7 @@ import java.io.BufferedReader;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,22 +56,37 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.io.BaseEncoding;
+import com.sun.mail.imap.protocol.BASE64MailboxDecoder;
+import com.sun.mail.imap.protocol.BASE64MailboxEncoder;
+import org.apache.http.conn.util.InetAddressUtils;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 
 /**
  * A helper class for Google's Gmail API.
  *
  */
+@Component
 public final class GmailHelper {
 
     /** Application name. */
@@ -83,7 +109,8 @@ public final class GmailHelper {
      */
     private static final String CLIENT_SECRET = "/client_secret.json";
 
-    private static final Collection<String> SCOPE = Arrays.asList(GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_READONLY);
+    private static final Collection<String> SCOPE = Arrays.asList(GmailScopes.GMAIL_LABELS, GmailScopes.GMAIL_COMPOSE, GmailScopes.GMAIL_INSERT, GmailScopes.GMAIL_MODIFY, GmailScopes.GMAIL_READONLY);
+//    private static final Collection<String> SCOPE = GmailScopes.all();
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -95,6 +122,8 @@ public final class GmailHelper {
     private Gmail service;
 
     private boolean textIsHtml = false;
+
+    private String user;
 
     /* Init transport and store */
     static {
@@ -111,8 +140,10 @@ public final class GmailHelper {
      * Constructor initializes the Google Authorization Code Flow with CLIENT
      * ID, SECRET, and SCOPE
      */
-    public GmailHelper(String userId) {
+    @Autowired
+    public GmailHelper(@Value("${spring.mail.username}") String userId) {
         try {
+            user = userId;
             InputStream in = GmailHelper.class.getResourceAsStream(CLIENT_SECRET);
             GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
             GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPE)
@@ -154,8 +185,10 @@ public final class GmailHelper {
      * @param query String used to filter the Threads listed.
      * @throws IOException
      */
-    public List<Thread> getThreads(List<String> labels, String query) throws IOException {
-        Gmail.Users.Threads.List threadQuery = service.users().threads().list("me").setLabelIds(labels).setQ(query);
+    public List<SimpleThread> getThreads(List<String> labels, Long limit, String query) throws IOException {
+        List<SimpleThread> result = Lists.newArrayList();
+
+        Gmail.Users.Threads.List threadQuery = service.users().threads().list("me").setLabelIds(labels).setQ(query).setMaxResults(limit);
         ListThreadsResponse response = threadQuery.execute();
         List<Thread> threads = new ArrayList<>();
         while(response.getThreads() != null) {
@@ -167,7 +200,28 @@ public final class GmailHelper {
                 break;
             }
         }
-        return threads;
+        /* конвертим в наш тип */
+        result.addAll(threads.stream().map(SimpleThread::valueOf).collect(Collectors.toList()));
+        return result;
+    }
+
+    public List<SimpleDraft> getDrafts() throws IOException {
+        List<SimpleDraft> result = Lists.newArrayList();
+		Gmail.Users.Drafts.List draftQuery = service.users().drafts().list("me");
+        ListDraftsResponse response = draftQuery.execute();
+		List<Draft> drafts = new ArrayList<>();
+		while(response.getDrafts() != null) {
+			drafts.addAll(response.getDrafts());
+			if(response.getNextPageToken() != null) {
+				String pageToken = response.getNextPageToken();
+				response = draftQuery.setPageToken(pageToken).execute();
+			} else {
+				break;
+			}
+		}
+        /* конвертим в наш тип */
+        result.addAll(drafts.stream().map(SimpleDraft::valueOf).collect(Collectors.toList()));
+        return result;
     }
 
     /**
@@ -211,14 +265,12 @@ public final class GmailHelper {
      * @param labels
      * @param limit
      * @param filter
-     * @param isRaw
-     * @param isBare
-     * @param isDetailOnly
      * @return
      * @throws IOException
      */
-    public List<String> getMessages(List<String> labels, int limit, String filter, boolean isRaw, boolean isBare, boolean isDetailOnly) throws IOException {
-        List<String> result = Lists.newArrayList();
+    public List<SimpleMessage> getMessages(List<String> labels, Long limit, String filter) throws IOException {
+        List<SimpleMessage> result = Lists.newArrayList();
+
         List<Message> messages = getMessagesIds(labels, limit, filter);
         /* get Batched */
         BatchRequest request = service.batch();
@@ -228,19 +280,7 @@ public final class GmailHelper {
             @Override
             public void onSuccess(Message message, HttpHeaders responseHeaders) throws IOException {
                 System.out.println("result from batch for "+ message.getId());
-                if(isRaw){
-                    if(isDetailOnly){
-                        result.add(new JSONObject(simplifyRawMessage(message)).toJSONString());
-                    } else {
-                        System.out.println(message.toPrettyString());
-                    }
-                } else {
-                    if(isBare){
-                        result.add(new JSONObject(simplifyBareMessage(message)).toJSONString());
-                    } else {
-                        result.add(message.toPrettyString());
-                    }
-                }
+                result.add(SimpleMessage.valueOf(message, false));
             }
 
             @Override
@@ -252,14 +292,6 @@ public final class GmailHelper {
         // queuing requests on the batch requests
         for (Message message : messages) {
             Gmail.Users.Messages.Get batch = service.users().messages().get("robot.grimmstory@gmail.com", message.getId());
-            if(isBare){
-                batch.setFields("id,payload,sizeEstimate,snippet,threadId");
-            }
-            if(isRaw){
-                batch.setFormat("raw");
-            } else {
-                batch.setFormat("full");
-            }
             System.out.println("queue in batch for "+ message.getId());
             batch.queue(request, bc);
         }
@@ -274,10 +306,10 @@ public final class GmailHelper {
      * @return
      * @throws IOException
      */
-    private List<Message> getMessagesIds(List<String> labels, int limit, String filter) throws IOException {
+    private List<Message> getMessagesIds(List<String> labels, Long limit, String filter) throws IOException {
         ListMessagesResponse response;
 
-        Gmail.Users.Messages.List list = service.users().messages().list("me").setLabelIds(labels).setQ(filter);
+        Gmail.Users.Messages.List list = service.users().messages().list("me").setLabelIds(labels).setQ(filter).setMaxResults(limit);
         response = list.execute();
 
         /* получение ID сообщений по Labels*/
@@ -295,90 +327,364 @@ public final class GmailHelper {
         return messages;
     }
 
+
+
     /**
-     * Выборка нужных полей из RAW сообщения
-     * @param message
+     * Перемещение цепочки сообщений в корзину
+     * @param threadId
      * @return
      */
-    private Map simplifyRawMessage(Message message){
-        Map<String, Object> messageDetails = new HashMap<>();
+    public String trashThread(String threadId){
         try {
-            byte[] emailBytes = Base64.decodeBase64(message.getRaw());
-
-            Properties props = new Properties();
-            Session session = Session.getDefaultInstance(props, null);
-
-            MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
-            messageDetails.put("subject", email.getSubject());
-            messageDetails.put("from", email.getSender() != null ? email.getSender().toString() : "None");
-            messageDetails.put("time", email.getSentDate() != null ? email.getSentDate().toString() : "None");
-            messageDetails.put("snippet", message.getSnippet());
-            messageDetails.put("threadId", message.getThreadId());
-            messageDetails.put("id", message.getId());
-            messageDetails.put("body", getText(email));
-
-        } catch (MessagingException ex) {
-            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            service.users().threads().trash("me", threadId).execute();
+            return "success";
         } catch (IOException ex) {
             Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
         }
-        return messageDetails;
     }
 
     /**
-     * Выборка нужных полей из FULL сообщения
-     * @param message
+     *
+     * @param threadId
      * @return
      */
-    private Map simplifyBareMessage(Message message){
-        Map<String, Object> messageDetails = new HashMap<>();
-        List<MessagePartHeader> headers = message.getPayload().getHeaders();
-        for (MessagePartHeader header : headers) {
-			if (header.getName().equals("From") || header.getName().equals("Date")
-				|| header.getName().equals("Subject") || header.getName().equals("To")
-				|| header.getName().equals("CC")) {
-				messageDetails.put(header.getName().toLowerCase(), header.getValue());
-			}
-		}
-        messageDetails.put("snippet", message.getSnippet());
-        messageDetails.put("threadId", message.getThreadId());
-        messageDetails.put("id", message.getId());
-        messageDetails.put("body",message.getPayload().getBody().getData());
-
-        System.out.println(messageDetails.toString());
-        return messageDetails;
+    public String untrashThread(String threadId){
+        try {
+            service.users().threads().untrash("me", threadId).execute();
+            return "success";
+        } catch (IOException ex) {
+            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
     }
 
-//    public String getUserEmails() throws IOException {
-//        Gmail service = getGmailService();
-//        JSONObject ticketDetails = new JSONObject();
-//        ListMessagesResponse openMessages = service.users().messages().list("me") //.setLabelIds(labelIds)
-//                .setQ("is:unread label:inbox").setMaxResults(new Long(3)).execute();
-//        ticketDetails.put("open", "" + openMessages.getResultSizeEstimate());
+    /**
+     * Перемещение сообщения в корзину
+     * @param messageId
+     * @return
+     */
+    public String trashMessage(String messageId) {
+        try {
+            service.users().messages().trash("me", messageId).execute();
+            return "success";
+        } catch (IOException ex) {
+            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
+    }
+
+    /**
+     * Перемещение сообщения в корзину
+     * @param messageId
+     * @return
+     */
+    public String untrashMessage(String messageId) {
+        try {
+            service.users().messages().untrash("me", messageId).execute();
+            return "success";
+        } catch (IOException ex) {
+            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
+    }
+
+    /**
+     * Получение сообщения по ID
+     * @param messageId
+     * @return
+     */
+    public SimpleMessage getMessage(String messageId) throws IOException {
+        //helper function to get message details in JSON format
+        Message message = service.users().messages().get("me", messageId).execute();
+        return SimpleMessage.valueOf(message, false);
+    }
+
+
+    /**
+     * Получение сообщения по ID
+     * @param draftId
+     * @return
+     */
+    public SimpleDraft getDraft(String draftId) throws IOException {
+        //helper function to get message details in JSON format
+        Draft draft = service.users().drafts().get("me", draftId).execute();
+        return SimpleDraft.valueOf(draft);
+    }
+
+    /**
+     *
+     * @param to
+     * @param subject
+     * @param body
+     * @return
+     * @throws IOException
+     * @throws MessagingException
+     */
+    public String createDraft(String to, String subject, String body) throws IOException, MessagingException {
+        MimeMessage email = createMimeMessage(to, user, subject, body);
+        Message message = createMessageWithEmail(email);
+        Draft draft = new Draft();
+        draft.setMessage(message);
+        draft = service.users().drafts().create("me", draft).execute();
+        System.out.println("draft id: " + draft.getId());
+        System.out.println(draft.toPrettyString());
+        if (draft.getId() != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    /**
+     * Delete draft email.
+     *
+     * can be used to indicate the authenticated user.
+     * @param draftId ID of Draft to deleted.
+     * @throws IOException
+     */
+    public void deleteDraft(String draftId) throws IOException{
+        service.users().drafts().delete("me", draftId).execute();
+        System.out.println("Draft with id: " + draftId + " deleted successfully.");
+    }
+
+
+    /**
+     * Send an email from the user's mailbox to its recipient.
+     *
+     * indicate the authenticated user.
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public String sendDraft(String draftId) throws MessagingException, IOException {
+        Draft draft = service.users().drafts().get("me", draftId).execute();
+        Message message = service.users().drafts().send("me", draft).execute();
+        System.out.println("Draft with ID: " + draftId + " sent successfully.");
+        System.out.println("Draft sent as Message with ID: " + message.getId());
+        if (message.getId() != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    /**
+     *
+     * @param to
+     * @param subject
+     * @param body
+     * @return
+     * @throws IOException
+     * @throws MessagingException
+     */
+    public String updateDraft(String draftId, String to, String subject, String body) throws IOException, MessagingException {
+        MimeMessage email = createMimeMessage(to, user, subject, body);
+        Message message = createMessageWithEmail(email);
+        Draft draft = new Draft();
+        draft.setMessage(message);
+        draft = service.users().drafts().update("me", draftId, draft).execute();
+        System.out.println("draft id: " + draft.getId());
+        System.out.println(draft.toPrettyString());
+        if (draft.getId() != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    /**
+     * Send an email from the user's mailbox to its recipient.
+     *
+     * indicate the authenticated user.
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public String sendMessage(String to, String subject, String body) throws MessagingException, IOException {
+
+        MimeMessage email = createMimeMessage(to, user, subject, body);
+        Message message = createMessageWithEmail(email);
+        message = service.users().messages().send("me", message).execute();
+
+        System.out.println("Message id: " + message.getId());
+        System.out.println(message.toPrettyString());
+        if (message.getId() != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    public String insertMessage(String to, String subject, String body) throws MessagingException, IOException {
+
+        MimeMessage email = createMimeMessage(to, user, subject, body);
+        Message message = createMessageWithEmail(email);
+        message.setLabelIds(Collections.singletonList("INBOX"));
+        message = service.users().messages().insert("me", message).execute();
+
+        System.out.println("Message id: " + message.getId());
+        System.out.println(message.toPrettyString());
+        if (message.getId() != null) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    /**
+     * Create a Message from an email
+     *
+     * @param email Email to be set to raw of message
+     * @return Message containing base64 encoded email.
+     * @throws IOException
+     * @throws MessagingException
+     */
+    private Message createMessageWithEmail(MimeMessage email) throws MessagingException, IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        email.writeTo(baos);
+        String encodedEmail = Base64.encodeBase64URLSafeString(baos.toByteArray());
+        Message message = new Message();
+        message.setRaw(encodedEmail);
+        return message;
+    }
+
+    private MimeMessage createMimeMessage(String to, String from, String subject, String body) {
+        try {
+            Properties props = new Properties();
+            Session session = Session.getDefaultInstance(props, null);
+            MimeMessage message = new MimeMessage(session);
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(javax.mail.Message.RecipientType.TO,
+                    new InternetAddress(to));
+
+            // Set Subject: header field
+            message.setSubject(subject);
+
+            // Send the actual HTML message, as big as you like
+            message.setContent(body, "text/html");
+            return message;
+        } catch (MessagingException ex) {
+            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    /**
+     * Return the primary text content of the message.
+     */
+    private String getText(Part p) throws
+                                   MessagingException, IOException {
+        if (p.isMimeType("text/*")) {
+            String s = (String) p.getContent();
+            textIsHtml = p.isMimeType("text/html");
+            return s;
+        }
+
+        if (p.isMimeType("multipart/alternative")) {
+            // prefer html text over plain text
+            Multipart mp = (Multipart) p.getContent();
+            String text = null;
+            for (int i = 0; i < mp.getCount(); i++) {
+                Part bp = mp.getBodyPart(i);
+                if (bp.isMimeType("text/plain")) {
+                    if (text == null) {
+                        text = getText(bp);
+                    }
+                    continue;
+                } else if (bp.isMimeType("text/html")) {
+                    String s = getText(bp);
+                    if (s != null) {
+                        return s;
+                    }
+                } else {
+                    return getText(bp);
+                }
+            }
+            return text;
+        } else if (p.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart) p.getContent();
+            for (int i = 0; i < mp.getCount(); i++) {
+                String s = getText(mp.getBodyPart(i));
+                if (s != null) {
+                    return s;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    //    private String getBody(HttpServletRequest request) throws IOException {
 //
-//        ListMessagesResponse closedMessages = service.users().messages().list("me") //.setLabelIds(labelIds)
-//                .setQ("label:inbox label:closed").setMaxResults(new Long(1)).execute();
-//        ticketDetails.put("closed", "" + closedMessages.getResultSizeEstimate());
+//        String body = null;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        BufferedReader bufferedReader = null;
 //
-//        ListMessagesResponse pendingMessages = service.users().messages().list("me") //.setLabelIds(labelIds)
-//                .setQ("label:inbox label:pending").setMaxResults(new Long(1)).execute();
-//        ticketDetails.put("pending", "" + pendingMessages.getResultSizeEstimate());
-//
-//        ticketDetails.put("unassigned", "0");
-//        List<Message> messages = openMessages.getMessages();
-//        //List<Map> openTickets=new ArrayList<Map>();
-//        JSONArray openTickets = new JSONArray();
-//        String returnVal = "";
-//        // Print ID and snippet of each Thread.
-//        if (messages != null) {
-//
-//            for (Message message : messages) {
-//                openTickets.add(new JSONObject(getBareGmailMessageDetails(message.getId())));
+//        try {
+//            InputStream inputStream = request.getInputStream();
+//            if (inputStream != null) {
+//                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//                char[] charBuffer = new char[128];
+//                int bytesRead = -1;
+//                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+//                    stringBuilder.append(charBuffer, 0, bytesRead);
+//                }
+//            } else {
+//                stringBuilder.append("");
 //            }
-//            ticketDetails.put("openTicketDetails", openTickets);
+//        } catch (IOException ex) {
+//            throw ex;
+//        } finally {
+//            if (bufferedReader != null) {
+//                try {
+//                    bufferedReader.close();
+//                } catch (IOException ex) {
+//                    throw ex;
+//                }
+//            }
 //        }
-//        return ticketDetails.toJSONString();
 //
+//        body = stringBuilder.toString();
+//        return body;
+//    }
+
+    //    /**
+//     * Выборка нужных полей из RAW сообщения
+//     * @param message
+//     * @return
+//     */
+//    private Map simplifyRawMessage(Message message){
+//        Map<String, Object> messageDetails = new HashMap<>();
+//        try {
+//            byte[] emailBytes = Base64.decodeBase64(message.getRaw());
+//
+//            Properties props = new Properties();
+//            Session session = Session.getDefaultInstance(props, null);
+//
+//            MimeMessage email = new MimeMessage(session, new ByteArrayInputStream(emailBytes));
+//            messageDetails.put("subject", email.getSubject());
+//
+//            List<String> senders = Lists.newArrayList();
+//            for(Address address : email.getFrom()){
+//                InternetAddress internetAddress = new InternetAddress(address.toString());
+//                String sender = internetAddress.getPersonal() + " <"+internetAddress.getAddress()+">";
+//                senders.add(sender);
+//            }
+//            messageDetails.put("from",  Joiner.on(';').join(senders));
+//            messageDetails.put("time", email.getSentDate() != null ? email.getSentDate().toString() : "None");
+//            messageDetails.put("snippet", message.getSnippet());
+//            messageDetails.put("threadId", message.getThreadId());
+//            messageDetails.put("id", message.getId());
+//            messageDetails.put("body", getText(email));
+//
+//        } catch (MessagingException ex) {
+//            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return messageDetails;
 //    }
 
 
@@ -427,179 +733,4 @@ public final class GmailHelper {
 //        }
 //    }
 
-    /**
-     * Удаление видимо
-     * @param messageId
-     * @return
-     */
-    public String trashMessage(String messageId) {
-        String msg = "";
-        try {
-            service.users().messages().trash("me", messageId).execute();
-            return "success";
-        } catch (IOException ex) {
-            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
-            return "error";
-        }
-    }
-
-    /**
-     * Получение сообщения по ID
-     * @param messageId
-     * @return
-     */
-    public String getMessage(String messageId, boolean isRaw, boolean isBare) throws IOException {
-        //helper function to get message details in JSON format
-        Message message = service.users().messages().get("me", messageId).setFormat(isRaw ? "raw" : "full").execute();
-        return isRaw ? new JSONObject(simplifyRawMessage(message)).toJSONString() : isBare ? new JSONObject(simplifyBareMessage(message)).toJSONString() : message.toPrettyString();
-    }
-
-    /**
-     * Return the primary text content of the message.
-     */
-    private String getText(Part p) throws
-            MessagingException, IOException {
-        if (p.isMimeType("text/*")) {
-            String s = (String) p.getContent();
-            textIsHtml = p.isMimeType("text/html");
-            return s;
-        }
-
-        if (p.isMimeType("multipart/alternative")) {
-            // prefer html text over plain text
-            Multipart mp = (Multipart) p.getContent();
-            String text = null;
-            for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
-                if (bp.isMimeType("text/plain")) {
-                    if (text == null) {
-                        text = getText(bp);
-                    }
-                    continue;
-                } else if (bp.isMimeType("text/html")) {
-                    String s = getText(bp);
-                    if (s != null) {
-                        return s;
-                    }
-                } else {
-                    return getText(bp);
-                }
-            }
-            return text;
-        } else if (p.isMimeType("multipart/*")) {
-            Multipart mp = (Multipart) p.getContent();
-            for (int i = 0; i < mp.getCount(); i++) {
-                String s = getText(mp.getBodyPart(i));
-                if (s != null) {
-                    return s;
-                }
-            }
-        }
-
-        return null;
-    }
-
-//    /**
-//     * Send an email from the user's mailbox to its recipient.
-//     *
-//     * @param service Authorized Gmail API instance.
-//     * @param userId User's email address. The special value "me" can be used to
-//     * indicate the authenticated user.
-//     * @param email Email to be sent.
-//     * @throws MessagingException
-//     * @throws IOException
-//     */
-//    public String sendMessage(String to, String from, String subject, String body)
-//            throws MessagingException, IOException {
-//
-//        Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName("Gmail Quickstart").build();
-//        MimeMessage email = createMimeMessage(to, from, subject, body);
-//        Message message = createMessageWithEmail(email);
-//        message = service.users().messages().send("me", message).execute();
-//
-//        System.out.println("Message id: " + message.getId());
-//        System.out.println(message.toPrettyString());
-//        if (message.getId() != null) {
-//            return "success";
-//        } else {
-//            return "fail";
-//        }
-//    }
-
-//    /**
-//     * Create a Message from an email
-//     *
-//     * @param email Email to be set to raw of message
-//     * @return Message containing base64 encoded email.
-//     * @throws IOException
-//     * @throws MessagingException
-//     */
-//    private Message createMessageWithEmail(MimeMessage email)
-//            throws MessagingException, IOException {
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        email.writeTo(baos);
-//        String encodedEmail = Base64.encodeBase64URLSafeString(baos.toByteArray());
-//        Message message = new Message();
-//        message.setRaw(encodedEmail);
-//        return message;
-//    }
-
-    private String getBody(HttpServletRequest request) throws IOException {
-
-        String body = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            } else {
-                stringBuilder.append("");
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
-            }
-        }
-
-        body = stringBuilder.toString();
-        return body;
-    }
-
-//    private MimeMessage createMimeMessage(String to, String from, String subject, String body) {
-//        try {
-//            Properties props = new Properties();
-//            Session session = Session.getDefaultInstance(props, null);
-//            MimeMessage message = new MimeMessage(session);
-//            // Set From: header field of the header.
-//            message.setFrom(new InternetAddress(from));
-//
-//            // Set To: header field of the header.
-//            message.addRecipient(javax.mail.Message.RecipientType.TO,
-//                    new InternetAddress(to));
-//
-//            // Set Subject: header field
-//            message.setSubject(subject);
-//
-//            // Send the actual HTML message, as big as you like
-//            message.setContent(body,
-//                    "text/html");
-//            return message;
-//        } catch (MessagingException ex) {
-//            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
-//    }
 }
