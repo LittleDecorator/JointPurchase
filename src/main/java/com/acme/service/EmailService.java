@@ -106,6 +106,12 @@ public interface EmailService {
 	 */
 	void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException;
 
+	/**
+	 * Добавление нового сообщения во входящие
+	 * @param message
+	 * @throws IOException
+	 * @throws MessagingException
+	 */
 	void insertToInbox(SimpleMessage message) throws IOException, MessagingException;
 
 	void saveDraft(SimpleDraft draft) throws IOException, MessagingException;

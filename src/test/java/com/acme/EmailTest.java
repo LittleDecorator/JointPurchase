@@ -3,7 +3,9 @@ package com.acme;
 import com.acme.constant.Constants;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Content;
+import com.acme.model.Order;
 import com.acme.repository.ContentRepository;
+import com.acme.repository.OrderRepository;
 import com.acme.service.EmailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,10 +41,10 @@ public class EmailTest {
     private EmailService emailService;
 
     @Autowired
-    private ContentRepository contentRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     String orderTemplate ="<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\" \"http://www.w3.org/TR/REC-html40/loose.dtd\">\n" +
                      "<html style=\"line-height: 1.5;font-weight: normal;font-size: 15px;\">\n" +
@@ -296,6 +298,18 @@ public class EmailTest {
 //        }
 //    }
 
+
+    @Test
+    public void sendOrderStatus() throws MessagingException {
+        try{
+            Order order = orderRepository.findOne("082c0f3e-133c-4569-a576-8019c982bfe3");
+            order.setRecipientEmail("kobzeff.inc@mail.ru");
+            emailService.sendOrderStatus(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 //    @Test
 //    //TODO: don't redirect to record and cabinet after login
 //    public void sendOrderConformationHtml() {
@@ -314,7 +328,7 @@ public class EmailTest {
 //    }
 
 
-    @Test
+//    @Test
     public void sendOrderConformationWithImageHtml() throws MessagingException, IOException {
 //        Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
         Content content = null;

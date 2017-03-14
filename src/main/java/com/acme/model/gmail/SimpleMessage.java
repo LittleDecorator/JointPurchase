@@ -146,6 +146,27 @@ public class SimpleMessage {
 	}
 
 	/**
+	 * Обновление данных сообщения
+	 * @param message
+	 */
+	public void merge(SimpleMessage message){
+		this.setSubject(message.getSubject());
+		this.setBody(message.getBody());
+		this.setTo(message.getTo());
+		this.setDate(message.getDate());
+		this.setSize(message.getSize());
+	}
+
+	/**
+	 * Получение нового объекта для Message тело которого представлено ввиде простого текста
+	 * @param message
+	 * @return
+	 */
+	public static SimpleMessage valueOf(Message message) {
+		return valueOf(message, false);
+	}
+
+	/**
 	 * Получение нового объекта для Message
 	 * @param message
 	 * @param asPlain
