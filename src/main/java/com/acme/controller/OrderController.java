@@ -1,10 +1,13 @@
 package com.acme.controller;
 
+import com.acme.enums.OrderStatus;
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
 import com.acme.model.Order;
 import com.acme.model.OrderItem;
 import com.acme.model.OrderView;
+import com.acme.model.dto.OrderItemsList;
+import com.acme.model.dto.OrderRequest;
 import com.acme.model.filter.OrderFilter;
 import com.acme.repository.specification.OrderViewSpecifications;
 import com.acme.repository.*;
@@ -105,7 +108,8 @@ public class OrderController {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
-		Order order = persistOrder(request);
+//		Order order = persistOrder(request);
+		Order order = null;
 		emailService.sendOrderStatus(order);
 		return order;
 	}
@@ -134,27 +138,32 @@ public class OrderController {
 	public Order persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try {
-
 			/* сохраним заказ из запроса. */
+			request.getOrder().setStatus(OrderStatus.NEW);
 			Order order = orderRepository.save(request.getOrder());
 
 			/* добавим записи в таблицу связи заказ-товар */
+			if(request.getItems() == null || request.getItems().isEmpty()){
+				throw new IllegalArgumentException("NO items in request");
+			}
 			for (OrderItemsList itemsList : request.getItems()) {
 				// собираем товар для дальнейшей обработки
 				OrderItem orderItem = new OrderItem();
 				orderItem.setItemId(itemsList.getItem().getId());
 				orderItem.setOrderId(order.getId());
-				orderItem.setCount(orderItem.getCount());
+				orderItem.setCount(itemsList.getCount());
 				orderItemRepository.save(orderItem);
 			}
 
 			//удаляем записи, где заказ совпадает, а товар нет.
 			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
 			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
-
 			transactionManager.commit(status);
+			/* отправляем на почту писмо с подтверждением заказа */
+			emailService.sendOrderStatus(order);
 			return order;
-		} catch (Exception e) {
+		} catch (Exception ex) {
+			ex.printStackTrace(System.out);
 			transactionManager.rollback(status);
 			return null;
 		}
@@ -188,63 +197,5 @@ public class OrderController {
         Map<String, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
 		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getItemId()), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
-	}
-
-    /* ------ NESTED CLASSES ------ */
-
-	/**
-	 * Класс представляет собой содержимое заказа.
-	 */
-	private class OrderRequest {
-
-		private Order order;
-		private List<OrderItemsList> items;
-
-		public Order getOrder() {
-			return order;
-		}
-
-		public void setOrder(Order order) {
-			this.order = order;
-		}
-
-		public List<OrderItemsList> getItems() {
-			return items;
-		}
-
-		public void setItems(List<OrderItemsList> items) {
-			this.items = items;
-		}
-	}
-
-	/**
-	 * Класс представляет собой содержимое заказа.
-	 * Детали заказа убраны.
-	 */
-	private class OrderItemsList {
-
-		Item item;
-		Integer count;
-
-		OrderItemsList(Item item, Integer count) {
-			this.item = item;
-			this.count = count;
-		}
-
-		public Item getItem() {
-			return item;
-		}
-
-		public void setItem(Item item) {
-			this.item = item;
-		}
-
-		public Integer getCount() {
-			return count;
-		}
-
-		public void setCount(Integer count) {
-			this.count = count;
-		}
 	}
 }

@@ -9,15 +9,16 @@
     //TODO: Найти способ сторить инфу во время заполнения
     angular.module('confirm')
 
+        /* Контроллер формирования заказа */
         .controller('confirmController',['$scope','$state','authService','dataResources','deliveries','$q','$timeout','$rootScope',function($scope,$state,authService,dataResources,deliveries,$q, $timeout, $rootScope){
-            console.log("enter confirm controller");
+
             $scope.showHints = true;
 
-            if(localStorage.getItem($state.current.name)){
-                $scope.data = angular.fromJson(localStorage.getItem($state.current.name));
-                $scope.data.stepData[0].data.delivery = helpers.findInArrayById($scope.data.stepData[0].data.deliveries,$scope.data.stepData[0].data.delivery.id);
-                console.log($scope.data);
-            } else {
+            /* ТУТ БЫЛА ПОПЫТКА СОХРАНИТЬ УЖЕ ВВЕДЕННЫЕ ДАННЫЕ  */
+            // if(localStorage.getItem($state.current.name)){
+            //     $scope.data = angular.fromJson(localStorage.getItem($state.current.name));
+                // $scope.data.stepData[0].data.delivery = helpers.findInArrayById($scope.data.stepData[0].data.deliveries,$scope.data.stepData[0].data.delivery.id);
+            // } else {
                 $scope.data = {};
                 $scope.data.selectedStep = 0;
                 $scope.data.stepProgress = 1;
@@ -51,34 +52,39 @@
                         }
                     }
                 ];
-            }
+            // }
 
             $scope.createOrder = function(deferred){
+                // список товаров для формирования заказа
                 var cleanOrderItems = [];
-                var orderPaymnet = 0;
+                var orderPayment = 0;
 
+                /* пройдемся по списку товаров */
                 $scope.cart.content.forEach(function (item) {
-                    if(item.cou>0){
-                        orderPaymnet = orderPaymnet + (item.cou * item.price);
+                    if(item.cou > 0){
+                        orderPayment = orderPayment + (item.cou * item.price);
                         cleanOrderItems.push({
-                            id:null,
-                            orderId: null,
-                            itemId: item.id,
-                            cou: item.cou
+                            item: {id: item.id},
+                            count: item.cou
                         })
                     }
                 });
 
-                var order = $.extend({},$scope.data.stepData[1].data);
-                order.payment = orderPaymnet;
+                // возьмем введенные данные о заказе
+                var order = $.extend({}, $scope.data.stepData[1].data);
+                order.payment = orderPayment;
+                // возьмем выбранный способ доставки
                 order.delivery = $scope.data.stepData[0].data.delivery.id;
+
                 var request = null;
+                // определим авторизован ли пользователь
                 if(localStorage.getItem('token') == undefined){
-                    request = dataResources.order.post({items:cleanOrderItems,order:order});
+                    request = dataResources.order.post({items:cleanOrderItems, order:order});
                 } else {
-                    request = dataResources.orderPrivate.post({items:cleanOrderItems,order:order});
+                    request = dataResources.orderPrivate.post({items:cleanOrderItems, order:order});
                 }
-                //dataResources.orderPrivate.post({items:cleanOrderItems,order:order}).$promise.then(function(data){
+
+                //promises для запроса на создание заказа
                 request.$promise.then(function(data){
                     deferred.resolve(data);
                 }, function(error){

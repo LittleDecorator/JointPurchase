@@ -39,7 +39,9 @@
                 if (label.length == 0) {
                     label = angular.element('<md-step-label></md-step-label>');
                     if (attr.label) label.text(attr.label);
-                    else label.append(element.contents());
+                    else {
+                        label.append(element.contents());
+                    }
 
                     if (body.length == 0) {
                         var contents = element.contents().detach();

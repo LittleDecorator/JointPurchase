@@ -2,6 +2,7 @@ package com.acme.model;
 
 import com.acme.enums.ItemStatus;
 import com.acme.enums.converters.ItemStatusConverter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -55,6 +56,7 @@ public class Item {
     private List<Category> categories;
 
     @Transient
+    @JsonProperty("images")
     private List<ItemContent> itemContents;
 
     @Transient

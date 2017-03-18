@@ -2,7 +2,7 @@
 
 <md-steppers  md-dynamic-height md-stretch-steppers="always" md-selected="data.selectedStep" md-busy-text="'Processing...'" md-busy="data.showBusyText" md-on-select="onTabSelect()">
 
-    <md-step label="Информация о получателе" md-complete="data.stepData[0].completed" ng-disabled="data.maxStep == data.stepProgress">
+    <md-step label="Способ доставки" md-complete="data.stepData[0].completed" ng-disabled="data.maxStep == data.stepProgress">
         <md-card class="md-padding">
             <md-step-body>
                 <md-content ng-form="step1">
@@ -33,13 +33,14 @@
 
     </md-step>
 
-    <md-step label="Способ доставки" md-complete="data.stepData[1].completed" ng-disabled="!data.stepData[0].completed || (data.maxStep == data.stepProgress)">
+    <md-step label="Информация о получателе" md-complete="data.stepData[1].completed" ng-disabled="!data.stepData[0].completed || (data.maxStep == data.stepProgress)">
         <md-card class="md-padding">
             <md-step-body>
                 <md-content ng-form="step2">
 
-                    <md-card class="md-padding">
-                        <div layout="row">
+                    <md-card class="md-padding" >
+
+                        <div layout="row" ng-if="auth.isAuth()">
                             <div flex></div>
                             <md-checkbox ng-model="data.usePrivate" aria-label="myData" ng-change="switchUserInfo()">Использовать персональные данные</md-checkbox>
                         </div>

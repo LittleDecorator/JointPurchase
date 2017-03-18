@@ -6,18 +6,24 @@
     'use strict';
 
     angular.module('catalog')
-        .controller('catalogController', ['$scope', '$state','dataResources','$timeout','eventService','$stateParams','$rootScope','node',function ($scope, $state, dataResources,$timeout,eventService,$stateParams,$rootScope,node) {
 
-            console.log("catalogController");
+        /* Основной контроллер работы со списком товара. */
+        .controller('catalogController', ['$scope', '$state','dataResources','$timeout','eventService','$stateParams','$rootScope','node', function ($scope, $state, dataResources, $timeout, eventService, $stateParams, $rootScope, node) {
 
-            $scope.items = [];
+            // используется только под администратором
             $scope.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
-            $scope.sideFilters = [];
+            // список товаров
+            $scope.items = [];
+            // набор фильтров категорий товара из бокового меню. Данные используются для ElasticSearch. ВРЕМЕННО УБЕРЕМ
+            // $scope.sideFilters = [];
 
+            // выбранный узел бокового меню
             if(node){
                 if($stateParams.type == 'category') {
+                    // если выбранный узел относится к Категориям
                     $scope.searchFilter.category = $stateParams.id
                 } else {
+                    // если выбранный узел относится к Производителям
                     $scope.searchFilter.company = $stateParams.id
                 }
             }
@@ -30,16 +36,20 @@
             $scope.allDataLoaded = false;
             $scope.infiniteDistance = 2;
 
-            //get items
+            /**
+             * получение данных с сервера
+             * @param isClean - нужно ли очищать существующий набор данных
+             */
             $scope.loadData = function(isClean){
+                // если загрузка разрешена и не заняты
                 if(!$scope.stopLoad && !busy){
                     busy = true;
                     dataResources.catalog.list.all($scope.searchFilter).$promise.then(function (data) {
-
+                        // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                         if(data.length < $scope.searchFilter.limit){
                             $scope.stopLoad = true;
                         }
-
+                        // очистим данные если требуется
                         if(isClean){
                             $scope.items = [];
                         }
@@ -48,36 +58,44 @@
 
                         portion++;
                         $scope.searchFilter.offset = portion * $scope.searchFilter.limit;
+                        //говорим что можно отображать
                         $scope.allDataLoaded = true;
                         busy = false;
                     });
                 }
             };
 
-            var getRootNodesScope = function() {
-                return angular.element(document.getElementById("tree-root")).scope();
-            };
+            /* ПОКА НЕ ПОНЯТНО ДЛЯ ЧЕГО ЭТО БЫЛО ОСТАВЛЕНО */
 
-            $scope.collapseAll = function() {
-                var scope = getRootNodesScope();
-                scope.collapseAll();
-            };
+            // var getRootNodesScope = function() {
+            //     return angular.element(document.getElementById("tree-root")).scope();
+            // };
+            //
+            // $scope.collapseAll = function() {
+            //     var scope = getRootNodesScope();
+            //     scope.collapseAll();
+            // };
+            //
+            // $scope.expandAll = function() {
+            //     var scope = getRootNodesScope();
+            //     scope.expandAll();
+            // };
 
-            $scope.expandAll = function() {
-                var scope = getRootNodesScope();
-                scope.expandAll();
-            };
-
-            /* transition to item view */
+            /**
+             * Переход на карточку товара
+             * @param id
+             */
             $scope.itemView = function(id){
                 $state.go("catalog.detail", {itemId: id});
             };
 
-            /* something for filter */
-            /* with will work when side click */
+            /**
+             * Слушатель события "onFilter"
+             */
             $scope.$on('onFilter',function() {
                 var node = eventService.data;
                 var type;
+                // определяет тип выбранного узла
                 if(node.company){
                     $scope.searchFilter.company = node.id;
                     $scope.searchFilter.category = null;
@@ -88,49 +106,48 @@
                     $scope.showSideFilter = true;
                     type = 'category';
                 }
-                $state.go('catalog.type',{id:node.id,type:type},{notify:false}).then(function(){
+                // переходим на страницу результата фильтрации
+                $state.go('catalog.type', {id:node.id, type:type}, {notify:false}).then(function(){
+                    // неявно обновим Breadcrumbs
                     $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                 });
+                // сбросим фильтр получения данных с сервера
                 portion = 0;
                 $scope.searchFilter.offset = 0;
                 $scope.stopLoad = false;
+                // запросим данные
                 $scope.loadData(true);
             });
 
-            $scope.removeFilterElem = function(idx){
-                $scope.sideFilters.splice(idx,1);
-                //TODO: maybe change to server clean
-
-                if($scope.sideFilters.length==0){
-                    $scope.showSideFilter = false;
-                }
-            }
+            /* ВОЗМОЖНО ПРЕДПОЛАГАЛОСЬ ДЛЯ ИСКЛЮЧЕНИЯ ДЕТЕЙ ВЫБРАННЫХ ЭЛЕМЕНТОВ ФИЛЬТРА КАТЕГОРИЙ */
+            // $scope.removeFilterElem = function(idx){
+            //     $scope.sideFilters.splice(idx,1);
+            //     //TODO: maybe change to server clean
+            //
+            //     if($scope.sideFilters.length==0){
+            //         $scope.showSideFilter = false;
+            //     }
+            // }
 
 
         }])
 
+        /* Контроллер работы с карточкой товара */
         .controller('catalogCardController',['$scope','$state','product',function ($scope, $state, product) {
 
-            $scope.mainImage = null;
-            $scope.item = angular.extend({},product);
-            console.log(product);
+            $scope.item = angular.extend({}, product);
+            $scope.mainImage = $scope.item.url;
 
-            $scope.THUMB_URL = "media/image/thumb/";
-            $scope.PREVIEW_URL = "media/image/preview/";
-            $scope.VIEW_URL = "media/image/view/";
-            $scope.ORIG_URL = "media/image/";
-
-            if($scope.item.itemContents == null){
-                $scope.mainImage = $scope.item.url;
-            } else {
-                $scope.mainImage = $scope.ORIG_URL + $scope.item.itemContents[0].contentId;
-            }
-
+            /**
+             * Установка изображения активным на просмотр
+             * @param id - изображение которое нужно показать как main
+             */
             $scope.show = function(id){
                 var keepGoing = true;
                 var res = null;
 
-                $scope.item.itemContents.forEach(function(elem,index){
+                // поиск выбранного в списке
+                $scope.item.images.forEach(function(elem, index){
                     if (keepGoing) {
                         if(elem === id) {
                             res = index;
@@ -138,9 +155,12 @@
                         }
                     }
                 });
-                $scope.mainImage = $scope.ORIG_URL + id;
+                $scope.mainImage = $scope.PREVIEW_URL + id;
             };
 
+            /**
+             * Переход в галерею товара
+             */
             $scope.showGallery = function () {
                 $state.go("product.detail.gallery", {id: $scope.item.id});
             };

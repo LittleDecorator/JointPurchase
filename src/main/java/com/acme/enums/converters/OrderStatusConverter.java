@@ -7,7 +7,8 @@ import javax.persistence.AttributeConverter;
 public class OrderStatusConverter implements AttributeConverter<OrderStatus, String> {
         @Override
         public String convertToDatabaseColumn(OrderStatus attribute) {
-            return attribute.getText();
+            String result = attribute!=null ? attribute.getText() : "FUCK";
+            return result;
         }
 
         @Override

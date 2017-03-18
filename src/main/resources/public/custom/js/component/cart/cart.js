@@ -8,14 +8,8 @@
     angular.module('cart')
 
         .controller('cartController',['$scope','$state',function($scope,$state){
-            console.log("enter cart controller");
 
             var templatePath = "pages/fragment/cart/";
-
-            $scope.THUMB_URL = "media/image/thumb/";
-            $scope.ORIG_URL = "media/image/";
-
-            console.log($scope);
 
             if($scope.cart && $scope.cart.cou==0){
                 $scope.$parent.showContent = false;
@@ -23,6 +17,8 @@
                 $scope.$parent.showContent = true;
                 $scope.orderItemsCou = $scope.cart.cou;
             }
+
+            console.log($scope.cart)
 
             //TODO: here will be check of auth
             $scope.toOrderCreation = function(){

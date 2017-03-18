@@ -4,7 +4,7 @@
 
 (function() {
     angular.module('login')
-        .controller('loginController',['$scope','eventService',function ($scope,eventService) {
+        .controller('loginController',['$scope','eventService','cryptoService',function ($scope, eventService, cryptoService) {
 
         $scope.keyPress = function(keyCode) {
             if (keyCode == 13){
@@ -13,7 +13,7 @@
         };
 
         $scope.submit = function() {
-            eventService.onLogin({name:$scope.uname,password:$scope.password});
+            eventService.onLogin({name:$scope.uname, password:cryptoService.encryptString($scope.password)});
         };
     }])
 })();

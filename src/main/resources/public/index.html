@@ -80,56 +80,35 @@
     </div>
 
     <!-- RAW INFORM PANEL -->
-    <div role="dialog" aria-live="polite" aria-label="cookieconsent" aria-describedby="cookieconsent:desc" class="cc-window cc-banner cc-type-info cc-theme-block cc-bottom " style="
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: rgba(0,0,0,0.75);
-    z-index: 999;
-    opacity: 1;
-    -webkit-transition: all .3s ease;
-    transition: all .3s ease;
-"><!--googleoff: all--><div class="box-cookies" style="
-    /* position: fixed; */
-    /* left: 0; */
-    /* right: 0; */
-    /* bottom: 0; */
-    /* width: 100%; */
-    /* background-color: rgba(0,0,0,0.75); */
-    /* z-index: 999; */
-    /* opacity: 1; */
-    /* -webkit-transition: all .3s ease; */
-    /* transition: all .3s ease; */
-    padding: 15px;
-    text-align: center;
-    color: #dbe0df;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 30px;
-"><span id="cookieconsent:desc" class="cc-message">This website uses cookies to ensure you get the best experience on our website. <a href="/cookies-policy/">Learn More</a>.</span><span aria-label="dismiss cookie message" role="button" tabindex="0" class="cc-close">GOT IT!</span></div><!--googleon: all--></div>
+    <div ng-include="'pages/fragment/informPanel.html'"></div>
 
     <!--  Scripts-->
     <script src="/webjars/jquery/2.2.4/jquery.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>-->
     <script src="/webjars/angular/1.5.7/angular.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>-->
+
     <script src="/webjars/ngDialog/0.5.8/js/ngDialog.min.js"></script>
     <script src="/webjars/angular-ui-router/0.3.1/release/angular-ui-router.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js"></script>-->
     <script src="/webjars/angular-resource/1.5.7/angular-resource.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-resource.min.js"></script>-->
     <script src="/webjars/angular-animate/1.5.7/angular-animate.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-animate.min.js"></script>-->
     <script src="/webjars/angular-aria/1.5.7/angular-aria.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-aria.min.js"></script>-->
     <script src="/webjars/angular-touch/1.5.7/angular-touch.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-touch.min.js"></script>-->
     <script src="/webjars/angular-messages/1.5.7/angular-messages.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-messages.min.js"></script>-->
     <script src="/webjars/momentjs/2.14.1/min/moment.min.js"></script>
     <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.5.0/angular-file-upload.min.js" ></script>-->
     <script src="official/ng-infinite-scroll.min.js"></script>
     <script src="official/nav-tree/abn-tree.js"></script>
     <script src="official/stepper/md-steppers.js"></script>
-
-    <!-- 2gis maps -->
-    <script src="http://maps.api.2gis.ru/2.0/loader.js?pkg=basic"></script>
 
     <!--materialize-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
@@ -141,7 +120,7 @@
     <script src="official/mdPickers.min.js"></script>
     <script src="official/crypto/crypto-js.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/0.9.1/cropper.min.js"></script>-->
-    <script src="official/cropper.js"></script>
+    <!--<script src="official/cropper.js"></script>-->
 
     <!-- build:js custom/js/all.js -->
     <script src="custom/js/libs/ngBreadcrumbs.js"></script>

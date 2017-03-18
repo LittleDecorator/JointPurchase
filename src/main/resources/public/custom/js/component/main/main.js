@@ -10,6 +10,11 @@
             function ($scope,$rootScope, $window, $state, authService, dataResources,jwtHelper, store,eventService,$timeout,$mdSidenav,$log,modal, $mdToast) {
                 console.log("Enter main controller");
 
+	            $scope.THUMB_URL = "media/image/thumb/";
+	            $scope.PREVIEW_URL = "media/image/preview/";
+	            $scope.VIEW_URL = "media/image/view/";
+	            $scope.ORIG_URL = "media/image/";
+
                 $rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
                 var templatePath = "pages/fragment/menu/";
@@ -28,16 +33,12 @@
                 $scope.showContent = false;
 
                 $scope.initCart = function(){
-                    console.log('init cart');
                     $scope.cart = {cou:0,content:[]};
                     var c = store.get("cart");
-                    console.log(c);
-                    console.log(store);
                     if(!helpers.isArray(c)) {
                         //$scope.cart = store.get("cart");
                         $scope.cart = c;
                     }
-                    console.log($scope.cart)
                 };
 
                 //restore token
@@ -154,7 +155,13 @@
                 //    console.log(data);
                 //});
 
+
                 /* handle event in side menu .Broadcast event */
+	            /**
+	             * Обрабатывает выбор в боковом меню товаров.
+	             * Распространяет событие "onFilter"
+	             * @param node
+	             */
                 $scope.filterProduct = function(node){
                     $mdSidenav('left').close();
                     eventService.onFilter(node);

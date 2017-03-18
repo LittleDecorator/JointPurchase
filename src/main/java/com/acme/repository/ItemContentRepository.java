@@ -1,7 +1,6 @@
 package com.acme.repository;
 
 import com.acme.model.ItemContent;
-import com.acme.model.OrderItem;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
