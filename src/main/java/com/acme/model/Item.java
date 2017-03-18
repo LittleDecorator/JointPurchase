@@ -1,45 +1,67 @@
 package com.acme.model;
 
 import com.acme.enums.ItemStatus;
+import com.acme.enums.converters.ItemStatusConverter;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Entity
+@Table(name = "item")
+@Document(indexName = "item-index",type = "item-type")
+@Setting(settingPath = "/elastic/item/settings.json")
+@Mapping(mappingPath = "/elastic/item/mappings.json")
 public class Item {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(name = "name")
     private String name;
 
-    private String companyId;
+    @OneToOne
+    @JoinColumn(name="company_id")
+    private Company company;
 
+    @Column(name = "article")
     private String article;
 
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "price")
     private Integer price;
 
+    @Column(name = "date_add")
     private Date dateAdd;
 
+    @Column(name = "not_for_sale")
     private boolean notForSale;
 
+    @Column(name = "in_stock")
     private Integer inStock;
 
-    private ItemStatus status;
+    @Convert(converter = ItemStatusConverter.class)
+    private ItemStatus status = ItemStatus.AVAILABLE;
 
-    public Item() {}
+    @Transient
+    private List<Category> categories;
 
-    public Item(Item item) {
-        this.id = item.getId();
-        this.name = item.getName();
-        this.companyId = item.getCompanyId();
-        this.article = item.getArticle();
-        this.description = item.getDescription();
-        this.price = item.getPrice();
-        this.dateAdd = item.getDateAdd();
-        this.notForSale = item.isNotForSale();
-        this.inStock = item.getInStock();
-        this.status = item.getStatus();
-    }
+    @Transient
+    private List<ItemContent> itemContents;
+
+    @Transient
+    private List<OrderItem> orderItems;
+
+    @Transient
+    private String url;
 
     public String getId() {
         return id;
@@ -55,13 +77,6 @@ public class Item {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId == null ? null : companyId.trim();
     }
 
     public String getArticle() {
@@ -120,19 +135,43 @@ public class Item {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", companyId='" + companyId + '\'' +
-                ", article='" + article + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", dateAdd=" + dateAdd +
-                ", notForSale=" + notForSale +
-                ", inStock=" + inStock +
-                ", status=" + status +
-                '}';
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public List<ItemContent> getItemContents() {
+        return itemContents;
+    }
+
+    public void setItemContents(List<ItemContent> itemContents) {
+        this.itemContents = itemContents;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

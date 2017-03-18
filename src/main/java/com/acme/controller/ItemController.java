@@ -1,27 +1,17 @@
 package com.acme.controller;
 
-import com.acme.model.CategorizeItem;
-import com.acme.model.CategoryItem;
-import com.acme.model.OrderItem;
-import com.acme.model.dto.ItemView;
+import com.acme.model.*;
 import com.acme.model.filter.ItemFilter;
-import com.acme.repository.CategoryItemRepository;
-import com.acme.repository.ContentRepository;
-import com.acme.repository.ItemCategoryLinkRepository;
-import com.acme.repository.ItemContentRepository;
-import com.acme.repository.ItemRepository;
-import com.acme.repository.OrderItemRepository;
+import com.acme.repository.specification.ItemSpecifications;
+import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
-import com.acme.model.Category;
-import com.acme.model.Item;
-import com.acme.repository.CategoryRepository;
-import com.acme.repository.CompanyRepository;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -51,13 +41,13 @@ public class ItemController{
 	ItemContentRepository itemContentRepository;
 
     @Autowired
-	CategoryItemRepository categoryItemRepository;
-
-    @Autowired
-	ItemCategoryLinkRepository itemCategoryLinkRepository;
-
-    @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    CategoryItemRepository categoryItemRepository;
 
     @Autowired
     PlatformTransactionManager transactionManager;
@@ -69,32 +59,37 @@ public class ItemController{
     ItemService itemService;
 
     /**
-     * Get all items
+     * Получение всех товаров по фильтру
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<ItemView> getItems(ItemFilter filter){
-        return itemRepository.getFilteredItems(filter);
+    public List<Item> getItems(ItemFilter filter){
+        /* выставляем offset, limit и order by */
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
+        return Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
     }
 
     /**
-     * Create new Item
+     * Создание нового | обновление существующего товара
      *
      * @param item
-     * @return ID of new item
+     * @return - ID of new item
      * @throws ParseException
      * @throws IOException
      */
-    @RequestMapping(method = RequestMethod.POST)
-    public String addItem(@RequestBody CategorizeItem item) throws ParseException, IOException {
+    @RequestMapping(method = {RequestMethod.PUT,RequestMethod.POST})
+    public String addItem(@RequestBody Item item) throws ParseException, IOException {
         String itemId = null;
         if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
-                itemId = UUID.randomUUID().toString();
-                item.setId(itemId);
-                itemRepository.insertSelective(item);
-                /* add new linked categories */
-                categoryItemRepository.insertBulk(categoryService.createCategoryItemList4Item(itemId, item.getCategories().stream().map(Category::getId).collect(Collectors.toList())));
+                itemId = itemRepository.save(item).getId();
+                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
+                /* удаление не существующих связей */
+                categoryItemRepository.deleteByItemIdAndCategoryIdNotIn(item.getId(), categoryIdList);
+                /* актуализация списка сатегорий */
+                categoryIdList.removeAll(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
+                /* добавление новых связей */
+                categoryItemRepository.save(categoryService.createCategoryItemList4Item(itemId, categoryIdList));
                 transactionManager.commit(status);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -105,40 +100,21 @@ public class ItemController{
     }
 
     /**
-     * Update item record
-     *
-     * @param item
-     */
-    @RequestMapping(method = RequestMethod.PUT)
-    public void updateItem(@RequestBody CategorizeItem item){
-        if (item != null) {
-            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            try {
-                itemRepository.updateSelectiveById(item);
-                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
-                categoryItemRepository.deleteByItemAndExcludedCategoryIdList(item.getId(), categoryIdList);
-                categoryIdList.removeAll(categoryItemRepository.getByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
-                List<CategoryItem> categoryItems = categoryService.createCategoryItemList4Item(item.getId(),categoryIdList);
-                categoryItemRepository.insertBulk(categoryItems);
-                transactionManager.commit(status);
-            } catch (Exception ex) {
-                transactionManager.rollback(status);
-            }
-        }
-    }
-
-    /**
-     * Delete Item by id
+     * Удаление товара по ID
      * @param id
      */
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public void deleteItem(@PathVariable("id") String id) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
+            /* удалим записи товара в заказе */
             orderItemRepository.deleteByItemId(id);
+            /* удалим записи товара в изображениях */
             itemContentRepository.deleteByItemId(id);
+            /* удалим записи товара в категориях */
             categoryItemRepository.deleteByItemId(id);
-            itemRepository.deleteById(id);
+            /* удалим товар */
+            itemRepository.delete(id);
             transactionManager.commit(status);
         } catch (Exception ex){
             System.out.println(Arrays.toString(ex.getStackTrace()));
@@ -147,60 +123,58 @@ public class ItemController{
     }
 
     /**
-     * Get Item detail
+     * Получение товара по ID
      *
      * @param id
      * @return Item info with Categories
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public CategorizeItem getItemDetail(@PathVariable("id") String id) {
-        CategorizeItem item = new CategorizeItem(itemRepository.getById(id));
-        System.out.println(item);
-        item.setCategories(categoryRepository.getByItemId(item.getId()));
+    public Item getItemDetail(@PathVariable("id") String id) {
+        Item item = itemRepository.findOne(id);
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         return item;
     }
 
     /**
-     * Return Item list by specific order
+     * Получение списка товаров по ID заказа
      * @param orderId
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
     public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
-        List<String> itemIdList = Lists.transform(orderItemRepository.getByOrderId(orderId), OrderItem::getItemId);
-        return itemRepository.getByIdList(itemIdList);
+        Order order = orderRepository.findOne(orderId);
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
+        List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+        for(Item item : items){
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        }
+        return items;
     }
 
     /**
-     * Return all items by specific company
+     * Получение товара по компании
      * @param companyId
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/company/{id}")
     public List<Item> getAllByCompanyId(@PathVariable("id")String companyId) {
-        return itemRepository.getByCompanyId(companyId);
+        List<Item> items = itemRepository.findByCompanyId(companyId);
+        for(Item item : items){
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        }
+        return items;
     }
 
     /**
-     * Get all items as map
+     * Получение мапы товара для списков
      **/
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<Map<String,Object>> getItemMap() {
-        List<Map<String,Object>> list = new ArrayList<>();
-        Map<String,Object> map;
-        for(Item i : itemRepository.getAll()){
-            map = new HashMap<>();
-            map.put("id",i.getId());
-            map.put("name",i.getName());
-            map.put("price",i.getPrice());
-            map.put("article",i.getArticle());
-            list.add(map);
-        }
-        return list;
+    public List<ItemMap> getItemMap() {
+        return itemRepository.findAllByOrderByDateAddAsc().stream().map(i -> new ItemMap(i.getId(), i.getName(), i.getPrice(), i.getArticle())).collect(Collectors.toList());
     }
 
     /**
-     * Toggle item for select
+     * Зменение признака товара "выставить на продажу"
      * @param input
      * @throws ParseException
      */
@@ -215,9 +189,55 @@ public class ItemController{
         Item item = new Item();
         item.setId(itemId);
         item.setNotForSale(notForSale);
-        itemRepository.updateSelectiveById(item);
+        itemRepository.save(item);
     }
 
+    /*------ NESTED -------*/
 
+    private class ItemMap {
+        String id;
+        String name;
+        double price;
+        String article;
+
+        ItemMap(String id, String name, double price, String article) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.article = article;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public String getArticle() {
+            return article;
+        }
+
+        public void setArticle(String article) {
+            this.article = article;
+        }
+    }
 }
 

@@ -2,11 +2,13 @@ package com.acme.service;
 
 import com.acme.email.Email;
 import com.acme.exception.TemplateException;
-import com.acme.model.PurchaseOrder;
+import com.acme.model.Order;
+import com.acme.model.gmail.SimpleDraft;
+import com.acme.model.gmail.SimpleMessage;
+import com.acme.model.gmail.SimpleThread;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ public interface EmailService {
 	 * @throws MessagingException
 	 * @throws TemplateException
 	 */
-	void sendOrderStatus(PurchaseOrder order) throws IOException, MessagingException, TemplateException;
+	void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException;
 
 	/**
 	 * Отправка ссылки для подтверждения регистрации
@@ -52,13 +54,69 @@ public interface EmailService {
 	 * @return - список писем
 	 * @throws MessagingException
 	 */
-	List<Email> getInbox() throws MessagingException;
+	List<SimpleThread> getInbox() throws IOException;
 
 	/**
 	 * Получение списка отправленных сообщений
 	 * @return - список отправленных сообщений
 	 * @throws MessagingException
 	 */
-	List<Email> getOutbox() throws MessagingException;
+	List<SimpleThread> getSent() throws IOException;
 
+	List<SimpleDraft> getDraft() throws IOException;
+
+	/**
+	 * Получение списка нитей в корзине
+	 * @return
+	 * @throws IOException
+	 */
+	List<SimpleThread> getTrash() throws IOException;
+
+	/**
+	 * Перемещение сообщения в корзину
+	 * @param id
+	 */
+	void removeMessage(String id);
+
+	/**
+	 * Восстановление сообщения из корзины
+	 * @param id
+	 */
+	void restoreMessage(String id);
+
+	/**
+	 * Перемещение Цепочки сообщений в корзину
+	 * @param id
+	 */
+	void removeThread(String id);
+
+	/**
+	 * восстановление Цепочки сообщений из корзины
+	 * @param id
+	 */
+	void restoreThread(String id);
+
+	void removeDraft(String id) throws IOException;
+
+	/**
+	 * Отправка сообщения без вложений
+	 * @param message
+	 * @throws IOException
+	 * @throws MessagingException
+	 */
+	void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException;
+
+	/**
+	 * Добавление нового сообщения во входящие
+	 * @param message
+	 * @throws IOException
+	 * @throws MessagingException
+	 */
+	void insertToInbox(SimpleMessage message) throws IOException, MessagingException;
+
+	void saveDraft(SimpleDraft draft) throws IOException, MessagingException;
+
+	SimpleDraft getDraft(String id) throws IOException;
+
+	void sendDraft(SimpleDraft draft) throws IOException, MessagingException;
 }

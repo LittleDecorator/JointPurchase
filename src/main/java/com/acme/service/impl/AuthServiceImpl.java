@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService{
      */
     @Override
     public Subject getSubject(String login) {
-        return subjectRepository.getByEmail(login);
+        return subjectRepository.findByEmail(login);
     }
 
     /**
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService{
         if (!(subject != null && subject.isEnabled())) {
             return null;
         }
-        Credential credential = credentialRepository.getById(subject.getId());
+        Credential credential = credentialRepository.findOne(subject.getId());
         if(credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())){
                 return credential;
         } else {
@@ -148,14 +148,14 @@ public class AuthServiceImpl implements AuthService{
         subject.setLastName(data.getLastName());
         subject.setMiddleName(data.getMiddleName());
         subject.setPhoneNumber(data.getPhone());
-        subjectRepository.insert(subject);
+        subjectRepository.save(subject);
 
         //create credential
         Credential credential = new Credential();
         credential.setSubjectId(subject.getId());
         credential.setRoleId("user");
         credential.setPassword(PasswordHashing.hashPassword(data.getPassword()));
-        credentialRepository.insert(credential);
+        credentialRepository.save(credential);
 
         //create temp token
         String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
@@ -177,7 +177,7 @@ public class AuthServiceImpl implements AuthService{
                 smsService.passChangeConfirm();
             } else {
                 /* будем использовать почту */
-                String tmpToken = tokenService.createExpToken(credentialRepository.getById(subject.getId()), (long) (24 * 60 * 60 * 1000));
+                String tmpToken = tokenService.createExpToken(credentialRepository.findOne(subject.getId()), (long) (24 * 60 * 60 * 1000));
                 String tokenLink = "http://grimmstory.ru/public/auth/restore?jwt="+tmpToken;
                 emailService.sendPassChangeConfirm(subject.getEmail(), tokenLink);
             }

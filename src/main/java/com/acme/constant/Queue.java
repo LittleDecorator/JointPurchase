@@ -22,9 +22,11 @@ public interface Queue {
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_AND_EXCLUDE_ITEM_LIST = "DELETE FROM public.category_item WHERE category_id = :categoryId AND item_id NOT IN (:itemIdList)";
     String CATEGORY_ITEM_DELETE_BY_CATEGORY_ID = "DELETE FROM public.category_item WHERE category_id = ?";
 
+    /* moved */
     String ITEM_FIND_ALL = "SELECT * FROM public.item ORDER BY date_add asc";
-
+    /* moved */
     String ITEM_FIND_BY_ID = "SELECT * FROM public.item WHERE id = ?";
+    /* moved */
     String ITEM_FIND_BY_ID_LIST = "SELECT * FROM public.item WHERE id in (:idList)";
     String ITEM_BY_COMPANY_FOR_SALE = "SELECT * FROM public.catalog WHERE company_id = :companyId AND not_for_sale = 'N'";
     String ITEM_BY_CATEGORY_FOR_SALE = "WITH RECURSIVE tmp ( id, parent_id ) AS ( " +

@@ -1,6 +1,5 @@
 package com.acme;
 
-import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CategoryRepository;
 import com.acme.repository.ItemRepository;
 import com.jayway.restassured.RestAssured;
@@ -29,8 +28,8 @@ public class ItemControllerTest {
 
     @Autowired
     ItemRepository itemRepository;
-    @Autowired
-    CategoryItemRepository categoryItemRepository;
+//    @Autowired
+//    CategoryItemRepository categoryItemRepository;
     @Autowired
     CategoryRepository categoryRepository;
 

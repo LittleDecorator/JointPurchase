@@ -17,11 +17,11 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Override
 	public Subject getSubject(String subjectId) {
-		return subjectRepository.getById(subjectId);
+		return subjectRepository.findOne(subjectId);
 	}
 
 	@Override
 	public Subject getSubjectByEmail(String email) {
-		return subjectRepository.getByEmail(email);
+		return subjectRepository.findByEmail(email);
 	}
 }

@@ -2,21 +2,20 @@ package com.acme.controller;
 
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
+import com.acme.model.Order;
 import com.acme.model.OrderItem;
-import com.acme.model.PurchaseOrder;
-import com.acme.model.dto.OrderRequest;
-import com.acme.model.dto.OrderView;
+import com.acme.model.OrderView;
 import com.acme.model.filter.OrderFilter;
-import com.acme.repository.ItemRepository;
-import com.acme.repository.OrderItemRepository;
-import com.acme.repository.PurchaseOrderRepository;
+import com.acme.repository.specification.OrderViewSpecifications;
+import com.acme.repository.*;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
 import com.google.common.collect.Lists;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -29,159 +28,223 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/order")
-public class OrderController{
+public class OrderController {
 
-    @Autowired
-    PurchaseOrderRepository purchaseOrderRepository;
+	@Autowired
+	OrderRepository orderRepository;
 
-    @Autowired
-    OrderItemRepository orderItemRepository;
+	@Autowired
+	OrderViewRepository orderViewRepository;
 
-    @Autowired
-    ItemRepository itemRepository;
+	@Autowired
+	ItemRepository itemRepository;
 
-    @Autowired
-    AuthService authService;
+	@Autowired
+	AuthService authService;
 
-    @Autowired
-    EmailService emailService;
+	@Autowired
+	EmailService emailService;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+	@Autowired
+	OrderItemRepository  orderItemRepository;
+
+	@Autowired
+	private PlatformTransactionManager transactionManager;
 
 
-    /**
-     * Get all orders
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public List<OrderView> getOrders(OrderFilter filter) {
-        return purchaseOrderRepository.getAll(filter);
-    }
+	/**
+	 * Получение всех заказов по фильтру
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public List<OrderView> getOrders(OrderFilter filter) {
+		/* выставляем offset, limit и order by */
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
+		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
+	}
 
-    @RequestMapping(value = "/history", method = RequestMethod.GET)
-    public List<OrderView> getOrderHistory(OrderFilter filter) {
-        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
-        filter.setSubjectId(authService.getClaims(servletRequest).getId());
-        System.out.println(filter);
-        return purchaseOrderRepository.getAll(filter);
-    }
+	/**
+	 * Получение заказа по ID
+	 * @param id - order ID
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	public Order getOrder(@PathVariable("id") String id) {
+		return orderRepository.findOne(id);
+	}
 
-    /**
-     * Get specific customer order
-     * @param id - customer ID
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET,value = "/customer/{id}")
-    public List<OrderView> getCustomerOrders(@PathVariable("id") String id) {
-        return purchaseOrderRepository.getBySubjectId(id);
-    }
+	/**
+	 * Получение заказов по ID клиента
+	 * @param id - customer ID
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/customer/{id}")
+	public List<OrderView> getCustomerOrders(@PathVariable("id") String id) {
+		return orderViewRepository.findAll(OrderViewSpecifications.customer(id));
+	}
 
-    @RequestMapping(method = RequestMethod.POST,value = "/personal")
-    public PurchaseOrder privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
-        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
-        request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
-        PurchaseOrder purchaseOrder = createOrUpdateOrder(request);
-        emailService.sendOrderStatus(purchaseOrder);
-        return purchaseOrder;
-    }
+	/**
+	 * Создание заказа авторизованного клиента.
+	 * Клиенту также будет отправлено уведомление (sms|email) о создание заказа
+	 *
+	 * @param request
+	 * @return
+	 * @throws ParseException
+	 * @throws IOException
+	 * @throws MessagingException
+	 * @throws TemplateException
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/personal")
+	public Order privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
+		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+		request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
+		Order order = persistOrder(request);
+		emailService.sendOrderStatus(order);
+		return order;
+	}
 
-    /**
-     * Update Order if ID present, else Create new Order
-     * @param request
-     * @return
-     * @throws ParseException
-     * @throws IOException
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public PurchaseOrder createOrUpdateOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try{
-            PurchaseOrder order = request.getOrder();
-            if(order.getId()!=null){
-                purchaseOrderRepository.updateSelectiveById(order);
-            } else {
-                order.setUid(System.currentTimeMillis());
-                System.out.println("insert " + order);
-                purchaseOrderRepository.insertSelective(order);
-                System.out.println(order);
-            }
+	/**
+	 * Получение истории заказов авторизованного клиента
+	 * @return
+	 */
+	@RequestMapping(value = "/history", method = RequestMethod.GET)
+	public Page<OrderView> getOrderHistory(OrderFilter filter) {
+		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
+		filter.setSubjectId(authService.getClaims(servletRequest).getId());
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
+		return orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+	}
 
-            //delete old links
-            orderItemRepository.deleteByOrderId(order.getId());
-            //insert new links
-            for(OrderItem orderItem : request.getItems()){
-                orderItem.setOrderId(order.getId());
-                orderItemRepository.insertSelective(orderItem);
-            }
-            transactionManager.commit(status);
-            return order;
-        } catch (Exception e){
-            System.out.println("ERROR HAPPEN");
-            transactionManager.rollback(status);
-            return null;
-        }
-    }
+	/**
+	 * Создание заказа
+	 * @param request
+	 * @return
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public Order persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
+		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+		try {
 
-    /**
-     * Delete specific order
-     * @param id - order ID
-     */
-    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
-    public void deleteOrder(@PathVariable("id") String id){
-        //delete order bind items
-        orderItemRepository.deleteByOrderId(id);
-        //delete order itself
-        purchaseOrderRepository.deleteById(id);
-    }
+			/* сохраним заказ из запроса. */
+			Order order = orderRepository.save(request.getOrder());
 
-    /**
-     * Get Order detail
-     * @param id - order ID
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public PurchaseOrder getOrder(@PathVariable("id") String id){
-        return purchaseOrderRepository.getById(id);
-    }
+			/* добавим записи в таблицу связи заказ-товар */
+			for (OrderItemsList itemsList : request.getItems()) {
+				// собираем товар для дальнейшей обработки
+				OrderItem orderItem = new OrderItem();
+				orderItem.setItemId(itemsList.getItem().getId());
+				orderItem.setOrderId(order.getId());
+				orderItem.setCount(orderItem.getCount());
+				orderItemRepository.save(orderItem);
+			}
 
-    /**
-     * Get Items list in order
-     * @param id - order ID
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
-    public JSONArray getOrderItems(@PathVariable("id") String id) {
-        System.out.println("getOrderItems");
-        //get link info
-        List<OrderItem> orderItems = orderItemRepository.getByOrderId(id);
-        List<String> itemIdList = Lists.transform(orderItems, OrderItem::getItemId);
-        System.out.println(itemIdList);
-        //get items
-        JSONArray array = new JSONArray();
-        if(itemIdList.size()>0){
-            List<Item> items = itemRepository.getByIdList(itemIdList);
+			//удаляем записи, где заказ совпадает, а товар нет.
+			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
+			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
 
-            //create result
-            JSONObject object;
-            for(OrderItem orderItem : orderItems){
-                for(Item item : items){
-                    if(orderItem.getItemId().contentEquals(item.getId())){
-                        object = new JSONObject();
-                        object.put("item",item);
-                        object.put("cou",orderItem.getCou());
-                        array.add(object);
-                    }
-                }
-            }
-        }
+			transactionManager.commit(status);
+			return order;
+		} catch (Exception e) {
+			transactionManager.rollback(status);
+			return null;
+		}
+	}
 
-        return array;
-    }
+	/**
+	 * Удаление заказа по ID
+	 * @param id - order ID
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	public void deleteOrder(@PathVariable("id") String id) {
+		//delete order bind items
+		orderItemRepository.deleteByOrderId(id);
+		//delete order itself
+		orderRepository.delete(id);
+	}
 
+
+
+	/**
+	 * Получение товара из заказа
+	 * @param id - order ID
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/{id}/items")
+	public List<OrderItemsList> getOrderItems(@PathVariable("id") String id) {
+		List<OrderItemsList> result = Lists.newArrayList();
+		// получим заказ
+		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(id);
+		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+        Map<String, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getItemId()), orderItem.getCount())).collect(Collectors.toList()));
+		return result;
+	}
+
+    /* ------ NESTED CLASSES ------ */
+
+	/**
+	 * Класс представляет собой содержимое заказа.
+	 */
+	private class OrderRequest {
+
+		private Order order;
+		private List<OrderItemsList> items;
+
+		public Order getOrder() {
+			return order;
+		}
+
+		public void setOrder(Order order) {
+			this.order = order;
+		}
+
+		public List<OrderItemsList> getItems() {
+			return items;
+		}
+
+		public void setItems(List<OrderItemsList> items) {
+			this.items = items;
+		}
+	}
+
+	/**
+	 * Класс представляет собой содержимое заказа.
+	 * Детали заказа убраны.
+	 */
+	private class OrderItemsList {
+
+		Item item;
+		Integer count;
+
+		OrderItemsList(Item item, Integer count) {
+			this.item = item;
+			this.count = count;
+		}
+
+		public Item getItem() {
+			return item;
+		}
+
+		public void setItem(Item item) {
+			this.item = item;
+		}
+
+		public Integer getCount() {
+			return count;
+		}
+
+		public void setCount(Integer count) {
+			this.count = count;
+		}
+	}
 }

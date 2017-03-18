@@ -4,20 +4,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-//TODO: В дальнейшем нужно перевесить на LocalDateTime (может нужно другой драйвер? Может запрос изменить? )
 public class OrderFilter {
 
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    LocalDateTime dateFrom;
-//    Date dateFrom;
+    private LocalDateTime dateFrom;
     @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSX")
-    LocalDateTime dateTo;
-//    Date dateTo;
-    String delivery;
-    String status;
-    String subjectId;
-    Integer limit;
-    Integer offset;
+    private LocalDateTime dateTo;
+    private String delivery;
+    private String status;
+    private String subjectId;
+    private Integer limit;
+    private Integer offset;
 
     public LocalDateTime getDateFrom() {
         return dateFrom;

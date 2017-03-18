@@ -1,19 +1,33 @@
 package com.acme.model;
 
-import java.util.Arrays;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "content")
 public class Content {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Column(name = "file_name")
     private String fileName;
+
     private String mime;
+
     private String type;
+
+    @Column(name = "is_default")
     private boolean isDefault;
 
+    @Column(name = "date_add")
     private Date dateAdd;
 
-    private byte[] content;
+    private String content;
 
     public String getId() {
         return id;
@@ -63,23 +77,21 @@ public class Content {
         this.dateAdd = dateAdd;
     }
 
-    public byte[] getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(byte[] content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    @Override
-    public String toString() {
-        return "Content{" +
-                "id='" + id + '\'' +
-                ", fileName='" + fileName + '\'' +
-                ", mime='" + mime + '\'' +
-                ", type='" + type + '\'' +
-                ", isDefault=" + isDefault +
-                ", dateAdd=" + dateAdd +
-                '}';
+    public boolean isDefault() {
+        return isDefault;
     }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+
 }

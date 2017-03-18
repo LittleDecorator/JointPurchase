@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Node> getRootNodes() {
         List<Node> roots = Lists.newArrayList();
-        roots.addAll(categoryRepository.getAll().stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> treeService.category2Node(category)).collect(Collectors.toList()));
+        roots.addAll(Lists.newArrayList(categoryRepository.findAll()).stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> treeService.category2Node(category)).collect(Collectors.toList()));
         return roots;
     }
 }

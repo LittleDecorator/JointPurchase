@@ -1,12 +1,30 @@
 package com.acme.model;
 
-import java.util.Date;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "category")
 public class Category {
+
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
     private String name;
+
+    @Column(name = "parent_id")
     private String parentId;
+
+    @Column(name = "date_add")
     private Date dateAdd;
+
+    @Transient
+    private List<Item> items;
 
     public String getId() {
         return id;
@@ -40,13 +58,11 @@ public class Category {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", parentId='" + parentId + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }

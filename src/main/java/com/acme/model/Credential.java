@@ -1,15 +1,25 @@
 package com.acme.model;
 
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "credential")
 public class Credential {
+
+    @Id
     private String subjectId;
 
     private String password;
 
+    @Column(name = "role_id")
     private String roleId;
 
+    @Column(name = "date_add")
     private Date dateAdd;
 
     public String getSubjectId() {
@@ -43,13 +53,4 @@ public class Credential {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Credential{" +
-                "subjectId='" + subjectId + '\'' +
-                ", password='" + password + '\'' +
-                ", roleId='" + roleId + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

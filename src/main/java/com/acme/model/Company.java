@@ -1,9 +1,21 @@
 package com.acme.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "company")
 public class Company {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
     private String name;
@@ -26,6 +38,7 @@ public class Company {
 
     private String rs;
 
+    @Column(name = "date_add")
     private Date dateAdd;
 
     public String getId() {
@@ -124,21 +137,4 @@ public class Company {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Company{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", url='" + url + '\'' +
-                ", bik='" + bik + '\'' +
-                ", inn='" + inn + '\'' +
-                ", ks='" + ks + '\'' +
-                ", rs='" + rs + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

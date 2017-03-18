@@ -1,19 +1,24 @@
 package com.acme.model;
 
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
-public class Role extends Base {
+@Entity
+@Table(name = "role")
+public class Role {
 
+	@Id
     private String id;
-
 
     private String description;
 
-
+	@Column(name = "parent_role_id")
     private String parentRoleId;
 
-
+	@Column(name = "date_add")
     private Date dateAdd;
 
 
@@ -36,7 +41,6 @@ public class Role extends Base {
         this.description = description == null ? null : description.trim();
     }
 
-
     public String getParentRoleId() {
         return parentRoleId;
     }
@@ -44,7 +48,6 @@ public class Role extends Base {
     public void setParentRoleId(String parentRoleId) {
         this.parentRoleId = parentRoleId == null ? null : parentRoleId.trim();
     }
-
 
     public Date getDateAdd() {
         return dateAdd;
@@ -54,13 +57,4 @@ public class Role extends Base {
         this.dateAdd = dateAdd;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                ", parentRoleId='" + parentRoleId + '\'' +
-                ", dateAdd=" + dateAdd +
-                '}';
-    }
 }

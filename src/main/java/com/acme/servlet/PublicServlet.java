@@ -76,7 +76,7 @@ public class PublicServlet extends HttpServlet {
                     /* registration */
                     String subjectId = claims.getId();
                     if (subjectRepository != null) {
-                        Subject subject = subjectRepository.getById(subjectId);
+                        Subject subject = subjectRepository.findOne(subjectId);
                         if (subject == null) {
                             res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
                             return;
@@ -86,7 +86,7 @@ public class PublicServlet extends HttpServlet {
                             res.sendRedirect(Settings.appMainPage);
                         } else {
                             subject.setEnabled(true);
-                            subjectRepository.updateSelectiveById(subject);
+                            subjectRepository.save(subject);
                             /* если регистрация прошла успешно, то отправим письмо о результате */
                             emailService.sendRegistrationConfirm(subject.getEmail());
                             res.sendRedirect(Settings.registrationResultPage + "?confirmed=true");

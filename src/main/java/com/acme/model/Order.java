@@ -2,27 +2,60 @@ package com.acme.model;
 
 
 import com.acme.enums.OrderStatus;
+import com.acme.enums.converters.OrderStatusConverter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-public class PurchaseOrder extends Base {
+@Entity
+@Table(name = "purchase_order")
+public class Order {
 
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
-    private String subjectId;
-    private Long uid;
-    private String recipientFname;
-    private String recipientLname;
-    private String recipientMname;
-    private String recipientEmail;
-    private String recipientPhone;
-    private String recipientAddress;
-    private Date dateAdd;
-    private Date closeOrderDate;
-    private String comment;
-    private OrderStatus status;
-    private String delivery;
-    private Integer payment;
 
+    @Column(name = "subject_id")
+    private String subjectId;
+
+    private Long uid = System.currentTimeMillis();
+
+    @Column(name = "recipient_fname")
+    private String recipientFname;
+
+    @Column(name = "recipient_lname")
+    private String recipientLname;
+
+    @Column(name = "recipient_mname")
+    private String recipientMname;
+
+    @Column(name = "recipient_email")
+    private String recipientEmail;
+
+    @Column(name = "recipient_phone")
+    private String recipientPhone;
+
+    @Column(name = "recipient_address")
+    private String recipientAddress;
+
+    @Column(name = "date_add")
+    private Date dateAdd;
+
+    @Column(name = "close_order_date")
+    private Date closeOrderDate;
+
+    private String comment;
+
+    @Convert(converter = OrderStatusConverter.class)
+    private OrderStatus status;
+
+    @Column(name = "delivery_id")
+    private String delivery;
+
+    private Integer payment;
 
     public String getId() {
         return id;
@@ -166,24 +199,4 @@ public class PurchaseOrder extends Base {
         this.payment = payment;
     }
 
-    @Override
-    public String toString() {
-        return "PurchaseOrder{" +
-                "id='" + id + '\'' +
-                ", subjectId='" + subjectId + '\'' +
-                ", uid=" + uid +
-                ", recipientFname='" + recipientFname + '\'' +
-                ", recipientLname='" + recipientLname + '\'' +
-                ", recipientMname='" + recipientMname + '\'' +
-                ", recipientEmail='" + recipientEmail + '\'' +
-                ", recipientPhone='" + recipientPhone + '\'' +
-                ", recipientAddress='" + recipientAddress + '\'' +
-                ", dateAdd=" + dateAdd +
-                ", closeOrderDate=" + closeOrderDate +
-                ", comment='" + comment + '\'' +
-                ", status='" + status + '\'' +
-                ", delivery='" + delivery + '\'' +
-                ", payment=" + payment +
-                '}';
-    }
 }

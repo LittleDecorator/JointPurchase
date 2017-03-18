@@ -1,10 +1,12 @@
 package com.acme.controller;
 
 import com.acme.enums.ImageSize;
+import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Content;
 import com.acme.repository.ContentRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
+import com.google.common.io.BaseEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,10 +39,7 @@ public class MediaController {
 	public void getImageForGallery(@PathVariable(value = "contentId") String contentId,
 								   @RequestParam(name = "asWebp", required = false) Boolean asWebp,
 								   HttpServletResponse response) throws Exception {
-		if (asWebp == null) {
-			asWebp = false;
-		}
-		writeResponse(ImageSize.RAW, contentId, asWebp, response);
+		writeResponse(ImageSize.RAW, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/image/{size}/{contentId}")
@@ -48,44 +47,42 @@ public class MediaController {
 						 @PathVariable(value = "contentId") String contentId,
 						 @RequestParam(name = "asWebp", required = false) Boolean asWebp,
 						 HttpServletResponse response) throws Exception {
-		if (asWebp == null) {
-			asWebp = false;
-		}
 		ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
-		writeResponse(imageSize, contentId, asWebp, response);
+		writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
 	private void writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
 		long start = System.currentTimeMillis();
 		BufferedImage image;
 		System.out.println("Request: " + size.name());
-		Content content = contentRepository.getById(contentId);
+		Content content = contentRepository.findOne(contentId);
 		System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
 		String type = asWebp ? "webp" : content.getType();
+		byte[] data = Base64BytesSerializer.deserialize(content.getContent());
 		switch (size) {
 			case GALLERY:
-				image = resizeService.forGallery(content.getContent());
+				image = resizeService.forGallery(data);
 				break;
 			case VIEW:
-				image = resizeService.forView(content.getContent());
+				image = resizeService.forView(data);
 				break;
 			case PREVIEW:
-				image = resizeService.forPreview(content.getContent());
+				image = resizeService.forPreview(data);
 				break;
 			case THUMB:
-				image = resizeService.forThumb(content.getContent());
+				image = resizeService.forThumb(data);
 				break;
 			case ORIGINAL:
-				image = resizeService.forOrign(content.getContent());
+				image = resizeService.forOrign(data);
 				break;
 			default:
-				image = imageService.getImage(content.getContent());
+				image = imageService.getImage(data);
 		}
 		System.out.println("Size : w - " + image.getWidth() + " h - " + image.getHeight());
-		byte[] data = imageService.toBytes(image, type);
+		byte[] result = imageService.toBytes(image, type);
 		System.out.println("After convert: " + (System.currentTimeMillis() - start) + "ms");
 		response.setContentType(type);
-		response.getOutputStream().write(data);
+		response.getOutputStream().write(result);
 		System.out.println("After write: " + (System.currentTimeMillis() - start) + "ms");
 	}
 }

@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.CaseFormat;
 
+import javax.persistence.AttributeConverter;
+
 @JsonSerialize(using = OrderStatusSerializer.class)
 @JsonDeserialize(using = OrderStatusDeserializer.class)
-public enum OrderStatus {
+public enum OrderStatus implements AttributeConverter<OrderStatus, String> {
 
     NEW("Новый","создан"),
     ACCEPTED("Принят", "добавлен в обработку"),
@@ -31,6 +33,16 @@ public enum OrderStatus {
 
     public String getNotifyText() {
         return notifyText;
+    }
+
+    @Override
+    public String convertToDatabaseColumn(OrderStatus attribute) {
+        return attribute.getText();
+    }
+
+    @Override
+    public OrderStatus convertToEntityAttribute(String dbData) {
+        return OrderStatus.getByName(dbData);
     }
 
     public static OrderStatus getByName(String text){

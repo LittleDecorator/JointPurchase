@@ -5,7 +5,7 @@ create table content (
 	file_name varchar(255),
 	mime varchar(25),
 	type varchar(25),
-	is_default char(1) not null default 'N',
+	is_default boolean not null default false,
 	date_add timestamp default current_timestamp,
 	primary key (id)
 );
@@ -40,7 +40,7 @@ create table role (
 -- таблица покупателей
 create table subject (
   id varchar(128) not null,
-  enabled char(1) not null default 'N' check(enabled in ('Y', 'N')),
+  enabled boolean not null default false,
   first_name varchar(30) not null,
   middle_name varchar(30),
   last_name varchar(30) not null,
@@ -113,7 +113,7 @@ create table item (
   description varchar(2000),
   price int not null, --цена еденицы товара
   date_add timestamp default current_timestamp,
-  not_for_sale char(1) not null default 'N' check(not_for_sale in ('Y', 'N')),
+  not_for_sale boolean not null default false,
   status varchar(30) default 'available',
   in_stock int not null default 0,
   primary key (id),
@@ -136,9 +136,9 @@ create table order_item (
   id varchar(37) not null,
   order_id varchar(37) not null,
   item_id varchar(37) not null,
-  cou int not null,       --количество наименования в заказе
+  count int not null,       --количество наименования в заказе
   date_add timestamp default current_timestamp,
-  primary key (id),
+  PRIMARY KEY (id),
   foreign key (order_id) REFERENCES purchase_order,
   FOREIGN key (item_id) REFERENCES item
 );
@@ -148,10 +148,10 @@ create table item_content(
   id varchar(37) not null,
   item_id varchar(37) not null,
   content_id varchar(37) not null,
-  show char(1) not null default 'N' check(show in ('Y', 'N')),
-  main char(1) not null default 'N' check(main in ('Y', 'N')),
+  show boolean not null default false,
+  main boolean not null default false,
   date_add timestamp default current_timestamp,
-  primary key (id),
+  PRIMARY KEY (id),
   foreign key (item_id) references item,
   foreign key (content_id) references content
 );
@@ -163,7 +163,7 @@ create table email (
 	smtp_port integer, --email port
 	username varchar(255) not null, --email username: qwerty@qwerty.ru
 	password varchar(255) not null, --email password: 12345678
-	compromised char(1) not null default 'N' check(compromised in ('Y', 'N')),
+	compromised boolean not null default false,
 	primary key (id)
 );
 
@@ -177,7 +177,7 @@ create table sms (
 	active char(1) not null default 'Y' check(active in ('Y', 'N')),
 	balance varchar(255),
 	currency varchar(255),
-	compromised char(1) not null default 'N' check(compromised in ('Y', 'N')),
+	compromised boolean not null default false,
 	primary key (id),
 	foreign key (email_id) references email
 );
@@ -192,7 +192,7 @@ create table settings (
 	clipper_xpath_wait varchar(255), -- xpath string for wait page render
 
 	--параметры генерации сертификата для первого захода в систему
-	certificate_gen char(1) not null default 'N' check(certificate_gen in ('Y', 'N')),
+	certificate_gen boolean not null default false,
 
 	--параметры для билдера
 	builder_host varchar(255),   --ip for host builder
@@ -227,20 +227,15 @@ create table settings (
 	resources_domain varchar(255) not null default 'localhost',
 	resources_template_context_external varchar(255) not null default 'http://{{domain}}:8080/pub',
 	resources_template_context_internal varchar(255) not null default 'http://{{domain}}:8080/pub',
-
 	auto_check_blacklist integer default 30,--интервал автопроверки по blacklist-ам
-	blacklist_check_on char(1) not null default 'N' check(blacklist_check_on in ('Y', 'N')),
-
-        auto_check_search integer default 30, --интервал автопроверки поисковыми системами
-	search_check_on char(1) not null default 'N' check(search_check_on in ('Y', 'N')),
-        search_pattern varchar(255) default 'xer_takoe_naidesh',
-
-        auto_check_antivirus integer default 30,--интервал автопроверки по антивирусам
-	virus_check_on char(1) not null default 'N' check(virus_check_on in ('Y', 'N')),
-
-        auto_check_getlog integer default 30,--интервал автопроверки по антивирусам
-	getlog_check_on char(1) not null default 'N' check(getlog_check_on in ('Y', 'N')),
-
+	blacklist_check_on boolean not null default false,
+  auto_check_search integer default 30, --интервал автопроверки поисковыми системами
+	search_check_on boolean not null default false,
+  search_pattern varchar(255) default 'xer_takoe_naidesh',
+  auto_check_antivirus integer default 30,--интервал автопроверки по антивирусам
+	virus_check_on boolean not null default false,
+  auto_check_getlog integer default 30,--интервал автопроверки по антивирусам
+	getlog_check_on boolean not null default false,
 	primary key (id),
     foreign key (clipper_id) references content,
     foreign key (sms_id) references sms,

@@ -7,38 +7,67 @@ import com.acme.email.InlinePicture;
 import com.acme.email.impl.EmailAttachmentImpl;
 import com.acme.email.impl.EmailImpl;
 import com.acme.email.impl.InlinePictureImpl;
+import com.acme.enums.GmailLabels;
 import com.acme.exception.EmailConversionException;
 import com.acme.exception.TemplateException;
+import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.*;
+import com.acme.model.gmail.SimpleDraft;
+import com.acme.model.gmail.SimpleMessage;
+import com.acme.model.gmail.SimpleThread;
 import com.acme.service.EmailService;
 import com.acme.service.OrderService;
 import com.acme.service.SubjectService;
 import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
+import com.acme.util.GmailHelper;
+import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
+import com.google.api.services.gmail.model.Draft;
+import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
+import static org.apache.tika.metadata.MSOffice.APPLICATION_NAME;
 
 @Service
 @Slf4j
@@ -61,6 +90,20 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private TemplateService templateService;
+
+    @Autowired
+    private GmailHelper helper;
+
+    private List<SimpleMessage> messages;
+    private BigInteger lastHistoryId;
+
+    @PostConstruct
+    private void init() throws IOException {
+        /* получение всех сообщений (полная синхронизация) */
+        messages = helper.getMessages();
+        /* получение последнего ID в истории */
+        lastHistoryId = messages.get(0).getHistoryId();
+    }
 
     @Override
     public boolean sendRegistrationToken(String mailTo, String tokenLink) {
@@ -94,7 +137,11 @@ public class EmailServiceImpl implements EmailService {
                     .build();
 
             /* отправляем */
-            mailSender.send(message);
+            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+            /* добавим сообщение во исходящие */
+            messages.add(sended);
+            //TODO: добавить обновление ID истории
+
         } catch (MessagingException | IOException | TemplateException ex){
             log.error("Faild send registration email");
             result = false;
@@ -130,7 +177,11 @@ public class EmailServiceImpl implements EmailService {
                 .build();
 
         /* отправляем */
-        mailSender.send(message);
+        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+        /* добавим сообщение во исходящие */
+        messages.add(sended);
+        //TODO: добавить обновление ID истории
+
     }
 
     /**
@@ -144,11 +195,11 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendPassChangeConfirm(String mailTo, String tokenLink) throws IOException, TemplateException, MessagingException {
         EmailBuilder builder = EmailBuilder.getBuilder();
-            /* получаем клиента */
+        /* получаем клиента */
         Subject subject = subjectService.getSubjectByEmail(mailTo);
-            /* берем его полное имя */
+        /* берем его полное имя */
         String subjectFullName = subject.getLastName() + " "+ subject.getFirstName();
-            /* Получим объект сообщения */
+        /* Получим объект сообщения */
         Email email = EmailImpl.builder()
                 .from(new InternetAddress(senderAddress, senderName))
                 .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
@@ -158,57 +209,101 @@ public class EmailServiceImpl implements EmailService {
                 .encoding(Charset.forName("UTF-8"))
                 .build();
 
-            /* Параметры */
+        /* Параметры */
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("fullName",subjectFullName);
         paramMap.put("confirm", tokenLink);
 
-            /* Конвертим его в Message */
+        /* Конвертим его в Message */
         MimeMessage message = builder.setMessage(convert(email))
                 .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_REQUEST, paramMap))
                 .build();
 
-            /* отправляем */
-        mailSender.send(message);
+        /* отправляем */
+        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+        /* добавим сообщение в общий список */
+        messages.add(sended);
+        //TODO: добавить обновление ID истории
+
     }
 
+    //TODO: Доделать!!!!!
     @Override
     public void sendNews(String mailTo) {
         log.info("Тут будет отправка новостей и акций");
     }
 
     @Override
-    public List<Email> getInbox(){
-        List<Email> emails = null;
-        log.info("Тут будет получение всех входящих писем");
-        return emails;
+    public List<SimpleThread> getInbox() throws IOException {
+        return getMessages(GmailLabels.INBOX);
     }
 
     @Override
-    public List<Email> getOutbox(){
-        List<Email> emails = null;
-        log.info("Тут будет получение всех отправленных писем");
-        return emails;
+    public List<SimpleThread> getSent() throws IOException {
+        /* получим сообщения */
+        return getMessages(GmailLabels.SENT);
     }
 
-    public void sendOrderStatus(PurchaseOrder order) throws IOException, MessagingException, TemplateException {
+    @Override
+    public List<SimpleThread> getTrash() throws IOException {
+        /* получим сообщения */
+        return getMessages(GmailLabels.TRASH);
+    }
+
+    @Override
+    public void removeMessage(String id) {
+        SimpleMessage trashed = SimpleMessage.valueOf(helper.trashMessage(id));
+        /* обновим метку сообщения */
+        messages.stream().filter(m -> m.getId().contentEquals(trashed.getId())).forEach(m -> m.setLabels(trashed.getLabels()));
+    }
+
+    @Override
+    public void restoreMessage(String id) {
+        SimpleMessage untrashed = SimpleMessage.valueOf(helper.untrashMessage(id));
+        /* обновим метку сообщения */
+        messages.stream().filter(m -> m.getId().contentEquals(untrashed.getId())).forEach(m -> m.setLabels(untrashed.getLabels()));
+    }
+
+    @Override
+    public void removeThread(String id) {
+        SimpleThread trashThread = SimpleThread.valueOf(helper.trashThread(id));
+        /* обновим метку всех сообщений в цепочке */
+        Map<String, SimpleMessage> trashedMessages = trashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
+        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
+    }
+
+    @Override
+    public void restoreThread(String id) {
+        SimpleThread untrashThread = SimpleThread.valueOf(helper.untrashThread(id));
+        /* обновим метку всех сообщений в цепочке */
+        Map<String, SimpleMessage> trashedMessages = untrashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
+        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
+    }
+
+    public void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException {
+        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message.getTo(), message.getSubject(), message.getBody()));
+        messages.add(sended);
+    }
+
+    public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
 
         /* get all info */
         Map<String, Object> info = orderService.getOrderInfo(order.getId());
-        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
+//        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
         Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
         Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
         List<Map<String, String>> list = Lists.newArrayList();
 
         /* перебираем товар */
-        itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
-						.put("imageName", contentMap.get(itemId).getId())
-						.put("itemName", itemMap.get(itemId).getName())
-						.put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
-						.put("itemCount", orderItemMap.get(itemId).getCou() + " шт")
-				.build()));
-
+        if(itemMap!=null && !itemMap.isEmpty()){
+            itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
+                    .put("imageName", contentMap.get(itemId).getId())
+                    .put("itemName", itemMap.get(itemId).getName())
+                    .put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
+//						.put("itemCount", orderItemMap.get(itemId).getCou() + " шт")
+                    .build()));
+        }
 
         /* build template data */
         final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
@@ -239,8 +334,62 @@ public class EmailServiceImpl implements EmailService {
                 .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
                 .setEmailContent(templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data))
                 .build();
-        mailSender.send(message);
+
+        /* отправим письмо */
+        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+        /* добавим сообщение в общий список */
+        messages.add(sended);
+        //TODO: добавить обновление ID истории
     }
+
+    @Override
+    public void insertToInbox(SimpleMessage message) throws IOException, MessagingException {
+        messages.add(SimpleMessage.valueOf(helper.insertMessage(message.getTo(), message.getSubject(), message.getBody())));
+    }
+
+    @Override
+    public List<SimpleDraft> getDraft() throws IOException {
+        return getDrafts();
+    }
+
+    @Override
+    public void removeDraft(String id) throws IOException {
+        helper.deleteDraft(id);
+        /* удалим из списка */
+        messages.removeIf(message -> message.getId().contentEquals(id));
+    }
+
+    @Override
+    public void saveDraft(SimpleDraft draft) throws IOException, MessagingException {
+        SimpleMessage message = draft.getMessage();
+        Draft result;
+        if(Strings.isNullOrEmpty(draft.getId())){
+            result = helper.createDraft(message.getTo(), message.getSubject(), message.getBody());
+            /* добавим в список */
+            messages.add(SimpleMessage.valueOf(result.getMessage()));
+        } else {
+            result = helper.updateDraft(draft.getId(), message.getTo(), message.getSubject(), message.getBody());
+            /* получим обновленное сообщение черновика */
+            SimpleMessage updatedMessage = SimpleMessage.valueOf(result.getMessage());
+            /* обновим в списке */
+            messages.stream().filter(m -> m.getId().contentEquals(updatedMessage.getId())).forEach(m -> m.merge(updatedMessage));
+        }
+    }
+
+    @Override
+    public SimpleDraft getDraft(String id) throws IOException {
+        return helper.getDraft(id);
+    }
+
+    @Override
+    public void sendDraft(SimpleDraft draft) throws IOException, MessagingException {
+        SimpleMessage message = draft.getMessage();
+        helper.updateDraft(draft.getId(), message.getTo(), message.getSubject(), message.getBody());
+        helper.sendDraft(draft.getId());
+        //TODO: возможно нужно удалять черновик после отправки
+    }
+
+    /*-------------- PRIVATE METHODS --------------*/
 
     /**
      * Чтение шаблона email
@@ -334,11 +483,60 @@ public class EmailServiceImpl implements EmailService {
      */
     private List<InlinePicture> collectPics(List<Content> contents) throws IOException {
         List<InlinePicture> pictures = Lists.newArrayList();
-        pictures.addAll(contents.stream().map(content -> InlinePictureImpl.builder()
-                .content(content.getContent())
-                .imageType(ImageType.valueOf(content.getType().toUpperCase()))
-                .templateName(content.getId()).build()).collect(Collectors.toList()));
+        pictures.addAll(contents.stream().map(content -> {
+            InlinePicture inlinePicture = null;
+            try {
+                inlinePicture = InlinePictureImpl.builder()
+                        .content(Base64BytesSerializer.deserialize(content.getContent()))
+                        .imageType(ImageType.valueOf(content.getType().toUpperCase()))
+                        .templateName(content.getId()).build();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return inlinePicture;
+        }).collect(Collectors.toList()));
         return pictures;
     }
 
+    /**
+     * Получение нитий сообщений конкретных Label без фильтрации и со стандартным размером
+     * @param label
+     * @return
+     * @throws IOException
+     */
+    private List<SimpleThread> getMessages(GmailLabels label) throws IOException {
+        /* отфильтруем входящие */
+        List<SimpleMessage> inbox = messages.stream().filter(message -> message.getLabels().contains(label.name())).collect(Collectors.toList());
+        /* группируем по цепочкам */
+        Multimap<String, SimpleMessage> messages = Multimaps.index(inbox, SimpleMessage::getThreadId);
+        /* получим все свежие цепочки во входящих */
+        List<SimpleThread> result = helper.getThreads(label.asSingleList());
+        for(SimpleThread simpleThread : result){
+            simpleThread.setMessages((List<SimpleMessage>) messages.get(simpleThread.getId()));
+        }
+        return result;
+    }
+
+    /**
+     * Получение черновиков
+     * @return
+     * @throws IOException
+     */
+    private List<SimpleDraft> getDrafts() throws IOException {
+        /* отфильтруем сообщения черновиков */
+        Map<String, SimpleMessage> draftMap = messages.stream().filter(message -> message.getLabels().contains(GmailLabels.DRAFT.name())).collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
+        /* получим все черновики */
+        List<SimpleDraft> result = helper.getDrafts();
+        for(SimpleDraft draft : result){
+            draft.setMessage(draftMap.get(draft.getMessage().getId()));
+        }
+        return result;
+    }
+
+    /**
+     * Обновление метки истории
+     */
+    private void refreshHistory(){
+        //TODO: Добавить обновление ID последней записи в истории
+    }
 }

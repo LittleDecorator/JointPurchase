@@ -1,26 +1,47 @@
 package com.acme.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name = "subject")
 public class Subject {
+
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
     private boolean enabled;
 
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "middle_name")
     private String middleName;
 
+    @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String email;
 
     private String address;
 
+    @Column(name = "post_address")
     private Integer postAddress;
 
+    @Column(name = "date_add")
     private Date dateAdd;
+
     public String getId() {
         return id;
     }

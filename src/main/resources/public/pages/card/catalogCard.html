@@ -7,15 +7,15 @@
                 <div class="col l8 s12">
                     <div class="box" style="width: 100%; padding-bottom: 65%;">
                         <div class="boxInner">
-                            <a ng-href="{{ORIG_URL+mainImage}}" class="swipebox" title="Some Title">
-                                <img ng-src="{{ORIG_URL+mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
+                            <a ng-href="{{mainImage}}" class="swipebox" title="Some Title">
+                                <img ng-src="{{mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
                             </a>
                         </div>
                     </div>
-                    <div ng-if="item.media.length>1">
-                        <div class="box" ng-repeat="img in item.media" ng-click="show(img)" style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
+                    <div ng-if="item.itemContents.length>1">
+                        <div class="box" ng-repeat="img in item.itemContents" ng-click="show(img.contentId)" style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
                             <div class="boxInner">
-                                <img ng-src="{{::ORIG_URL+img}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                                <img ng-src="{{::VIEW_URL+img.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                             </div>
                         </div>
                     </div>

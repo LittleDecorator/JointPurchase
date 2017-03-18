@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.CaseFormat;
 
+import javax.persistence.AttributeConverter;
+
 @JsonSerialize(using = ItemStatusSerializer.class)
 @JsonDeserialize(using = ItemStatusDeserializer.class)
 public enum ItemStatus {
