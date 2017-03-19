@@ -129,6 +129,7 @@ public class OrderController {
 
 	/**
 	 * Создание заказа
+	 *
 	 * @param request
 	 * @return
 	 * @throws ParseException
@@ -158,9 +159,9 @@ public class OrderController {
 			//удаляем записи, где заказ совпадает, а товар нет.
 			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
 			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
-			transactionManager.commit(status);
 			/* отправляем на почту писмо с подтверждением заказа */
 			emailService.sendOrderStatus(order);
+			transactionManager.commit(status);
 			return order;
 		} catch (Exception ex) {
 			ex.printStackTrace(System.out);

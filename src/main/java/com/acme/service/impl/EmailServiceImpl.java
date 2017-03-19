@@ -15,31 +15,19 @@ import com.acme.model.*;
 import com.acme.model.gmail.SimpleDraft;
 import com.acme.model.gmail.SimpleMessage;
 import com.acme.model.gmail.SimpleThread;
+import com.acme.repository.DeliveryRepository;
 import com.acme.service.EmailService;
 import com.acme.service.OrderService;
 import com.acme.service.SubjectService;
 import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
 import com.acme.util.GmailHelper;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.gmail.Gmail;
-import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Draft;
-import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.base.Strings;
@@ -55,8 +43,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -67,7 +53,6 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
-import static org.apache.tika.metadata.MSOffice.APPLICATION_NAME;
 
 @Service
 @Slf4j
@@ -81,6 +66,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
 
     @Autowired
     private OrderService orderService;
@@ -288,33 +276,33 @@ public class EmailServiceImpl implements EmailService {
     public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
 
-        /* get all info */
+        /* порлучаем всю информацию по заказу */
         Map<String, Object> info = orderService.getOrderInfo(order.getId());
-//        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
+        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
         Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
         Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
-        List<Map<String, String>> list = Lists.newArrayList();
 
+        List<Map<String, String>> list = Lists.newArrayList();
         /* перебираем товар */
         if(itemMap!=null && !itemMap.isEmpty()){
             itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
                     .put("imageName", contentMap.get(itemId).getId())
                     .put("itemName", itemMap.get(itemId).getName())
                     .put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
-//						.put("itemCount", orderItemMap.get(itemId).getCou() + " шт")
+                    .put("itemCount", orderItemMap.get(itemId).getCount() + " шт")
                     .build()));
         }
 
-        /* build template data */
+        /* сформируем шаблон сообщения */
         final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
 				/* основной текст письма */
                 .put("order_number", order.getUid())
                 .put("order_status", order.getStatus().getNotifyText())
-                .put("isAuth", true)
+                .put("isAuth", order.getSubjectId() != null)
                 .put("cabinet_link", Constants.CABINET_LINK)
 				/* информация о заказе */
                 .put("orderDate", order.getDateAdd() == null ? new Date() : order.getDateAdd())
-                .put("orderDelivery", order.getDelivery())
+                .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
                 .put("orderPayment", order.getPayment()+ " руб")
 				/* данные о товаре */
                 .put("item", list)
@@ -330,15 +318,24 @@ public class EmailServiceImpl implements EmailService {
                 .encoding(Charset.forName("UTF-8"))
                 .build();
 
+        String emailContent = templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data);
+
         MimeMessage message = builder.setMessage(convert(email))
                 .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
-                .setEmailContent(templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data))
+                .setEmailContent(emailContent)
                 .build();
 
         /* отправим письмо */
-        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-        /* добавим сообщение в общий список */
-        messages.add(sended);
+        mailSender.send(message);
+
+        helper.
+//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+//        /* добавим сообщение в общий список */
+//        if(sended!=null){
+//            messages.add(sended);
+//        } else {
+//            System.out.println("No sended email");
+//        }
         //TODO: добавить обновление ID истории
     }
 

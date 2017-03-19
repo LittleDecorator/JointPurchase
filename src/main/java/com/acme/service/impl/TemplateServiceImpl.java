@@ -33,15 +33,12 @@ public class TemplateServiceImpl implements TemplateService {
 	@Override
 	public
 	@NonNull
-	String mergeTemplateIntoString(final @NonNull String templateReference,
-								   final @NonNull Map<String, Object> model)
-			throws IOException, TemplateException {
+	String mergeTemplateIntoString(final @NonNull String templateReference, final @NonNull Map<String, Object> model) throws IOException, TemplateException {
 		checkArgument(!isNullOrEmpty(templateReference.trim()), "The given templateName is null, empty or blank");
 		checkArgument(Objects.equals(getFileExtension(templateReference), expectedTemplateExtension()),
 				"Expected a Mustache template file with extension %s, while %s was given. To check " +
 				"the default extension look at 'spring.mustache.suffix' in your application.properties file",
 				expectedTemplateExtension(), getFileExtension(templateReference));
-
 
 		try {
 			final Reader template = mustacheAutoConfiguration.mustacheTemplateLoader()

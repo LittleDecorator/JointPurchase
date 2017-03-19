@@ -41,16 +41,23 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	ContentRepository contentRepository;
 
-	@Override
+	/**
+	 * Получение полной информации по заказу
+	 * @param orderId
+	 * @return
+     */
 	public Map<String, Object> getOrderInfo(String orderId) {
 		Map<String, Object> result = Maps.newHashMap();
+		// получение информации о получателе и заказе
 		Order order = orderRepository.findOne(orderId);
 		result.put("order",order);
 		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
 		Map<String, OrderItem> orderItemsMap = orderItems.stream().collect(Collectors.toMap(OrderItem::getItemId, Function.identity()));
+		// информация о количествах товара в заказе
 		result.put("orderItems",orderItemsMap);
 		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
 		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+		// товары заказа
 		result.put("items", itemsMap);
 		Map<String, Content> contentMap = Maps.newHashMap();
 		for(String itemId : itemsMap.keySet()){
@@ -62,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 
 		}
+		// изображения товаров
 		result.put("contents", contentMap);
 		return result;
 	}

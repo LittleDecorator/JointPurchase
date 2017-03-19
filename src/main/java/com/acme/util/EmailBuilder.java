@@ -79,7 +79,7 @@ public class EmailBuilder {
             //Set the image part
             final MimeBodyPart imagePart = new MimeBodyPart();
 //			imagePart.attachFile(inlinePicture.getFile());
-            ByteArrayDataSource dataSource = new ByteArrayDataSource( inlinePicture.getContent(), "image/jpg" );
+            ByteArrayDataSource dataSource = new ByteArrayDataSource( inlinePicture.getContent(), inlinePicture.getImageType().getContentType() );
             imagePart.setDataHandler(new DataHandler(dataSource));
             imagePart.setContentID('<' + cid + '>');
             imagePart.setDisposition(MimeBodyPart.INLINE);

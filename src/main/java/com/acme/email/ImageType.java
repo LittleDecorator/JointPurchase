@@ -23,4 +23,11 @@ public enum ImageType {
 		this.contentType = contentType;
 	}
 
+	public String getExtension() {
+		return extension;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
 }
