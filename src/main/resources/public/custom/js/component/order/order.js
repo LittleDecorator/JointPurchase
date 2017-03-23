@@ -6,33 +6,90 @@
     'use strict';
 
     angular.module('order')
-        .controller('orderController',['$scope','$state','$stateParams','dataResources', function ($scope, $state, $stateParams, dataResources) {
+
+        /* Контроллер списочной формы */
+        .controller('orderController',['$scope','$state','$stateParams','dataResources','deliveryMap','statusMap', function ($scope, $state, $stateParams, dataResources, deliveryMap,statusMap ) {
             //TODO: Написать сервис подсчета товаров при заказах
             //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
 
             var templatePath = "pages/fragment/order/";
 
-            /* array of orders*/
             $scope.orders = [];
-            $scope.selectedPerson = {};
+            $scope.statuses = statusMap;
+            $scope.deliveries = deliveryMap;
 
-            if ($stateParams.customerId) {
-                //$scope.orders = dataResources.orderByCustomerId.get({id: $stateParams.customerId}, function (data) {
-                //    angular.forEach(data, function (order) {
-                //        var person = helpers.findInArrayById(persons, order.personId);
-                //        order.personName = person.name;
-                //    });
-                //});
-            } else {
-                dataResources.order.all().$promise.then(function (data) {
-                    $scope.orders = data
-                });
+            $scope.filter = {subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0};
+            var confirmedFilter = angular.copy($scope.filter);
+
+            /* если в фильтре должен участвовать клиент */
+            if($stateParams.customerId != null){
+                $scope.filter.subjectId = $stateParams.customerId;
             }
 
-            $scope.editOrder = function (id) {
-                $state.transitionTo("order.detail",{id:id});
+            var busy = false;
+            var portion = 0;
+
+            $scope.scrolling = {stopLoad:false, allDataLoaded:false, infiniteDistance: 2};
+            $scope.filterInUse = false;
+
+            /* Получение данных */
+            $scope.loadData = function(isClean){
+                if(!$scope.scrolling.stopLoad && !busy){
+                    busy = true;
+
+                    dataResources.order.all(confirmedFilter).$promise.then(function(data){
+
+                        if(data.length < confirmedFilter.limit){
+                            $scope.scrolling.stopLoad = true;
+                        }
+
+                        if(isClean){
+                            $scope.orders = [];
+                        }
+
+                        $scope.orders = data;
+
+                        portion++;
+                        confirmedFilter.offset = portion * confirmedFilter.limit;
+                        $scope.scrolling.allDataLoaded = true;
+                        busy = false;
+                    });
+                }
             };
 
+            // очистка фильтра
+            $scope.clear = function () {
+                portion = 0;
+                $scope.filterInUse = false;
+                $scope.filter = {subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0};
+                confirmedFilter = angular.copy($scope.filter);
+                // удалим старый фильтр
+                localStorage.removeItem($state.current.name);
+                $scope.scrolling.stopLoad = false;
+                $scope.loadData(true);
+            };
+
+            // подтверждение фильтра
+            $scope.apply = function () {
+                portion = 0;
+                $scope.filterInUse = true;
+                $scope.filter.offset = portion * $scope.filter.limit;
+                confirmedFilter = angular.copy($scope.filter);
+                // запомним фильтр
+                localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
+                //
+                confirmedFilter.delivery = confirmedFilter.delivery!= null ? confirmedFilter.delivery.value : null;
+                confirmedFilter.status = confirmedFilter.status != null ? confirmedFilter.status.id : null;
+                $scope.scrolling.stopLoad = false;
+                $scope.loadData(true);
+            };
+
+            /* Редактирование заказа */
+            $scope.editOrder = function (id) {
+                $state.transitionTo("order.detail", {id:id});
+            };
+
+            /* Удаление заказа */
             $scope.deleteOrder = function (id) {
                 dataResources.order.delete({id: id});
                 var currOrder = helpers.findInArrayById($scope.orders, id);
@@ -40,11 +97,12 @@
                 $scope.orders.splice(idx, 1);
             };
 
-            //create order
+            /* Создание заказа */
             $scope.addOrder = function () {
                 $state.transitionTo("order.detail");
             };
 
+            /* Получение шаблона страницы */
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "order-sm.html"
@@ -59,6 +117,7 @@
 
         }])
 
+        /* Контроллер Карточки заказа */
         .controller('orderDetailController',['$scope','$state','$stateParams','dataResources','$timeout','$mdToast','modal','order','items','deliveryMap','statusMap',function ($scope, $state, $stateParams, dataResources,$timeout,$mdToast,modal,order,items,deliveryMap,statusMap){
 
             var templatePath = "pages/fragment/order/card/";
@@ -73,15 +132,14 @@
                 return item
             });
 
+            /* Если создаем новый заказ, то проставим время */
             if(!$scope.order) {
                 var time = new Date().getTime();
                 $scope.order = {status:null,payment:0,uid:time,dateAdd:time,delivery:null};
             }
 
+            /* Сохранения/ Обновление заказа */
             $scope.save = function () {
-
-                console.log($scope);
-
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
                 function haveEmptyItems(){
@@ -145,12 +203,21 @@
                 }
             };
 
-            //add item to order
+            /* Добавление товара в заказ */
             $scope.addItemsInOrder = function () {
-                var dialog = modal({templateUrl:"pages/modal/itemModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"itemClssController",data:$scope.items});
+                //определим модальное окно
+                var dialog = modal({
+                    templateUrl:"pages/modal/itemModal.html",
+                    className:'ngdialog-theme-default custom-width',
+                    closeByEscape:true,
+                    controller:"itemClssController",
+                    data:$scope.items
+                });
+
+                // callback закрытия модального
                 dialog.closePromise.then(function(output) {
 
-                    // филтрация массива
+                    // фильтрация массива
                     function itemFilter(array, onlyMiss){
                         return function(item){
                             //ищем елемент по id
@@ -167,7 +234,6 @@
                             if(onlyMiss) result=!result;
                             return result;
                         }
-
                     }
 
                     if(output.value && output.value != '$escape'){
@@ -188,20 +254,20 @@
                 });
             };
 
-            //remove item from order
+            // Удаление товара из заказа
             $scope.remItemsFromOrder = function (idx) {
                 $scope.items.splice(idx,1);
                 recalculatePayment();
             };
 
-            //increment item cou in order
+            // увеличение счетчика товаров в заказе
             $scope.incrementCou = function (idx) {
                 var item = $scope.items[idx];
                 item.count++;
                 recalculatePayment();
             };
 
-            //decrement item cou in order
+            // уменьшение счетчика товаров в заказе
             $scope.decrementCou = function (idx) {
                 var item = $scope.items[idx];
                 if (item.count > 0) {
@@ -210,6 +276,7 @@
                 }
             };
 
+            // пересчет суммы заказа
             function recalculatePayment(){
                 $scope.order.payment = 0;
                 angular.forEach($scope.items,function(item){
@@ -229,6 +296,7 @@
                 }
             };*/
 
+            // получение страницы
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "order-card-sm.html"
@@ -241,12 +309,11 @@
                 }
             };
 
+            // помечаем scope как чистый
             $scope.afterInclude = function(){
                 $timeout(function(){
                     $scope.orderCard.$setPristine(true);
-                    console.log($scope);
                 },50);
-
             }
 
         }])

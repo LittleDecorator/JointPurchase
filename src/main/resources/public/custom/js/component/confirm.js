@@ -12,6 +12,11 @@
         /* Контроллер формирования заказа */
         .controller('confirmController',['$scope','$state','authService','dataResources','deliveries','$q','$timeout','$rootScope',function($scope,$state,authService,dataResources,deliveries,$q, $timeout, $rootScope){
 
+            /* Если при переходе сюда у нас почему-то пустая корзина, то возвращаемся в корзину */
+            if($scope.cart == null || $scope.cart.content.length == 0 ){
+                $state.go("cart");
+            }
+
             $scope.showHints = true;
 
             /* ТУТ БЫЛА ПОПЫТКА СОХРАНИТЬ УЖЕ ВВЕДЕННЫЕ ДАННЫЕ  */
@@ -54,6 +59,7 @@
                 ];
             // }
 
+            /* Создание заказа */
             $scope.createOrder = function(deferred){
                 // список товаров для формирования заказа
                 var cleanOrderItems = [];
@@ -93,6 +99,7 @@
                 return deferred.promise;
             };
 
+            /* Переход к следующему шагу */
             $scope.enableNextStep = function() {
                 //do not exceed into max step
                 if ($scope.data.selectedStep >= $scope.data.maxStep) {
@@ -103,34 +110,36 @@
                     $scope.data.stepProgress = $scope.data.stepProgress + 1;
                 }
                 $scope.data.selectedStep = $scope.data.selectedStep + 1;
-                console.log($scope.data);
-                localStorage.setItem($state.current.name,angular.toJson($scope.data));
+
+                //дошли до последнего шага
+                if($scope.data.maxStep === $scope.data.stepProgress){
+                    $scope.clearCart();
+                }
+                // localStorage.setItem($state.current.name,angular.toJson($scope.data));
             };
 
+            /* Возврат на предыдущий шаг */
             $scope.moveToPreviousStep = function() {
                 if ($scope.data.selectedStep > 0) {
                     $scope.data.selectedStep = $scope.data.selectedStep - 1;
-                    console.log($scope.data);
-                    localStorage.setItem($state.current.name,angular.toJson($scope.data));
+                    // localStorage.setItem($state.current.name,angular.toJson($scope.data));
                 }
             };
 
+            /* Подтверждение текущего шага */
             $scope.submitCurrentStep = function(stepData) {
                 var deferred = $q.defer();
-                console.log($scope.data.maxStep);
-                console.log($scope.data.stepProgress);
-                console.log($scope.data.selectedStep);
                 if(($scope.data.maxStep  - 1 == $scope.data.stepProgress) &&  ($scope.data.stepProgress == $scope.data.selectedStep + 1)){
-                    console.log("pass condition");
+                    //если достигли последнего шага
                     $scope.data.showBusyText = true;
                     $scope.createOrder(deferred).then(function(data){
-                        $scope.clearCart();
                         $scope.data.stepData[2].data = data;
                         $scope.data.showBusyText = false;
                         stepData.completed = true;
                         $scope.enableNextStep();
                     }, function(error){
-                        console.log(error)
+                        console.log(error);
+                        //TODO: нужно наполнить даными о невозможности создать заказ и перейти на последний шаг
                     });
                 } else {
                     $scope.data.showBusyText = false;
@@ -139,10 +148,11 @@
                 }
             };
 
-            $scope.clear = function(){
-                localStorage.removeItem($state.current.name);
-            };
+            // $scope.clear = function(){
+            //     localStorage.removeItem($state.current.name);
+            // };
 
+            /* Валидация данных о получателе и подтверждение текущего шага */
             $scope.confirmInfoStep = function(){
                 $scope.showHints = false;
                 if($scope.step2.$valid){
@@ -152,15 +162,15 @@
             };
 
             //will be called on change tab
-            //TODO: maybe change to promise
-            $scope.onTabSelect = function(){
-                $timeout(function(){
-                    localStorage.setItem($state.current.name,angular.toJson($scope.data));
-                },100);
-            };
+            //TODO: НЕ помню для чего это. Пока уберем
+            // $scope.onTabSelect = function(){
+            //     $timeout(function(){
+            //         localStorage.setItem($state.current.name,angular.toJson($scope.data));
+            //     },100);
+            // };
 
+            /* Использование персональных данных авторизованных клиентов */
             $scope.switchUserInfo = function(){
-                console.log('switchUserInfo');
                 if($scope.data.usePrivate){
                     $scope.data.userInfoStash = angular.copy($scope.data.stepData[1].data);
 
@@ -176,10 +186,16 @@
                 }
             };
 
+            /* Отмена оформления */
             $scope.cancel = function(){
                 localStorage.removeItem($state.current.name);
                 $state.go("cart");
-            }
+            };
+
+            /* Переход в каталог после оформления заказа */
+            $scope.toCatalog = function(){
+                $state.go("catalog");
+            };
 
         }])
 })();

@@ -1,46 +1,45 @@
 <div class="filter-item">
 
-    <div layout="row">
-        <md-input-container flex="33" style="margin-bottom: 0">
+    <div layout="row" style="margin: 10px 0">
+
+        <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
             <label>Название</label>
             <input ng-model="filter.name">
         </md-input-container>
 
-        <md-input-container flex="33" style="margin-bottom: 0">
+        <md-input-container class="md-block no-errors" flex="15" style="margin-left: 1%">
             <label>Артикул</label>
             <input ng-model="filter.article">
         </md-input-container>
 
-        <md-input-container class="md-block" flex="33" style="margin-bottom: 0">
+        <md-input-container class="md-block no-errors" flex="33" style="margin-left: 1%">
             <label>Производитель</label>
             <md-select ng-model="filter.companyId" placeholder="Выберите компанию ...">
                 <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
             </md-select>
         </md-input-container>
-    </div>
 
-
-
-    <div layout="row" layout-align="end">
-        <a class="waves-effect waves-light btn" ng-click="filter.apply()" >Найти</a>
-        <a class="waves-effect waves-light btn" ng-click="filter.clear()">Сбросить</a>
-    </div>
-
-    </div>
-
-    <div class="item_result">
-        <div>
-            <h4 class="example_head">Товары:</h4>
+        <div style="margin: auto 0 auto 25px;">
+            <a class="waves-effect waves-light btn" ng-click="apply()">Найти</a>
+            <a class="waves-effect waves-light btn" ng-click="clear()">Сбросить</a>
         </div>
-
-        <div class="list" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
-            <div ng-include="getTemplate()"></div>
-        </div>
-
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
-        <md-icon>add</md-icon>
-    </md-button>
+</div>
+
+<div class="item_result">
+    <div>
+        <h4 class="example_head">Товары:</h4>
+    </div>
+
+    <div class="list" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
+        <div ng-include="getTemplate()"></div>
+    </div>
+
+</div>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+    <md-icon>add</md-icon>
+</md-button>
 
 </div>

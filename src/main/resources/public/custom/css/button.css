@@ -149,6 +149,10 @@ md-card .md-icon-button:hover{
     letter-spacing: .5px;
 }
 
+.md-button.btn.md > span {
+    font-size: .9rem;
+}
+
 .md-plain {
     color: rgb(33,33,33)!important;
     background-color: rgb(250,250,250)!important;

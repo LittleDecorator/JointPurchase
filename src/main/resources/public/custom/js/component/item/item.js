@@ -9,6 +9,7 @@
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
 
             $scope.companyNames = companies;
+            console.log($scope.companyNames);
             $scope.items = [];
 
             $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
@@ -66,6 +67,7 @@
 
             //clear filter
             $scope.clear = function () {
+                console.log("in clear item");
                 portion = 0;
                 $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
                 $scope.confirmedFilter = angular.copy($scope.filter);

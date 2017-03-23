@@ -302,7 +302,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/orders.html',
-                        controller: 'orderController'
+                        controller: 'orderController',
+                        controllerAs: 'order'
                     }
                 },
                 data: {
@@ -310,6 +311,12 @@ var route = {
                     requireLogin: true
                 },
                 resolve: {
+                    statusMap:function(resolveService) {
+                        return resolveService.getOrderStatusMap();
+                    },
+                    deliveryMap:function(resolveService) {
+                        return resolveService.getDeliveryMap();
+                    }
                 }
             },
             {

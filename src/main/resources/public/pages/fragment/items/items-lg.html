@@ -15,7 +15,7 @@
         </thead>
         <tbody>
         <!--<tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad" ng-class="{'bad-row': item.inStock < item.inOrder}">-->
-        <tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
+        <tr id="{{::item.id}}" ng-repeat="item in items " class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
             <td style="text-align: right;">
                 <input type="checkbox" disabled class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)"/>
                 <label for="{{::item.id}}" style="vertical-align: -15px;"></label>

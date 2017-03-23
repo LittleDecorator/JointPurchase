@@ -41,7 +41,7 @@ public class Order {
     @Column(name = "recipient_address")
     private String recipientAddress;
 
-    @Column(name = "date_add")
+    @Column(name = "date_add", nullable = false, insertable = false, updatable = false)
     private Date dateAdd;
 
     @Column(name = "close_order_date")

@@ -6,11 +6,8 @@ import com.acme.model.OrderView_;
 import com.acme.model.filter.OrderFilter;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ public class OrderViewSpecifications {
 			Path<Timestamp> createDate = root.get(OrderView_.createDate);
 			Path<OrderStatus> status = root.get(OrderView_.status);
 			Path<String> recipient = root.get(OrderView_.recipientId);
+			Path<String> delivery = root.get(OrderView_.delivery);
 
 			final List<Predicate> predicates = new ArrayList<>();
 			if (filter.getDateFrom() != null) {
@@ -36,10 +34,13 @@ public class OrderViewSpecifications {
 				predicates.add(builder.lessThanOrEqualTo(createDate, Timestamp.from(filter.getDateTo().atZone(ZoneId.of("UTC")).toInstant())));
 			}
 			if (filter.getStatus() != null) {
-				predicates.add(builder.equal(status, filter.getStatus()));
+				predicates.add(builder.equal(status, OrderStatus.getByName(filter.getStatus())));
 			}
 			if (filter.getSubjectId() != null) {
 				predicates.add(builder.equal(recipient, filter.getSubjectId()));
+			}
+			if (filter.getDelivery() != null) {
+				predicates.add(builder.equal(delivery, filter.getDelivery()));
 			}
 			return builder.and(predicates.toArray(new Predicate[predicates.size()]));
 		};

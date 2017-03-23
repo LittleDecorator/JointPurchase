@@ -83,7 +83,8 @@
                     store.remove('cart');
                     $scope.cart = {cou:0,content:[]};
                     $scope.initCart();
-                    $state.reload();
+                    //ЗАЧЕМ БЫЛ RELOAD????
+                    // $state.reload();
                 };
 
                 function clearCookieInfo(){
@@ -132,10 +133,10 @@
                                 //set current user promises
                                 $timeout(eventService.onComplete(),100);
                             } else {
-                                eventService.onComplete();
+                                $mdToast.show($rootScope.toast.textContent('Неверные Логин/Пароль').theme('error'));
                             }
                         }, function(){
-                            eventService.onComplete();
+                                $mdToast.show($rootScope.toast.textContent('Неверные Логин/Пароль').theme('error'));
                         });
                 });
 

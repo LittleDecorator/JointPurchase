@@ -233,7 +233,8 @@
                 }),
                 orderStatusMap:$resource('clss/order/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
-                        var result = [{id:null,value:"Выберите статус заказа ..."}];
+                        // var result = [{id:null,value:"Выберите статус заказа ..."}];
+	                    var result = [];
                         angular.forEach(angular.fromJson(data), function(value, key){
                             result.push({id:key,value:value})
                         });
@@ -242,8 +243,8 @@
                 }),
                 deliveryMap:$resource('clss/order/delivery',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
-                        //var result = [{id:null,value:"Укажите тип доставки ..."}];
-                        var result = [];
+                        // var result = [{id:null,value:"Выберите тип доставки ..."}];
+	                    var result = [];
                         angular.forEach(angular.fromJson(data), function(value){
                             result.push({id:value.id,value:value.name,hint:value.hint})
                         });

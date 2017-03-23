@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -273,6 +274,7 @@ public class EmailServiceImpl implements EmailService {
         messages.add(sended);
     }
 
+    @Async
     public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
 
@@ -327,15 +329,6 @@ public class EmailServiceImpl implements EmailService {
 
         /* отправим письмо */
         mailSender.send(message);
-
-        helper.
-//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-//        /* добавим сообщение в общий список */
-//        if(sended!=null){
-//            messages.add(sended);
-//        } else {
-//            System.out.println("No sended email");
-//        }
         //TODO: добавить обновление ID истории
     }
 

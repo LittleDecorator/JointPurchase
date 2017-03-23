@@ -1,32 +1,33 @@
-<div>
-    <h4 class="example_head">Заказы:</h4>
-    <div class="table-result">
-        <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
-            <thead>
-            <tr>
-                <th style="width: 15%">Номер заказа</th>
-                <th style="width: 25%">Получатель</th>
-                <th style="width: 15%">Дата создания</th>
-                <th style="width: 15%">Способ доставки</th>
-                <th style="width: 10%">Статус</th>
-                <th style="width: 10%">Сумма</th>
-                <th style="width: 15%"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="order in orders" id="{{order.id}}" class="collection-item">
-                <td class="center-align">{{::order.uid}}</td>
-                <td class="center-align">{{::order.recipientName}}</td>
-                <td class="center-align">{{::order.createDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
-                <td class="center-align">{{::order.delivery}}</td>
-                <td class="center-align">{{::order.status.name}}</td>
-                <td class="center-align">{{::order.payment}} руб</td>
-                <td class="right-align">
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editOrder(order.id)"><md-icon>edit</md-icon></a>
-                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteOrder(order.id)"><md-icon>close</md-icon></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="table-result">
+    <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+        <thead>
+        <tr>
+            <th style="width: 15%">Номер заказа</th>
+            <th style="width: 25%">Получатель</th>
+            <th style="width: 15%">Дата создания</th>
+            <th style="width: 15%">Способ доставки</th>
+            <th style="width: 10%">Статус</th>
+            <th style="width: 10%">Сумма</th>
+            <th style="width: 15%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="order in orders track by order.id" id="{{::order.id}}" class="collection-item">
+            <td class="center-align">{{::order.uid}}</td>
+            <td class="center-align">{{::order.recipientName}}</td>
+            <td class="center-align">{{::order.createDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            <td class="center-align">{{::order.delivery}}</td>
+            <td class="center-align">{{::order.status.name}}</td>
+            <td class="center-align">{{::order.payment}} руб</td>
+            <td class="right-align">
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editOrder(order.id)">
+                    <md-icon>edit</md-icon>
+                </a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteOrder(order.id)">
+                    <md-icon>close</md-icon>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

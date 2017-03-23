@@ -44,6 +44,7 @@ public class AuthController {
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public LoginResponse authentication(@RequestBody SubjectCredential subjectCredential) throws ServletException {
         System.out.println("AuthLogin: login credentials -> " + subjectCredential.toString());
+        subjectCredential.setPassword(authService.decryptPassword(subjectCredential.getPassword()));
         Credential credential = authService.validate(subjectCredential);
         if (credential!=null){
             return new LoginResponse(tokenService.createToken(credential));

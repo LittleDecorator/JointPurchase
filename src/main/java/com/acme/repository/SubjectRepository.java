@@ -1,6 +1,9 @@
 package com.acme.repository;
 
+import com.acme.model.OrderView;
 import com.acme.model.Subject;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 
@@ -9,7 +12,7 @@ import org.springframework.data.repository.CrudRepository;
  *
  * CRUD для работы с "Клиент"
  */
-public interface SubjectRepository extends CrudRepository<Subject, String> {
+public interface SubjectRepository extends JpaRepository<Subject, String>, JpaSpecificationExecutor<Subject> {
 
 	/**
 	 * Получение клиента по email

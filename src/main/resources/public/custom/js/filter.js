@@ -35,7 +35,7 @@
 
         .filter('nvl', function() {
             return function (value, param) {
-                if (value) {
+                if (value && value.trim().length > 0) {
                     return value;
                 } else {
                     return param;

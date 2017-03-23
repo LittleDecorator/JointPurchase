@@ -67,8 +67,8 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public List<OrderView> getOrders(OrderFilter filter) {
-		/* выставляем offset, limit и order by */
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
+		/* Сортировка видимо будет идти по модели, и в запросе не участвует */
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "createDate");
 		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
 	}
 
@@ -159,9 +159,9 @@ public class OrderController {
 			//удаляем записи, где заказ совпадает, а товар нет.
 			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
 			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
+			transactionManager.commit(status);
 			/* отправляем на почту писмо с подтверждением заказа */
 			emailService.sendOrderStatus(order);
-			transactionManager.commit(status);
 			return order;
 		} catch (Exception ex) {
 			ex.printStackTrace(System.out);

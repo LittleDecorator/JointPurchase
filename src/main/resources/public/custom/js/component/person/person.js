@@ -10,12 +10,72 @@
 
             var templatePath = "pages/fragment/person/";
             
-            $scope.customers = dataResources.customer.all();
+            $scope.customers = [];
 
-            $scope.editPerson = function (id) {
-                $state.transitionTo("person.detail",{id:id});
+            $scope.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
+            var confirmedFilter = angular.copy($scope.filter);
+
+            var busy = false;
+            var portion = 0;
+
+            $scope.scrolling = {stopLoad:false, allDataLoaded:false, infiniteDistance: 2};
+            $scope.filterInUse = false;
+
+            /* Получение данных */
+            $scope.loadData = function(isClean){
+                if(!$scope.scrolling.stopLoad && !busy){
+                    busy = true;
+
+                    dataResources.customer.all(confirmedFilter).$promise.then(function(data){
+
+                        if(data.length < confirmedFilter.limit){
+                            $scope.scrolling.stopLoad = true;
+                        }
+
+                        if(isClean){
+                            $scope.customers = [];
+                        }
+
+                        $scope.customers = data;
+
+                        portion++;
+                        confirmedFilter.offset = portion * confirmedFilter.limit;
+                        $scope.scrolling.allDataLoaded = true;
+                        busy = false;
+                    });
+                }
             };
 
+            // очистка фильтра
+            $scope.clear = function () {
+                portion = 0;
+                $scope.filterInUse = false;
+                $scope.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
+                confirmedFilter = angular.copy($scope.filter);
+                // удалим старый фильтр
+                localStorage.removeItem($state.current.name);
+                $scope.scrolling.stopLoad = false;
+                $scope.loadData(true);
+            };
+
+            // подтверждение фильтра
+            $scope.apply = function () {
+                portion = 0;
+                $scope.filterInUse = true;
+                $scope.filter.offset = portion * $scope.filter.limit;
+                confirmedFilter = angular.copy($scope.filter);
+                // запомним фильтр
+                localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
+                $scope.scrolling.stopLoad = false;
+                $scope.loadData(true);
+            };
+
+            // редактирование клиента
+            $scope.editPerson = function (id) {
+                $state.transitionTo("person.detail", {id:id});
+            };
+
+            // удаление клиента
             $scope.deletePerson = function (id) {
                 dataResources.customer.delete({id: id});
                 var currPerson = helpers.findInArrayById($scope.customers, id);
@@ -23,15 +83,17 @@
                 $scope.customers.splice(idx, 1);
             };
 
+            // Добавление клиента
             $scope.addPerson = function () {
                 $state.transitionTo("person.detail");
             };
 
-            //show customer orders, pass id via route
+            // перейти на страницу с заказами выбранного клиента
             $scope.showOrders = function (id) {
                 $state.transitionTo("order", {customerId: id});
             };
 
+            // получение шаблона страницы
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "person-sm.html"

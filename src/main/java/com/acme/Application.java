@@ -26,7 +26,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -38,11 +40,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
 
 @ComponentScan("com.acme")
 @Configurable
 @EnableCaching
 @EnableScheduling
+@EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement(proxyTargetClass=true)
 @EnableJpaRepositories(basePackages = "com.acme.repository")
@@ -51,7 +55,6 @@ public class Application extends WebMvcConfigurerAdapter {
 
 //    @Autowired
 //    private ResourceProperties resourceProperties = new ResourceProperties();
-
 
     @Bean
     public FilterRegistrationBean jwtFilter() {

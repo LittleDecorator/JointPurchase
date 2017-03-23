@@ -1,11 +1,17 @@
 package com.acme.controller;
 
 import com.acme.model.Subject;
+import com.acme.model.filter.SubjectFilter;
+import com.acme.repository.OffsetBasePage;
 import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
+import com.acme.repository.specification.OrderViewSpecifications;
+import com.acme.repository.specification.SubjectSpecifications;
 import com.acme.service.AuthService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -33,8 +39,10 @@ public class SubjectController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<Subject> getSubjects() {
-        return (List<Subject>) subjectRepository.findAll();
+    public List<Subject> getSubjects(SubjectFilter filter) {
+        /* Сортировка видимо будет идти по модели, и в запросе не участвует */
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
+        return Lists.newArrayList(subjectRepository.findAll(SubjectSpecifications.filter(filter), pageable).iterator());
     }
 
     /**
