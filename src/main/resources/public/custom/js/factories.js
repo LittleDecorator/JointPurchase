@@ -95,17 +95,25 @@
                         transformRequest:function(data, headers) {
                             var result = angular.copy(data);
                             result.price= result.price.replace(/[^0-9]/g,'');
+                            console.log(result);
                             return angular.toJson(result);
                         },
                         transformResponse:function(data, headers){
+                            console.log(data);
                             return {result:data}
                         }
                     },
                     put:{method:'PUT',isArray:false,
                         transformRequest:function(data, headers) {
+                            console.log(data);
                             var result = angular.copy(data);
                             result.price= result.price.replace(/[^0-9]/g,'');
+                            console.log(result);
                             return angular.toJson(result);
+                        },
+                        transformResponse:function(data, headers){
+                            console.log(data);
+                            return {result:data}
                         }
                     }
                 }),

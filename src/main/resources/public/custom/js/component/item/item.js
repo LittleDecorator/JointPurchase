@@ -6,13 +6,14 @@
     'use strict';
 
     angular.module('item')
+        
+        /* Контроллер товара */
         .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
 
-            $scope.companyNames = companies;
-            console.log($scope.companyNames);
             $scope.items = [];
-
-            $scope.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
+            $scope.companyNames = companies;
+                        
+            $scope.filter = {name:null, article:null, company:null, category:null, limit:30, offset:0};
 
             $scope.confirmedFilter = angular.copy($scope.filter);
 
@@ -110,23 +111,28 @@
             };
         }])
 
-        .controller('itemDetailController',['$rootScope','$scope','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses', function ($rootScope,$scope, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses){
-            $scope.item = item;
+        /* Карточка товара */
+        .controller('itemDetailController',['$rootScope','$scope','$stateParams','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses', function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses){
+            $scope.item = item ? item : {};
+
             $scope.companyNames = companies;
             $scope.statuses = statuses;
+            console.log($scope.statuses);
             $scope.showHints = true;
 
-            var elem = helpers.findInArrayById(statuses,$scope.item.status.id);
-            console.log(elem);
+            // var elem = helpers.findInArrayById(statuses, $scope.item.status.id);
 
+            //парсим стоимость в денежный формат
             if($scope.item.price){
                 $scope.item.price = $filter('number')($scope.item.price);
             }
 
+            // если категорий нет, то инициализация пустым массивом
             if(!$scope.item.categories){
                 $scope.item.categories = [];
             }
 
+            // инициализация кол-ва товара в наличие
             if(!$scope.item.inStock){
                 $scope.item.inStock = 0;
             }
@@ -150,6 +156,8 @@
                     })
                 }
                 var dialog = modal({templateUrl:"pages/modal/categoryModal.html",className:'ngdialog-theme-default custom-width',closeByEscape:true,controller:"categoryClssController",data:selected});
+
+                //получение данных при закрытие модального окна категорий
                 dialog.closePromise.then(function(output) {
                     if(output.value && output.value != '$escape'){
                         $scope.item.categories = output.value;
@@ -162,29 +170,41 @@
 
             /* Сохранение товара */
             $scope.save = function () {
+                console.log("save");
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
+                // изменение состояния breadCrumbs
                 function refreshState(data){
                     $scope.itemCard.$setPristine();
                     /* refresh state because name can be changed */
                     $state.go($state.current,{id:data.result},{notify:false}).then(function(){
                         $scope.item.id = data.result;
+                        $stateParams.id = data.result;
                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                     });
                 }
 
                 if($scope.itemCard.$dirty){
+                    console.log("dirty");
                     if($scope.itemCard.$valid){
+                        console.log("valid");
                         if($scope.item.id){
+                            console.log("try put");
+                            // если товар был на редактирование
                             dataResources.item.put($scope.item).$promise.then(function(data){
+                                console.log(data);
                                 $mdToast.show(toast.textContent('Товар ['+ $scope.item.name +'] успешно изменён').theme('success'));
+                                //нужно сбросить состояние, т.к может измениться имя товара
                                 refreshState({result:$scope.item.id});
                             }, function(error){
                                 $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
                             })
                         } else {
+                            console.log("try post");
                             dataResources.item.post($scope.item).$promise.then(function(data){
+                                console.log(data);
                                 $mdToast.show(toast.textContent('Товар ['+ $scope.item.name +'] успешно создан').theme('success'));
+                                // изменилось состояние.
                                 refreshState(data);
                             }, function(error){
                                 $mdToast.show(toast.textContent('Неудалось создать новый товар').theme('error'));
@@ -192,8 +212,12 @@
                         }
                         $scope.showHints = true;
                     } else {
+                        console.log($scope.item);
+                        console.log("not valid");
                         $scope.showHints = false;
                     }
+                } else {
+                    console.log("not dirty");
                 }
             };
 
@@ -211,6 +235,13 @@
                     return templatePath + "item-card-lg.html";
                 }
             };
+
+            // помечаем scope как чистый
+            $scope.afterInclude = function(){
+                $timeout(function(){
+                    $scope.itemCard.$setPristine(true);
+                },50);
+            }
 
         }])
 

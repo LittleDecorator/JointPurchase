@@ -10,12 +10,16 @@
             function ($scope, $state, $stateParams, dataResources, $timeout, statusMap, deliveryMap, modal, $mdToast,$rootScope) {
 
             var templatePath = "pages/fragment/cabinet/";
+            // история заказов
             $scope.history = [];
+            // персональная информация    
             $scope.person = null;
+            // вспомогательные мапы     
             $scope.statuses = statusMap;
             $scope.deliveries = deliveryMap;
             $scope.showHints = true;
-
+            
+            // ищем сохраненый фильтр в storage
             if(localStorage.getItem($state.current.name)){
                 $scope.filter = angular.fromJson(localStorage.getItem($state.current.name));
             } else {
@@ -23,6 +27,7 @@
             }
 
             var confirmedFilter = angular.copy($scope.filter);
+                
             var busy = false;
             var portion = 0;
             $scope.stopLoad=false;

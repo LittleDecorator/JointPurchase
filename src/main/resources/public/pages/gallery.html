@@ -6,7 +6,7 @@
     <div class="wrap">
         <div class="box" ng-repeat="image in images">
             <div class="boxInner">
-                <a ng-href="media/image/{{::image.id}}" class="swipebox" title="Some Title">
+                <a ng-href="media/image/{{::image.contentId}}" class="swipebox" title="Some Title">
                     <img ng-src="{{::image.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                 </a>
                 <img-title></img-title>

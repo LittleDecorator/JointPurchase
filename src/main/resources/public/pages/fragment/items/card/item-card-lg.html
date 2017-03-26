@@ -25,9 +25,9 @@
         <md-content>
             <div layout="row">
                 <md-input-container class="md-block" flex="25" class="no-errors">
-                    <label class="required">Производитель</label>
-                    <md-select name="company" ng-model="item.companyId" required>
-                        <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+                    <label>Производитель</label>
+                    <md-select ng-model="item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>
+                        <md-option ng-repeat="company in companyNames" ng-value="company">{{::company.name}}</md-option>
                     </md-select>
                     <div ng-messages="itemCard.company.$error" ng-if="!showHints">
                         <div ng-message="required">Не выбран производитель</div>

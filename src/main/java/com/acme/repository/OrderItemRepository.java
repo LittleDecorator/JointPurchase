@@ -20,4 +20,6 @@ public interface OrderItemRepository extends CrudRepository<OrderItem, String> {
 
 	List<OrderItem> findAllByOrderId(String orderId);
 
+	List<OrderItem> findAllByOrderIdIn(List<String> orderIds);
+
 }

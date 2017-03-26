@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.enums.OrderStatus;
 import com.acme.model.*;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.specification.ItemSpecifications;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,10 +64,18 @@ public class ItemController{
      * Получение всех товаров по фильтру
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<Item> getItems(ItemFilter filter){
+    public List<Item> getItems(ItemFilter filter) {
         /* выставляем offset, limit и order by */
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
-        return Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
+        List<Item> items = Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
+        // подсчитаем кол-во товара в заказах
+        List<Order> orders = orderRepository.findAllByStatusIn(Lists.newArrayList(OrderStatus.ACCEPTED, OrderStatus.IN_PROCESS, OrderStatus.NEW, OrderStatus.READY));
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderIdIn(orders.stream().map(Order::getId).collect(Collectors.toList()));
+        Map<String, Integer> result = orderItems.stream().collect(Collectors.groupingBy(OrderItem::getItemId, Collectors.summingInt(OrderItem::getCount)));
+        for(Item item : items){
+            item.setInOrder(result.get(item.getId()));
+        }
+        return items;
     }
 
     /**

@@ -7,7 +7,7 @@ import javax.persistence.AttributeConverter;
 public class ItemStatusConverter implements AttributeConverter<ItemStatus, String> {
         @Override
         public String convertToDatabaseColumn(ItemStatus attribute) {
-            return attribute.getText();
+            return attribute.name();
         }
 
         @Override

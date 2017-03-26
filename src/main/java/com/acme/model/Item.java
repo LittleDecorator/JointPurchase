@@ -49,6 +49,9 @@ public class Item {
     @Column(name = "in_stock")
     private Integer inStock;
 
+    @Transient
+    private Integer inOrder;
+
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
@@ -175,5 +178,13 @@ public class Item {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getInOrder() {
+        return inOrder;
+    }
+
+    public void setInOrder(Integer inOrder) {
+        this.inOrder = inOrder;
     }
 }

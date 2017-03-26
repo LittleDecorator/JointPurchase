@@ -14,7 +14,7 @@
 
         <md-input-container class="md-block no-errors" flex="33" style="margin-left: 1%">
             <label>Производитель</label>
-            <md-select ng-model="filter.companyId" placeholder="Выберите компанию ...">
+            <md-select ng-model="filter.company" placeholder="Выберите компанию ...">
                 <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
             </md-select>
         </md-input-container>

@@ -1,5 +1,8 @@
-label.required:before{
-    content: '\002A   ';
+label.required:after,
+md-select.ng-required.ng-invalid:not(.md-no-asterisk) .md-select-value span:first-child:after, md-select[required].ng-invalid:not(.md-no-asterisk) .md-select-value span:first-child:after
+/*md-select[required] md-select-value span:first-child:before*/
+{
+    content: '   \002A   ';
     color: red;
 }
 

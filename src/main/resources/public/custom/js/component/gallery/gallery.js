@@ -6,13 +6,14 @@
     'use strict';
 
     angular.module('gallery')
+        /* Контроллер галереи */
         .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','$timeout','fileUploadModal','FileUploader',
             function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
-                console.log("Enter gallery controller");
 
                 var uploader = $scope.uploader = new FileUploader();
                 //var dialog;
                 var mCou=0;
+                
                 $scope.images = [];
 
                 //загрузка файлов

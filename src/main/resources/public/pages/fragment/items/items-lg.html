@@ -17,15 +17,14 @@
         <!--<tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad" ng-class="{'bad-row': item.inStock < item.inOrder}">-->
         <tr id="{{::item.id}}" ng-repeat="item in items " class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
             <td style="text-align: right;">
-                <input type="checkbox" disabled class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)"/>
-                <label for="{{::item.id}}" style="vertical-align: -15px;"></label>
+                <md-checkbox class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
             </td>
             <td class="center-align">{{::item.name}}</td>
             <td class="center-align">{{::item.companyName}}</td>
             <td class="center-align">{{::item.article}}</td>
             <td class="center-align">{{::item.price|number}} руб</td>
             <td class="center-align">{{::item.inStock|asZero}}</td>
-            <td class="center-align">{{item.inOrder|asZero}}</td>
+            <td class="center-align">{{::item.inOrder|asZero}}</td>
             <td class="right-align">
                 <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><md-icon>edit</md-icon></a>
                 <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id,$index)"><md-icon>close</md-icon></a>

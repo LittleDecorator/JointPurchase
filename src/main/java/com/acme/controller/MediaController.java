@@ -39,7 +39,8 @@ public class MediaController {
 	public void getImageForGallery(@PathVariable(value = "contentId") String contentId,
 								   @RequestParam(name = "asWebp", required = false) Boolean asWebp,
 								   HttpServletResponse response) throws Exception {
-		writeResponse(ImageSize.RAW, contentId, Boolean.TRUE.equals(asWebp), response);
+//		writeResponse(ImageSize.RAW, contentId, Boolean.TRUE.equals(asWebp), response);
+		writeResponse(ImageSize.ORIGINAL, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/image/{size}/{contentId}")

@@ -93,9 +93,9 @@
         .controller('itemClssController',['$scope','dataResources','resolved',function($scope,dataResources,resolved){
 
             $scope.items = [];
-
+            
+            // получаем мапу товаров
             dataResources.itemMap.get().$promise.then(function(result){
-                console.log(result);
                 angular.forEach(result, function (item) {
                     item.selected=false;
                     $scope.items.push(item);

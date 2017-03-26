@@ -108,10 +108,7 @@ public class OrderController {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
-//		Order order = persistOrder(request);
-		Order order = null;
-		emailService.sendOrderStatus(order);
-		return order;
+		return persistOrder(request);
 	}
 
 	/**
@@ -154,6 +151,10 @@ public class OrderController {
 				orderItem.setOrderId(order.getId());
 				orderItem.setCount(itemsList.getCount());
 				orderItemRepository.save(orderItem);
+				// изменить кол-во товара в наличие
+				Item item = itemRepository.findOne(itemsList.getItem().getId());
+				item.setInStock(item.getInStock() - itemsList.getCount());
+				itemRepository.save(item);
 			}
 
 			//удаляем записи, где заказ совпадает, а товар нет.
@@ -176,10 +177,17 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public void deleteOrder(@PathVariable("id") String id) {
-		//delete order bind items
-		orderItemRepository.deleteByOrderId(id);
-		//delete order itself
-		orderRepository.delete(id);
+		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+		try{
+			//delete order bind items
+			orderItemRepository.deleteByOrderId(id);
+			//delete order itself
+			orderRepository.delete(id);
+			transactionManager.commit(status);
+		} catch (Exception ex) {
+			ex.printStackTrace(System.out);
+			transactionManager.rollback(status);
+		}
 	}
 
 

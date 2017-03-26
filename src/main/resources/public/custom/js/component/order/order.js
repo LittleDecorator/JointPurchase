@@ -118,19 +118,26 @@
         }])
 
         /* Контроллер Карточки заказа */
-        .controller('orderDetailController',['$scope','$state','$stateParams','dataResources','$timeout','$mdToast','modal','order','items','deliveryMap','statusMap',function ($scope, $state, $stateParams, dataResources,$timeout,$mdToast,modal,order,items,deliveryMap,statusMap){
+        .controller('orderDetailController',['$scope','$rootScope','$state','$stateParams','dataResources','$timeout','$mdToast','modal','order','items','deliveryMap','statusMap',function ($scope, $rootScope, $state, $stateParams, dataResources,$timeout,$mdToast,modal,order,items,deliveryMap,statusMap){
 
             var templatePath = "pages/fragment/order/card/";
 
             $scope.statuses = statusMap;
             $scope.deliveries = deliveryMap;
             $scope.showHints = true;
-            $scope.order = order;
-            $scope.items = items.map(function(element){
-                var item = element.item;
-                item.count = element.cou;
-                return item
-            });
+            $scope.order = order ? order: {};
+
+            // перебираем товар заказа если открыт на редактирование
+            console.log(items);
+            if(items !=null ){
+                $scope.items = items.map(function(element){
+                    var item = element.item;
+                    item.count = element.count;
+                    return item
+                });
+            } else {
+                $scope.items = [];
+            }
 
             /* Если создаем новый заказ, то проставим время */
             if(!$scope.order) {
@@ -142,6 +149,7 @@
             $scope.save = function () {
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
+                // проверим что есть товары с кол-вом = 0
                 function haveEmptyItems(){
                     var result = false;
                     $scope.items.some(function(item){
@@ -154,38 +162,43 @@
                     return result;
                 }
 
+                // обновление breadCrumbs текущей страницы
                 function refreshState(data){
+                    console.log(data);
                     $scope.orderCard.$setPristine();
                     /* refresh state because name can be changed */
-                    $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                        $scope.selected.id = data.result;
+                    $state.go($state.current, {id:data.result}, {notify:false}).then(function(){
+                        $scope.order.id = data.result;
+                        $stateParams.id = data.result;
                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                     });
                 }
 
+                // точка входа в сохранение заказа
                 if($scope.orderCard.$dirty) {
                     if ($scope.orderCard.$valid) {
                         if($scope.items.length!=0 && !haveEmptyItems()){
 
                             var orderItems = [];
 
+                            // формируем список товара
                             $scope.items.forEach(function (item) {
                                 if(item.count>0){
                                     orderItems.push({
-                                        id:null,
-                                        orderId: $scope.order.id,
-                                        itemId: item.id,
-                                        cou: item.count
+                                        item: {id: item.id},
+                                        count: item.count
                                     })
                                 }
                             });
 
+                            // оправляем запрос
                             dataResources.order.post({order:$scope.order, items:orderItems}).$promise.then(function(data){
+                                console.log(data);
                                 if($scope.order.id){
                                     $mdToast.show(toast.textContent('Заказ #['+ $scope.order.uid +'] успешно изменён').theme('success'));
                                 } else {
                                     $mdToast.show(toast.textContent('Заказ #['+ $scope.order.uid +'] успешно создан').theme('success'));
-                                    refreshState({result:$scope.order.id});
+                                    refreshState({result:data.id});
                                 }
                             }, function(error){
                                 if($scope.order.id){
@@ -194,8 +207,8 @@
                                     $mdToast.show(toast.textContent('Неудалось создать новый заказ').theme('error'));
                                 }
                             });
-                        } else {
-                            $mdToast.show(toast.textContent('В заказе отсутствует товар!').theme('error'));
+                        // } else {
+                        //     $mdToast.show(toast.textContent('В заказе отсутствует товар!').theme('error'));
                         }
                     } else {
                         $scope.showHints = false;
@@ -214,7 +227,7 @@
                     data:$scope.items
                 });
 
-                // callback закрытия модального
+                // Слушатель закрытия модального
                 dialog.closePromise.then(function(output) {
 
                     // фильтрация массива
@@ -236,6 +249,7 @@
                         }
                     }
 
+                    // если при закрытие были переданны данные
                     if(output.value && output.value != '$escape'){
                         // сперва фильтруем исходный массив чтобы убрать все старые товары
                         $scope.items = $scope.items.filter(itemFilter(output.value,false));
