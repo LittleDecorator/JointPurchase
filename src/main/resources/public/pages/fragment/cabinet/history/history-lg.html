@@ -27,7 +27,7 @@
             <div layout="row">
 
                 <md-input-container flex=50">
-                    <input value="{{::order.status.name}}" placeholder="Статус заказа" disabled>
+                    <input value="{{order.status.name}}" placeholder="Статус заказа" disabled>
                 </md-input-container>
 
                 <md-input-container flex="50" style="margin-left:1%">
@@ -99,6 +99,10 @@
                 </tbody>
             </table>
         </md-card>
-
+    {{order.status}}
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="cancelOrder(order.id)" ng-class="{'disabled':order.status.id=='canceled'||order.status.id=='done', 'btn-large':width>600, 'btn-x-small': width < 601}">
+        <md-tooltip md-direction="left">Отменить заказ</md-tooltip>
+        <md-icon>close</md-icon>
+    </md-button>
 
 </div>

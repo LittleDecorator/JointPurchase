@@ -420,7 +420,8 @@ nav .brand-logo-lpad {
 
 @media screen and (min-width: 1025px){
     .main-wrapper {
-        top: 100px;
+        /*top: 100px;*/
+        top: 64px;
     }
 }
 

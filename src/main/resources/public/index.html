@@ -70,6 +70,8 @@
     </header>
 
     <main class="main-wrapper">
+        <!-- отображение пользователя и основное меню для LG -->
+        <div ng-include="'pages/template/sideMenu.html'"></div>
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main"></div>
@@ -102,7 +104,8 @@
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-touch.min.js"></script>-->
     <script src="/webjars/angular-messages/1.5.7/angular-messages.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-messages.min.js"></script>-->
-    <script src="/webjars/momentjs/2.14.1/min/moment.min.js"></script>
+    <script src="/webjars/momentjs/2.17.1/min/moment.min.js"></script>
+    <script src="/webjars/momentjs/2.17.1/min/locales.min.js"></script>
     <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
@@ -118,7 +121,7 @@
     <script src="official/auth0/angular-jwt.min.js"></script>
     <script src="official/mask.js"></script>
     <script src="official/ngMask.min.js"></script>
-    <script src="official/mdPickers.min.js"></script>
+    <script src="official/mdPickers.js"></script>
     <script src="official/crypto/crypto-js.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/0.9.1/cropper.min.js"></script>-->
     <!--<script src="official/cropper.js"></script>-->

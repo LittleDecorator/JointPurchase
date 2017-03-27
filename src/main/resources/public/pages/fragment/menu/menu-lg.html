@@ -4,47 +4,88 @@
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
             <div layout="row" class="layout-row">
                 <div class="row-wrapper">
+                    <!-- логотип -->
                     <a class="left brand-logo-lpad" ui-sref="home" style="font-size: 2rem;">GrimmStory</a>
-
+                    <!-- корзина товаров клиента -->
                     <a ui-sref="cart" class="cart">
                         <md-icon>shopping_basket</md-icon>
                         <span class="badge ng-binding ng-hide" ng-show="cart.cou>0">{{cart.cou}}</span>
                     </a>
-
-                    <span flex="" class="flex"></span>
-
-                    <div class="input-field row" style="margin: auto 15px; line-height: 30px; width: 30%">
-                        <input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria" maxlength="50">
-                        <md-button style="position: absolute;right: 0;min-width: 30px;margin: 0;    min-height: initial;    line-height: inherit;">
-                            <md-icon style="color:#846C63;!important">search</md-icon>
+                    <!-- строка поиска -->
+                    <div class="input-field row" style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px">
+                        <input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="searchFilter.criteria" maxlength="50" style="border-radius:0">
+                        <md-button style="position: absolute;right: 0;min-width: 70px;margin: 0; min-height: initial; line-height: inherit;border-left: 1px solid #d3d3d3;    border-radius: 0;    background-color: #f8f8f8;">
+                            <md-icon style="color:#846C63;!important;font-size: 22px;">search</md-icon>
                         </md-button>
                     </div>
+                    <!-- заполнитель -->
+                    <span flex="" class="flex"></span>
+                    <!-- отображаем имя только авторизованного -->
+                    <!--<span ng-if="auth.isAuth()">Добро пожальвать, {{::currentUser.name}}</span>-->
+                    <!-- уведомления -->
+                    <a style="width: 30px; height: 30px; min-width: 50px; min-height: 50px; line-height: 56px; text-align: center; cursor: pointer; top: 1rem; font-size: 2rem;">
+                        <md-icon>notifications</md-icon>
+                        <span class="badge ng-binding ng-hide" ng-show="true" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: relative; top: 0.2rem; font-weight: 300; right: 14px; padding: 3px 6px;">4</span>
+                    </a>
+                    <!-- меню -->
+                    <md-menu>
+                        <md-button ng-click="$mdOpenMenu($event)" style="margin: auto; width: 30px; height: 30px; min-width: 50px; min-height: 50px;">
+                            <md-icon>account_circle</md-icon>
+                        </md-button>
+                        <md-menu-content width="3">
+                            <!-- вход в приложение -->
+                            <md-menu-item ng-show="!auth.isAuth()">
+                                <md-button ng-click="goto('login')">
+                                    <md-icon>vpn_key</md-icon>
+                                    Вход
+                                </md-button>
+                            </md-menu-item>
+                            <!-- выход -->
+                            <md-menu-item ng-show="auth.isAuth()">
+                                <md-button ng-click="logout()">
+                                    <md-icon>exit_to_app</md-icon>
+                                    Выход
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item ng-show="!auth.isAuth()">
+                                <md-button ng-click="goto('registration')">
+                                    <md-icon>person_add</md-icon>
+                                    Регистрация
+                                </md-button>
+                            </md-menu-item>
+                            <!-- кабинет -->
+                            <md-menu-item ng-show="auth.isAuth()">
+                                <md-button ng-click="goto('cabinet')">
+                                    <md-icon>security</md-icon>
+                                    Личный кабинет
+                                </md-button>
+                            </md-menu-item>
+                            <!--<md-menu-divider></md-menu-divider>-->
+                        </md-menu-content>
+                    </md-menu>
 
-                    <md-button ng-if="auth.isAuth()" ng-click="goto('cabinet')" style="padding: 0"><md-icon>account_circle</md-icon> {{::currentUser.name}}</md-button>
-                    <md-button ng-if="auth.isAuth()" ng-click="logout()" style="padding: 0"><md-icon>exit_to_app</md-icon> Выход</md-button>
-                    <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn light-green lighten-2" style="margin: auto;margin-left: 15px;height: 30px; line-height: 30px;font-size: 1rem;" >Вход</a>
                 </div>
 
             </div>
-            <div layout="row" class="layout-row" style="border-bottom: 3px solid burlywood;">
-                <div class="row-wrapper">
-                    <ul id="nav-mobile" class="right ng-scope" style="margin: 0;line-height: 40px;height: 40px;">
-                        <li class="menu-item active" ui-sref-active="active"><a ui-sref="home"><md-icon>store</md-icon></a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="catalog">Каталог</a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="about">О нас</a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Контакты</a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="delivery">Доставка</a></li>
-                        <li class="menu-item" ui-sref-active="active"><a ui-sref="stock">Акции</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="order">Заказы</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="person">Клиенты</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="item">Товар</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="company">Поставщики</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="category">Категории</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="email">Почта</a></li>
-                        <li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="settings">Настройка</a></li>
-                    </ul>
-                </div>
-            </div>
+            <!--<div layout="row" class="layout-row" style="border-bottom: 3px solid burlywood;">-->
+                <!--<div class="row-wrapper">-->
+                    <!--<ul id="nav-mobile" class="right ng-scope" style="margin: 0;line-height: 40px;height: 40px;">-->
+                        <!--<li class="menu-item active" ui-sref-active="active"><a ui-sref="home"><md-icon>store</md-icon></a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="catalog">Каталог</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="about">О нас</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Контакты</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="delivery">Доставка</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="stock">Акции</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="order">Заказы</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="person">Клиенты</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="item">Товар</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="company">Поставщики</a></li>-->
+                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="category">Категории</a></li>-->
+                        <!--&lt;!&ndash;<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="email">Почта</a></li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="settings">Настройка</a></li>&ndash;&gt;-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
     </div>
 

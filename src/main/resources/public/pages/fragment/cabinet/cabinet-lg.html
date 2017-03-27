@@ -2,26 +2,24 @@
     <md-tab label="Заказы" md-on-select="remember(0);">
         <md-content class="md-padding">
 
-            <div>
-                <div layout="row">
+                <div layout="row" style="margin: 10px 0">
 
-                    <mdp-date-picker mdp-open-on-click name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom"></mdp-date-picker>
+                    <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" style="margin-left: 1%"></mdp-date-picker>
 
-                    <mdp-date-picker mdp-open-on-click name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" style="margin-left: 1%"></mdp-date-picker>
+                    <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" style="margin-left: 1%"></mdp-date-picker>
 
-                    <md-input-container class="md-block" flex="33" style="margin-bottom: 0">
+                    <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
                         <label>Статус заказа</label>
                         <md-select name="status" ng-model="filter.status" ng-model-options="{trackBy: '$value.id'}">
                             <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
                         </md-select>
                     </md-input-container>
 
-                    <div layout="row" layout-align="end">
-                        <a class="waves-effect waves-light btn" ng-click="apply()" >Найти</a>
+                    <div style="margin: auto 0 auto 25px;">
+                        <a class="waves-effect waves-light btn" ng-click="apply()">Найти</a>
                         <a class="waves-effect waves-light btn" ng-click="clear()">Сбросить</a>
                     </div>
                 </div>
-            </div>
 
             <md-card class="md-padding">
 
@@ -40,11 +38,12 @@
                     <tr id="{{::record.id}}" ng-repeat="record in history" class="collection-item" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
                         <td class="center-align">{{::record.uid}}</td>
                         <td class="center-align">{{::record.delivery}}</td>
-                        <td class="center-align">{{::record.status.name}}</td>
+                        <td class="center-align">{{record.status.name}}</td>
                         <td class="center-align">{{::record.createDate|date:'dd-MM-yyyy'}}</td>
                         <td class="center-align">{{::record.payment|number}} руб</td>
                         <td>
                             <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
                         </td>
                     </tr>
                     </tbody>

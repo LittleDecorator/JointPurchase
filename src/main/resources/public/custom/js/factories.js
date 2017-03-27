@@ -239,6 +239,10 @@
                         return result;
                     }}
                 }),
+                // отмена заказа
+                orderCancel:$resource('order/:id/cancel',{id:'@id'}, {
+                    put: {method: 'PUT', isArray: false}
+                }),
                 orderStatusMap:$resource('clss/order/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         // var result = [{id:null,value:"Выберите статус заказа ..."}];

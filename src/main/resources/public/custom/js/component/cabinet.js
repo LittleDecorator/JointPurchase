@@ -80,6 +80,7 @@
                 $scope.loadData(true);
             };
 
+            /* получение шаблона страницы */
             $scope.getTemplateUrl = function(){
                 if($scope.width < 601){
                     return templatePath + "cabinet-sm.html"
@@ -92,11 +93,13 @@
                 }
             };
 
+            /* Положить фильтр в хранилище */
             $scope.remember = function(idx){
                 $scope.filter.selectedTab = idx;
                 localStorage.setItem($state.current.name,angular.toJson($scope.filter));
             };
 
+            /* Получение персональных данных */
             $scope.getPerson = function(){
                 dataResources.customerPrivate.get().$promise.then(function(data){
                     $scope.person = data;
@@ -105,6 +108,7 @@
                 });
             };
 
+            /* Сохранить изменения */
             $scope.save = function(){
                 $scope.showHints = false;
                 console.log($scope);
@@ -121,6 +125,7 @@
                 }
             };
 
+            /* Изменение пароля клиента */
             $scope.changePassword = function(){
                 var dialog = modal({templateUrl:"pages/modal/passwordModal.html",className:'ngdialog-theme-default small-width',closeByEscape:true,controller:"passwordModalController",data:null});
                 dialog.closePromise.then(function(output) {
@@ -130,10 +135,28 @@
                 });
             };
 
-                $scope.viewOrder = function(id){
-                    console.log(id);
-                    $state.go("cabinet.historyDetail",{id:id});
-                };
+            /* Просмотр заказа */
+            $scope.viewOrder = function(id){
+                $state.go("cabinet.historyDetail",{id:id});
+            };
+
+            /* отменяем заказ */
+            $scope.cancelOrder = function(id){
+                console.log("cabinetController");
+                var order = helpers.findInArrayById($scope.history, id);
+                if(order.status!='canceled' || order.status!='done'){
+                    dataResources.orderCancel.put({id: id}).$promise.then(function(data){
+                        if(data.status){
+                            order.status = data.status;
+                            $mdToast.show($scope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                        } else {
+                            if(data.status != null){
+                                $mdToast.show($scope.toast.textContent('Не удалось отменить заказ').theme('error'));
+                            }
+                        }
+                    });
+                }
+            };
 
             $timeout(function(){
                 $scope.apply();
@@ -143,16 +166,16 @@
 
         }])
 
+        /* Контроллер иодального окна изменения пароля */
         .controller('passwordModalController',['$scope','dataResources','resolved','cryptoService','$mdToast',function($scope,dataResources,resolved,cryptoService,$mdToast){
 
             $scope.showHints = true;
 
+            /* изменить пароль */
             $scope.change = function() {
                 $scope.showHints = false;
                 if($scope.pswChange.$valid){
-                    console.log("Validation passed");
                     dataResources.authChange.post({oldPassword:$scope.oldPassword, newPassword:cryptoService.encryptString($scope.newPassword)}).$promise.then(function(data){
-                        console.log(data.result);
                         if(data.result){
                             $scope.closeThisDialog(data);
                         } else {
@@ -166,20 +189,24 @@
 
         }])
 
-        .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap',
-            function ($scope, order, items, deliveryMap) {
+        /* Контроль заказа из истории пользователя */
+        .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap', 'dataResources', '$mdToast',
+            function ($scope, order, items, deliveryMap, dataResources, $mdToast) {
 
                 var templatePath = "pages/fragment/cabinet/history/";
 
-
+                // получим заказ
                 $scope.order = order;
+                // получим способы доставки
                 $scope.order.delivery = helpers.findInArrayById(deliveryMap, $scope.order.delivery)
+                // получим товары из заказа
                 $scope.items = items.map(function(element){
                     var item = element.item;
-                    item.count = element.cou;
+                    item.count = element.count;
                     return item
                 });
 
+                /* получение шаблона страницы */
                 $scope.getTemplateUrl = function(){
                     if($scope.width < 601){
                         return templatePath + "history-sm.html"
@@ -192,7 +219,21 @@
                     }
                 };
 
-                console.log($scope)
+                $scope.cancelOrder = function(id){
+                    console.log("cabinetHistoryDetailController");
+                    if($scope.order.status!='canceled' || $scope.order.status!='done'){
+                        dataResources.orderCancel.put({id: id}).$promise.then(function(data){
+                            if(data.status){
+                                $scope.order.status = data.status;
+                                $mdToast.show($scope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                            } else {
+                                if(data.status!= null){
+                                    $mdToast.show($scope.toast.textContent('Не удалось отменить заказ').theme('error'));
+                                }
+                            }
+                        });
+                    }
+                };
 
             }])
 })();

@@ -16,7 +16,6 @@ import com.acme.service.EmailService;
 import com.google.common.collect.Lists;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -83,6 +82,35 @@ public class OrderController {
 	}
 
 	/**
+	 * Отмена заказа по ID
+	 * @param id - order ID
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/cancel")
+	public Order cancelOrder(@PathVariable("id") String id) {
+		Order order = orderRepository.findOne(id);
+		// получим заблокированные статусы
+		List<OrderStatus> lockedStatuses = Lists.newArrayList(OrderStatus.CANCELED, OrderStatus.DONE);
+		if(!lockedStatuses.contains(order.getStatus())){
+			// изменим статус заказа если возможно
+			TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+			try{
+				order.setStatus(OrderStatus.CANCELED);
+				orderRepository.save(order);
+				transactionManager.commit(status);
+				//отправляем письмо об изменение статуса заказа
+				emailService.sendOrderStatus(order);
+			} catch (Exception ex){
+				ex.printStackTrace(System.out);
+				transactionManager.rollback(status);
+			}
+		} else {
+			order = null;
+		}
+		return order;
+	}
+
+	/**
 	 * Получение заказов по ID клиента
 	 * @param id - customer ID
 	 * @return
@@ -116,12 +144,12 @@ public class OrderController {
 	 * @return
 	 */
 	@RequestMapping(value = "/history", method = RequestMethod.GET)
-	public Page<OrderView> getOrderHistory(OrderFilter filter) {
+	public List<OrderView> getOrderHistory(OrderFilter filter) {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		filter.setSubjectId(authService.getClaims(servletRequest).getId());
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "create_order_date");
-		return orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable);
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "createDate");
+		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
 	}
 
 	/**

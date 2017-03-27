@@ -443,3 +443,12 @@ table > tbody > tr.bad-row {
 md-input-container .md-input.ng-invalid.ng-dirty {
     border-width: 0 0 1px;
 }
+
+/* убираем фон при автозаполнении */
+/* Change the white to any color ;) */
+input:-webkit-autofill, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px white inset!important;
+    background-color: white!important;
+    /*Additionally, you can use this to change the text color:*/
+    /*-webkit-text-fill-color: yellow !important;*/
+}
