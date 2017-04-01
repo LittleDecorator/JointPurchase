@@ -206,8 +206,22 @@ var route = {
                 url:'/restore',
                 views: {
                     'main@': {
-                        templateUrl : 'pages/remember.html',
+                        templateUrl : 'pages/restore.html',
                         controller: 'restoreController'
+                    }
+                },
+                data: {
+                    requireLogin: false
+                }
+            },
+                /* Страница результата восстановления доступа */
+            {
+                name:'restore.result',
+                url:'/restore?confirmed',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/restoreResult.html',
+                        controller: 'restoreResultController'
                     }
                 },
                 data: {

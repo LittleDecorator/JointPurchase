@@ -135,6 +135,11 @@
                 });
             };
 
+            /* Удаление учетной записи */
+            $scope.deleteAccount = function(){
+                //TODO: показать окно подтверждения. Удалить учетку и все что с ней связанно.
+            };
+
             /* Просмотр заказа */
             $scope.viewOrder = function(id){
                 $state.go("cabinet.historyDetail",{id:id});

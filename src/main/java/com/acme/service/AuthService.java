@@ -23,7 +23,7 @@ public interface AuthService {
 
     Claims getClaims(ServletRequest servletRequest);
 
-    void restore(String login) throws TemplateException, IOException, MessagingException;
+    void restore(String login, String password) throws TemplateException, IOException, MessagingException;
 
     String decryptPassword(String password);
 }

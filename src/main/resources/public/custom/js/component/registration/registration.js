@@ -6,41 +6,53 @@
     'use strict';
 
     angular.module('registration')
-        .factory('registrationResource',['$resource',function($resource){
-            return {
-                _register: $resource('/auth/register',{},{post:{method:'POST'}}),
-                _throughLogin: $resource('/auth/register',{},{post:{method:'POST'}})
-            }
-        }])
-
-        .controller('registrationController',['$scope','$state','registrationResource', function($scope,$state,registrationResource){
-
-            $scope.card={
-                firstName:"",
-                lastName:"",
-                middleName:"",
-                phone:"",
-                mail:"",
-                password:"",
-                repeat:""
-            };
-
+        /* Контроллер регистрации */
+        .controller('registrationController',['$scope','$state','dataResources','$mdToast','cryptoService', function($scope,$state,dataResources, $mdToast, cryptoService){
+            $scope.showHints = true;
+            // объект регистрационных данных
+            $scope.card={ firstName:null, lastName:null, mail:null, password:null, passwordRepeat: null};
+            // флаг что заявка на регистрацию отправлена
             $scope.isSend = false;
+            var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
-            $scope.register = function(){
-                $scope.isSend = registrationResource._register.post($scope.card);
-                $scope.smtpLoginPage = "http://"+($scope.card.mail.substring($scope.card.mail.indexOf('@')+1))+"/login";
+            // отправка запроса на регистрацию
+            $scope.send = function(){
+                if($scope.registrationForm.$dirty){
+                    if($scope.registrationForm.$valid){
+                        var data = angular.extend({}, $scope.card);
+                        data.password = cryptoService.encryptString(data.password);
+                        dataResources.authRegister.post(data).$promise.then(function(data){
+                            console.log(data);
+                            $scope.isSend = true;
+                            $scope.showHints = true;
+                        }, function(error){
+                            console.log(error);
+                            $scope.isSend = false;
+                            $mdToast.show(toast.textContent('Неудалось произвести регистрацию\n'+ error.data.message).theme('error'));
+                        })
+                    } else {
+                        $scope.showHints = false;
+                    }
+                }
             };
         }])
 
-        .controller('registrationResultController',['$scope','$state','registrationResource','$stateParams', function($scope,$state,registrationResource,$stateParams) {
-            console.log("in registrationResultController");
+        /* Контроллер результата регистрации */
+        .controller('registrationResultController',['$scope','$state','$stateParams', function($scope,$state,$stateParams) {
             //TODO: through login, pretty info page
-            $scope._registrationStatus = $stateParams.confirmed;
+            // получим признак подтверждена ли регистрация
+            $scope.registrationStatus = $stateParams.confirmed;
             if($stateParams.confirmed){
-                $scope.message = "You can now login and continue your shopping!"
+                $scope.message = "Ваша учетная запись успешно активированна\n" +
+                                 "Приятных покупок!"
             } else {
-                $scope.message = "Your timeout for confirm expired. Please repeat registration process!"
+                $scope.message = "Ссылка используемая вами уже не действительна.\n" +
+                                 "Пожалуйста повторите процедуру регистрации!"
             }
+
+            /* Переход в каталог */
+            $scope.toCatalog = function(){
+                $state.go("catalog");
+            };
         }])
 })();

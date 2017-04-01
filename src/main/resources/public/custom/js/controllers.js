@@ -17,7 +17,7 @@
                 'login',
                 'clss',
                 'category',
-                'remember',
+                'restore',
                 'email',
                 'address',
                 'search',

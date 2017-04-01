@@ -1,17 +1,28 @@
-<div class="login-card center">
-    <h4>Авторизация</h4>
+<div class="login-card" style="width: 30%;padding: 20px;">
+    <h4 style="text-align: center">Авторизация</h4>
 
-    <div class="input-field col s12">
-        <input type="text" ng-model="uname" id="email"/>
-        <label for="email" class="control-label" style="left: 0.75rem">Email</label>
+    <md-content style="background-color: rgba(0,0,0,0)">
+        <div layout="column">
+
+            <md-input-container class="no-errors">
+                <label>Email</label>
+                <input name="fname" ng-model="uname">
+            </md-input-container>
+
+            <md-input-container class="no-errors">
+                <label>Пароль</label>
+                <input name="password" ng-model="password" type="password">
+            </md-input-container>
+
+        </div>
+    </md-content>
+
+    <div layout="column" layout-align="center center">
+        <a class="btn btn-default" ng-click="submit()" style="width: 100%">Подтвердить</a>
+
     </div>
-    <div class="input-field col s12">
-        <input type="password" ng-model="password" id="password" ng-keydown="keyPress($event.keyCode)"/>
-        <label class="control-label" for="password" style="left: 0.75rem">Пароль</label>
-    </div>
-    <div class="login-control-wrapper">
-        <a ui-sref="remember" class="waves-effect waves-green btn-flat" >Забыли пароль?</a>
-        <a ui-sref="registration" class="waves-effect waves-green btn-flat" >Регистрация</a>
-        <a class="waves-effect waves-green btn" ng-click="submit()">Подтвердить</a>
+    <div layout="row" layout-align="space-between center" style="margin-top: 15px">
+        <div style="margin-left: 10px"><a ui-sref="restore" style="font-size: 1.1rem">Забыли пароль?</a></div>
+        <div style="margin-right: 10px"><a ui-sref="registration" style="font-size: 1.1rem">Регистрация</a></div>
     </div>
 </div>

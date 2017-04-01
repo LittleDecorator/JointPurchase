@@ -236,7 +236,6 @@ public final class GmailHelper {
 
             @Override
             public void onSuccess(Message message, HttpHeaders responseHeaders) throws IOException {
-                System.out.println("result from batch for "+ message.getId());
                 result.add(SimpleMessage.valueOf(message, false));
             }
 
@@ -249,7 +248,6 @@ public final class GmailHelper {
         // queuing requests on the batch requests
         for (Message message : messages) {
             Gmail.Users.Messages.Get batch = service.users().messages().get("robot.grimmstory@gmail.com", message.getId());
-            System.out.println("queue in batch for "+ message.getId());
             batch.queue(request, bc);
         }
 
@@ -292,8 +290,6 @@ public final class GmailHelper {
      */
     public Thread getThread(String threadId) throws IOException {
         Thread thread = service.users().threads().get(user, threadId).execute();
-        System.out.println("Thread id: " + thread.getId());
-        System.out.println("No. of messages in this thread: " + thread.getMessages().size());
         return thread;
     }
 

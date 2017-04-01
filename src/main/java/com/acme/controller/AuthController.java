@@ -41,9 +41,14 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    /**
+     * Авторизация клиента
+     * @param subjectCredential
+     * @return
+     * @throws ServletException
+     */
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public LoginResponse authentication(@RequestBody SubjectCredential subjectCredential) throws ServletException {
-        System.out.println("AuthLogin: login credentials -> " + subjectCredential.toString());
         subjectCredential.setPassword(authService.decryptPassword(subjectCredential.getPassword()));
         Credential credential = authService.validate(subjectCredential);
         if (credential!=null){
@@ -52,22 +57,42 @@ public class AuthController {
         return null;
     }
 
+    /**
+     * Запрос на регистрацию нового клиента
+     * @param input
+     * @return
+     * @throws ServletException
+     * @throws ParseException
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public boolean registrationConfirm(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
         return authService.register(input);
     }
 
+    /**
+     * Запрос на восстановление доступа через смену пароля
+     * @param credential
+     * @throws ServletException
+     * @throws ParseException
+     * @throws IOException
+     * @throws TemplateException
+     * @throws MessagingException
+     */
     @RequestMapping(value = "/restore",method = RequestMethod.POST)
-//    public String restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, IOException, TemplateException, MessagingException {
-    public void restorePasswordConfirm(@RequestBody String login) throws ServletException, ParseException, IOException, TemplateException, MessagingException {
-        System.out.println(login);
-        JSONParser parser = new JSONParser();
-        String elogin = ((JSONObject)parser.parse(login)).get("data").toString();
-        System.out.println(elogin);
-//        return authService.restore(elogin);
-        authService.restore(elogin);
+    public void restorePasswordConfirm(@RequestBody SubjectCredential credential) throws ServletException, ParseException, IOException, TemplateException, MessagingException {
+        authService.restore(credential.getName(), authService.decryptPassword(credential.getPassword()));
     }
 
+    /**
+     * Сиена пароля
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     * @throws ServletException
+     * @throws ParseException
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(value = "/change",method = RequestMethod.POST)
     public Boolean changePassword(@JsonAttribute("oldPassword") String oldPassword, @JsonAttribute("newPassword")String newPassword) throws ServletException, ParseException, UnsupportedEncodingException {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();

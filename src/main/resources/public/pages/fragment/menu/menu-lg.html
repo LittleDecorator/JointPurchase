@@ -4,6 +4,9 @@
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
             <div layout="row" class="layout-row">
                 <div class="row-wrapper">
+                    <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 56px; line-height: 56px;" ng-click="toggleMenu()">
+                        <md-icon style="font-size: 2.2rem; line-height: 34px; width: 34px; height: 34px;">menu</md-icon>
+                    </md-button>
                     <!-- логотип -->
                     <a class="left brand-logo-lpad" ui-sref="home" style="font-size: 2rem;">GrimmStory</a>
                     <!-- корзина товаров клиента -->
@@ -23,14 +26,14 @@
                     <!-- отображаем имя только авторизованного -->
                     <!--<span ng-if="auth.isAuth()">Добро пожальвать, {{::currentUser.name}}</span>-->
                     <!-- уведомления -->
-                    <a style="width: 30px; height: 30px; min-width: 50px; min-height: 50px; line-height: 56px; text-align: center; cursor: pointer; top: 1rem; font-size: 2rem;">
-                        <md-icon>notifications</md-icon>
-                        <span class="badge ng-binding ng-hide" ng-show="true" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: relative; top: 0.2rem; font-weight: 300; right: 14px; padding: 3px 6px;">4</span>
+                    <a style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;">
+                        <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">notifications</md-icon>
+                        <span class="badge ng-binding ng-hide" ng-show="true" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;">4</span>
                     </a>
                     <!-- меню -->
                     <md-menu>
-                        <md-button ng-click="$mdOpenMenu($event)" style="margin: auto; width: 30px; height: 30px; min-width: 50px; min-height: 50px;">
-                            <md-icon>account_circle</md-icon>
+                        <md-button ng-click="$mdOpenMenu($event)" style="margin: auto; width: 30px; min-width: 50px;">
+                            <md-icon style="font-size: 30px; flex-grow: 1; line-height: 0.6;">account_circle</md-icon>
                         </md-button>
                         <md-menu-content width="3">
                             <!-- вход в приложение -->
@@ -38,13 +41,6 @@
                                 <md-button ng-click="goto('login')">
                                     <md-icon>vpn_key</md-icon>
                                     Вход
-                                </md-button>
-                            </md-menu-item>
-                            <!-- выход -->
-                            <md-menu-item ng-show="auth.isAuth()">
-                                <md-button ng-click="logout()">
-                                    <md-icon>exit_to_app</md-icon>
-                                    Выход
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item ng-show="!auth.isAuth()">
@@ -58,6 +54,13 @@
                                 <md-button ng-click="goto('cabinet')">
                                     <md-icon>security</md-icon>
                                     Личный кабинет
+                                </md-button>
+                            </md-menu-item>
+                            <!-- выход -->
+                            <md-menu-item ng-show="auth.isAuth()">
+                                <md-button ng-click="logout()">
+                                    <md-icon>exit_to_app</md-icon>
+                                    Выход
                                 </md-button>
                             </md-menu-item>
                             <!--<md-menu-divider></md-menu-divider>-->
@@ -90,3 +93,19 @@
     </div>
 
 </md-toolbar>
+
+<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="overflow: auto;  width: 250px; min-width: 0; top: 56px; padding-top: 15px">
+    <md-menu-item><md-button ng-click="goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
+</md-sidenav>

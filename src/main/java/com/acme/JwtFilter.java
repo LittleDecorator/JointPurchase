@@ -29,23 +29,17 @@ public class JwtFilter extends GenericFilterBean {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            System.out.println("Missing or invalid Authorization header.");
             return;
-
-//            throw new ServletException("Missing or invalid Authorization header.");
         } else {
             final String token = authHeader.substring(7); // The part after "Bearer "
 
             try {
                 final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
-                System.out.println("JWT FIlter -> "+claims.toString());
                 request.setAttribute("claims", claims);
             }
             catch (final SignatureException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                System.out.println("Invalid token.");
                 return;
-//                throw new ServletException("Invalid token.");
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);

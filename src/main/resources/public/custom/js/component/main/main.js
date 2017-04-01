@@ -229,6 +229,7 @@
                         return templatePath + "menu-md.html";
                     } else {
                         return templatePath + "menu-lg.html";
+                        // return templatePath + "menu-sm.html";
                     }
                 };
 

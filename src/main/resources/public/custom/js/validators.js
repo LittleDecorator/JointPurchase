@@ -159,7 +159,6 @@
                     if (!ctrl || !attrs.match) {
                         return;
                     }
-
                     var matchGetter = $parse(attrs.match);
                     var caselessGetter = $parse(attrs.matchCaseless);
                     var noMatchGetter = $parse(attrs.notMatch);

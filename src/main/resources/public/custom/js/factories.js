@@ -17,6 +17,8 @@
                 },
 
                 response: function(response) {
+                    console.log("auth response");
+                    console.log(response);
                     var time = response.headers('Expires');
                     if(time && time!== 'null'){
                         localStorage.setItem('Expires',time);
@@ -163,6 +165,9 @@
 
                 //itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
                 itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
+                /* AUTH SECTION */
+                authRegister: $resource('/auth/register',{},{post:{method:'POST',isArray:false}}),
+                authRestore: $resource('/auth/restore',{},{post:{method:'POST',isArray:false}}),
 
                 authLogin: $resource('/auth/login',{},{
                     post:{method:'POST'}

@@ -4,7 +4,7 @@
     <!-- SCROLLS -->
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
     <link rel="stylesheet" href="official/css/material.css">
-    <link rel="stylesheet" href="webjars/angular-material/1.0.9/angular-material.min.css">
+    <link rel="stylesheet" href="webjars/angular-material/1.1.3/angular-material.min.css">
 
     <link rel="stylesheet" href="official/css/swipebox.min.css">
     <link rel="stylesheet" href="official/css/ngDialog.css">
@@ -66,12 +66,12 @@
 
     <header>
         <div ng-include="getMenuTemplateUrl()" include-callback="afterInclude()"></div>
-        <div ng-include="'pages/template/sideMenuNew.html'"></div>
+        <div ng-include="'pages/template/sideFilter.html'"></div>
     </header>
 
     <main class="main-wrapper">
         <!-- отображение пользователя и основное меню для LG -->
-        <div ng-include="'pages/template/sideMenu.html'"></div>
+        <!--<div ng-include="'pages/template/sideMenu.html'"></div>-->
         <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main"></div>
@@ -106,7 +106,7 @@
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-messages.min.js"></script>-->
     <script src="/webjars/momentjs/2.17.1/min/moment.min.js"></script>
     <script src="/webjars/momentjs/2.17.1/min/locales.min.js"></script>
-    <script src="/webjars/angular-material/1.0.9/angular-material.min.js"></script>
+    <script src="/webjars/angular-material/1.1.3/angular-material.min.js"></script>
 
     <script src="official/angular/angular-file-upload.min.js" ></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.5.0/angular-file-upload.min.js" ></script>-->
@@ -156,7 +156,7 @@
     <script src="custom/js/component/login/login.js"></script>
     <script src="custom/js/component/category/category.js"></script>
     <script src="custom/js/component/clss/clss.js"></script>
-    <script src="custom/js/component/remember/remember.js"></script>
+    <script src="custom/js/component/restore/restore.js"></script>
     <script src="custom/js/component/email/email.js"></script>
     <script src="custom/js/component/address/address.js"></script>
     <script src="custom/js/component/search/search.js"></script>

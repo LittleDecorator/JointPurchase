@@ -95,7 +95,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public boolean sendRegistrationToken(String mailTo, String tokenLink) {
+    @Async
+    public Boolean sendRegistrationToken(String mailTo, String tokenLink) {
         boolean result = true;
 
         try{
@@ -108,7 +109,7 @@ public class EmailServiceImpl implements EmailService {
             Email email = EmailImpl.builder()
                     .from(new InternetAddress(senderAddress, senderName))
                     .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
-                    .subject("Registration confirmation")
+                    .subject("Подтверждение регистрации")
                     .sentAt(new Date())
                     .body("")
                     .encoding(Charset.forName("UTF-8"))
@@ -126,19 +127,21 @@ public class EmailServiceImpl implements EmailService {
                     .build();
 
             /* отправляем */
-            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-            /* добавим сообщение во исходящие */
-            messages.add(sended);
+            mailSender.send(message);
+//            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+//            /* добавим сообщение во исходящие */
+//            messages.add(sended);
             //TODO: добавить обновление ID истории
 
         } catch (MessagingException | IOException | TemplateException ex){
-            log.error("Faild send registration email");
+            log.error("Не удалось отправить письмо для подтверждения регистрации");
             result = false;
         }
         return result;
     }
 
     @Override
+    @Async
     public void sendRegistrationConfirm(String mailTo) throws IOException, MessagingException, TemplateException {
         EmailBuilder builder = EmailBuilder.getBuilder();
         /* получаем клиента */
@@ -149,7 +152,7 @@ public class EmailServiceImpl implements EmailService {
         Email email = EmailImpl.builder()
                 .from(new InternetAddress(senderAddress, senderName))
                 .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
-                .subject("Registration confirmation")
+                .subject("Подтверждение регистрации")
                 .sentAt(new Date())
                 .body("")
                 .encoding(Charset.forName("UTF-8"))
@@ -166,11 +169,11 @@ public class EmailServiceImpl implements EmailService {
                 .build();
 
         /* отправляем */
-        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-        /* добавим сообщение во исходящие */
-        messages.add(sended);
+        mailSender.send(message);
+//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+//        /* добавим сообщение во исходящие */
+//        messages.add(sended);
         //TODO: добавить обновление ID истории
-
     }
 
     /**
@@ -182,7 +185,61 @@ public class EmailServiceImpl implements EmailService {
      * @throws MessagingException
      */
     @Override
-    public void sendPassChangeConfirm(String mailTo, String tokenLink) throws IOException, TemplateException, MessagingException {
+    @Async
+    public Boolean sendPassChangeToken(String mailTo, String tokenLink){
+        boolean result = true;
+
+        try{
+            EmailBuilder builder = EmailBuilder.getBuilder();
+            /* получаем клиента */
+            Subject subject = subjectService.getSubjectByEmail(mailTo);
+            /* берем его полное имя */
+            String subjectFullName = subject.getLastName() + " "+ subject.getFirstName();
+            /* Получим объект сообщения */
+            Email email = EmailImpl.builder()
+                    .from(new InternetAddress(senderAddress, senderName))
+                    .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
+                    .subject("Подтверждение смены пароля")
+                    .sentAt(new Date())
+                    .body("")
+                    .encoding(Charset.forName("UTF-8"))
+                    .build();
+
+        /* Параметры */
+            Map<String, Object> paramMap = Maps.newHashMap();
+            paramMap.put("fullName",subjectFullName);
+            paramMap.put("site", Constants.HOME);
+            paramMap.put("confirm", tokenLink);
+
+        /* Конвертим его в Message */
+            MimeMessage message = builder.setMessage(convert(email))
+                    .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_REQUEST, paramMap))
+                    .build();
+
+        /* отправляем */
+            mailSender.send(message);
+//            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+//        /* добавим сообщение в общий список */
+//            messages.add(sended);
+            //TODO: добавить обновление ID истории
+        } catch (MessagingException | IOException | TemplateException ex){
+            log.error("Не удалось отправить письмо для подтверждения изменения пароля");
+            result = false;
+        }
+        return result;
+    }
+
+    /**
+     * Отправка токена для подтверждения изменения пароля. Используется, если не указан тел
+     * @param mailTo
+     * @throws IOException
+     * @throws TemplateException
+     * @throws MessagingException
+     */
+    @Override
+    @Async
+    public void sendPassChangeConfirm(String mailTo) throws IOException, TemplateException, MessagingException{
+
         EmailBuilder builder = EmailBuilder.getBuilder();
         /* получаем клиента */
         Subject subject = subjectService.getSubjectByEmail(mailTo);
@@ -192,7 +249,7 @@ public class EmailServiceImpl implements EmailService {
         Email email = EmailImpl.builder()
                 .from(new InternetAddress(senderAddress, senderName))
                 .to(Lists.newArrayList(new InternetAddress(subject.getEmail(), subjectFullName)))
-                .subject("Password change confirmation")
+                .subject("Подтверждение смены пароля")
                 .sentAt(new Date())
                 .body("")
                 .encoding(Charset.forName("UTF-8"))
@@ -201,77 +258,19 @@ public class EmailServiceImpl implements EmailService {
         /* Параметры */
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("fullName",subjectFullName);
-        paramMap.put("confirm", tokenLink);
+        paramMap.put("site", Constants.HOME);
 
         /* Конвертим его в Message */
         MimeMessage message = builder.setMessage(convert(email))
-                .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_REQUEST, paramMap))
+                .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_CONFIRM, paramMap))
                 .build();
 
         /* отправляем */
-        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-        /* добавим сообщение в общий список */
-        messages.add(sended);
-        //TODO: добавить обновление ID истории
-
-    }
-
-    //TODO: Доделать!!!!!
-    @Override
-    public void sendNews(String mailTo) {
-        log.info("Тут будет отправка новостей и акций");
-    }
-
-    @Override
-    public List<SimpleThread> getInbox() throws IOException {
-        return getMessages(GmailLabels.INBOX);
-    }
-
-    @Override
-    public List<SimpleThread> getSent() throws IOException {
-        /* получим сообщения */
-        return getMessages(GmailLabels.SENT);
-    }
-
-    @Override
-    public List<SimpleThread> getTrash() throws IOException {
-        /* получим сообщения */
-        return getMessages(GmailLabels.TRASH);
-    }
-
-    @Override
-    public void removeMessage(String id) {
-        SimpleMessage trashed = SimpleMessage.valueOf(helper.trashMessage(id));
-        /* обновим метку сообщения */
-        messages.stream().filter(m -> m.getId().contentEquals(trashed.getId())).forEach(m -> m.setLabels(trashed.getLabels()));
-    }
-
-    @Override
-    public void restoreMessage(String id) {
-        SimpleMessage untrashed = SimpleMessage.valueOf(helper.untrashMessage(id));
-        /* обновим метку сообщения */
-        messages.stream().filter(m -> m.getId().contentEquals(untrashed.getId())).forEach(m -> m.setLabels(untrashed.getLabels()));
-    }
-
-    @Override
-    public void removeThread(String id) {
-        SimpleThread trashThread = SimpleThread.valueOf(helper.trashThread(id));
-        /* обновим метку всех сообщений в цепочке */
-        Map<String, SimpleMessage> trashedMessages = trashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
-        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
-    }
-
-    @Override
-    public void restoreThread(String id) {
-        SimpleThread untrashThread = SimpleThread.valueOf(helper.untrashThread(id));
-        /* обновим метку всех сообщений в цепочке */
-        Map<String, SimpleMessage> trashedMessages = untrashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
-        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
-    }
-
-    public void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException {
-        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message.getTo(), message.getSubject(), message.getBody()));
-        messages.add(sended);
+        mailSender.send(message);
+//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+//        /* добавим сообщение в общий список */
+//        messages.add(sended);
+//        TODO: добавить обновление ID истории
     }
 
     @Async
@@ -330,6 +329,64 @@ public class EmailServiceImpl implements EmailService {
         /* отправим письмо */
         mailSender.send(message);
         //TODO: добавить обновление ID истории
+    }
+
+    @Override
+    public void sendNews(String mailTo) {
+        //TODO: Доделать!!!!!
+        log.info("Тут будет отправка новостей и акций");
+    }
+
+    @Override
+    public List<SimpleThread> getInbox() throws IOException {
+        return getMessages(GmailLabels.INBOX);
+    }
+
+    @Override
+    public List<SimpleThread> getSent() throws IOException {
+        /* получим сообщения */
+        return getMessages(GmailLabels.SENT);
+    }
+
+    @Override
+    public List<SimpleThread> getTrash() throws IOException {
+        /* получим сообщения */
+        return getMessages(GmailLabels.TRASH);
+    }
+
+    @Override
+    public void removeMessage(String id) {
+        SimpleMessage trashed = SimpleMessage.valueOf(helper.trashMessage(id));
+        /* обновим метку сообщения */
+        messages.stream().filter(m -> m.getId().contentEquals(trashed.getId())).forEach(m -> m.setLabels(trashed.getLabels()));
+    }
+
+    @Override
+    public void restoreMessage(String id) {
+        SimpleMessage untrashed = SimpleMessage.valueOf(helper.untrashMessage(id));
+        /* обновим метку сообщения */
+        messages.stream().filter(m -> m.getId().contentEquals(untrashed.getId())).forEach(m -> m.setLabels(untrashed.getLabels()));
+    }
+
+    @Override
+    public void removeThread(String id) {
+        SimpleThread trashThread = SimpleThread.valueOf(helper.trashThread(id));
+        /* обновим метку всех сообщений в цепочке */
+        Map<String, SimpleMessage> trashedMessages = trashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
+        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
+    }
+
+    @Override
+    public void restoreThread(String id) {
+        SimpleThread untrashThread = SimpleThread.valueOf(helper.untrashThread(id));
+        /* обновим метку всех сообщений в цепочке */
+        Map<String, SimpleMessage> trashedMessages = untrashThread.getMessages().stream().collect(Collectors.toMap(SimpleMessage::getId, Function.identity()));
+        messages.stream().filter(m -> trashedMessages.keySet().contains(m.getId())).forEach(m -> m.setLabels(trashedMessages.get(m.getId()).getLabels()));
+    }
+
+    public void sendWithoutAttach(SimpleMessage message) throws IOException, MessagingException {
+        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message.getTo(), message.getSubject(), message.getBody()));
+        messages.add(sended);
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.acme.service.EmailService;
 import com.acme.service.SmsService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
+import com.google.api.client.util.Maps;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,160 +31,178 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Map;
 
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    SubjectRepository subjectRepository;
+	@Autowired
+	SubjectRepository subjectRepository;
 
-    @Autowired
-    CredentialRepository credentialRepository;
+	@Autowired
+	CredentialRepository credentialRepository;
 
-    @Autowired
-    TokenService tokenService;
+	@Autowired
+	TokenService tokenService;
 
-    @Autowired
-    EmailService emailService;
+	@Autowired
+	EmailService emailService;
 
-    @Autowired
-    SmsService smsService;
+	@Autowired
+	SmsService smsService;
 
-    /**
-     * Получение пользователя по логину
-     * @param login
-     * @return
-     */
-    @Override
-    public Subject getSubject(String login) {
-        return subjectRepository.findByEmail(login);
-    }
+	/**
+	 * Получение пользователя по логину
+	 * @param login
+	 * @return
+	 */
+	@Override
+	public Subject getSubject(String login) {
+		return subjectRepository.findByEmail(login);
+	}
 
-    /**
-     * Проверка корректности указанных пользователем логина/пароля
-     * @param subjectCredential
-     * @return
-     */
-    @Override
-    public Credential validate(SubjectCredential subjectCredential) {
-        if (Strings.isNullOrEmpty(subjectCredential.getName()) || Strings.isNullOrEmpty(subjectCredential.getPassword())) {
-            return null;
-        }
-        Subject subject = getSubject(subjectCredential.getName());
-        if (!(subject != null && subject.isEnabled())) {
-            return null;
-        }
-        Credential credential = credentialRepository.findOne(subject.getId());
-        if(credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())){
-                return credential;
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * Проверка корректности указанных пользователем логина/пароля
+	 * @param subjectCredential
+	 * @return
+	 */
+	@Override
+	public Credential validate(SubjectCredential subjectCredential) {
+		if (Strings.isNullOrEmpty(subjectCredential.getName()) || Strings.isNullOrEmpty(subjectCredential.getPassword())) {
+			return null;
+		}
+		Subject subject = getSubject(subjectCredential.getName());
+		if (!(subject != null && subject.isEnabled())) {
+			return null;
+		}
+		Credential credential = credentialRepository.findOne(subject.getId());
+		if (credential != null && PasswordHashing.validatePassword(subjectCredential.getPassword(), credential.getPassword())) {
+			return credential;
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * Дешифровка пароля пользователя, пришедшего с клиента
-     * @param password
-     * @return
-     */
-    @Override
-    public String decryptPassword(String password){
-        try {
-            SecretKey key = new SecretKeySpec(Base64.decodeBase64("ZQiPJvvwFlfa9IxXj+F+eJCST+XvFr6nWYS0rloQZdQ="), "AES");
-            AlgorithmParameterSpec iv = new IvParameterSpec(Base64.decodeBase64("ksgfrrfixQ4xLk/qV5CmRg=="));
+	/**
+	 * Дешифровка пароля пользователя, пришедшего с клиента
+	 * @param password
+	 * @return
+	 */
+	@Override
+	public String decryptPassword(String password) {
+		try {
+			SecretKey key = new SecretKeySpec(Base64.decodeBase64("ZQiPJvvwFlfa9IxXj+F+eJCST+XvFr6nWYS0rloQZdQ="), "AES");
+			AlgorithmParameterSpec iv = new IvParameterSpec(Base64.decodeBase64("ksgfrrfixQ4xLk/qV5CmRg=="));
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, key, iv);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key, iv);
 
-            return new String(cipher.doFinal(Base64.decodeBase64(password)), "UTF-8");
-        } catch (Exception e) {
-            throw new RuntimeException("This should not happen in production.", e);
-        }
-    }
+			return new String(cipher.doFinal(Base64.decodeBase64(password)), "UTF-8");
+		} catch (Exception e) {
+			throw new RuntimeException("This should not happen in production.", e);
+		}
+	}
 
-    @Override
-    public boolean isAdmin(String username) {
-        return false;
-    }
+	@Override
+	public boolean isAdmin(String username) {
+		return false;
+	}
 
-    /**
-     * Получение полезной информации из token'а
-     * @param servletRequest
-     * @return
-     */
-    @Override
-    public Claims getClaims(ServletRequest servletRequest) {
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final String authHeader = request.getHeader("Authorization");
+	/**
+	 * Получение полезной информации из token'а
+	 * @param servletRequest
+	 * @return
+	 */
+	@Override
+	public Claims getClaims(ServletRequest servletRequest) {
+		final HttpServletRequest request = (HttpServletRequest) servletRequest;
+		final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("Missing or invalid Authorization header.");
-            return null;
-        } else {
-            final String token = authHeader.substring(7); // The part after "Bearer "
+		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+			System.out.println("Missing or invalid Authorization header.");
+			return null;
+		} else {
+			final String token = authHeader.substring(7); // The part after "Bearer "
 
-            try {
-                final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
-                return claims;
-            }
-            catch (final SignatureException e) {
-                System.out.println("Invalid token.");
-                return null;
-            }
-        }
-    }
+			try {
+				final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
+				return claims;
+			} catch (final SignatureException e) {
+				System.out.println("Invalid token.");
+				return null;
+			}
+		}
+	}
 
-    /**
-     * Регистрация нового пользователя.
-     * Новый пользователь будет не активированным, поэтому он не сможет авторизовываться.
-     * @param data
-     * @return
-     */
-    @Override
-    public boolean register(RegistrationData data) {
-        //create subject
-        Subject subject = new Subject();
-        subject.setEmail(data.getMail());
-        subject.setFirstName(data.getFirstName());
-        subject.setLastName(data.getLastName());
-        subject.setMiddleName(data.getMiddleName());
-        subject.setPhoneNumber(data.getPhone());
-        subjectRepository.save(subject);
+	/**
+	 * Регистрация нового пользователя.
+	 * Новый пользователь будет не активированным, поэтому он не сможет авторизовываться.
+	 * @param data
+	 * @return
+	 */
+	@Override
+	public boolean register(RegistrationData data) {
+		Subject subject = getSubject(data.getMail());
+		Credential credential;
+		if (subject != null) {
+			if(subject.isEnabled()){
+				throw new InvalidRequestException("Пользователь с указанным адресом уже зарегистрирован", data.getMail());
+			}
+			// обовим существующую не активную запись при повторной регистрации
+			subject.setFirstName(data.getFirstName());
+			subject.setLastName(data.getLastName());
+			subjectRepository.save(subject);
 
-        //create credential
-        Credential credential = new Credential();
-        credential.setSubjectId(subject.getId());
-        credential.setRoleId("user");
-        credential.setPassword(PasswordHashing.hashPassword(data.getPassword()));
-        credentialRepository.save(credential);
+			credential = credentialRepository.findOne(subject.getId());
+			credential.setPassword(PasswordHashing.hashPassword(decryptPassword(data.getPassword())));
+			credentialRepository.save(credential);
+		} else {
+			// создадим нового пользователя
+			subject = new Subject();
+			subject.setEmail(data.getMail());
+			subject.setFirstName(data.getFirstName());
+			subject.setLastName(data.getLastName());
+			subjectRepository.save(subject);
 
-        //create temp token
-        String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
-//        String tokenLink = "http://grimmstory.ru/public/auth/confirm?jwt="+tmpToken;
-        String tokenLink = "http://192.168.1.88:7777/public/auth/confirm?jwt="+tmpToken;
-        return emailService.sendRegistrationToken(data.getMail(), tokenLink);
-    }
+			// создадим для него credential
+			credential = new Credential();
+			credential.setSubjectId(subject.getId());
+			credential.setRoleId("user");
+			credential.setPassword(PasswordHashing.hashPassword(decryptPassword(data.getPassword())));
+			credentialRepository.save(credential);
+		}
 
-    /**
-     * Обработка запроса пользователя на изменение пароля
-     * @param login
-     */
-    @Override
-    public void restore(String login) throws TemplateException, IOException, MessagingException {
-        Subject subject = getSubject(login);
-        if(subject!=null){
-            if(!Strings.isNullOrEmpty(subject.getPhoneNumber())){
-                /* будем использовать смс если есть тел номер у клиента */
-                smsService.passChangeConfirm();
-            } else {
-                /* будем использовать почту */
-                String tmpToken = tokenService.createExpToken(credentialRepository.findOne(subject.getId()), (long) (24 * 60 * 60 * 1000));
-                String tokenLink = "http://grimmstory.ru/public/auth/restore?jwt="+tmpToken;
-                emailService.sendPassChangeConfirm(subject.getEmail(), tokenLink);
-            }
-        } else {
-            System.out.println("Subject not found");
-            throw new InvalidRequestException("Subject not found", login);
-        }
-    }
+		// создадим token для подтверждения
+		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
+		// создадим внешнюю ссылку на наш ресурс
+		String tokenLink = "http://192.168.1.27:7777/public/auth/confirm?jwt=" + tmpToken;
+		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
+	}
+
+	/**
+	 * Обработка запроса пользователя на изменение пароля
+	 * @param login
+	 */
+	@Override
+	public void restore(String login, String password) throws TemplateException, IOException, MessagingException {
+		// получение клиента
+		Subject subject = getSubject(login);
+		if (subject == null) {
+			throw new InvalidRequestException("Пользователь не зарегистрирован", login);
+		}
+		Credential credential = credentialRepository.findOne(subject.getId());
+		Map<String, Object> claims = Maps.newHashMap();
+		claims.put("password", password);
+
+		if (!Strings.isNullOrEmpty(subject.getPhoneNumber())) {
+			// будем использовать смс если есть тел номер у клиента
+			smsService.passChangeConfirm();
+		} else {
+			// будем использовать почту
+			String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000), claims);
+			// создадим внешнюю ссылку на наш ресурс
+			String tokenLink = "http://192.168.1.27:7777/public/auth/restore?jwt=" + tmpToken;
+			emailService.sendPassChangeToken(subject.getEmail(), tokenLink);
+		}
+	}
 }

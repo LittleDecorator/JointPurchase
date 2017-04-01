@@ -2,6 +2,7 @@ package com.acme.service.impl;
 
 import com.acme.model.Credential;
 import com.acme.service.TokenService;
+import com.google.common.collect.Maps;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -18,16 +20,44 @@ public class TokenServiceImpl implements TokenService {
 
     private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    //get token builder base
-    private JwtBuilder createToken(Credential credential, Date now) {
-        return Jwts.builder()
-                .setId(credential.getSubjectId())
-                .claim("role", credential.getRoleId())
+    /**
+     * Вернем builder токена
+     * @param credential
+     * @param now
+     * @param claims
+     * @return
+     */
+    private JwtBuilder createToken(Credential credential, Date now, Map<String, Object> claims) {
+        // создадим builder
+        JwtBuilder builder = Jwts.builder().setId(credential.getSubjectId())
                 .setIssuedAt(now)
                 .signWith(signatureAlgorithm, getKey());
+
+        if(claims == null) {
+            claims = Maps.newHashMap();
+        }
+        claims.put("role", credential.getRoleId());
+        // добавим дополнительную инфу в токен
+        builder.setClaims(claims);
+        return builder;
     }
 
-    //return expiring token
+    /**
+     * Вернем builder токена
+     * @param credential
+     * @param now
+     * @return
+     */
+    private JwtBuilder createToken(Credential credential, Date now) {
+        return createToken(credential, now, null);
+    }
+
+    /**
+     * Создадим истекающий токен
+     * @param credential
+     * @param ttl
+     * @return
+     */
     public String createExpToken(Credential credential, Long ttl){
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
@@ -35,6 +65,32 @@ public class TokenServiceImpl implements TokenService {
         JwtBuilder builder = createToken(credential,now);
         builder.setExpiration(exp);
         return builder.compact();
+    }
+
+    /**
+     * Создания истекающего токена
+     * @param builder
+     * @param ttl
+     * @return
+     */
+    private String createExpToken(JwtBuilder builder, Long ttl){
+        long nowMillis = System.currentTimeMillis();
+        Date exp = new Date(nowMillis + ttl);
+        builder.setExpiration(exp);
+        return builder.compact();
+    }
+
+    /**
+     * Создадим истекающий токен
+     * @param credential
+     * @param ttl
+     * @param claims
+     * @return
+     */
+    public String createExpToken(Credential credential, Long ttl, Map<String, Object> claims) {
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        return createExpToken(createToken(credential, now, claims), ttl);
     }
 
     public String createToken(Credential credential){

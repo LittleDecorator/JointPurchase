@@ -31,7 +31,7 @@ public interface EmailService {
 	 * @param tokenLink - token регистрации
 	 * @return
 	 */
-	boolean sendRegistrationToken(String mailTo, String tokenLink);
+	Boolean sendRegistrationToken(String mailTo, String tokenLink);
 
 
 	/**
@@ -40,9 +40,17 @@ public interface EmailService {
 	void sendRegistrationConfirm(String mailTo) throws IOException, MessagingException, TemplateException;
 
 	/**
+	 * Отправка ссылки для подтверждения смены пароля
+	 * @param mailTo    - получатель
+	 * @param tokenLink - token регистрации
+	 * @return
+	 */
+	Boolean sendPassChangeToken(String mailTo, String tokenLink);
+
+	/**
 	 * Сообщение об успешном изменении пароля
 	 */
-	void sendPassChangeConfirm(String mailTo, String tokenLink) throws IOException, TemplateException, MessagingException;
+	void sendPassChangeConfirm(String mailTo) throws IOException, TemplateException, MessagingException;
 
 	/**
 	 * Рассылка новостей и инфо про акции

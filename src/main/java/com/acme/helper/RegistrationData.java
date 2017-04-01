@@ -2,12 +2,10 @@ package com.acme.helper;
 
 public class RegistrationData {
 
-    String firstName;
-    String lastName;
-    String middleName;
-    String phone;
-    String mail;
-    String password;
+    private String firstName;
+    private String lastName;
+    private String mail;
+    private String password;
 
     public String getFirstName() {
         return firstName;
@@ -15,30 +13,6 @@ public class RegistrationData {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getMail() {
@@ -57,15 +31,21 @@ public class RegistrationData {
         this.password = password;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
         return "RegistrationData{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", mail='" + mail + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+               "firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", mail='" + mail + '\'' +
+               ", password='" + password + '\'' +
+               '}';
     }
 }

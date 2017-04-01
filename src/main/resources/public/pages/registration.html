@@ -1,40 +1,65 @@
-<div ng-if="!isSend">
-    <h4>Регистрация</h4>
-    <div class="table-container">
-        <div ng-form="registration" >
-            <div class="input-field">
-                <input name="fname" type="text" id="fname" class="form-control" ng-model="card.firstName" required>
-                <label class="control-label required" for="fname">Имя</label>
+<div class="login-card" ng-form="registrationForm" style="width: 30%;padding: 20px;">
+    <h4 style="text-align: center">Регистрация</h4>
+    <div ng-if="!isSend">
+
+        <md-content style="background-color: rgba(0,0,0,0)">
+            <div layout="column">
+
+                <md-input-container>
+                    <label>Имя</label>
+                    <input name="fname" ng-model="card.firstName" required>
+                    <div ng-messages="registrationForm.fname.$error" ng-if="!showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Фамилия</label>
+                    <input name="lname" ng-model="card.lastName" required>
+                    <div ng-messages="registrationForm.lname.$error" ng-if="!showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label class="required">Почта</label>
+                    <input name="email" ng-model="card.mail" ng-pattern="/^.+@.+\..+$/" required>
+                    <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+                    <div ng-messages="registrationForm.email.$error" ng-if="!showHints">
+                        <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                        <div ng-message="required">Необходимо указать e-mail получателя</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label class="required">Пароль</label>
+                    <input name="password" ng-model="card.password" type="password" required password-validate>
+                    <div ng-messages="registrationForm.password.$error" ng-if="registrationForm.password.$invalid || !showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                        <div ng-message="uppercaseValidator">Пароль должен содержать по крайней мере одну букву в верхнем регистре</div>
+                        <div ng-message="numberValidator">Пароль должен содержать по крайней мере одну цифру</div>
+                        <div ng-message="sixCharactersValidator">Длина пароля должна быть точно 6 символов</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container flex>
+                    <input name="passwordRepeat" ng-model="card.passwordRepeat" placeholder="Повторите пароль" type="password" required data-match="card.password">
+                    <div ng-messages="registrationForm.passwordRepeat.$error" ng-if="(registrationForm.passwordRepeat.$dirty && registrationForm.passwordRepeat.$invalid) || !showHints">
+                        <div ng-message="required">Поле не может быть пустым</div>
+                        <div ng-message="match">Пароли не совпадают</div>
+                    </div>
+                </md-input-container>
+
             </div>
-            <div class="input-field">
-                <input name="lname" type="text" id="lname" class="form-control" ng-model="card.lastName" required>
-                <label class="control-label required" for="lname">Фамилия</label>
-            </div>
-            <div class="input-field">
-                <input name="mname" type="text" id="mname" class="form-control" ng-model="card.middleName">
-                <label class="control-label" for="mname">Отчество</label>
-            </div>
-            <div class="input-field">
-                <input name="phone" type="text" id="phone" class="form-control" ng-model="card.phone">
-                <label class="control-label" for="phone">Телефон</label>
-            </div>
-            <div class="input-field">
-                <input name="mail" type="text" id="mail" class="form-control" ng-model="card.mail" required email-validate
-                       ng-class="{'invalid': registration.mail.$error.emailValidator && card.mail.length > 0, 'valid':!registration.mail.$error.emailValidator && card.mail.length > 0}">
-                <label class="control-label required" for="mail" data-error='Not valid semail'>Почта</label>
-            </div>
-            <div class="input-field">
-                <input name="password" type="password" id="password" class="form-control" ng-model="card.password" password-validate required
-                       ng-class="{'invalid': !$validation.password.valid && card.password.length>0, 'valid':$validation.password.valid}">
-                <label class="control-label required" for="password" data-error="{{$validation.password.errorText}}">Пароль</label>
-            </div>
+        </md-content>
+        <div layout="column" layout-align="center center">
+            <a class="btn btn-default" ng-click="send()" ng-class="{'disabled':registrationForm.$invalid || !registrationForm.$dirty}" style="width: 100%">Подтвердить</a>
+            <p class="margin center medium-small sign-up" style="margin-bottom: 0">Уже есть учетка? <a ui-sref="login">Вход</a></p>
         </div>
-        <a class="btn btn-default " ng-click="register()" ng-class="{'disabled':registration.$invalid}" style="margin-top: 30px">Подтвердить</a>
     </div>
-</div>
-<div ng-if="isSend" style="padding-top: 3%">
-    <div class="table-container" >
-        <p class="valign" >На указанный Вами почтовый ящик было отправленно письмо для <a style="cursor: pointer" href="{{smtpLoginPage}}">подтверждения регистрации</a></p>
-        <!--<a style="cursor: pointer" class="waves-effect waves-green btn-flat" href="{{smtpLoginPage}}">Перейти?</a>-->
+    <div ng-if="isSend" style="padding-top: 3%">
+        <div class="table-container">
+            <p class="valign">На указанный Вами почтовый ящик было отправленно письмо для подтверждения регистрации</p>
+        </div>
     </div>
 </div>

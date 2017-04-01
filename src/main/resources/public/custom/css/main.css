@@ -421,6 +421,13 @@ nav .brand-logo-lpad {
 @media screen and (min-width: 1025px){
     .main-wrapper {
         /*top: 100px;*/
+        top: 56px;
+    }
+}
+
+@media screen and (max-width: 720px){
+    .main-wrapper {
+        /*top: 100px;*/
         top: 64px;
     }
 }
@@ -449,3 +456,7 @@ md-card span.md-headline {
     }
 }
 
+/* HIDE REQUIRED IN LABEL */
+md-input-container label.hide-require.md-required:after{
+content: "";
+}

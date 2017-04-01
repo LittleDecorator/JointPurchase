@@ -2,10 +2,13 @@ package com.acme.servlet;
 
 import com.acme.constant.Settings;
 import com.acme.exception.TemplateException;
+import com.acme.model.Credential;
 import com.acme.model.Subject;
+import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.EmailService;
 import com.acme.service.TokenService;
+import com.acme.util.PasswordHashing;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -39,8 +42,8 @@ public class PublicServlet extends HttpServlet {
     @Autowired
     EmailService emailService;
 
-//    @Autowired
-//    CredentialRepository credentialRepository;
+    @Autowired
+    CredentialRepository credentialRepository;
 
     private WebApplicationContext springContext;
 
@@ -54,48 +57,54 @@ public class PublicServlet extends HttpServlet {
 
     @Override
     public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        //first parse temporary token
+        // получаем токен
         final String token = req.getParameter("jwt");
         res.setStatus(HttpServletResponse.SC_FOUND);
 
-        //if no token then go to fail page
+        // если пытаемся пройти без токена вообще
         if(Strings.isNullOrEmpty(token)){
             res.sendRedirect(Settings.appMainPage);
             return;
         }
+        // определим цель запроса
+        String page = req.getPathInfo().contains("restore") ? Settings.restoreResultPage : Settings.registrationResultPage;
 
+        // парсим токен
         try {
             final Claims claims = Jwts.parser().setSigningKey(tokenService.getKey()).parseClaimsJws(token).getBody();
-
+            // если токен просрочен, будет брошен exception
             if(claims.getExpiration().after(new Date())){
+				Subject subject = subjectRepository.findOne(claims.getId());
+				// если не нашли клиента, то ошибка
+				if (subject == null) {
+					res.sendRedirect(page + "?confirmed=false");
+					return;
+				}
+				// получаем credential
+				Credential credential = credentialRepository.findOne(subject.getId());
 
-                /* check if it pass change */
-                if(req.getPathInfo().contains("restore")){
-                    res.sendRedirect(Settings.restorePage);
+                // если цель восстановление пароля
+                if(page.contentEquals(Settings.registrationResultPage)){
+					addTokenHeader(res, credential);
+					if (subject.isEnabled()) {
+						// если пользователь уже активирован
+						res.sendRedirect(Settings.appMainPage);
+					} else {
+						subject.setEnabled(true);
+						subjectRepository.save(subject);
+						// если регистрация прошла успешно, то отправим письмо о результате
+						emailService.sendRegistrationConfirm(subject.getEmail());
+						res.sendRedirect(page + "?confirmed=true");
+					}
                 } else {
-                    /* registration */
-                    String subjectId = claims.getId();
-                    if (subjectRepository != null) {
-                        Subject subject = subjectRepository.findOne(subjectId);
-                        if (subject == null) {
-                            res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
-                            return;
-                        }
-                        if (subject.isEnabled()) {
-                            //if user already valid then go to main page (no login)
-                            res.sendRedirect(Settings.appMainPage);
-                        } else {
-                            subject.setEnabled(true);
-                            subjectRepository.save(subject);
-                            /* если регистрация прошла успешно, то отправим письмо о результате */
-                            emailService.sendRegistrationConfirm(subject.getEmail());
-                            res.sendRedirect(Settings.registrationResultPage + "?confirmed=true");
-                        }
-                    }
+						credential.setPassword(PasswordHashing.hashPassword(String.valueOf(claims.get("password"))));
+						credentialRepository.save(credential);
+						emailService.sendPassChangeConfirm(subject.getEmail());
+						res.sendRedirect(page + "?confirmed=true");
                 }
             }
         } catch (ExpiredJwtException e) {
-            res.sendRedirect(Settings.registrationResultPage + "?confirmed=false");
+            res.sendRedirect(page + "?confirmed=false");
         } catch (MessagingException | TemplateException e) {
             e.printStackTrace();
         }
@@ -107,6 +116,8 @@ public class PublicServlet extends HttpServlet {
         super.doGet(req, resp);
     }
 
-
+	private void addTokenHeader(HttpServletResponse response, Credential credential){
+		response.addHeader("Authorization", tokenService.createToken(credential));
+	}
 }
 
