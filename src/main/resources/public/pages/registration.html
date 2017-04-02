@@ -1,4 +1,4 @@
-<div class="login-card" ng-form="registrationForm" style="width: 30%;padding: 20px;">
+<div class="registration-card" ng-class="{send:isSend}" ng-form="registrationForm" style="width: 30%;padding: 20px;">
     <h4 style="text-align: center">Регистрация</h4>
     <div ng-if="!isSend">
 
@@ -57,8 +57,9 @@
             <p class="margin center medium-small sign-up" style="margin-bottom: 0">Уже есть учетка? <a ui-sref="login">Вход</a></p>
         </div>
     </div>
-    <div ng-if="isSend" style="padding-top: 3%">
-        <div class="table-container">
+    <div ng-if="isSend">
+        <md-divider />
+        <div class="table-container" style="text-align: center">
             <p class="valign">На указанный Вами почтовый ящик было отправленно письмо для подтверждения регистрации</p>
         </div>
     </div>

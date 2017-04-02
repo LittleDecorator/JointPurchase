@@ -151,31 +151,31 @@ public class AuthServiceImpl implements AuthService {
 			// обовим существующую не активную запись при повторной регистрации
 			subject.setFirstName(data.getFirstName());
 			subject.setLastName(data.getLastName());
-			subjectRepository.save(subject);
+			subject = subjectRepository.save(subject);
 
 			credential = credentialRepository.findOne(subject.getId());
 			credential.setPassword(PasswordHashing.hashPassword(decryptPassword(data.getPassword())));
-			credentialRepository.save(credential);
+			credential = credentialRepository.save(credential);
 		} else {
 			// создадим нового пользователя
 			subject = new Subject();
 			subject.setEmail(data.getMail());
 			subject.setFirstName(data.getFirstName());
 			subject.setLastName(data.getLastName());
-			subjectRepository.save(subject);
+			subject = subjectRepository.save(subject);
 
 			// создадим для него credential
 			credential = new Credential();
 			credential.setSubjectId(subject.getId());
 			credential.setRoleId("user");
 			credential.setPassword(PasswordHashing.hashPassword(decryptPassword(data.getPassword())));
-			credentialRepository.save(credential);
+			credential = credentialRepository.save(credential);
 		}
 
 		// создадим token для подтверждения
 		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
 		// создадим внешнюю ссылку на наш ресурс
-		String tokenLink = "http://192.168.1.27:7777/public/auth/confirm?jwt=" + tmpToken;
+		String tokenLink = "http://192.168.1.88:7777/public/auth/confirm?jwt=" + tmpToken;
 		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
 	}
 
@@ -201,7 +201,7 @@ public class AuthServiceImpl implements AuthService {
 			// будем использовать почту
 			String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000), claims);
 			// создадим внешнюю ссылку на наш ресурс
-			String tokenLink = "http://192.168.1.27:7777/public/auth/restore?jwt=" + tmpToken;
+			String tokenLink = "http://192.168.1.88:7777/public/auth/restore?jwt=" + tmpToken;
 			emailService.sendPassChangeToken(subject.getEmail(), tokenLink);
 		}
 	}

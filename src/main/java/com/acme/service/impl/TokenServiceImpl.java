@@ -32,13 +32,12 @@ public class TokenServiceImpl implements TokenService {
         JwtBuilder builder = Jwts.builder().setId(credential.getSubjectId())
                 .setIssuedAt(now)
                 .signWith(signatureAlgorithm, getKey());
-
-        if(claims == null) {
-            claims = Maps.newHashMap();
+        // добавим роль
+        builder.claim("role", credential.getRoleId());
+        // добавим доп параметры
+        for(Map.Entry<String, Object> entry : claims.entrySet()) {
+            builder.claim(entry.getKey(), entry.getValue());
         }
-        claims.put("role", credential.getRoleId());
-        // добавим дополнительную инфу в токен
-        builder.setClaims(claims);
         return builder;
     }
 
