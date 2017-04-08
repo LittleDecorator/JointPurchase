@@ -3,10 +3,14 @@ package com.acme.service.impl;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
+import com.acme.model.OrderItem;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
+import com.acme.repository.ItemRepository;
+import com.acme.repository.OrderItemRepository;
+import com.acme.repository.OrderRepository;
 import com.acme.service.ItemService;
 import com.acme.constant.Constants;
 import com.google.common.collect.Lists;
@@ -26,6 +30,15 @@ public class ItemServiceImpl implements ItemService{
 
     @Autowired
     ContentRepository contentRepository;
+
+    @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    OrderItemRepository orderItemRepository;
 
     @Override
     public List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items) {
@@ -69,5 +82,29 @@ public class ItemServiceImpl implements ItemService{
             transfer.setDescription(item.getDescription());
         }
         return transfer;
+    }
+
+//    @Override
+//    public void decreaseCountByOrder(String orderId) {
+//        // обновим кол-во товара в наличие
+//        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+//        for(OrderItem orderItem : orderItems){
+//            Item item = itemRepository.findOne(orderItem.getItemId());
+//            item.setInStock(item.getInStock() - orderItem.getCount());
+//            item.setInOrder(item.getInOrder() + orderItem.getCount());
+//            itemRepository.save(item);
+//        }
+//    }
+
+    @Override
+    public void increaseCountByOrder(String orderId) {
+        // обновим кол-во товара в наличие
+        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+        for(OrderItem orderItem : orderItems){
+            Item item = itemRepository.findOne(orderItem.getItemId());
+            item.setInStock(item.getInStock() + orderItem.getCount());
+            item.setInOrder(item.getInOrder() - orderItem.getCount());
+            itemRepository.save(item);
+        }
     }
 }

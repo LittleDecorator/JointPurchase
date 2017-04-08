@@ -13,6 +13,7 @@ import com.acme.repository.specification.OrderViewSpecifications;
 import com.acme.repository.*;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
+import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,8 @@ public class OrderController {
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
+	@Autowired
+	private ItemService itemService;
 
 	/**
 	 * Получение всех заказов по фильтру
@@ -95,8 +98,11 @@ public class OrderController {
 			// изменим статус заказа если возможно
 			TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 			try{
+				// изменяем статус заказа на "ОТМЕНЕН"
 				order.setStatus(OrderStatus.CANCELED);
 				orderRepository.save(order);
+				// обновим кол-во товара в наличие
+				itemService.increaseCountByOrder(order.getId());
 				transactionManager.commit(status);
 				//отправляем письмо об изменение статуса заказа
 				emailService.sendOrderStatus(order);
@@ -182,6 +188,7 @@ public class OrderController {
 				// изменить кол-во товара в наличие
 				Item item = itemRepository.findOne(itemsList.getItem().getId());
 				item.setInStock(item.getInStock() - itemsList.getCount());
+				item.setInOrder(item.getInOrder() + itemsList.getCount());
 				itemRepository.save(item);
 			}
 
@@ -207,9 +214,14 @@ public class OrderController {
 	public void deleteOrder(@PathVariable("id") String id) {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 		try{
-			//delete order bind items
+			Order order = orderRepository.findOne(id);
+			if(!order.getStatus().equals(OrderStatus.CANCELED)){
+				// если удаляемый заказ небыл отменен, то необходимо обновить кол-во товара
+				itemService.increaseCountByOrder(id);
+			}
+			// удаляем выбранные товары заказа
 			orderItemRepository.deleteByOrderId(id);
-			//delete order itself
+			// удаляем заказ
 			orderRepository.delete(id);
 			transactionManager.commit(status);
 		} catch (Exception ex) {

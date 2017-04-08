@@ -10,6 +10,7 @@ import com.acme.model.dto.SearchResultElement;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
+import com.acme.service.ElasticService;
 import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -18,7 +19,6 @@ import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -33,28 +33,28 @@ import java.util.stream.Collectors;
 public class CatalogController {
 
     @Autowired
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     @Autowired
-    CatalogRepository catalogRepository;
+    private CatalogRepository catalogRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    ContentRepository contentRepository;
+    private ContentRepository contentRepository;
 
     @Autowired
-    ItemContentRepository itemContentRepository;
+    private ItemContentRepository itemContentRepository;
 
     @Autowired
-    CategoryItemRepository categoryItemRepository;
+    private CategoryItemRepository categoryItemRepository;
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    private ElasticsearchTemplate elasticsearchTemplate;
+    private ElasticService elasticService;
 
     /**
      * Получение списка товаров по фильтру, для отображения на странице каталога.
@@ -88,14 +88,7 @@ public class CatalogController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "index")
     public void indexItem() {
-        List<IndexQuery> indexQueries = Lists.newArrayList();
-        /* найдем все документы из "Товар" для включения в индекс */
-        for(Item item : itemRepository.findAll()){
-            IndexQuery indexQuery = new IndexQueryBuilder().withId(item.getId()).withObject(item).build();
-            indexQueries.add(indexQuery);
-        }
-        /* Добавление документов в индекс */
-        elasticsearchTemplate.bulkIndex(indexQueries);
+        elasticService.indexItems(itemRepository.findAll());
     }
 
     /**

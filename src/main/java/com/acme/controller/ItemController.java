@@ -69,12 +69,13 @@ public class ItemController{
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
         List<Item> items = Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
         // подсчитаем кол-во товара в заказах
-        List<Order> orders = orderRepository.findAllByStatusIn(Lists.newArrayList(OrderStatus.ACCEPTED, OrderStatus.IN_PROCESS, OrderStatus.NEW, OrderStatus.READY));
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrderIdIn(orders.stream().map(Order::getId).collect(Collectors.toList()));
-        Map<String, Integer> result = orderItems.stream().collect(Collectors.groupingBy(OrderItem::getItemId, Collectors.summingInt(OrderItem::getCount)));
-        for(Item item : items){
-            item.setInOrder(result.get(item.getId()));
-        }
+        //TODO: сейчас пересчет происходит при создании, отмене и удалении заказа
+//        List<Order> orders = orderRepository.findAllByStatusIn(Lists.newArrayList(OrderStatus.ACCEPTED, OrderStatus.IN_PROCESS, OrderStatus.NEW, OrderStatus.READY));
+//        List<OrderItem> orderItems = orderItemRepository.findAllByOrderIdIn(orders.stream().map(Order::getId).collect(Collectors.toList()));
+//        Map<String, Integer> result = orderItems.stream().collect(Collectors.groupingBy(OrderItem::getItemId, Collectors.summingInt(OrderItem::getCount)));
+//        for(Item item : items){
+//            item.setInOrder(result.get(item.getId()));
+//        }
         return items;
     }
 

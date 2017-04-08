@@ -1,7 +1,7 @@
 package com.acme.service.impl;
 
 import com.acme.service.ImageService;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Cacheable(value = "decode")
     public BufferedImage decodeToImage(String imageString) throws IOException {
-        byte[] imageByte = Base64.decode(imageString);
+        byte[] imageByte = Base64.decodeBase64(imageString);
         return ImageIO.read(new ByteArrayInputStream(imageByte));
     }
 
@@ -73,7 +73,7 @@ public class ImageServiceImpl implements ImageService {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
         ImageIO.write(image, type, bos);
         byte[] imageBytes = bos.toByteArray();
-        String imageString = BASE + Base64.encode(imageBytes);
+        String imageString = BASE + Base64.encodeBase64String(imageBytes);
         bos.close();
         return imageString;
     }

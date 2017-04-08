@@ -49,7 +49,7 @@ public class Item {
     @Column(name = "in_stock")
     private Integer inStock;
 
-    @Transient
+    @Column(name = "in_order")
     private Integer inOrder;
 
     @Convert(converter = ItemStatusConverter.class)

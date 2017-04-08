@@ -10,5 +10,18 @@ import java.util.List;
 public interface ItemService {
 
     List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items);
+
     ItemMediaTransfer getItemMediaTransfers(Item item);
+
+    /**
+     * Пересчет кол-ва товара из-за создания заказа
+     * @param orderId
+     */
+//    void decreaseCountByOrder(String orderId);
+
+    /**
+     * Пересчет кол-ва товара из-за отмены или удаления заказа
+     * @param orderId
+     */
+    void increaseCountByOrder(String orderId);
 }

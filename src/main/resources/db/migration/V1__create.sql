@@ -116,6 +116,7 @@ create table item (
   not_for_sale boolean not null default false,
   status varchar(30) default 'available',
   in_stock int not null default 0,
+  in_order int not null default 0,
   primary key (id),
   foreign key (company_id) references company
 );

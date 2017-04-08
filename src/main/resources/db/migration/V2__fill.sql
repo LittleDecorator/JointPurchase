@@ -134,7 +134,7 @@ insert into category(id,name,parent_id)
 insert into item(id,name,company_id,article,description,price)
         values ('5e24b8ea-8a81-4984-ae92-fed630d5b859', '7 друзей в стаканчиках','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','10580','Seven Friends in 7 bowls: Sorting and matching peg dolls in wooden frame (for each day). Tip: You can style the peg dolls with cloth or tape. Our Bus (09480) fits perfectly with the peg dolls. Each hand-painted peg doll is unique! Materials: alder and maple wood, non-toxic water based color stain/non-toxic plant based oil finish. Size: frame diameter 19cm, peg dolls height 6cm, diameter 3cm.',1000);
 insert into item(id,name,company_id,article,price,in_stock)
-        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','10760',1650,0);
+        values ('b172e14f-33fd-4819-9831-09c54541feb4', 'Радуга (малая)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','10760',1650,1);
 insert into item(id,name,company_id,article,description,price,in_stock)
         values ('72fab541-593e-48ef-882e-e226775f0b6f', 'Радуга (12 частей)','40636ca3-6c19-4ecb-83a2-9027dcd5b22f','10670','The large Rainbow is really versatile and ideal already for small children! Toddlers stack, sort and build and as the children get older they will use it as a cradle for dolls, as fence for animals, like a tunnel or bridge for vehicles, as house for dwarfs and dollhouse dolls, build amazing sculptures... this rainbow will always be integrated in playing with a lot of fantasy. Materials: lime wood, non-toxic water based color stain. Size: length 38cm, height 18cm.',3500,2);
 insert into item(id,name,company_id,article,price)
