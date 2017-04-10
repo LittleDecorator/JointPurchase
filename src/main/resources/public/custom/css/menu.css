@@ -1,11 +1,21 @@
-md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
-    min-height: 40px;
-    height: 40px;
+@media (min-width: 456px) {
+    md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
+        min-height: 40px;
+        height: 40px;
+    }
 }
+
 
 md-sidenav#menu .md-button span {
     font-size: 1.1rem;
     color: #676565!important;
+}
+
+md-sidenav#menu .md-button span.menu-badge{
+    margin-left: 45px;
+    border-radius: 50%;
+    color: white!important;
+    font-size: .8rem;
 }
 
 .menu-lg {
@@ -26,10 +36,77 @@ md-sidenav {
     width: 260px;
 }
 
-@media screen and (max-width: 456px){
+/*@media screen and (max-width: 456px){*/
 
-    md-sidenav {
-        min-width: calc(100% - 90px);
+    /*md-sidenav {*/
+        /*min-width: calc(100% - 90px);*/
+    /*}*/
+
+/*}*/
+
+/********************************** SMALL SCREEN'S ******************************/
+@media (max-width: 456px) {
+
+    /* Делаем во весь экран */
+    md-sidenav#menu {
+        /*width: calc(100% - 56px);*/
+        width: 100%;
+        /*min-width: calc(100% - 56px);*/
+        min-width: 100%;
+        /*max-width: calc(100% - 56px);*/
+        max-width: 100%;
+    }
+
+    md-sidenav#menu .md-button{
+        min-height: 36px;
+        line-height: 36px;
+    }
+
+    md-sidenav#menu .md-button > md-icon{
+        font-size: 32px;
+        height: 32px;
+        width: 32px;
+        min-height: 32px;
+        min-width: 32px;
+    }
+
+    md-sidenav#menu .md-button span {
+        font-size: 1.3rem;
+        color: #676565!important;
+    }
+
+    /* Badge в меню */
+    md-sidenav#menu .md-button span.menu-badge{
+        min-width: 1.5rem;
+        padding: 0 6px;
+        font-size: 1rem;
+        line-height: 22px;
+        float: right;
+        margin-top: calc(1.5rem - 15px);
+        margin-left: 45px;
+        border-radius: 50%;
+        color: white!important;
+    }
+
+    /* Высота элемента меню */
+    md-sidenav#menu md-menu-item {
+        min-height: 52px;
+        height: 52px;
+    }
+
+    md-sidenav#menu md-divider {
+        margin: auto;
+        width: 90%;
+    }
+
+    /* Скрываем скроллирование */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Отступ для пункта меню */
+    .layout-padding, .layout-padding-gt-sm, .layout-padding-gt-sm>*, .layout-padding-md, .layout-padding-md>*, .layout-padding>*, .layout-padding>.flex, .layout-padding>.flex-gt-sm, .layout-padding>.flex-md{
+        padding: 4px 8px;
     }
 
 }

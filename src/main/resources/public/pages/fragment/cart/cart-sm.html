@@ -1,38 +1,51 @@
-<div >
+<div>
     <md-list class="row" flex style="margin: 0">
-        <md-list-item class="md-4-line cart-item card" layout="column" ng-repeat="item in cart.content" style="padding: 0;background-color: white; margin-top: 0; margin-bottom: 15px">
 
-            <div layout="row" style="width:100%; margin: 5px 0; padding: 0 10px;">
-                <a ng-click="itemView(item.id)" style="cursor: pointer;padding-top: 5px;">
-                    <span style="font-size: 20px">{{::item.name}}</span>
-                </a>
-                <div flex></div>
-                <md-icon ng-click="removeFromCart($index)" style="color: darksalmon;margin-right: 0;cursor: pointer;font-size: 2rem;height: 2rem; ">clear</md-icon>
-            </div>
+        <md-list-item class="md-3-line col s12 cart-item" ng-repeat="item in cart.content"
+                      style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
 
-                <div class="md-list-item-inner card-panel" style="padding: 0 5px; background-color: whitesmoke;">
 
-                    <div class="boxInner md-avatar" style="margin-right: 10px;width: 160px!important; margin-left: 5px;margin-top: 10px; margin-bottom: 10px;">
-                        <a ng-href="media/image/{{::item.contentId}}" class="swipebox" title="Some Title">
-                            <img ng-src="{{ORIG_URL+item.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+            <div class="md-list-item-inner" style="width: 100%; margin: 5px;display: block">
+
+                <!-- Заголовок -->
+                <div layout="row" style="width:100%; margin: 5px 0; padding: 0 10px;">
+                    <a ng-click="itemView(item.id)" style="cursor: pointer;">
+                        <span style="font-size: 20px">{{::item.name}}</span>
+                    </a>
+                    <div flex></div>
+                    <md-icon ng-click="removeFromCart($index)" style="color: darksalmon;margin-right: 0;cursor: pointer;font-size: 2rem;height: 2rem; ">clear
+                    </md-icon>
+                </div>
+                <md-divider></md-divider>
+
+                <div layout="row" style="padding-top: 10px;">
+                    <div class="boxInner md-avatar" style="margin-right: 10px; margin-left: 5px;margin-top: 10px; margin-bottom: 10px;">
+                        <a ng-href="{{::item.url}}" class="swipebox">
+                            <img ng-src="{{::item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                         </a>
                     </div>
                     <div class="md-list-item-text" layout="column" style="width:100%;margin: 5px;">
+
                         <div layout="row" style="margin: 3px 0;justify-content: flex-end;">
                             <div>
-                                <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
-                                <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
-                                <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
+                                <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="decrementCou($index)">
+                                    <md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon>
+                                </a>
+                                <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center">
+                                    <span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
+                                <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="incrementCou($index)">
+                                    <md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon>
+                                </a>
                             </div>
                         </div>
 
-                        <div layout="row" style="margin: 3px 0;">
+                        <div layout="row" style="margin: 3px 0;padding-top: 5px">
                             <span style="font-size: 14px;">Цена:</span>
                             <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
                             <span>{{::item.price|number}} руб</span>
                         </div>
 
-                        <div layout="row" style="margin: 3px 0;">
+                        <div layout="row" style="margin: 3px 0;padding-top: 5px">
                             <span style="font-size: 14px;">Сумма:</span>
                             <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
                             <span>{{(item.price * item.cou)| number}} руб</span>
@@ -40,6 +53,7 @@
                     </div>
 
                 </div>
+            </div>
 
         </md-list-item>
     </md-list>
@@ -47,7 +61,8 @@
 
 <div class="gray-row card">
     <div class="col s6 offset-s6 table-total" style="margin: 10px 15px">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey|number}} руб</span>
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong
+                style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey|number}} руб</span>
     </div>
 </div>
 

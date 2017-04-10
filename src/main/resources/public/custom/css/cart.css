@@ -1,3 +1,10 @@
 .cart-item a {
     color:#88AAA9!important;
 }
+
+md-list-item.cart-item md-divider {
+    position: relative;
+    /* bottom: 0; */
+    left: 0;
+    width: 100%;
+}

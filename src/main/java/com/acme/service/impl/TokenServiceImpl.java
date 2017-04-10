@@ -35,8 +35,10 @@ public class TokenServiceImpl implements TokenService {
         // добавим роль
         builder.claim("role", credential.getRoleId());
         // добавим доп параметры
-        for(Map.Entry<String, Object> entry : claims.entrySet()) {
-            builder.claim(entry.getKey(), entry.getValue());
+        if(claims!=null){
+            for(Map.Entry<String, Object> entry : claims.entrySet()) {
+                builder.claim(entry.getKey(), entry.getValue());
+            }
         }
         return builder;
     }

@@ -432,9 +432,11 @@ nav .brand-logo-lpad {
     }
 }
 
+/********************************** SMALL SCREEN'S ******************************/
+/* Обертка основного экрана */
 @media screen and (max-width: 600px){
     .main-wrapper {
-        top: 45px;
+        top: 56px;
     }
 }
 
@@ -450,11 +452,12 @@ md-card span.md-headline {
     }
 }
 
-@media screen and (min-width: 361px) and (max-width: 600px){
-    md-card span.md-headline {
-        font-size: 1.8rem;
-    }
-}
+/* Временно убрано */
+/*@media screen and (min-width: 361px) and (max-width: 600px){*/
+    /*md-card span.md-headline {*/
+        /*font-size: 1.8rem;*/
+    /*}*/
+/*}*/
 
 /* HIDE REQUIRED IN LABEL */
 md-input-container label.hide-require.md-required:after{

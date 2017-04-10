@@ -1,4 +1,4 @@
-.registration-card {
+.restore-card {
     width: 60%;
     margin: 20% auto auto;
     padding: 10px 10px 20px;
@@ -7,25 +7,25 @@
 }
 
 @media only screen and (min-width : 1280px){
-    .registration-card {
+    .restore-card {
         width: 30%;
         margin-top: 15%;
     }
-    .registration-card.send {
+    .restore-card.send {
         width: 50%;
         margin-top: 15%;
     }
 }
 
 @media only screen and (max-width : 720px){
-    .registration-card {
+    .restore-card {
         width: 70%;
         margin-top: 40%;
     }
 }
 
 @media only screen and (max-width : 600px){
-    .registration-card {
+    .restore-card {
         /*width: 90%;*/
         width: 100%;
         margin: 10% auto auto;
@@ -34,13 +34,13 @@
 }
 
 @media only screen and (max-width : 360px){
-    .registration-card {
+    .restore-card {
         width: 100%;
         margin: 10% auto auto;
         background: white;
     }
 }
 
-.registration-card div.input-field {
+.restore-card div.input-field {
     margin: 0 15px;
 }
