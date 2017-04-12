@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -103,7 +104,6 @@ public class CatalogController {
      */
     @Warning(value = "Not working temporary")
     @RequestMapping(method = RequestMethod.GET, value = "search")
-//    public Collection<SearchResultElement> searchItem(@RequestParam(value = "criteria") String criteria) {
     public List<Item> searchItem(@RequestParam(value = "criteria") String criteria) {
 
         /* Указываем в каких полях с каким приоритетом */
@@ -111,30 +111,7 @@ public class CatalogController {
         builder.field("name",4).field("title",3).field("tags",2).field("content");
 
         /* ищем документы */
-        List<Item> itemsList = Lists.newArrayList(catalogRepository.search(builder));
-
-
-//        List<Product> items = customRepository.getBySearch(criteria);
-//        Map<String,Product> productMap = items.stream().collect(Collectors.toMap(Product::getId, Function.<Product>identity()));
-//        List<CategoryItem> categoryItems = itemCategoryLinkRepository.getByItemIdList(items.stream().map(Product::getId).collect(Collectors.toList()));
-
-        Map<String,SearchResultElement> stash = Maps.newHashMap();
-
-//        for(CategoryItem entry : categoryItems){
-//            Product product = productMap.get(entry.getItemId());
-//            product.setImageUrl("/media/image/gallery/" + product.getContentId());
-//            if(stash.containsKey(entry.getCategoryId())){
-//                stash.get(entry.getCategoryId()).getChildren().add(product);
-//            } else {
-//                SearchResultElement resultElement = new SearchResultElement();
-//                resultElement.setGroupId(entry.getCategoryId());
-//                resultElement.setGroupName(entry.getCategoryName());
-//                resultElement.setChildren(Lists.newArrayList(product));
-//                stash.put(entry.getCategoryId(),resultElement);
-//            }
-//        }
-//        return stash.values();
-        return itemsList;
+        return Lists.newArrayList(catalogRepository.search(builder));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.elasticsearch.repository.CatalogRepository;
 import com.acme.enums.OrderStatus;
 import com.acme.model.*;
 import com.acme.model.filter.ItemFilter;
@@ -29,6 +30,9 @@ public class ItemController{
 
     @Autowired
 	ItemRepository itemRepository;
+
+    @Autowired
+    private CatalogRepository catalogRepository;
 
     @Autowired
 	OrderItemRepository orderItemRepository;
@@ -93,6 +97,7 @@ public class ItemController{
         if (item != null) {
             TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
             try {
+                //добавим сам товар
                 itemId = itemRepository.save(item).getId();
                 List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
                 /* удаление не существующих связей */
@@ -102,6 +107,8 @@ public class ItemController{
                 /* добавление новых связей */
                 categoryItemRepository.save(categoryService.createCategoryItemList4Item(itemId, categoryIdList));
                 transactionManager.commit(status);
+                // поместим в индекс только после добавления товара
+                catalogRepository.save(item);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 transactionManager.rollback(status);

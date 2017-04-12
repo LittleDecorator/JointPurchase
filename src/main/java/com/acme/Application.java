@@ -50,6 +50,7 @@ import java.util.concurrent.Executor;
 @SpringBootApplication
 @EnableTransactionManagement(proxyTargetClass=true)
 @EnableJpaRepositories(basePackages = "com.acme.repository")
+@EnableElasticsearchRepositories(basePackages = "com.acme.elasticsearch")
 @PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 

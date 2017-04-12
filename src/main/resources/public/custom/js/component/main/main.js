@@ -308,7 +308,8 @@
 									});
 						}
 					}
-
+					
+					// модальное окно поиска
 					$scope.openSearch = function (event) {
 						var dialog = modal({
 							templateUrl: "pages/modal/searchModal.html",

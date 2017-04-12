@@ -137,6 +137,11 @@
                 $scope.item.inStock = 0;
             }
 
+            // инициализация кол-ва товара в наличие
+            if(!$scope.item.inOrder){
+                $scope.item.inOrder = 0;
+            }
+
             /* Удаление категории из товара */
             $scope.removeCategory = function(idx){
                 $scope.item.categories.splice(idx,1);
@@ -161,6 +166,7 @@
                 dialog.closePromise.then(function(output) {
                     if(output.value && output.value != '$escape'){
                         $scope.item.categories = output.value;
+                        console.log($scope.itemCard);
                         $scope.itemCard.categories.$error = {};
                         $scope.itemCard.categories.$setValidity("required", true);
                         $('md-chips-wrap').removeClass('md-chips-invalid');

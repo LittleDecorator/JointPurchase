@@ -1,6 +1,7 @@
 package com.acme.repository;
 
 import com.acme.model.CategoryItem;
+import com.acme.model.Item;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 public interface CategoryItemRepository extends CrudRepository<CategoryItem, String> {
 
     List<CategoryItem> findAllByItemId(String itemId);
+
+    List<CategoryItem> findAllByItemIdIn(List<String> ids);
 
     void deleteByItemId(String itemId);
 

@@ -37,6 +37,19 @@
             $scope.infiniteDistance = 2;
 
             /**
+             * Событие поиска.
+             * Пока учитавается только текст
+             */
+            $scope.querySearch = function() {
+                dataResources.catalog.search.get($scope.searchFilter.criteria).$promise.then(
+                    function (data) {
+                    
+                    },
+                    func
+            };
+
+
+            /**
              * получение данных с сервера
              * @param isClean - нужно ли очищать существующий набор данных
              */

@@ -57,19 +57,19 @@ td > a > .material-icons{
 
 /* CHIPS */
 
- .category-chips .md-chip {
+ .category-chips md-chip {
     position: relative;
  }
-.md-chips:not(.md-readonly) .md-chip:not(.md-readonly) {
+.md-chips:not(.md-readonly) md-chip:not(.md-readonly) {
     padding-right: 25px;
 }
- .category-chips .md-chip .md-chip-remove-container {
+ .category-chips md-chip .md-chip-remove-container {
     position: absolute;
     right: 4px;
     top: 4px;
     margin-right: 0;
     height: 24px; }
- .category-chips .md-chip .md-chip-remove-container button.vegetablechip {
+ .category-chips md-chip .md-chip-remove-container button.vegetablechip {
     position: relative;
     height: 24px;
     width: 24px;
@@ -83,16 +83,16 @@ td > a > .material-icons{
     margin: 0;
     transition: background 0.15s linear;
     display: block; }
- .category-chips .md-chip .md-chip-remove-container button.vegetablechip md-icon {
+ .category-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0) scale(0.7);
     color: white;
     fill: white; }
- .category-chips .md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip:focus {
+ .category-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips .md-chip .md-chip-remove-container button.vegetablechip:focus {
     background: rgba(255, 0, 0, 0.8); }
-.category-chips .md-chip:not(.md-readonly) md-chip-template {
+.category-chips md-chip:not(.md-readonly) md-chip-template {
     padding-right: 5px; }
 .md-chip-content span {
     font-size: 13px;

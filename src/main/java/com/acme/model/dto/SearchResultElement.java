@@ -1,12 +1,14 @@
 package com.acme.model.dto;
 
+import com.acme.model.Item;
+
 import java.util.List;
 
 public class SearchResultElement {
 
     String groupId;
     String groupName;
-    List<Product> children;
+    List<Item> children;
 
     public String getGroupId() {
         return groupId;
@@ -24,11 +26,11 @@ public class SearchResultElement {
         this.groupName = groupName;
     }
 
-    public List<Product> getChildren() {
+    public List<Item> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Product> children) {
+    public void setChildren(List<Item> children) {
         this.children = children;
     }
 

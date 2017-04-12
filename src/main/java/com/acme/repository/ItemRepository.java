@@ -2,6 +2,7 @@ package com.acme.repository;
 
 import com.acme.model.Item;
 import com.acme.model.OrderItem;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

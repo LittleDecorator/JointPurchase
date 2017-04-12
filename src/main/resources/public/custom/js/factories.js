@@ -96,6 +96,7 @@
                     post:{method:'POST',isArray:false,
                         transformRequest:function(data, headers) {
                             var result = angular.copy(data);
+                            console.log(result);
                             result.price= result.price.replace(/[^0-9]/g,'');
                             console.log(result);
                             return angular.toJson(result);
