@@ -1,6 +1,7 @@
-<div ng-include="'pages/template/searchResult.html'" ng-if="showResults"></div>
+<!--<div ng-include="'pages/template/searchResult.html'" ng-if="showResults"></div>-->
 
-<div class="section" style="margin-top: 20px;" ng-if="!showResults">
+<!--<div class="section" style="margin-top: 20px;" ng-if="!showResults">-->
+<div class="section" style="margin-top: 20px;">
 
     <div class="row isotope" infinite-scroll='loadData()' infinite-scroll-distance='1' infinite-scroll-disabled="stopLoad">
         <div class="col s12 m6 l4" ng-repeat="item in items">

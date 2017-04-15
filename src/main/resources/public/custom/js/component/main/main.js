@@ -6,14 +6,16 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$log', 'modal', '$mdToast',
-				function ($scope, $rootScope, $window, $state, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $log, modal, $mdToast) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$log', 'modal', '$mdToast','$q',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $log, modal, $mdToast, $q) {
 					console.log("Enter main controller");
 
 					$scope.THUMB_URL = "media/image/thumb/";
 					$scope.PREVIEW_URL = "media/image/preview/";
 					$scope.VIEW_URL = "media/image/view/";
 					$scope.ORIG_URL = "media/image/";
+
+					$scope.search = {criteria:null};
 
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
@@ -281,12 +283,53 @@
 						$scope.isInfoPanelClosed = true;
 					};
 
+					/*======================== SEARCH ==============================*/
+
+					//TODO: Нужно получать сразу все имена, и фильтровать на клиенте
+					$scope.states        = [];
+					$scope.selectedItem  = null;
+					$scope.searchText    = null;
+					$scope.querySearch   = querySearch;
+
+					// нажатие кнопки поиск
+					$scope.searchItem = function(){
+						if($scope.search.criteria){
+							/* refresh state because name can be changed */
+							if($state.current == 'search'){
+								$state.go('search', {criteria: $scope.search.criteria},{notify:false}).then(function(){
+									// $scope.item.id = data.result;
+									$stateParams.criteria = $scope.search.criteria;
+									$rootScope.$broadcast('$refreshBreadcrumbs',$state);
+								});
+							} else {
+								$state.go('search', {criteria: $scope.search.criteria});
+							}
+						}
+					};
+
+
+					$scope.keyPress = function(keyCode) {
+						if (keyCode == 13) {
+								$scope.searchItem();
+						}
+					};
+
+					/**
+					 * Search for states... use $timeout to simulate
+					 * remote dataservice call.
+					 */
+					function querySearch (query) {
+						console.log("query");
+						//TODO: показывать загрузку
+						return query ? dataResources.catalog.search.get({criteria: query}).$promise : $scope.states;
+					}
+
 					/*========================== SIDE NAV ============================*/
 					//TODO: move all this to directive
 					$scope.toggleLeft = buildToggler('left');
 					$scope.toggleMenu = buildToggler('menu');
 
-					function debounce(func, wait, context) {
+					function debounce(func, wait) {
 						var timer;
 						return function debounced() {
 							var context = $scope,

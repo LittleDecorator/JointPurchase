@@ -310,6 +310,50 @@ var route = {
                     }
                 }
             },
+                /* Результат поиска */
+            {
+                name: 'search',
+                url:'/search/:criteria',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/template/searchResult.html',
+                        controller: 'searchController'
+                    }
+                },
+                data:{
+                    displayName: 'Результат поиска',
+                    requireLogin: false,
+                    options: function() {
+                        return {reload: true}
+                    }
+                },
+                resolve: {
+                    node: function() {
+                        return null;
+                    }
+                }
+            },
+            {
+                name:'search.detail',
+                url:'/:itemId',
+                parent:'search',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/card/catalogCard.html',
+                        controller: 'catalogCardController'
+                    }
+                },
+                data: {
+                    displayName: '{{product.name}}',
+                    requireLogin: false,
+                },
+                resolve: {
+                    product: function($stateParams, resolveService) {
+                        return resolveService.getProduct($stateParams.itemId);
+                    }
+                }
+            },
+                /* Заказы */
             {
                 name: 'order',
                 url: '/order?customerId',

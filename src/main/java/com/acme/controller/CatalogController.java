@@ -72,14 +72,7 @@ public class CatalogController {
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
         Page<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter), pageable);
         for (Item item : items){
-            List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
-            if(itemContents.isEmpty()){
-                item.setUrl(Constants.PREVIEW_URL+defContent.getId());
-            } else {
-                item.setItemContents(itemContents);
-                item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
-            }
-            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+            itemService.fillItem(item, defContent);
         }
         return Lists.newArrayList(items);
     }
@@ -88,7 +81,7 @@ public class CatalogController {
      * индексация документов
      */
     @RequestMapping(method = RequestMethod.POST, value = "index")
-    public void indexItem() {
+    public void indexItem(){
         elasticService.indexItems(itemRepository.findAll());
     }
 
@@ -106,12 +99,18 @@ public class CatalogController {
     @RequestMapping(method = RequestMethod.GET, value = "search")
     public List<Item> searchItem(@RequestParam(value = "criteria") String criteria) {
 
+        Content defContent = contentRepository.findOneByIsDefault(true);
+
         /* Указываем в каких полях с каким приоритетом */
         SimpleQueryStringBuilder builder = new SimpleQueryStringBuilder(criteria);
         builder.field("name",4).field("title",3).field("tags",2).field("content");
 
         /* ищем документы */
-        return Lists.newArrayList(catalogRepository.search(builder));
+        List<Item> result = Lists.newArrayList(catalogRepository.search(builder));
+        for(Item item : result){
+            itemService.fillItem(item, defContent);
+        }
+        return result;
     }
 
     /**

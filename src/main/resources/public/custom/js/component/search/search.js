@@ -6,9 +6,30 @@
     'use strict';
 
     angular.module('search')
-        .controller('searchController', ['$scope', '$state', 'dataResources', '$timeout', function ($scope, $state, dataResources, $timeout) {
+        .controller('searchController', ['$scope', '$state', '$stateParams', 'dataResources', '$timeout', function ($scope, $state, $stateParams, dataResources, $timeout) {
             $scope.simulateQuery = false;
             $scope.isDisabled    = false;
+            $scope.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
+            $scope.searchResult = [];
+
+            if($stateParams.criteria){
+                $scope.searchFilter.criteria = $stateParams.criteria;
+                /*
+                 * Событие поиска.
+                 * Пока учитавается только текст
+                 */
+
+                dataResources.catalog.search.get({criteria: $scope.searchFilter.criteria}).$promise.then(
+                        function (data) {
+                            $scope.searchResult = data;
+                            $scope.showResults = true;
+                        },
+                        function (error) {
+                            console.log(error);
+                        }
+                )
+
+            }
 
             function createFilterFor () {
                 var lowercaseQuery = angular.lowercase($scope.searchText);
@@ -27,6 +48,7 @@
             };
 
             $scope.querySearch = function() {
+                console.log("SEARCH")
                 //var results = query ? $scope.states.filter( createFilterFor(query) ) : $scope.states,
                 var results = $scope.searchText ? $scope.states.filter( createFilterFor() ) : [],
                     deferred;
@@ -59,6 +81,14 @@
                 });
             };
 
+            /**
+             * Переход на карточку товара из списка поиска
+             * @param id
+             */
+            $scope.itemView = function(id){
+                $state.go("search.detail", {itemId: id});
+            };
+
             $scope.clear = function(){
                 $scope.searchText = null;
             };
@@ -68,6 +98,9 @@
             $timeout(function(){
                 $('#searchInput').focus();
             },100);
+
+            console.log($scope.searchFilter)
+            console.log($scope.searchResult)
 
         }])
 })();

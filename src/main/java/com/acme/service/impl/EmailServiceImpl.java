@@ -86,13 +86,13 @@ public class EmailServiceImpl implements EmailService {
     private List<SimpleMessage> messages;
     private BigInteger lastHistoryId;
 
-    @PostConstruct
-    private void init() throws IOException {
-        /* получение всех сообщений (полная синхронизация) */
-        messages = helper.getMessages();
-        /* получение последнего ID в истории */
-        lastHistoryId = messages.get(0).getHistoryId();
-    }
+//    @PostConstruct
+//    private void init() throws IOException {
+//        /* получение всех сообщений (полная синхронизация) */
+//        messages = helper.getMessages();
+//        /* получение последнего ID в истории */
+//        lastHistoryId = messages.get(0).getHistoryId();
+//    }
 
     @Override
     @Async

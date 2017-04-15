@@ -1,6 +1,7 @@
 package com.acme.service;
 
 
+import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
@@ -24,4 +25,6 @@ public interface ItemService {
      * @param orderId
      */
     void increaseCountByOrder(String orderId);
+
+    void fillItem(Item item, Content defContent);
 }

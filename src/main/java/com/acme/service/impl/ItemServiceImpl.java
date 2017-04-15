@@ -1,11 +1,14 @@
 package com.acme.service.impl;
 
+import com.acme.model.CategoryItem;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.OrderItem;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
+import com.acme.repository.CategoryItemRepository;
+import com.acme.repository.CategoryRepository;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.repository.ItemRepository;
@@ -39,6 +42,12 @@ public class ItemServiceImpl implements ItemService{
 
     @Autowired
     OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private CategoryItemRepository categoryItemRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items) {
@@ -106,5 +115,16 @@ public class ItemServiceImpl implements ItemService{
             item.setInOrder(item.getInOrder() - orderItem.getCount());
             itemRepository.save(item);
         }
+    }
+
+    public void fillItem(Item item, Content defContent){
+        List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
+        if(itemContents.isEmpty()){
+            item.setUrl(Constants.PREVIEW_URL+defContent.getId());
+        } else {
+            item.setItemContents(itemContents);
+            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
+        }
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
     }
 }

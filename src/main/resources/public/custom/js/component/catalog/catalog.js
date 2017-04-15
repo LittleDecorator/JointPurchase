@@ -30,23 +30,10 @@
 
             var busy = false;
             var portion = 0;
-            $scope.showResults = false;
             $scope.showSideFilter = false;
             $scope.stopLoad=false;
             $scope.allDataLoaded = false;
             $scope.infiniteDistance = 2;
-
-            /**
-             * Событие поиска.
-             * Пока учитавается только текст
-             */
-            $scope.querySearch = function() {
-                dataResources.catalog.search.get($scope.searchFilter.criteria).$promise.then(
-                    function (data) {
-                    
-                    },
-                    func
-            };
 
 
             /**

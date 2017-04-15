@@ -17,8 +17,6 @@
                 },
 
                 response: function(response) {
-                    console.log("auth response");
-                    console.log(response);
                     var time = response.headers('Expires');
                     if(time && time!== 'null'){
                         localStorage.setItem('Expires',time);

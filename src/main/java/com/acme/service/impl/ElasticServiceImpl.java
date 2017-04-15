@@ -26,6 +26,7 @@ public class ElasticServiceImpl implements ElasticService {
         /* найдем все документы из "Товар" для включения в индекс */
 		for(Item item : items){
 			IndexQuery indexQuery = new IndexQueryBuilder().withIndexName("item-index").withId(item.getId()).withObject(item).build();
+//			IndexQuery indexQuery = new IndexQueryBuilder().withId(item.getId()).withObject(item).build();
 			indexQueries.add(indexQuery);
 		}
         /* Добавление документов в индекс */
