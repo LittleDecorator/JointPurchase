@@ -1,3 +1,17 @@
+/********************************** COMMON ******************************/
+
+button.clearSearch{
+	border: none;
+	background-color: transparent;
+}
+
+input[type=search]:focus:not([readonly])#searchInput,
+md-input-container.md-input,
+md-input-container input[type=search]{
+	border: none transparent;
+	box-shadow: 0 0 0 0 transparent;
+}
+
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
 @media (min-width: 993px) {
 
@@ -29,7 +43,7 @@
 		margin-top: 0;
 	}
 
-	md-input-container .md-input {
+	.menu-lg md-input-container .md-input {
 		border-color: transparent;
 		background-color: white;
 	}
@@ -75,5 +89,17 @@
 	    z-index: 1;
 	    padding-bottom: 0;
     }
+
+}
+
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 601px) {
+
+}
+
+
+
+/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
+@media (max-width: 600px) {
 
 }

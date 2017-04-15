@@ -1,21 +1,21 @@
-<div layout="row" class="layout-row md-whiteframe-z1">
+<div flex layout="row" class="layout-row md-whiteframe-z1">
     <button type="button" ng-click="closeThisDialog()" class="clearSearch">
         <md-icon>keyboard_backspace</md-icon>
     </button>
-    <input flex type="search" id="searchInput"
-           ng-model="searchText"
-           ng-keydown="keyPress($event.keyCode)"
-           class="flex"
-           ng-model-options="{debounce:200}"
-            ng-change="querySearch()"/>
+    <md-input-container style="margin: 0" flex class="no-errors">
+        <input flex type="search" id="searchInput" style=" font-size: 1.4rem; margin: 0; height: 52px;"
+               ng-model="searchText" ng-keydown="keyPress($event.keyCode)"
+               class="flex" ng-model-options="{debounce:200}" ng-change="querySearch()">
+    </md-input-container>
 
-    <button type="button" ng-click="clear()" class="clearSearch" ng-if="searchText">
-        <md-icon>close</md-icon>
+    <button type="button" ng-click="clear()" class="clearSearch" style="min-width: 50px">
+        <md-icon ng-if="searchText">close</md-icon>
     </button>
 </div>
 
 
-<md-virtual-repeat-container md-auto-shrink md-auto-shrink-min="1" ng-if="filtered.length > 0" class="md-autocomplete-suggestions-container md-whiteframe-z1">
+<md-virtual-repeat-container md-auto-shrink md-auto-shrink-min="1" ng-if="filtered.length > 0"
+                             class="md-autocomplete-suggestions-container md-whiteframe-z1">
     <ul class="md-autocomplete-suggestions">
         <li md-virtual-repeat="item in filtered">
             <span md-highlight-flags="^i" md-highlight-text="searchText" style=" font-size: 20px;">{{item.value}}</span>
