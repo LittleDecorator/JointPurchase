@@ -33,11 +33,8 @@
 
             function createFilterFor () {
                 var lowercaseQuery = angular.lowercase($scope.searchText);
-                console.log(lowercaseQuery);
                 return function filterFn(state) {
-                    var res = (state.value.indexOf(lowercaseQuery) === 0);
-                    console.log(res);
-                    return res;
+                    return (state.value.indexOf(lowercaseQuery) === 0);
                 };
             }
 
@@ -48,7 +45,6 @@
             };
 
             $scope.querySearch = function() {
-                console.log("SEARCH")
                 //var results = query ? $scope.states.filter( createFilterFor(query) ) : $scope.states,
                 var results = $scope.searchText ? $scope.states.filter( createFilterFor() ) : [],
                     deferred;
@@ -91,6 +87,7 @@
 
             $scope.clear = function(){
                 $scope.searchText = null;
+                $scope.filtered = [];
             };
 
             $scope.states = $scope.loadAll();
@@ -98,9 +95,6 @@
             $timeout(function(){
                 $('#searchInput').focus();
             },100);
-
-            console.log($scope.searchFilter)
-            console.log($scope.searchResult)
 
         }])
 })();

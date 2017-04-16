@@ -17,8 +17,14 @@
 <md-virtual-repeat-container md-auto-shrink md-auto-shrink-min="1" ng-if="filtered.length > 0"
                              class="md-autocomplete-suggestions-container md-whiteframe-z1">
     <ul class="md-autocomplete-suggestions">
-        <li md-virtual-repeat="item in filtered">
-            <span md-highlight-flags="^i" md-highlight-text="searchText" style=" font-size: 20px;">{{item.value}}</span>
+        <div md-virtual-repeat="item in filtered">
+            <li>
+                <span md-highlight-flags="^i" md-highlight-text="searchText" style=" font-size: 20px;">{{item.value}}</span>
+            </li>
+            <md-divider style="width: 95%; margin: auto;"></md-divider>
+        </div>
+        <li style="display: flex; padding: 0" ng-if="filtered.length > 5">
+            <md-button class="md-raised" style="width: 100%; position: relative; text-align:center; font-size: 20px;">Показать все</md-button>
         </li>
     </ul>
 </md-virtual-repeat-container>
