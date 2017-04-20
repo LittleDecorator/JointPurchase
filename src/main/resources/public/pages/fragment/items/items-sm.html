@@ -18,26 +18,26 @@
                     <div layout="row">
                         <md-input-container flex="50">
                             <label>Производитель</label>
-                            <input value="{{::item.companyName}}">
+                            <input value="{{::item.companyName}}" disabled>
                         </md-input-container>
                         <md-input-container flex="50">
                             <label>Артикул</label>
-                            <input value="{{::item.article}}">
+                            <input value="{{::item.article}}" disabled>
                         </md-input-container>
                     </div>
 
                     <div layout="row">
                         <md-input-container flex="33">
                             <label>Цена</label>
-                            <input value="{{::item.price|number}}">
+                            <input value="{{::item.price|number}}" disabled>
                         </md-input-container>
                         <md-input-container flex="33">
                             <label>В наличии</label>
-                            <input value="{{::item.inStock|asZero}}">
+                            <input value="{{::item.inStock|asZero}}" disabled>
                         </md-input-container>
                         <md-input-container flex="33">
                             <label>Заказано</label>
-                            <input value="{{::item.inOrder|asZero}}">
+                            <input value="{{::item.inOrder|asZero}}" disabled>
                         </md-input-container>
                     </div>
                 </div>

@@ -17,23 +17,23 @@
                     <div class="md-list-item-text" layout="column">
 
                         <md-input-container class="no-errors">
-                            <input value="{{::order.recipientName}}" placeholder="Получатель">
+                            <input value="{{::order.recipientName}}" placeholder="Получатель" disabled>
                         </md-input-container>
 
                         <md-input-container class="no-errors">
-                            <input value="{{::order.createDate | date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания">
+                            <input value="{{::order.createDate | date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания" disabled>
                         </md-input-container>
 
                         <md-input-container class="no-errors">
-                            <input value="{{::order.delivery}}" placeholder="Тип доставки">
+                            <input value="{{::order.delivery}}" placeholder="Тип доставки" disabled>
                         </md-input-container>
 
                         <md-input-container class="no-errors">
-                            <input value="{{::order.status.name}}" placeholder="Статус заказа">
+                            <input value="{{::order.status.name}}" placeholder="Статус заказа" disabled>
                         </md-input-container>
 
                         <md-input-container class="no-errors">
-                            <input value="{{::order.payment|number}} руб" placeholder="Сумма к оплате">
+                            <input value="{{::order.payment|number}} руб" placeholder="Сумма к оплате" disabled>
                         </md-input-container>
 
                     </div>

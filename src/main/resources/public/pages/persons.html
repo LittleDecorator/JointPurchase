@@ -1,25 +1,26 @@
 <div ng-cloak class="ng-cloak">
 
+    <!-- переделать на модальное окно с кнопкой вызова -->
     <div class="filter-item">
 
-        <div layout="row" style="margin: 10px 0">
+        <div layout="row" layout-xs="column" style="margin: 10px 0">
 
-            <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
+            <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>ФИО</label>
                 <input ng-model="filter.fio">
             </md-input-container>
 
-            <md-input-container class="md-block no-errors" flex="20" style="margin-left: 1%">
+            <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>Номер телефона</label>
                 <input ng-model="filter.phone">
             </md-input-container>
 
-            <md-input-container class="md-block no-errors" flex="20" style="margin-left: 1%">
+            <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>Почта</label>
                 <input ng-model="filter.email">
             </md-input-container>
 
-            <div style="margin: auto 0 auto 25px;">
+            <div style="margin: auto 0 auto 25px;" layout-xs="column">
                 <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply()">Найти</md-button>
                 <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="clear()">Сбросить</md-button>
             </div>

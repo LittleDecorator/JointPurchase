@@ -1,27 +1,28 @@
 <div class="filter-item">
 
-    <div layout="row" style="margin: 10px 0">
+    <!-- переделать на модальное окно с кнопкой вызова -->
+    <div layout="row" layout-xs="column" style="margin: 10px 0">
 
-        <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
+        <md-input-container class="md-block no-errors" style="margin-left: 1%">
             <label>Название</label>
             <input ng-model="filter.name">
         </md-input-container>
 
-        <md-input-container class="md-block no-errors" flex="15" style="margin-left: 1%">
+        <md-input-container class="md-block no-errors" style="margin-left: 1%">
             <label>Артикул</label>
             <input ng-model="filter.article">
         </md-input-container>
 
-        <md-input-container class="md-block no-errors" flex="33" style="margin-left: 1%">
+        <md-input-container class="md-block no-errors" style="margin-left: 1%">
             <label>Производитель</label>
             <md-select ng-model="filter.company" placeholder="Выберите компанию ...">
                 <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
             </md-select>
         </md-input-container>
 
-        <div style="margin: auto 0 auto 25px;">
-            <a class="waves-effect waves-light btn" ng-click="apply()">Найти</a>
-            <a class="waves-effect waves-light btn" ng-click="clear()">Сбросить</a>
+        <div style="margin: auto 0 auto 25px;" layout-xs="column">
+            <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply()">Найти</md-button>
+            <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="clear()">Сбросить</md-button>
         </div>
     </div>
 

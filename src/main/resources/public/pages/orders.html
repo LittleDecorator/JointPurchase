@@ -1,27 +1,29 @@
 <div ng-cloak class="ng-cloak">
     <div class="filter-item">
 
-        <div layout="row" style="margin: 10px 0">
+        <!-- переделать на модальное окно с кнопкой вызова -->
+        <div layout="row" layout-xs="column" style="margin: 10px 0">
 
-            <md-input-container class="md-block" flex="15" style="margin-left: 1%">
+            <md-input-container class="md-block" style="margin-left: 1%">
                 <label>Статус заказа</label>
                 <md-select ng-model="filter.status" placeholder="Выберите статус ..." ng-model-options="{trackBy: '$value.id'}">
                     <md-option ng-repeat="status in statuses" ng-value="status">{{::status.value}}</md-option>
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" flex="20" style="margin-left: 1%">
+            <md-input-container class="md-block" style="margin-left: 1%">
                 <label>Тип доставки</label>
                 <md-select ng-model="filter.delivery" placeholder="Выберите тип доставки ..." ng-model-options="{trackBy: '$value.id'}">
                     <md-option ng-repeat="delivery in deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
                 </md-select>
             </md-input-container>
 
-            <mdp-date-picker flex="15" class="fill no-errors" mdp-open-on-click name="dateFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" mdp-tooltip="Дата начала временного интервала - будут отображены бетпулы, которые были созданы в этот временной интервал." style="margin-left: 1%"></mdp-date-picker>
+            <!-- добавить классы для календаря на ширину -->
+            <mdp-date-picker class="fill no-errors" mdp-open-on-click name="dateFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" mdp-tooltip="Дата начала временного интервала - будут отображены бетпулы, которые были созданы в этот временной интервал." style="margin-left: 1%"></mdp-date-picker>
 
-            <mdp-date-picker flex="15" class="fill no-errors" mdp-open-on-click name="dateTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" mdp-tooltip="Дата окончания временного интервала - будут отображены бетпулы, которые были созданы в этот временной интервал." style="margin-left: 1%"></mdp-date-picker>
+            <mdp-date-picker class="fill no-errors" mdp-open-on-click name="dateTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" mdp-tooltip="Дата окончания временного интервала - будут отображены бетпулы, которые были созданы в этот временной интервал." style="margin-left: 1%"></mdp-date-picker>
 
-            <div style="margin: auto 0 auto 25px;">
+            <div style="margin: auto 0 auto 25px;" layout-xs="column">
                 <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply()">Найти</md-button>
                 <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="clear()">Сбросить</md-button>
             </div>
