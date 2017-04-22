@@ -1,0 +1,23 @@
+<div layout-xs="column" style="margin: 15px; height: 95%">
+
+    <md-input-container class="md-block no-errors" style="margin-left: 1%">
+        <label>Название</label>
+        <input ng-model="filter.name">
+    </md-input-container>
+
+    <md-input-container class="md-block no-errors" style="margin-left: 1%">
+        <label>Артикул</label>
+        <input ng-model="filter.article">
+    </md-input-container>
+
+    <md-input-container class="md-block no-errors" style="margin-left: 1%">
+        <label>Производитель</label>
+        <md-select ng-model="filter.company" placeholder="Выберите компанию ...">
+            <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply();closeThisDialog();" style="margin-top: auto">Найти</md-button>
+    <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+
+</div>

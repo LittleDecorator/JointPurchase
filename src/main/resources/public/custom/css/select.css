@@ -1,3 +1,11 @@
 md-select-value .md-text {
     color: #846C63;
 }
+
+
+@media (max-width: 600px) {
+    .md-select-menu-container {
+        z-index: 1000;
+    }
+
+}

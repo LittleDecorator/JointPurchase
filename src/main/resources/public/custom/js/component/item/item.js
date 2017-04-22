@@ -8,7 +8,7 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', function ($scope, $state, dataResources,$timeout, companies) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', function ($scope, $state, dataResources,$timeout, companies, modal) {
 
             $scope.items = [];
             $scope.companyNames = companies;
@@ -79,6 +79,7 @@
 
             /* apply filter */
             $scope.apply = function () {
+                console.log($scope);
                 portion = 0;
                 $scope.filter.offset = portion * $scope.filter.limit;
                 $scope.confirmedFilter = angular.copy($scope.filter);
@@ -95,6 +96,21 @@
             //изъятие\включение в продажу
             $scope.forSaleToggle = function(item){
                 dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
+            };
+
+            // модальное окно фильтрации
+            $scope.openFilter = function (event) {
+                var dialog = modal({
+                    templateUrl: "pages/modal/items-filter.html",
+                    className: 'ngdialog-theme-default fullscreen',
+                    closeByEscape: true,
+                    closeByDocument: true,
+                    scope: $scope
+                });
+                dialog.closePromise.then(function (output) {
+                    if (output.value && output.value != '$escape') {
+                    }
+                });
             };
 
             $scope.getTemplate = function(){

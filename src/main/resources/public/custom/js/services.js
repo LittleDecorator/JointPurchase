@@ -12,13 +12,16 @@
                 var className = 'ngdialog-theme-default';
                 var closeByEscape = true;
                 var closeByDocument = false;
+                var showClose = false;
                 if(params.className){
                     className = params.className;
                 }
                 if(!params.resolver){
                     params.resolver = null;
                 }
-
+                if(params.showClose){
+                   showClose = params.showClose;
+                }
                 if(params.closeByEscape != undefined){
                     closeByEscape = params.closeByEscape;
                 }
@@ -31,7 +34,8 @@
                     template: params.templateUrl,
                     className: className,
                     controller: params.controller,
-                    showClose: false,
+                    scope:params.scope,
+                    showClose: showClose,
                     closeByEscape: closeByEscape,
                     closeByDocument: closeByDocument,
                     resolve: {
