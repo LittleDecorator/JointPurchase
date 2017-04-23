@@ -1,6 +1,6 @@
 package com.acme;
 
-import com.acme.servlet.PublicServlet;
+//import com.acme.servlet.PublicServlet;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -30,13 +30,13 @@ public class TestApplication extends WebMvcConfigurerAdapter {
         return registrationBean;
     }
 
-    @Bean
-    public ServletRegistrationBean publicServlet(){
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-        registrationBean.setServlet(new PublicServlet());
-        registrationBean.addUrlMappings("/public/auth/*");
-        return registrationBean;
-    }
+//    @Bean
+//    public ServletRegistrationBean publicServlet(){
+//        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
+//        registrationBean.setServlet(new PublicServlet());
+//        registrationBean.addUrlMappings("/public/auth/*");
+//        return registrationBean;
+//    }
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

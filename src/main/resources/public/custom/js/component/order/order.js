@@ -8,7 +8,7 @@
     angular.module('order')
 
         /* Контроллер списочной формы */
-        .controller('orderController',['$scope','$state','$stateParams','dataResources','deliveryMap','statusMap', function ($scope, $state, $stateParams, dataResources, deliveryMap,statusMap ) {
+        .controller('orderController',['$scope','$state','$stateParams','dataResources','deliveryMap','statusMap','modal', function ($scope, $state, $stateParams, dataResources, deliveryMap,statusMap, modal ) {
             //TODO: Написать сервис подсчета товаров при заказах
             //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
 
@@ -100,6 +100,21 @@
             /* Создание заказа */
             $scope.addOrder = function () {
                 $state.transitionTo("order.detail");
+            };
+
+            // модальное окно фильтрации
+            $scope.openFilter = function (event) {
+                var dialog = modal({
+                    templateUrl: "pages/modal/orders-filter.html",
+                    className: 'ngdialog-theme-default fullscreen',
+                    closeByEscape: true,
+                    closeByDocument: true,
+                    scope: $scope
+                });
+                dialog.closePromise.then(function (output) {
+                    if (output.value && output.value != '$escape') {
+                    }
+                });
             };
 
             /* Получение шаблона страницы */

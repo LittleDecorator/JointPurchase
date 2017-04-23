@@ -6,7 +6,7 @@
     'use strict';
 
     angular.module('person')
-        .controller('personController',['$scope','$state','dataResources', function ($scope, $state, dataResources) {
+        .controller('personController',['$scope','$state','dataResources','modal', function ($scope, $state, dataResources, modal) {
 
             var templatePath = "pages/fragment/person/";
             
@@ -91,6 +91,21 @@
             // перейти на страницу с заказами выбранного клиента
             $scope.showOrders = function (id) {
                 $state.transitionTo("order", {customerId: id});
+            };
+
+            // модальное окно фильтрации
+            $scope.openFilter = function (event) {
+                var dialog = modal({
+                    templateUrl: "pages/modal/persons-filter.html",
+                    className: 'ngdialog-theme-default fullscreen',
+                    closeByEscape: true,
+                    closeByDocument: true,
+                    scope: $scope
+                });
+                dialog.closePromise.then(function (output) {
+                    if (output.value && output.value != '$escape') {
+                    }
+                });
             };
 
             // получение шаблона страницы

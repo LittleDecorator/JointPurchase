@@ -141,7 +141,8 @@ img:focus, img:active{
         margin: auto;
         /*margin: 0 auto;*/
         max-width: 1280px;
-        width: 90%;
+        /*width: 90%;*/
+        width: 95%;
         /*display: flex;*/
         align-items: center;
     }
@@ -484,6 +485,20 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
         min-height: 0;
     }
 
+    /* Вынесем календарь для модального окна выше */
+    md-dialog.mdp-datepicker, div.md-dialog-container {
+        z-index: 1000;
+    }
+
+    /* Компонент колендаря на всю строку */
+    mdp-date-picker md-input-container {
+        width: 100%;
+    }
+
+    /* Меняем для листа левый отступ */
+    md-list-item.md-no-proxy, md-list-item .md-no-style {
+        padding-left: 0;
+    }
 }
 
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/

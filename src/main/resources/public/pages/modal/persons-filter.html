@@ -1,0 +1,24 @@
+<div layout="column" style="margin: 15px; height: 95%">
+
+    <div class="card-panel" style="height: 100%">
+        <md-input-container class="md-block">
+            <label>ФИО</label>
+            <input ng-model="filter.fio">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Номер телефона</label>
+            <input ng-model="filter.phone">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Почта</label>
+            <input ng-model="filter.email">
+        </md-input-container>
+    </div>
+
+    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply();closeThisDialog();" style="margin-top: auto">Найти</md-button>
+    <md-button md-no-ink class="md-accent md-raised btn" aria-label="apply" ng-click="clear();">Очистить</md-button>
+    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+
+</div>

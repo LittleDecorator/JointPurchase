@@ -23,6 +23,7 @@ import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
 import com.acme.util.GmailHelper;
 import com.google.api.services.gmail.model.Draft;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -30,7 +31,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -64,6 +64,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String senderAddress;
+
+    @Value("${app.home}")
+    private String HOME;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -118,7 +121,7 @@ public class EmailServiceImpl implements EmailService {
             /* Параметры */
             Map<String, Object> paramMap = Maps.newHashMap();
             paramMap.put("fullName",subjectFullName);
-            paramMap.put("site", Constants.HOME);
+            paramMap.put("site", HOME);
             paramMap.put("confirm", tokenLink);
 
             /* Конвертим его в Message */
@@ -161,7 +164,7 @@ public class EmailServiceImpl implements EmailService {
         /* Параметры */
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("fullName",subjectFullName);
-        paramMap.put("site", Constants.HOME);
+        paramMap.put("site", HOME);
 
         /* Конвертим его в Message */
         MimeMessage message = builder.setMessage(convert(email))
@@ -208,7 +211,7 @@ public class EmailServiceImpl implements EmailService {
         /* Параметры */
             Map<String, Object> paramMap = Maps.newHashMap();
             paramMap.put("fullName",subjectFullName);
-            paramMap.put("site", Constants.HOME);
+            paramMap.put("site", HOME);
             paramMap.put("confirm", tokenLink);
 
         /* Конвертим его в Message */
@@ -258,7 +261,7 @@ public class EmailServiceImpl implements EmailService {
         /* Параметры */
         Map<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("fullName",subjectFullName);
-        paramMap.put("site", Constants.HOME);
+        paramMap.put("site", HOME);
 
         /* Конвертим его в Message */
         MimeMessage message = builder.setMessage(convert(email))

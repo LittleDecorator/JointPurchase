@@ -12,6 +12,7 @@ import org.elasticsearch.env.Environment;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -36,8 +37,10 @@ public class ElasticSearchConfig implements DisposableBean {
 
     private static Log logger = LogFactory.getLog(ElasticSearchConfig.class);
 
-    @Autowired
-    private ElasticsearchProperties properties;
+//    @Autowired
+//    private ElasticsearchProperties properties;
+    @Value("${spring.data.elasticsearch.clusterName}")
+    private String nodeName;
 
     private NodeClient client;
 
@@ -54,10 +57,11 @@ public class ElasticSearchConfig implements DisposableBean {
             }
             NodeBuilder nodeBuilder = new NodeBuilder();
             nodeBuilder
-                    .clusterName(this.properties.getClusterName())
+                    .clusterName(nodeName)
                     .local(false)
             ;
             nodeBuilder.settings()
+                    .put("path.home", "target/elastic")
                     .put("http.enabled", true)
             ;
             this.client = (NodeClient)nodeBuilder.node().client();

@@ -10,7 +10,7 @@
 
                 <md-input-container style="margin-bottom: 0;">
                     <label class="hide-require">Email</label>
-                    <input name="login" ng-model="login" required style="margin-bottom: 0;">
+                    <input name="login" ng-model="data.name" required style="margin-bottom: 0;">
                     <div ng-messages="restoreForm.login.$error" ng-if="!showHints">
                         <div ng-message="required">Поле не может быть пустым</div>
                     </div>
@@ -18,7 +18,7 @@
 
                 <md-input-container class="no-errors">
                     <label class="hide-require">Новый пароль</label>
-                    <input name="password" ng-model="password" type="password" required password-validate style="margin-bottom: 0;">
+                    <input name="password" ng-model="data.password" type="password" required password-validate style="margin-bottom: 0;">
                     <div ng-messages="restoreForm.password.$error" ng-if="restoreForm.password.$invalid || !showHints">
                         <div ng-message="required">Поле не может быть пустым</div>
                         <div ng-message="uppercaseValidator">Пароль должен содержать по крайней мере одну букву в верхнем регистре</div>

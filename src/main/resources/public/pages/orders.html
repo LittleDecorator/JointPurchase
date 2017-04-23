@@ -1,8 +1,9 @@
-<div ng-cloak class="ng-cloak">
+<div ng-cloak>
+
     <div class="filter-item">
 
         <!-- переделать на модальное окно с кнопкой вызова -->
-        <div layout="row" layout-xs="column" style="margin: 10px 0">
+        <div layout="row" layout-xs="column" style="margin: 10px 0" ng-if="width > 600">
 
             <md-input-container class="md-block" style="margin-left: 1%">
                 <label>Статус заказа</label>
@@ -47,6 +48,10 @@
     <div class="table-result" ng-show="orders.length==0 && filterInUse">
         <span style="margin-right: 2%">Нет записей удовлетворяющих критерию поиска</span>
     </div>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="openFilter()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 80px" ng-if="width < 601" >
+        <md-icon>more_vert</md-icon>
+    </md-button>
 
     <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addOrder()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
         <md-icon>add</md-icon>

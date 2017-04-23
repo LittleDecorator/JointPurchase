@@ -20,6 +20,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -35,6 +36,12 @@ import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+	@Value("${app.home}")
+	String HOME;
+
+	@Value("${app.host}")
+	String HOST;
 
 	@Autowired
 	SubjectRepository subjectRepository;
@@ -175,7 +182,7 @@ public class AuthServiceImpl implements AuthService {
 		// создадим token для подтверждения
 		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
 		// создадим внешнюю ссылку на наш ресурс
-		String tokenLink = "http://192.168.1.88:7777/public/auth/confirm?jwt=" + tmpToken;
+		String tokenLink = HOST +"/public/auth/confirm?jwt=" + tmpToken;
 		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
 	}
 
@@ -201,7 +208,7 @@ public class AuthServiceImpl implements AuthService {
 			// будем использовать почту
 			String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000), claims);
 			// создадим внешнюю ссылку на наш ресурс
-			String tokenLink = "http://192.168.1.88:7777/public/auth/restore?jwt=" + tmpToken;
+			String tokenLink = HOST+"/public/auth/restore?jwt=" + tmpToken;
 			emailService.sendPassChangeToken(subject.getEmail(), tokenLink);
 		}
 	}

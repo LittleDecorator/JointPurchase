@@ -15,8 +15,7 @@
             $scope.showHints = true;
 
             $scope.send = function(){
-                console.log($scope);
-                console.log($scope.contactForm.$error);
+                $scope.showHints = false;
                 if($scope.contactForm.phone.$valid){
                     console.log('BLA')
                 } else {

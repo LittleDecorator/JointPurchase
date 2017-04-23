@@ -1,6 +1,7 @@
 package com.acme.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ public class Subject {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(name = "enabled")
     private boolean enabled;
 
     @Column(name = "first_name")

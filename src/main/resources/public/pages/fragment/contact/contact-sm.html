@@ -6,21 +6,27 @@
         <hr>
         <div class="card">
             <div class="card-content">
-                <div ng-form="_callback" class="row" style="margin-bottom: 0">
-                    <div class="input-field col s12">
-                        <input type="text" id="phone" name="phone" class="form-control" ng-model="request.phone" required phone-validate
-                               ng-class="{'invalid': (_callback.$error.phoneValidator && request.phone.length>0),'valid':(!_callback.$error.phoneValidator && request.phone.length>0)}">
-                        <label for="phone" data-error='Not valid phone'>Телефон</label>
-                    </div>
+                <div layout="column" style="margin-bottom: 0">
 
-                    <div class="input-field col s12">
-                        <textarea name="message" id="message" class="materialize-textarea" ng-model="request.message"></textarea>
-                        <label for="message">Сообщение</label>
-                    </div>
+                    <md-input-container style="margin-left: 1%">
+                        <label>Телефон</label>
+                        <input name="phone" ng-model="request.phone" mask="(999) 999-99-99" mask-restrict="reject" required>
+                        <div class="hint" ng-if="showHints">Пример: (915) 343-43-45</div>
+                        <div ng-messages="contactForm.phone.$error" ng-if="!showHints">
+                            <div ng-message="required">Необходимо указать номер телефона</div>
+                            <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                        </div>
+                    </md-input-container>
 
-                    <div class="login-control-wrapper" style="float: right">
-                        <a class="waves-effect waves-green btn" ng-click="send()">Отправить</a>
-                    </div>
+                    <md-input-container class="md-block">
+                        <label>Сообщение</label>
+                        <textarea name="message" ng-model="request.message" md-maxlength="150" rows="2" md-select-on-focus required></textarea>
+                        <div ng-messages="contactForm.message.$error" ng-if="!showHints">
+                            <div ng-message="required">Сообщение не может быть пустым</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="send()" style="width: 100%">Отправить</md-button>
                 </div>
             </div>
         </div>
@@ -35,7 +41,7 @@
             <div class="col s12">
                 <!--<a style="cursor: pointer" class="waves-effect waves-green btn-flat" ng-click="load()">Загрузить</a>-->
                 <div class="center" style="margin: 0 auto;">
-                    <div class="table-container">
+                    <div class="table-container" style="margin: 0">
                         <!--<div id="map" style="height: 800px"></div>-->
                         <div id="map" style="height: 250px"></div>
                     </div>

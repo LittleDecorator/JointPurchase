@@ -14,7 +14,7 @@
             var newCategoryList=[],editCategoryList=[],deleteCategoryList=[];
             $scope.categories = categoryNodes;
             $scope.tree = {};
-            
+            console.log(categoryNodes)
             $scope.selected = null;
             $scope.selectedCopy = null;
             $scope.newCategory = "";
@@ -30,6 +30,7 @@
             //     });
             //     return items;
             // }
+
 
             //get selected node
             $scope.treeHandler = function(branch) {

@@ -1,8 +1,10 @@
 package com.acme.util;
 
+import org.hibernate.MappingException;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.UUIDGenerator;
+import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.Type;
 
 import java.io.Serializable;

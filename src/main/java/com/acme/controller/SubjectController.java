@@ -2,6 +2,7 @@ package com.acme.controller;
 
 import com.acme.model.Subject;
 import com.acme.model.filter.SubjectFilter;
+import com.acme.repository.CredentialRepository;
 import com.acme.repository.OffsetBasePage;
 import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
@@ -10,6 +11,7 @@ import com.acme.repository.specification.SubjectSpecifications;
 import com.acme.service.AuthService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,9 @@ public class SubjectController{
 
     @Autowired
     OrderRepository purchaseOrderRepository;
+
+    @Autowired
+    CredentialRepository credentialRepository;
 
     @Autowired
     AuthService authService;
@@ -98,7 +103,11 @@ public class SubjectController{
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public boolean deleteSubject(@PathVariable("id") String id) {
         //delete from orders
-        purchaseOrderRepository.delete(id);
+        try{
+            purchaseOrderRepository.delete(id);
+        } catch (EmptyResultDataAccessException ex){}
+        // удаляем из credentials
+        credentialRepository.delete(id);
         //delete subject itself
         subjectRepository.delete(id);
         return true;

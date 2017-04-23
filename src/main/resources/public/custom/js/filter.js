@@ -22,6 +22,8 @@
             };
         })
 
+            .filter("nospace",function(){return function(e){return e?e.replace(/ /g,""):""}})
+
         .filter('asZero', function() {
             return function(data) {
                 if (typeof(data) === 'undefined' || !data) {

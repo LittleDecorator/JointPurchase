@@ -11,4 +11,6 @@ public interface SubjectService {
 
 	Subject getSubjectByEmail(String email);
 
+	Subject enableSubject(Subject subject);
+
 }

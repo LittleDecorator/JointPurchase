@@ -5,6 +5,8 @@ import com.acme.repository.SubjectRepository;
 import com.acme.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by kobzev on 20.12.16.
@@ -23,5 +25,12 @@ public class SubjectServiceImpl implements SubjectService {
 	@Override
 	public Subject getSubjectByEmail(String email) {
 		return subjectRepository.findByEmail(email);
+	}
+
+	@Override
+	public Subject enableSubject(Subject subject) {
+		subject.setEnabled(true);
+		subject.setMiddleName("BLSADKSFD");
+		return subjectRepository.save(subject);
 	}
 }

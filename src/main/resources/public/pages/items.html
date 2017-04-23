@@ -39,8 +39,7 @@
 
 </div>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="openFilter()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 80px" >
-    <md-tooltip md-direction="left">Открыть фильтр</md-tooltip>
+<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="openFilter()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 80px" ng-if="width < 601" >
     <md-icon>more_vert</md-icon>
 </md-button>
 
