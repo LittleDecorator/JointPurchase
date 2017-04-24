@@ -1,9 +1,11 @@
 package com.acme.controller;
 
+import com.acme.model.Order;
 import com.acme.model.Subject;
 import com.acme.model.filter.SubjectFilter;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.OffsetBasePage;
+import com.acme.repository.OrderItemRepository;
 import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.repository.specification.OrderViewSpecifications;
@@ -14,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,6 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -33,10 +40,16 @@ public class SubjectController{
     OrderRepository purchaseOrderRepository;
 
     @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Autowired
     CredentialRepository credentialRepository;
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     /**
      * Получение списка клиентов (без фильтра)
@@ -102,12 +115,21 @@ public class SubjectController{
      */
     @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
     public boolean deleteSubject(@PathVariable("id") String id) {
-        //delete from orders
-        try{
-            purchaseOrderRepository.delete(id);
-        } catch (EmptyResultDataAccessException ex){}
-        // удаляем из credentials
-        credentialRepository.delete(id);
+        try {
+            List<String> orderIds = purchaseOrderRepository.findAllBySubjectId(id).stream().map(Order::getId).collect(Collectors.toList());
+            // удаляем связь товара с заказами
+            orderItemRepository.deleteByOrderIdIn(orderIds);
+            // удаляем заказы
+            purchaseOrderRepository.deleteBySubjectId(id);
+        } catch (EmptyResultDataAccessException ex) {
+            ex.printStackTrace(System.out);
+        }
+        try {
+            // удаляем из credentials
+            credentialRepository.delete(id);
+        } catch (EmptyResultDataAccessException ex) {
+            ex.printStackTrace(System.out);
+        }
         //delete subject itself
         subjectRepository.delete(id);
         return true;

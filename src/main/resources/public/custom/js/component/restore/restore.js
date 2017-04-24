@@ -41,6 +41,7 @@
             //TODO: through login, pretty info page
             // получим признак подтверждена ли операция восстановления пароля
             $scope.restoreStatus = $stateParams.confirmed;
+            $scope.iconName = $scope.restoreStatus ? "done" : "block";
             if($stateParams.confirmed){
                 $scope.message = "Ваша учетная запись успешно изменена\n" +
                                  "Приятных покупок!"

@@ -42,6 +42,7 @@
             //TODO: through login, pretty info page
             // получим признак подтверждена ли регистрация
             $scope.registrationStatus = $stateParams.confirmed;
+            $scope.iconName = $scope.restoreStatus ? "done" : "block";
             if($stateParams.confirmed){
                 $scope.message = "Ваша учетная запись успешно активированна\n" +
                                  "Приятных покупок!"

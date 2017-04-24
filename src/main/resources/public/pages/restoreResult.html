@@ -1,8 +1,17 @@
-<div class="jumbotron text-center">
-    <p>{{::message}}</p>
-    <div ng-if="restoreStatus">
-        <div layout="row" layout-align="center center" style="padding-top: 35px">
-            <md-button ng-click="toCatalog()" class="waves-effect waves-green btn md" >Перейти в каталог</md-button>
+<div class="restore-card" style="padding: 20px;">
+    <h4 style="text-align: center">Смена пароля</h4>
+
+    <div style="padding-top: 3%">
+        <md-divider />
+        <md-icon>{{::iconName}}</md-icon>
+        <div class="table-container" style="text-align: center">
+            <p class="valign">{{::message}}</p>
+        </div>
+        <div ng-if="restoreStatus">
+            <div layout="row" layout-align="center center" style="padding-top: 35px">
+                <md-button ng-click="toCatalog()" class="waves-effect waves-green btn md" >Перейти в каталог</md-button>
+            </div>
         </div>
     </div>
+
 </div>

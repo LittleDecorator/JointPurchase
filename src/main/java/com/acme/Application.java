@@ -26,7 +26,7 @@ import java.util.Locale;
 @EnableScheduling
 @EnableAsync
 @SpringBootApplication
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "com.acme.repository")
 @EnableElasticsearchRepositories(basePackages = "com.acme.elasticsearch")
 @PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)

@@ -216,8 +216,8 @@ var route = {
             },
                 /* Страница результата восстановления доступа */
             {
-                name:'restore.result',
-                url:'/restore?confirmed',
+                name:'restoreResult',
+                url:'/restore/result?confirmed',
                 views: {
                     'main@': {
                         templateUrl : 'pages/restoreResult.html',
@@ -230,8 +230,8 @@ var route = {
             },
                 /* Страница результата регистрации */
             {
-                name:'registration.result',
-                url:'/result?confirmed',
+                name:'registrationResult',
+                url:'/registration/result?confirmed',
                 views: {
                     'main@': {
                         templateUrl : 'pages/registrationResult.html',

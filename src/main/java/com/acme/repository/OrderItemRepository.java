@@ -1,7 +1,9 @@
 package com.acme.repository;
 
 import com.acme.model.OrderItem;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public interface OrderItemRepository extends CrudRepository<OrderItem, String> {
 	void deleteByOrderId(String orderId);
 
 	void deleteByItemId(String itemId);
+
+	@Transactional(noRollbackFor = {Exception.class, EmptyResultDataAccessException.class})
+	List<String> deleteByOrderIdIn(List<String> orderIds);
 
 	List<OrderItem> findAllByOrderId(String orderId);
 
