@@ -37,11 +37,11 @@
         }])
 
         /* Контроллер страницы результата восстановления пароля */
-        .controller('restoreResultController',['$scope','$state','authResource','jwtHelper','dataResources', function($scope, $state, authResource,jwtHelper,dataResources) {
+        .controller('restoreResultController',['$scope','$state','$stateParams','jwtHelper','dataResources', function($scope, $state, $stateParams, jwtHelper,dataResources) {
             //TODO: through login, pretty info page
             // получим признак подтверждена ли операция восстановления пароля
             $scope.restoreStatus = $stateParams.confirmed;
-            $scope.iconName = $scope.restoreStatus ? "done" : "block";
+            $scope.fontColor = $scope.iconName = $scope.restoreStatus ? "done" : "block";
             if($stateParams.confirmed){
                 $scope.message = "Ваша учетная запись успешно изменена\n" +
                                  "Приятных покупок!"
@@ -53,6 +53,10 @@
             /* Переход в каталог */
             $scope.toCatalog = function(){
                 $state.go("catalog");
+            };
+
+            $scope.toRestore = function(){
+                $state.go("restore");
             };
 
             /* ВИДИМО ВАРИАН АВТОРИЗАЦИИ И ПЕРЕАДРИСАЦИИ */

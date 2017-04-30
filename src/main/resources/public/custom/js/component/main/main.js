@@ -307,10 +307,9 @@
 						}
 					};
 
-
 					$scope.keyPress = function(keyCode) {
 						if (keyCode == 13) {
-								$scope.searchItem();
+							$scope.searchItem();
 						}
 					};
 

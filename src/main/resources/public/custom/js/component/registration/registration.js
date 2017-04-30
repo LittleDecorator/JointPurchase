@@ -22,11 +22,9 @@
                         var data = angular.extend({}, $scope.card);
                         data.password = cryptoService.encryptString(data.password);
                         dataResources.authRegister.post(data).$promise.then(function(data){
-                            console.log(data);
                             $scope.isSend = true;
                             $scope.showHints = true;
                         }, function(error){
-                            console.log(error);
                             $scope.isSend = false;
                             $mdToast.show(toast.textContent('Неудалось произвести регистрацию\n'+ error.data.message).theme('error'));
                         })
@@ -42,7 +40,7 @@
             //TODO: through login, pretty info page
             // получим признак подтверждена ли регистрация
             $scope.registrationStatus = $stateParams.confirmed;
-            $scope.iconName = $scope.restoreStatus ? "done" : "block";
+            $scope.fontColor = $scope.iconName = $scope.registrationStatus ? "done" : "block";
             if($stateParams.confirmed){
                 $scope.message = "Ваша учетная запись успешно активированна\n" +
                                  "Приятных покупок!"
@@ -54,6 +52,11 @@
             /* Переход в каталог */
             $scope.toCatalog = function(){
                 $state.go("catalog");
+            };
+
+            /* Переход на регистрацию */
+            $scope.toRegistration = function(){
+                $state.go("registration");
             };
         }])
 })();

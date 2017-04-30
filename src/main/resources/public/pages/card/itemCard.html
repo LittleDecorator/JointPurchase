@@ -1,19 +1,5 @@
-<div ng-form="itemCard">
+<div id="itemCard" ng-form="itemCard">
+
     <div ng-include="getTemplateUrl()" include-callback="afterInclude()"></div>
-
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="showCategoryModal()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 205px; right: 25px;">
-        <md-tooltip md-direction="left">Показать категории</md-tooltip>
-        <md-icon>open_in_new</md-icon>
-    </md-button>
-
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="showGallery()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 140px; right: 25px;">
-        <md-tooltip md-direction="left">Перейти в галерею</md-tooltip>
-        <md-icon>photo</md-icon>
-    </md-button>
-
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!itemCard.$dirty, 'btn-large':width>600, 'btn-x-small': width < 601}">
-        <md-tooltip md-direction="left">Сохранить</md-tooltip>
-        <md-icon>save</md-icon>
-    </md-button>
 
 </div>

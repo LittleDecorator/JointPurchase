@@ -1,0 +1,52 @@
+<div layout="column" style="margin: 15px; height: 95%">
+
+    <div class="card-panel" style="height: 100%">
+
+        <div layout="column">
+
+            <md-input-container>
+                <label>Статус заказа</label>
+                <md-select ng-model="filter.status" placeholder="Выберите статус ..." ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="status in statuses" ng-value="status">{{::status.value}}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Тип доставки</label>
+                <md-select ng-model="filter.delivery" placeholder="Выберите тип доставки ..." ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="delivery in deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <!-- добавить классы для календаря на ширину -->
+            <mdp-date-picker mdp-open-on-click name="dateFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom"></mdp-date-picker>
+
+            <mdp-date-picker mdp-open-on-click name="dateTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo"></mdp-date-picker>
+        </div>
+
+        <!--<div layout="row" style="margin: 10px 0">-->
+
+        <!--<mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" ></mdp-date-picker>-->
+
+        <!--<mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" style="margin-left: 1%"></mdp-date-picker>-->
+
+        <!--<md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">-->
+        <!--<label>Статус заказа</label>-->
+        <!--<md-select name="status" ng-model="filter.status" ng-model-options="{trackBy: '$value.id'}">-->
+        <!--<md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>-->
+        <!--</md-select>-->
+        <!--</md-input-container>-->
+
+        <!--<div style="margin: auto 0 auto 0;">-->
+        <!--<a class="waves-effect waves-light md-button btn md" ng-click="apply()">Найти</a>-->
+        <!--<a class="waves-effect waves-light md-button btn md" ng-click="clear()">Сбросить</a>-->
+        <!--</div>-->
+        <!--</div>-->
+
+    </div>
+
+    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply();closeThisDialog();" style="margin-top: auto">Найти</md-button>
+    <md-button md-no-ink class="md-accent md-raised btn" aria-label="apply" ng-click="clear();">Очистить</md-button>
+    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+
+</div>

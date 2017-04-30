@@ -213,8 +213,13 @@ body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleB
     }
 }
 
-@media only screen and (max-width : 600px) {
+@media (max-width : 600px) {
     .breadcrumb li {
         font-size: 14px;
     }
 }
+
+
+/*img.responsive-img, video.responsive-video {*/
+    /*height: 100%;*/
+/*}*/

@@ -125,6 +125,21 @@
                 }
             };
 
+                // модальное окно фильтрации
+                $scope.openFilter = function (wClass) {
+                    var dialog = modal({
+                        templateUrl: "pages/modal/cabinet-filter.html",
+                        className: 'ngdialog-theme-default ' + wClass,
+                        closeByEscape: true,
+                        closeByDocument: true,
+                        scope: $scope
+                    });
+                    dialog.closePromise.then(function (output) {
+                        if (output.value && output.value != '$escape') {
+                        }
+                    });
+                };
+
             /* Изменение пароля клиента */
             $scope.changePassword = function(){
                 var dialog = modal({templateUrl:"pages/modal/passwordModal.html",className:'ngdialog-theme-default small-width',closeByEscape:true,controller:"passwordModalController",data:null});
@@ -197,6 +212,8 @@
         /* Контроль заказа из истории пользователя */
         .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap', 'dataResources', '$mdToast',
             function ($scope, order, items, deliveryMap, dataResources, $mdToast) {
+
+                console.log(items);
 
                 var templatePath = "pages/fragment/cabinet/history/";
 

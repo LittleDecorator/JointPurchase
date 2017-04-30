@@ -165,5 +165,15 @@
                 $state.go("product.detail.gallery", {id: $scope.item.id});
             };
 
+            /* Получения шаблона страницы */
+            $scope.getTemplateUrl = function(){
+                var templatePath = "pages/fragment/catalog/card/";
+                if($scope.width < 601){
+                    return templatePath + "catalog-card-sm.html";
+                } else {
+                    return templatePath + "catalog-card-lg.html";
+                }
+            };
+
         }]);
 })();

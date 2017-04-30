@@ -34,6 +34,7 @@
 
             //get selected node
             $scope.treeHandler = function(branch) {
+                console.log("TREE HANDLER");
                 console.log(branch);
                 if($scope.width < 601){
                     $state.go("category.card",{id:branch.id});

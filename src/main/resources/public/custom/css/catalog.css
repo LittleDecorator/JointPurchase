@@ -1,0 +1,62 @@
+
+
+/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
+@media (min-width: 993px) {
+
+    div#catalog md-card._md > .card-image  > img{
+        max-height: 223px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    div#catalog md-card._md > div.card-image {
+        min-height: 223px;
+    }
+}
+
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 601px) {
+
+    div#catalog md-card._md > div.card-image {
+        min-height: 223px;
+    }
+
+    div#catalog md-card._md {
+        min-height: 273px;
+    }
+
+    div#catalog md-card._md > .card-image  > img{
+        max-height: 223px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
+@media (max-width: 600px) {
+
+    div#catalog md-card._md > div.card-image {
+        min-height: 223px;
+    }
+
+    div#catalog md-card._md {
+        min-height: 273px;
+    }
+
+    div#catalog md-card._md > .card-image  > img{
+        max-height: 223px;
+        margin: auto;
+    }
+
+    .box > .boxInner img {
+        height: 100%;
+    }
+}

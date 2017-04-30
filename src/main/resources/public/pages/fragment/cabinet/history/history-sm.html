@@ -5,32 +5,32 @@
         <div class="card-content" layout="column">
 
             <!-- Main Order Info -->
-            <div layout="row">
+            <div layout="column">
                 <md-input-container flex class="no-errors">
                     <label>Номер заказа</label>
                     <input value="{{::order.uid}}" disabled>
                 </md-input-container>
 
-                <md-input-container flex class="no-errors" style="margin-left:1%">
+                <md-input-container flex class="no-errors">
                     <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания" disabled>
                 </md-input-container>
 
-                <md-input-container flex class="no-errors" style="margin-left:1%">
+                <md-input-container flex class="no-errors">
                     <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата закрытия" disabled>
                 </md-input-container>
 
-                <md-input-container flex class="no-errors" style="margin-left:1%">
+                <md-input-container flex class="no-errors">
                     <input value="{{order.payment | number}}" placeholder="Сумма к оплате" disabled>
                 </md-input-container>
             </div>
 
-            <div layout="row">
+            <div layout="column">
 
-                <md-input-container flex=50">
+                <md-input-container>
                     <input value="{{order.status.name}}" placeholder="Статус заказа" disabled>
                 </md-input-container>
 
-                <md-input-container flex="50" style="margin-left:1%">
+                <md-input-container>
                     <input value="{{::order.delivery.value}}" placeholder="Тип доставки" disabled>
                 </md-input-container>
 
@@ -50,27 +50,27 @@
 
     <h4>Информация о заказчике</h4>
     <div class="card">
-        <div layout="row" class="card-content">
+        <div layout="column" class="card-content">
 
-            <md-input-container flex="20">
+            <md-input-container >
                 <input name="firstName" value="{{::order.recipientFname}}" placeholder="Имя" disabled>
             </md-input-container>
 
-            <md-input-container flex="20" style="margin-left:1%">
+            <md-input-container >
                 <label>Фамилия</label>
                 <input name="lastName" value="{{::order.recipientLname}}" disabled>
             </md-input-container>
 
-            <md-input-container flex="20" class="no-errors" style="margin-left:1%">
+            <md-input-container  class="no-errors" >
                 <input value="{{::order.recipientMname}}" placeholder="Отчество" disabled>
             </md-input-container>
 
-            <md-input-container flex="20" style="margin-left:1%">
+            <md-input-container >
                 <label>Email</label>
                 <input name="email" value="{{::order.recipientEmail}}" ng-pattern="/^.+@.+\..+$/" disabled>
             </md-input-container>
 
-            <md-input-container flex="20" style="margin-left:1%">
+            <md-input-container >
                 <label>Телефон</label>
                 <input value="{{::order.recipientPhone}}" mask="(999) 999-99-99" mask-restrict="reject" disabled>
             </md-input-container>

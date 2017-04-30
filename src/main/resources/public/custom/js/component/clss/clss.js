@@ -38,7 +38,6 @@
             });
 
             $scope.treeHandler = function(branch) {
-                branch.checked = !branch.checked;
                 if(branch.nodes.length>0){
                     angular.forEach(branch.nodes, function(child){
                         child.checked = branch.checked

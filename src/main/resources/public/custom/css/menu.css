@@ -27,6 +27,15 @@ md-sidenav#menu .md-button span.menu-badge{
     z-index: 50
 }
 
+.menu-md {
+    min-height: 50px;
+    line-height: 50px;
+    position: fixed;
+    top: 0;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    z-index: 50
+}
+
 md-backdrop, md-sidenav{
     position: fixed;
 }

@@ -7,8 +7,9 @@
             <md-icon ng-click="toggleBranch(row.branch)" class="tree-icon" style="width: 28px;line-height: 28px;">{{row.tree_icon}}</md-icon>
         </a>
         <div style="width: 100%;" ng-click="user_clicks_branch(row.branch)">
-            <input type="checkbox" class="filled-in" id="{{::row.id}}" ng-model="row.branch.checked"/>
-            <label for="{{::row.id}}" class="indented tree-label" ng-class="{'leaf':!row.branch.noLeaf}" style="padding-left: 30px;">{{::row.title}}</label>
+            <!--<input type="checkbox" class="filled-in" id="{{::row.id}}" ng-model="row.branch.checked"/>-->
+            <!--<label for="{{::row.id}}" class="indented tree-label" ng-class="{'leaf':!row.branch.noLeaf}" style="padding-left: 30px;">{{::row.title}}</label>-->
+            <md-checkbox id="{{::row.id}}" class="filled-in indented tree-label" ng-model="row.branch.checked" ng-class="{'leaf':!row.branch.noLeaf}">{{::row.title}}</md-checkbox>
         </div>
     </li>
 </ul>

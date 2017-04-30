@@ -1,0 +1,123 @@
+<md-tabs md-dynamic-height md-border-bottom md-autoselect="false" id="tabs" md-selected="filter.selectedTab">
+    <md-tab label="Заказы" md-on-select="remember(0);">
+        <md-content class="md-padding">
+
+                <div layout="row" style="margin: 10px 0">
+
+                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" ></mdp-date-picker>
+
+                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" style="margin-left: 1%"></mdp-date-picker>
+
+                    <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
+                        <label>Статус заказа</label>
+                        <md-select name="status" ng-model="filter.status" ng-model-options="{trackBy: '$value.id'}">
+                            <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <div style="margin: auto 0 auto 0;">
+                        <a class="waves-effect waves-light md-button btn md" ng-click="apply()">Найти</a>
+                        <a class="waves-effect waves-light md-button btn md" ng-click="clear()">Сбросить</a>
+                    </div>
+                </div>
+
+            <md-card class="md-padding">
+
+                <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+                    <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Тип доставки</th>
+                        <th>Статус</th>
+                        <th>Дата</th>
+                        <th>Цена</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="{{::record.id}}" ng-repeat="record in history" class="collection-item" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
+                        <td class="center-align">{{::record.uid}}</td>
+                        <td class="center-align">{{::record.delivery}}</td>
+                        <td class="center-align">{{record.status.name}}</td>
+                        <td class="center-align">{{::record.createDate|date:'dd-MM-yyyy'}}</td>
+                        <td class="center-align">{{::record.payment|number}} руб</td>
+                        <td>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-card>
+
+        </md-content>
+    </md-tab>
+    <md-tab label="Персональная информаия" md-on-select="remember(1);">
+        <md-content class="md-padding" >
+
+            <div layout="column">
+
+                <div layout="row">
+
+                    <md-input-container flex>
+                        <label class="required">Имя</label>
+                        <input name="firstName" ng-model="person.firstName">
+                        <div ng-messages="personInfo.firstName.$error" ng-if="!showHints">
+                            <div ng-message="required">Поле не может быть пустым</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
+                        <label class="required">Фамилия</label>
+                        <input name="lastName" ng-model="person.lastName">
+                        <div ng-messages="personInfo.lastName.$error" ng-if="!showHints">
+                            <div ng-message="required">Поле не может быть пустым</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
+                        <label>Отчество</label>
+                        <input name="middleName" ng-model="person.middleName">
+                    </md-input-container>
+
+                </div>
+
+                <div layout="row">
+
+                    <md-input-container flex>
+                        <label>Номер телефона</label>
+                        <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
+                        <div class="hint" ng-if="showHints">Пример: (915) 343-43-45</div>
+                        <div ng-messages="personInfo.phoneNumber.$error" ng-if="!showHints">
+                            <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex style="margin-left: 1%">
+                        <label class="required">Почта</label>
+                        <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/" required>
+                        <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+                        <div ng-messages="personInfo.email.$error" ng-if="!showHints">
+                            <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex class="no-errors" style="margin-left: 1%">
+                        <label>Индекс</label>
+                        <input name="postAddress" ng-model="person.postAddress" mask="999999" mask-restrict="reject" post-validate>
+                        <div ng-messages="personInfo.postAddress.$error" ng-if="!showHints">
+                            <div ng-message="length">Указанный индекс не корректен</div>
+                        </div>
+                    </md-input-container>
+
+                </div>
+
+                <md-input-container class="no-errors">
+                    <label>Адрес</label>
+                    <input ng-model="person.address">
+                </md-input-container>
+
+            </div>
+        </md-content>
+    </md-tab>
+</md-tabs>

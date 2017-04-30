@@ -1,7 +1,13 @@
-<md-toolbar class="demo-toolbar md-primary _md" style="line-height: 64px;position: fixed;top: 0;box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);z-index: 50;padding: 0 20px;">
-    <div class="md-toolbar-tools" style="background-color: #86A8A8!important;padding: 0 15px;max-height: none;height: 100%;">
-        <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 55px;">
+<md-toolbar class="menu-md">
+
+    <!--<div class="md-toolbar-tools" style="background-color: #86A8A8!important;padding: 0 15px;max-height: none;height: 100%;">-->
+    <div class="md-toolbar-tools">
+        <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 50px;">
             <div layout="row" class="layout-row">
+
+                <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 50px; line-height: 50px;" ng-click="toggleMenu()">
+                    <md-icon style="font-size: 2.2rem; line-height: 34px; width: 34px; height: 34px;">menu</md-icon>
+                </md-button>
 
                 <a class="left brand-logo-lpad" ui-sref="home" style="font-size: 2rem;">GrimmStory</a>
 
@@ -10,63 +16,120 @@
                     <span class="badge ng-binding ng-hide" ng-show="cart.cou>0">{{cart.cou}}</span>
                 </a>
 
+                <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 50%; padding-left: 45px; display: flex; align-items: flex-end">
+                    <!--<input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="search.criteria" maxlength="50" style="border-radius:0">-->
+                    <md-autocomplete flex style="max-width: 80%"
+                                     ng-keydown="keyPress($event.keyCode)"
+                                     md-input-minlength="3"
+                                     md-min-length="0"
+                                     md-input-maxlength="50"
+                                     md-selected-item="selectedItem"
+                                     md-selected-item-change="itemView(item.id)"
+                                     md-search-text="search.criteria"
+                                     md-delay="1000"
+                                     md-items="item in querySearch(search.criteria)"
+                                     md-item-text="item.name"
+                                     md-floating-label="Не должно быть пустым"
+                                     md-dropdown-position="bottom"
+                                     md-menu-class="autocomplete-custom-template">
+
+                        <md-item-template>
+                            <span md-highlight-text="search.criteria">{{item.name}}</span>
+                        </md-item-template>
+
+                    </md-autocomplete>
+                    <div style="height: auto">
+                        <md-button ng-click="searchItem()" class="search-button">
+                            <md-icon style="color:#846C63;!important;font-size: 22px;">search</md-icon>
+                        </md-button>
+                    </div>
+
+                </div>
+
+                <!-- заполнитель -->
                 <span flex="" class="flex"></span>
 
-                <md-button style="width: 30px;min-width: 30px"><md-icon ng-click="openSearch($event)">search</md-icon></md-button>
-                <md-button ng-if="auth.isAuth()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>account_circle</md-icon></md-button>
-                <md-button ng-if="auth.isAuth()" ng-click="logout()" style="width: 30px;min-width: 30px;padding: 0"><md-icon>exit_to_app</md-icon></md-button>
-                <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn btn-small light-green lighten-2" style="margin: auto;margin-left: 10px;" >Вход</a>
+                <!-- уведомления -->
+                <a style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;">
+                    <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">notifications</md-icon>
+                    <span class="badge ng-binding ng-hide" ng-show="true" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;">4</span>
+                </a>
+
+
+                <md-button ng-if="auth.isAuth()" ng-click="goto('cabinet')" style="min-width: 30px;padding: 0">
+                    <md-icon style="font-size: 30px; height: 30px; width: 30px;">account_circle</md-icon>
+                </md-button>
+                <md-button ng-if="auth.isAuth()" ng-click="logout()" style="min-width: 30px;padding: 0; padding-right: 10px">
+                    <md-icon style="font-size: 30px; height: 30px; width: 30px;">exit_to_app</md-icon>
+                </md-button>
+                <a ng-if="!auth.isAuth()" ng-click="goto('login')" class="waves-effect waves-light btn btn-small light-green lighten-2" style="margin: auto;margin-left: 10px;margin-right: 10px" >Вход</a>
 
             </div>
 
-            <div id="menu-tabs" layout="row" class="layout-row vertical-align-middle">
-                <ul class="tabs" style="width: 100%;background-color: transparent;">
-                    <li id="catalog" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>
-                        <!--<a ui-sref="catalog" ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>-->
-                    </li>
-                    <li id="about" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('about')" style="cursor: pointer">О нас</a>
-                        <!--<a ui-sref="about" style="cursor: pointer">О нас</a>-->
-                    </li>
-                    <li id="contact" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('contact')" style="cursor: pointer">Контакты</a>
-                        <!--<a ui-sref="contact" style="cursor: pointer">Контакты</a>-->
-                    </li>
-                    <li id="delivery" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('delivery')" style="cursor: pointer">Доставка</a>
-                        <!--<a ui-sref="contact" style="cursor: pointer">Контакты</a>-->
-                    </li>
-                    <li id="stock" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">
-                        <a ng-click="goto('stock')" style="cursor: pointer">Акции</a>
-                        <!--<a ui-sref="stock" style="cursor: pointer">Акции</a>-->
-                    </li>
-                    <li id="order" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a ng-click="goto('order')" style="cursor: pointer">Заказы</a>
-                    </li>
-                    <li id="person" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a ng-click="goto('person')" style="cursor: pointer">Клиенты</a>
-                    </li>
-                    <li id="item" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a ng-click="goto('item')" style="cursor: pointer">Товар</a>
-                    </li>
-                    <li id="company" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a ng-click="goto('company')" style="cursor: pointer">Поставщики</a>
-                    </li>
-                    <li id="category" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a ng-click="goto('category')" style="cursor: pointer">Категории</a>
-                    </li>
-                    <li id="mail" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a style="cursor: pointer">Почта</a>
-                    </li>
-                    <li id="settings" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">
-                        <a style="cursor: pointer" >Настройки</a>
-                    </li>
-                    <!--<div class="indicator" style="right: 530.455px; left: 0px;"></div>-->
-                </ul>
-            </div>
+            <!--<div id="menu-tabs" layout="row" class="layout-row vertical-align-middle">-->
+                <!--<ul class="tabs" style="width: 100%;background-color: transparent;">-->
+                    <!--<li id="catalog" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">-->
+                        <!--<a ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>-->
+                        <!--&lt;!&ndash;<a ui-sref="catalog" ng-click="goto('catalog')" style="cursor: pointer">Каталог</a>&ndash;&gt;-->
+                    <!--</li>-->
+                    <!--<li id="about" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">-->
+                        <!--<a ng-click="goto('about')" style="cursor: pointer">О нас</a>-->
+                        <!--&lt;!&ndash;<a ui-sref="about" style="cursor: pointer">О нас</a>&ndash;&gt;-->
+                    <!--</li>-->
+                    <!--<li id="contact" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">-->
+                        <!--<a ng-click="goto('contact')" style="cursor: pointer">Контакты</a>-->
+                        <!--&lt;!&ndash;<a ui-sref="contact" style="cursor: pointer">Контакты</a>&ndash;&gt;-->
+                    <!--</li>-->
+                    <!--<li id="delivery" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">-->
+                        <!--<a ng-click="goto('delivery')" style="cursor: pointer">Доставка</a>-->
+                        <!--&lt;!&ndash;<a ui-sref="contact" style="cursor: pointer">Контакты</a>&ndash;&gt;-->
+                    <!--</li>-->
+                    <!--<li id="stock" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;">-->
+                        <!--<a ng-click="goto('stock')" style="cursor: pointer">Акции</a>-->
+                        <!--&lt;!&ndash;<a ui-sref="stock" style="cursor: pointer">Акции</a>&ndash;&gt;-->
+                    <!--</li>-->
+                    <!--<li id="order" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a ng-click="goto('order')" style="cursor: pointer">Заказы</a>-->
+                    <!--</li>-->
+                    <!--<li id="person" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a ng-click="goto('person')" style="cursor: pointer">Клиенты</a>-->
+                    <!--</li>-->
+                    <!--<li id="item" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a ng-click="goto('item')" style="cursor: pointer">Товар</a>-->
+                    <!--</li>-->
+                    <!--<li id="company" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a ng-click="goto('company')" style="cursor: pointer">Поставщики</a>-->
+                    <!--</li>-->
+                    <!--<li id="category" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a ng-click="goto('category')" style="cursor: pointer">Категории</a>-->
+                    <!--</li>-->
+                    <!--<li id="mail" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a style="cursor: pointer">Почта</a>-->
+                    <!--</li>-->
+                    <!--<li id="settings" class="tab" style="line-height: 30px;height: 30px;margin-top: auto;margin-bottom: 5px;" ng-if="auth.isAuth()">-->
+                        <!--<a style="cursor: pointer" >Настройки</a>-->
+                    <!--</li>-->
+                    <!--&lt;!&ndash;<div class="indicator" style="right: 530.455px; left: 0px;"></div>&ndash;&gt;-->
+                <!--</ul>-->
+            <!--</div>-->
         </div>
 
     </div>
 
 </md-toolbar>
+
+<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="overflow: auto;  width: 250px; min-width: 0; top: 49px;">
+    <md-menu-item><md-button ng-click="goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
+    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
+</md-sidenav>

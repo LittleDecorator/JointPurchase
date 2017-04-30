@@ -1,0 +1,39 @@
+<div class="section" style="padding-top: 0">
+
+    <div class="card-panel">
+        <div layout="column" style="margin-bottom: 0;">
+            <!-- название -->
+            <h4 style="margin-top: 0">{{item.name}}</h4>
+
+            <!-- изображения -->
+            <div class="box" style="width: 100%; padding-bottom: 65%; background-color: rgba(253,253,253,.6);">
+                <div class="boxInner">
+                    <a ng-href="{{mainImage}}" class="swipebox" title="Some Title">
+                        <img ng-src="{{mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
+                    </a>
+                </div>
+            </div>
+
+            <div ng-if="item.images.length > 1">
+                <div class="box" ng-repeat="img in item.images" ng-click="show(img.contentId)" style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
+                    <div class="boxInner">
+                        <img ng-src="{{::PREVIEW_URL+img.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- описание -->
+            <h5>Опиcание</h5>
+            <p style="margin: 0">{{item.description}}</p>
+            <md-divider style="margin-top: 5px;margin-bottom: 10px"></md-divider>
+            <div layout="row" style="margin-bottom: 10px; align-self: flex-end; font-size: 1.3rem;">
+                <b>Цена: </b>{{item.price}} руб
+            </div>
+
+            <div layout="column" layout-align="center center">
+                <a class="btn btn-default" ng-click="addToCart(item)" style="width: 100%">Купить</a>
+            </div>
+
+        </div>
+    </div>
+</div>

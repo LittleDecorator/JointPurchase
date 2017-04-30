@@ -43,7 +43,7 @@
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
                 <button md-chip-remove class="md-primary vegetablechip">
-                    <md-icon md-svg-icon="md-close"></md-icon>
+                    <md-icon>clear</md-icon>
                 </button>
             </md-chips>
             <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
@@ -86,3 +86,18 @@
 
     </div>
 </div>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showCategoryModal()" style="bottom: 125px; right: 25px;">
+    <md-tooltip md-direction="left">Показать категории</md-tooltip>
+    <md-icon>open_in_new</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showGallery()" style="bottom: 70px; right: 25px;">
+    <md-tooltip md-direction="left">Перейти в галерею</md-tooltip>
+    <md-icon>photo</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!itemCard.$dirty}" style="right: 25px;">
+    <md-tooltip md-direction="left">Сохранить</md-tooltip>
+    <md-icon>save</md-icon>
+</md-button>

@@ -183,7 +183,7 @@
 
                 personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
                 itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
-                image: $resource('/content/remove',{},{remove:{method:'DELETE'}}),
+                image: $resource('/content/remove/:id',{},{remove:{method:'DELETE'}}),
                 order:$resource('/order/:id',{},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},

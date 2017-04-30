@@ -82,7 +82,9 @@
                     var idx = $scope.images.indexOf(currImage);
                     $scope.images.splice(idx, 1);
                     //remove from DB
-                    dataResources.image.remove({contentId:id,itemId:$stateParams.id});
+                    console.log(currImage);
+                    // dataResources.image.remove({contentId:id,itemId:$stateParams.id});
+                    dataResources.image.remove({id:currImage.id});
                     //find new main if delete one
                     if(currImage.main && $scope.images.length>0){
                         currImage = $scope.images[0];
@@ -115,7 +117,7 @@
                         currImage.show = true;
                     }
                     console.log(currImage);
-                    var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
+                    var itemContent = {contentId:currImage.contentId,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
                     console.log(itemContent);
                     dataResources.galleryMain.toggle(itemContent);
                 };

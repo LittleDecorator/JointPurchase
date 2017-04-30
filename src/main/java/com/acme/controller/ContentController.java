@@ -161,10 +161,9 @@ public class ContentController{
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
     public void setAsMain(@RequestBody ItemContent input) throws ParseException {
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(input.getItemId())){
-            itemContent.setMain(false);
+            itemContent.setMain(itemContent.getContentId().contentEquals(input.getContentId()));
             itemContentRepository.save(itemContent);
         }
-        itemContentRepository.save(input);
     }
 
     /**

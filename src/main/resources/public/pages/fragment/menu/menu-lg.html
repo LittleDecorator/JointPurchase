@@ -15,8 +15,7 @@
                         <span class="badge ng-binding ng-hide" ng-show="cart.cou>0">{{cart.cou}}</span>
                     </a>
                     <!-- строка поиска -->
-                    <!--<div class="input-field row" flex style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px">-->
-                    <div class="input-field row" style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px; display: flex; align-items: flex-end">
+                    <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px; display: flex; align-items: flex-end">
                         <!--<input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="search.criteria" maxlength="50" style="border-radius:0">-->
                         <md-autocomplete flex style="max-width: 80%"
                                          ng-keydown="keyPress($event.keyCode)"
@@ -95,25 +94,7 @@
                 </div>
 
             </div>
-            <!--<div layout="row" class="layout-row" style="border-bottom: 3px solid burlywood;">-->
-                <!--<div class="row-wrapper">-->
-                    <!--<ul id="nav-mobile" class="right ng-scope" style="margin: 0;line-height: 40px;height: 40px;">-->
-                        <!--<li class="menu-item active" ui-sref-active="active"><a ui-sref="home"><md-icon>store</md-icon></a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="catalog">Каталог</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="about">О нас</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="contact">Контакты</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="delivery">Доставка</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active"><a ui-sref="stock">Акции</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="order">Заказы</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="person">Клиенты</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="item">Товар</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="company">Поставщики</a></li>-->
-                        <!--<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="category">Категории</a></li>-->
-                        <!--&lt;!&ndash;<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="email">Почта</a></li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<li class="menu-item" ui-sref-active="active" ng-if="auth.isAuth()"><a ui-sref="settings">Настройка</a></li>&ndash;&gt;-->
-                    <!--</ul>-->
-                <!--</div>-->
-            <!--</div>-->
+
         </div>
     </div>
 

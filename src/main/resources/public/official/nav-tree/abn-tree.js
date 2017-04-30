@@ -118,12 +118,13 @@
                     };
 
                     scope.user_clicks_branch = function(branch) {
-                        if (branch !== selected_branch || !branch.selected) {
+                        if (branch != selected_branch || !branch.selected) {
                             return select_branch(branch);
                         }
                     };
 
                     scope.toggleBranch = function(branch){
+                        console.log(branch)
                         branch.expanded = !branch.expanded;
                         scope.onToggle({branch: branch});
                     };

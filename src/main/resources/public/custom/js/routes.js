@@ -200,6 +200,20 @@ var route = {
                     requireLogin: false
                 }
             },
+            /* Страница результата регистрации */
+            {
+                name:'registrationResult',
+                url:'/registration/result?confirmed',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/registrationResult.html',
+                        controller: 'registrationResultController'
+                    }
+                },
+                data: {
+                    requireLogin: false,
+                }
+            },
                 /* Страница восстановления доступа */
             {
                 name:'restore',
@@ -226,20 +240,6 @@ var route = {
                 },
                 data: {
                     requireLogin: false
-                }
-            },
-                /* Страница результата регистрации */
-            {
-                name:'registrationResult',
-                url:'/registration/result?confirmed',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/registrationResult.html',
-                        controller: 'registrationResultController'
-                    }
-                },
-                data: {
-                    requireLogin: false,
                 }
             },
                 /* Каталог товаров */

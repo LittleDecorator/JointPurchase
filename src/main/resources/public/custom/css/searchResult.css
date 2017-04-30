@@ -1,0 +1,116 @@
+/********************************** COMMON ******************************/
+
+md-list-item .md-list-item-inner:before, md-list-item:before {
+    content: none;
+}
+
+
+/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
+@media (min-width: 993px) {
+
+    div.search .row md-list-item.col {
+        margin-top: 1rem;
+    }
+
+    div.search .row md-list-item.col md-button {
+        padding: 0;
+        margin-left: .5rem;
+        margin-right: .5rem;
+    }
+
+    div.search md-list-item.md-2-line:before, md-list-item.md-2-line>.md-no-style:before {
+        content: none;
+    }
+
+    div.search md-list-item img.md-avatar, md-list-item .md-list-item-inner img.md-avatar {
+        transform: translateX(-50%);
+        left: 50%;
+        position: relative;
+        height: 100%;
+    }
+
+    div.search md-list-item div.boxInner.md-avatar, md-list-item .md-list-item-inner div.boxInner.md-avatar {
+        border-radius: 50%;
+        width: 120px!important;
+        height: 120px!important;
+        margin: auto 10px auto auto;
+    }
+}
+
+
+
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 601px) {
+
+    div.search .row md-list-item.col {
+        margin-top: 1rem;
+    }
+
+    div.search md-list-item.md-2-line:before, md-list-item.md-2-line>.md-no-style:before {
+        content: none;
+    }
+
+    div.search md-list-item .md-avatar img, md-list-item .md-list-item-inner img {
+        transform: translateX(-50%);
+        left: 50%;
+        position: relative;
+        height: 100%;
+    }
+
+    div.search md-list-item div.boxInner.md-avatar, md-list-item .md-list-item-inner div.boxInner.md-avatar {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        margin: auto 10px auto auto;
+    }
+
+    md-list-item .md-avatar, md-list-item .md-list-item-inner .md-avatar {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+
+
+/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
+@media (max-width: 600px) {
+
+    div.search > h5 > span {
+        color: #86A8A8;
+    }
+
+    div.search md-content {
+        background: initial;
+    }
+
+    div.search .row md-list-item.col button {
+        background-color: white;
+    }
+
+    div.search md-list-item.md-2-line:before, md-list-item.md-2-line>.md-no-style:before {
+        content: none;
+    }
+
+    div.search md-list-item img, md-list-item .md-list-item-inner img {
+        transform: translateX(-50%);
+        left: 50%;
+        position: relative;
+        height: 100%;
+    }
+
+    div.search md-list-item div.boxInner.md-avatar, md-list-item .md-list-item-inner div.boxInner.md-avatar {
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        margin: auto 10px auto auto;
+    }
+
+    div.search .row md-list-item.col {
+        margin-top: 1rem;
+    }
+
+    div.search md-list-item.md-no-proxy, md-list-item .md-no-style {
+        padding: 0 16px;
+    }
+
+}

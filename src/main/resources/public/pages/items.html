@@ -1,9 +1,9 @@
 <div class="filter-item">
 
     <!-- переделать на модальное окно с кнопкой вызова -->
-    <div layout="row" style="margin: 10px 0" ng-if="width > 600">
+    <div layout="row" style="margin: 10px 0" ng-if="width > 992">
 
-        <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
+        <md-input-container class="md-block no-errors" flex="25">
             <label>Название</label>
             <input ng-model="filter.name">
         </md-input-container>
@@ -39,11 +39,15 @@
 
 </div>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="openFilter()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 80px" ng-if="width < 601" >
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
     <md-icon>more_vert</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
+    <md-icon>more_vert</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
     <md-icon>add</md-icon>
 </md-button>
 

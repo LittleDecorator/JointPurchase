@@ -1,24 +1,36 @@
-/********************************** COMMON ******************************/
-md-select-value .md-text {
-    color: #846C63;
-}
-
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
 @media (min-width: 993px) {
 
 }
 
+
+
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
 @media (min-width: 601px) {
-    .md-select-menu-container {
-        z-index: 1000;
-    }
+
 }
+
+
 
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
 @media (max-width: 600px) {
-    .md-select-menu-container {
-        z-index: 1000;
+
+    div.restore-card md-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        margin-top: 15px;
     }
 
+    div.restore-card md-icon.done {
+        color: cadetblue;
+    }
+
+    div.restore-card md-icon.block {
+        color: rgba(255, 0, 0, 0.64);
+    }
+
+    div.restore-card .table-container{
+        margin-top: 0;
+    }
 }

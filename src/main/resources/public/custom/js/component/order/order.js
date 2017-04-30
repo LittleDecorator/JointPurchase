@@ -103,10 +103,10 @@
             };
 
             // модальное окно фильтрации
-            $scope.openFilter = function (event) {
+            $scope.openFilter = function (wClass) {
                 var dialog = modal({
                     templateUrl: "pages/modal/orders-filter.html",
-                    className: 'ngdialog-theme-default fullscreen',
+                    className: 'ngdialog-theme-default ' + wClass,
                     closeByEscape: true,
                     closeByDocument: true,
                     scope: $scope

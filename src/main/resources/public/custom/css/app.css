@@ -468,10 +468,16 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
     /*Additionally, you can use this to change the text color:*/
     /*-webkit-text-fill-color: yellow !important;*/
 }
-
-
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
-@media (max-width: 456px) {
+@media (max-width: 600px) {
+    /* Компонент колендаря на всю строку */
+    mdp-date-picker md-input-container {
+        width: 100%;
+    }
+/*}*/
+
+/*!********************************** OFFICIAL CHANGE (MOBILE) ******************************!*/
+/*@media (max-width: 456px) {*/
 
     /* Убираем странный before */
     md-list-item.cart-item .md-list-item-inner:before, md-list-item.cart-item:before {

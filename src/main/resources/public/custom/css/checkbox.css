@@ -1,6 +1,9 @@
-[type="checkbox"]:not(:checked),
-[type="checkbox"]:checked {
+[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
 	visibility: visible!important;
-	left: inherit!important;
+	left: inherit;
 	position: relative!important;
+}
+
+md-checkbox.tree-label {
+    margin-bottom: 0;
 }
