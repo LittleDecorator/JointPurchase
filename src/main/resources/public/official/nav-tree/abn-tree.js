@@ -27,7 +27,6 @@
                 link: function(scope, element, attrs) {
                     var error, expand_all_parents, expand_level, for_all_ancestors, for_each_branch, get_parent, n, on_treeData_change, select_branch, selected_branch, tree;
                     error = function(s) {
-                        console.log('ERROR:' + s);
                         debugger;
                         return void 0;
                     };
@@ -124,7 +123,6 @@
                     };
 
                     scope.toggleBranch = function(branch){
-                        console.log(branch)
                         branch.expanded = !branch.expanded;
                         scope.onToggle({branch: branch});
                     };
@@ -279,7 +277,6 @@
                         });
                     }
                     n = scope.treeData.length;
-                    console.log('num root branches = ' + n);
                     for_each_branch(function(b, level) {
                         b.level = level;
                         return b.expanded = b.level < expand_level;
@@ -297,6 +294,15 @@
                                 return for_each_branch(function(b, level) {
                                     return b.expanded = false;
                                 });
+                            };
+                            tree.get_roots = function(){
+                                var roots = [];
+                                for_each_branch(function(b, level) {
+                                    if(level === 1){
+                                        roots.push(b);
+                                    }
+                                });
+                                return roots;
                             };
                             tree.get_first_branch = function() {
                                 n = scope.treeData.length;
@@ -343,6 +349,18 @@
                                     scope.treeData.push(new_branch);
                                 }
                                 return new_branch;
+                            };
+                            /* удаление узла из дерева по id */
+                            tree.delete_branch_by_uid = function(uid){
+                                var t;
+                                for_each_branch(function(b, level) {
+                                    if(b.uid === uid){
+                                        t = scope.treeData.indexOf(b);
+                                        if(t != -1){
+                                            scope.treeData.splice(t,1);
+                                        }
+                                    }
+                                });
                             };
                             tree.delete_children = function(parent){
                                 if (parent != null) {

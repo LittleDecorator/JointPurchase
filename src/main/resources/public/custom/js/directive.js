@@ -80,6 +80,73 @@
                     scope.onInclude();
                 }
             };
-        });
+        })
+
+        .directive('minItems', function minItems() {
+            return {
+                require: 'ngModel',
+                restrict: 'A',
+                link: function (scope, element, attr, ctrl) {
+                    var minItems = 0;
+
+                    attr.$observe('minItems', function (value) {
+                        minItems = parseInt(value, 10) || 0;
+                        ctrl.$validate();
+                    });
+
+                    ctrl.$validators['min-items'] = function (modelValue, viewValue) {
+                        return viewValue.length >= minItems;
+                    };
+
+                }
+            };
+        })
+
+        .directive('menuToggle', ['$timeout', function ($timeout ) {
+            return {
+                scope: {
+                    section: '='
+                },
+                templateUrl: 'pages/template/menu-toggle.tmpl.html',
+                link: function (scope, element) {
+                    var controller = element.parent().controller();
+
+                    scope.isOpen = function () {
+                        return controller.isOpen(scope.section);
+                    };
+                    scope.toggle = function () {
+                        controller.toggleOpen(scope.section);
+                    };
+
+                    var parentNode = element[0].parentNode.parentNode.parentNode;
+                    if (parentNode.classList.contains('parent-list-item')) {
+                        var heading = parentNode.querySelector('h2');
+                        element[0].firstChild.setAttribute('aria-describedby', heading.id);
+                    }
+                }
+            }
+        }])
+
+        .directive('menuLink', function () {
+            return {
+                scope: {
+                    section: '='
+                },
+                templateUrl: 'pages/template/menu-link.tmpl.html',
+                link: function ($scope, $element) {
+                    var controller = $element.parent().controller();
+
+                    $scope.focusSection = function () {
+                        // set flag to be used later when
+                        // $locationChangeSuccess calls openPage()
+                        controller.autoFocusContent = true;
+                    };
+                    
+                    $scope.showCard = function(){
+                        controller.openSection($scope.section)
+                    }
+                }
+            };
+        })
 
 })();

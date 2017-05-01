@@ -123,7 +123,8 @@ public class ItemServiceImpl implements ItemService{
             item.setUrl(Constants.PREVIEW_URL+defContent.getId());
         } else {
             item.setItemContents(itemContents);
-            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
+            System.out.println(item.getId());
+            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findAny().get().getContentId());
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
     }

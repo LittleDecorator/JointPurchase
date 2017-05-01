@@ -17,9 +17,7 @@
                 $scope.$parent.showContent = true;
                 $scope.orderItemsCou = $scope.cart.cou;
             }
-
-            console.log($scope.cart)
-
+            
             //TODO: here will be check of auth
             $scope.toOrderCreation = function(){
                 $state.transitionTo("cart.confirm");

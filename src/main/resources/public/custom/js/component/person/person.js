@@ -36,7 +36,7 @@
                             $scope.customers = [];
                         }
 
-                        $scope.customers = data;
+                        $scope.customers = $scope.customers.concat(data);
 
                         portion++;
                         confirmedFilter.offset = portion * confirmedFilter.limit;

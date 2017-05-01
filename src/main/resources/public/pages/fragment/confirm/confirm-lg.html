@@ -1,0 +1,158 @@
+<md-stepper-card-content class="md-no-padding">
+
+    <md-steppers  md-dynamic-height md-stretch-steppers="always" md-selected="data.selectedStep" md-busy-text="'Processing...'" md-busy="data.showBusyText" md-on-select="onTabSelect()">
+
+        <md-step label="Способ доставки" md-complete="data.stepData[0].completed" ng-disabled="data.maxStep == data.stepProgress">
+            <md-card class="md-padding">
+                <md-step-body>
+                    <md-content ng-form="forms.step1">
+
+                        <md-card class="md-padding">
+                            <div layout="column">
+
+                                <md-radio-group ng-model="data.stepData[0].data.delivery" class="md-primary">
+                                    <md-radio-button class="delivery" ng-repeat="delivery in data.stepData[0].data.deliveries" ng-value="delivery" >
+                                        <div layout="column">
+                                            <span>{{delivery.value }}</span>
+                                            <span>{{delivery.hint}}</span>
+                                        </div>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </md-card>
+
+                        <div flex style="justify-content: flex-end" layout="row">
+                            <md-button ng-click="cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить</md-button>
+                            <div flex></div>
+                            <md-button ng-click="submitCurrentStep(data.stepData[0])" class="btn">Далее</md-button>
+                        </div>
+
+                    </md-content>
+                </md-step-body>
+            </md-card>
+
+        </md-step>
+
+        <md-step label="Информация о получателе" md-complete="data.stepData[1].completed" ng-disabled="!data.stepData[0].completed || (data.maxStep == data.stepProgress)">
+            <md-card class="md-padding">
+                <md-step-body>
+                    <md-content ng-form="forms.step2">
+
+                        <md-card class="md-padding" >
+
+                            <div layout="row" ng-if="auth.isAuth()">
+                                <div flex></div>
+                                <md-switch ng-model="data.usePrivate" aria-label="myData" ng-change="switchUserInfo()">Использовать персональные данные</md-switch>
+                            </div>
+
+
+                            <div layout="row" layout-xs="column">
+
+                                <md-input-container flex>
+                                    <label class="required">Имя</label>
+                                    <input name="fname" ng-model="data.stepData[1].data.recipientFname" required>
+                                    <div ng-messages="step2.fname.$error" ng-if="!showHints">
+                                        <div ng-message="required">Необходимо указать имя заказчика</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container flex style="margin-left: 1%">
+                                    <label class="required">Фамилия</label>
+                                    <input name="lname" ng-model="data.stepData[1].data.recipientLname" required>
+                                    <div ng-messages="step2.lname.$error" ng-if="!showHints">
+                                        <div ng-message="required">Необходимо указать фамилию заказчика</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container flex style="margin-left: 1%">
+                                    <label>Отчество</label>
+                                    <input name="mname" ng-model="data.stepData[1].data.recipientMname">
+                                </md-input-container>
+
+                            </div>
+
+                            <div layout="row" layout-xs="column">
+
+                                <md-input-container flex>
+                                    <label class="required">Email</label>
+                                    <input name="email" ng-model="data.stepData[1].data.recipientEmail" ng-pattern="/^.+@.+\..+$/" required>
+                                    <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
+                                    <div ng-messages="step2.email.$error" ng-if="!showHints">
+                                        <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                                        <div ng-message="required">Необходимо указать e-mail получателя</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container flex style="margin-left: 1%">
+                                    <label>Телефон</label>
+                                    <input name="phoneNumber" ng-model="data.stepData[1].data.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+                                    <div class="hint">Пример: (915) 343-43-45</div>
+                                    <div ng-messages="step2.phoneNumber.$error" ng-if="!showHints">
+                                        <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                                    </div>
+                                </md-input-container>
+
+                            </div>
+
+                            <div layout="column" layout-wrap>
+
+                                <div layout="row">
+
+                                    <md-input-container flex="10" class="no-errors" ng-if="data.stepData[0].data.delivery.id == '72fab541-593e-48ef-882e-e226775f0b6f'" style="margin-right: 1%">
+                                        <label class="required">Индекс</label>
+                                        <input name="postAddress" ng-model="data.stepData[1].data.postAddress" mask="999999" mask-restrict="reject" required>
+                                        <div ng-messages="step2.postAddress.$error" ng-if="!showHints">
+                                            <div ng-message="length">Указанный индекс не корректен</div>
+                                        </div>
+                                    </md-input-container>
+
+                                    <md-input-container flex>
+                                        <label class="required">Адрес</label>
+                                        <input name="address" ng-model="data.stepData[1].data.recipientAddress" required>
+                                        <div ng-messages="step2.address.$error" ng-if="!showHints">
+                                            <div ng-message="required">Поле не может быть пустым</div>
+                                        </div>
+                                    </md-input-container>
+
+                                </div>
+
+                                <md-input-container flex>
+                                    <input ng-model="data.stepData[0].data.comment" placeholder="Комментарий">
+                                </md-input-container>
+                            </div>
+                        </md-card>
+
+                        <div layout="row" layout-align="end top">
+                            <md-button ng-click="moveToPreviousStep()" class="waves-effect btn md-plain md-raised">Назад</md-button>
+                            <md-button ng-click="cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить</md-button>
+                            <div flex></div>
+                            <md-button ng-click="confirmInfoStep()" class="waves-effect waves-green btn">Оформить заказ</md-button>
+                        </div>
+
+                    </md-content>
+                </md-step-body>
+            </md-card>
+        </md-step>
+
+        <md-step label="Статус заказа" md-complete="data.stepData[2].completed" ng-disabled="!data.stepData[1].completed">
+            <md-card class="md-padding">
+                <md-step-body>
+                    <md-content>
+
+                        <div layout="column">
+                            <h5 style="text-align: center; text-transform: uppercase; margin-bottom: 15px;">Ваш заказ <span style="text-decoration: underline;">#{{data.stepData[2].data.uid}}</span> успешно добавлен в обработку!</h5>
+                            <hr style="width: 100px; margin-bottom: 35px;">
+                            <span style="text-align: center;">На вашу почту была выслана информация о заказе!</span>
+                            <span style="text-align: center;" ng-if="auth.isAuth()">Состояние заказа вы можете отслеживать в <a ui-sref="cabinet">личном кабинете</a></span>
+                        </div>
+
+                        <div layout="row" layout-align="center center" style="padding-top: 35px">
+                            <md-button ng-click="toCatalog()" class="waves-effect waves-green btn md" >Продолжить покупки</md-button>
+                        </div>
+
+                    </md-content>
+                </md-step-body>
+            </md-card>
+        </md-step>
+    </md-steppers>
+</md-stepper-card-content>

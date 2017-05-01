@@ -12,11 +12,14 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container flex=25" class="no-errors" style="margin-left:2%">
+                <md-input-container flex=25" style="margin-left:2%">
                     <label class="required">Статус</label>
-                    <md-select ng-model="item.status" required ng-model-options="{trackBy: '$value.id'}">
+                    <md-select name="status" ng-model="item.status" required ng-model-options="{trackBy: '$value.id'}">
                         <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
                     </md-select>
+                    <div ng-messages="itemCard.status.$error" ng-if="!showHints">
+                        <div ng-message="required">Не выбран статус</div>
+                    </div>
                 </md-input-container>
 
             </div>
@@ -24,9 +27,9 @@
 
         <md-content>
             <div layout="row">
-                <md-input-container class="md-block" flex="25" class="no-errors">
+                <md-input-container class="md-block" flex="25">
                     <label>Производитель</label>
-                    <md-select ng-model="item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>
+                    <md-select name="company" ng-model="item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>
                         <md-option ng-repeat="company in companyNames" ng-value="company">{{::company.name}}</md-option>
                     </md-select>
                     <div ng-messages="itemCard.company.$error" ng-if="!showHints">
@@ -62,7 +65,7 @@
 
         <md-input-container style="width: 100%;">
             <label class="required">Категории</label>
-            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)">
+            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)" min-items="1">
                 <md-chip-template>
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
@@ -71,7 +74,7 @@
                 </button>
             </md-chips>
             <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
-                <div ng-message="required">Необходимо выбрать хотя бы одну категорию</div>
+                <div ng-message="min-items">Необходимо выбрать хотя бы одну категорию</div>
             </div>
         </md-input-container>
 

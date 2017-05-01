@@ -574,9 +574,33 @@ var route = {
                 }
             },
             {
+                name: 'categoryList',
+                url:'/categoryList',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/category.html',
+                        controller: 'categoryListController as vm',
+                        controllerAs: 'vm'
+                    }
+                },
+                resolve:{
+                    categoryNodes: function($stateParams, resolveService) {
+                        return resolveService.getCategoryTreeData();
+                    },
+                    categories: function($stateParams, resolveService){
+                        return resolveService.getCategoryMap();
+                    }
+                },
+                data: {
+                    displayName: 'Категории',
+                    requireLogin: true
+
+                }
+            },
+            {
                 name: 'category.card',
                 url:'/category/:id',
-                parent:'category',
+                parent:'categoryList',
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/categoryCard.html',

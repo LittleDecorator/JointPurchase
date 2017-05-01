@@ -1,36 +1,48 @@
-<div class="section">
-    <div class="row">
-        <div class="col s12 m7">
-            <div style="background:#FFFFFF;border:1px solid lightgray;border-radius:5px;">
-                <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>
-            </div>
-        </div>
+<div class="section" style="padding-top: 0">
 
-        <div class="col m5">
-            <div class="toc-wrapper">
+        <h4 class="example_head">Категории:</h4>
+
+    <div layout="row">
+        <!-- дерево категорий -->
+        <md-card flex="55">
+            <!--<abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>-->
+            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="1"></abn-tree>
+        </md-card>
+
+        <!-- настройки узла -->
+        <div flex="40">
+            <md-card class="md-padding">
+
+                <md-input-container class="md-block no-errors">
+                    <label>Выбранная категория</label>
+                    <input ng-model="selectedCopy.title" ng-change="nodeTitleChange()">
+                </md-input-container>
+
                 <div>
-                    <div class="form-group">
-                        <label for="selectedCategory" class="control-label">Выбранная категории</label>
-                        <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="selectedCopy.title">
-                    </div>
-                    <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="edit()" >Изменить</a>
-                    <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="delete()" >Удалить</a>
+                    <md-button id="edit" md-no-ink class="md-raised btn md disabled" aria-label="edit" ng-click="edit()">Изменить</md-button>
+                    <md-button id="delete" md-no-ink class="md-raised btn md disabled" aria-label="delete" ng-click="delete()">Удалить</md-button>
+                </div>
+            </md-card>
+
+            <md-card class="md-padding">
+                <md-input-container class="md-block no-errors">
+                    <label>Новая категория</label>
+                    <input ng-model="currentNode.title" ng-change="newNodeTitleChange()" maxlength="25">
+                </md-input-container>
+
+                <div>
+                    <md-button id="add_sibling" md-no-ink class="md-raised btn md disabled" aria-label="sibling" ng-click="addAsSibling()">Добавить</md-button>
+                    <md-button id="add" md-no-ink class="md-raised btn md disabled" aria-label="add" ng-click="add()">Как зависимую</md-button>
+                    <md-button id="add_root" md-no-ink class="md-raised btn md disabled" aria-label="root" ng-click="addAsRoot()">Как корневую</md-button>
                 </div>
 
-                <div style="padding-top: 20px;">
-                    <div class="input-field" >
-                        <input type="text" id="newCategory" name="newCategory" class="form-control" ng-model="newCategory" maxlength="25">
-                        <label class="control-label" for="newCategory">Новая категория</label>
-                    </div>
-                    <a id="add_sibling" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="addAsSibling()" >Добавить</a>
-                    <a id="add" class="waves-effect waves-light btn disabled" style="margin-top: 21px;" ng-click="add()" >Добавить как зависимую</a>
-                    <a class="waves-effect waves-light btn" style="margin-top: 21px;" ng-click="addAsRoot()" >Добавить как корневую</a>
-                </div>
+            </md-card>
 
-                <div ng-if="selected" style="margin-top: 20px;">
+            <md-card class="md-padding" ng-show="selected">
+                <div>
                     <h5>Связанные товары:</h5>
 
-                    <div class="table-result" ng-if="selected.items && selected.items.length>0" style="margin-top: 5px;">
+                    <div class="table-result" ng-if="selected.items && selected.items.length>0" style="margin-top: 5px;overflow: auto; max-height: 400px;">
                         <table class="bordered table-result">
                             <tbody>
                             <tr ng-repeat="item in selected.items" class="row" ng-class="{'no-bottom-border':$last}">
@@ -46,24 +58,19 @@
                         </table>
                     </div>
 
-                    <div class="table-result" ng-if="(!selected.items || selected.items.length==0)" style="margin-top: 5px;" >
+                    <div class="table-result" ng-show="(!selected.items || selected.items.length==0)" style="margin-top: 5px;background-color: rgb(250,250,250); border: 1px solid;" >
                         <span >Ни одного товара не связано с выбранной категорией</span>
                     </div>
 
                 </div>
+            </md-card>
+
+
             </div>
 
 
-        </div>
+        </md-card>
 
 
     </div>
 </div>
-
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addCategory()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 120px; right: 24px;">
-    <md-icon>add</md-icon>
-</md-button>
-
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="bottom: 45px; right: 24px;">
-    <md-icon>save</md-icon>
-</md-button>

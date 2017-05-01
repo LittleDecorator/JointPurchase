@@ -1,23 +1,22 @@
 package com.acme.controller;
 
 import com.acme.exception.PersistException;
-import com.acme.model.Node;
+import com.acme.model.*;
 import com.acme.model.dto.CategoryTransfer;
+import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CategoryRepository;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ItemRepository;
 import com.acme.service.CategoryService;
 import com.acme.service.TreeService;
 
-import com.acme.model.Category;
-import com.acme.model.Company;
-import com.acme.model.Item;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,11 +25,13 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/category")
@@ -44,6 +45,9 @@ public class CategoryController {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    CategoryItemRepository categoryItemRepository;
 
     @Autowired
     CompanyRepository companyRepository;
@@ -156,6 +160,7 @@ public class CategoryController {
      * @throws IOException
      */
     //TODO: ADD Items processing in tree
+    @Transactional
     @RequestMapping(method = RequestMethod.POST,value = "/tree")
     public void saveCategoryTree(@RequestBody String input) throws IOException, ParseException, PersistException {
         JSONParser parser=new JSONParser();
@@ -164,7 +169,7 @@ public class CategoryController {
         ObjectMapper mapper = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 
-        /* добавление узла дерева */
+        /* добавление новых узлов в дерево */
         JSONArray newArray = (JSONArray)main.get("new");
         if(newArray.size()>0){
             List<Node> newNodes = mapper.readValue(newArray.toJSONString(), new TypeReference<List<Node>>(){});
@@ -174,12 +179,24 @@ public class CategoryController {
                 category.setName(node.getTitle());
                 category.setId(node.getId());
                 category.setParentId(node.getParentId());
-                category.setItems(node.getItems());
                 categoryRepository.save(category);
+
+                /* Добавим объекты связи с товаром*/
+                if(node.getItems() !=null ){
+                    List<CategoryItem> categoryItemList = Lists.newArrayList();
+                    for(Item item : node.getItems()){
+                        CategoryItem categoryItem = new CategoryItem();
+                        categoryItem.setCategoryId(category.getId());
+                        categoryItem.setItemId(item.getId());
+                        categoryItem.setDateAdd(new Date());
+                        categoryItemList.add(categoryItem);
+                    }
+                    categoryItemRepository.save(categoryItemList);
+                }
             }
         }
 
-        /* Обновление узла дерева */
+        /* Обновление узлов дерева */
         JSONArray updateArray = (JSONArray)main.get("update");
         if(updateArray.size()>0){
             List<Node> updateNodes = mapper.readValue(updateArray.toJSONString(), new TypeReference<List<Node>>(){});
@@ -192,7 +209,22 @@ public class CategoryController {
                 category.setId(node.getId());
                 category.setParentId(node.getParentId());
                 categoryRepository.save(category);
-                /* удаление старых связей и создание новых отдано на откуп JPA */
+                /* удаление старых связей и создание новых */
+                if(node.getItems() == null){
+                    categoryItemRepository.deleteByCategoryId(category.getId());
+                } else {
+                    List<String> itemIds = node.getItems().stream().map(Item::getId).collect(Collectors.toList());
+                    categoryItemRepository.deleteByCategoryIdAndItemIdNotIn(category.getId(), itemIds);
+                    List<CategoryItem> categoryItemList = Lists.newArrayList();
+                    for(Item item : node.getItems()){
+                        CategoryItem categoryItem = new CategoryItem();
+                        categoryItem.setCategoryId(category.getId());
+                        categoryItem.setItemId(item.getId());
+                        categoryItem.setDateAdd(new Date());
+                        categoryItemList.add(categoryItem);
+                    }
+                    categoryItemRepository.save(categoryItemList);
+                }
             }
         }
 
@@ -202,6 +234,7 @@ public class CategoryController {
             List<Node> deleteNodes = mapper.readValue(deleteArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             for(Node node: deleteNodes){
+                categoryItemRepository.deleteByCategoryId(node.getId());
                 categoryRepository.delete(node.getId());
             }
         }
@@ -215,7 +248,9 @@ public class CategoryController {
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/items")
     public List<Item> getCategoryItems(@PathVariable("id") String categoryId){
-        return categoryRepository.findOne(categoryId).getItems();
+        List<CategoryItem> categoryItems = categoryItemRepository.findAllByCategoryId(categoryId);
+        List<String> itemIds = categoryItems.stream().map(CategoryItem::getItemId).collect(Collectors.toList());
+        return itemRepository.findByIdIn(itemIds);
     }
 
     /**

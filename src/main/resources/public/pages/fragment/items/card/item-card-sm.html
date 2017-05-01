@@ -38,7 +38,7 @@
 
         <md-content style="overflow: visible; margin-bottom: 18px">
             <label class="required">Категории</label>
-            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)">
+            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)" min-items="1">
                 <md-chip-template>
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
@@ -47,7 +47,7 @@
                 </button>
             </md-chips>
             <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
-                <div ng-message="required">Необходимо выбрать хотя бы одну категорию</div>
+                <div ng-message="min-items">Необходимо выбрать хотя бы одну категорию</div>
             </div>
         </md-content>
 

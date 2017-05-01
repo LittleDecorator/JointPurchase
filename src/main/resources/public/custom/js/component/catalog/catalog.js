@@ -48,13 +48,16 @@
                         // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                         if(data.length < $scope.searchFilter.limit){
                             $scope.stopLoad = true;
+                            console.log(isClean)
+                            console.log($scope.items)
                         }
                         // очистим данные если требуется
                         if(isClean){
+                            console.log("Очистка?")
                             $scope.items = [];
                         }
 
-                        $scope.items = data;
+                        $scope.items = $scope.items.concat(data);
 
                         portion++;
                         $scope.searchFilter.offset = portion * $scope.searchFilter.limit;

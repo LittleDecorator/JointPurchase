@@ -37,7 +37,7 @@
                             $scope.items = [];
                         }
 
-                        $scope.items = data;
+                        $scope.items = $scope.items.concat(data);
 
                         portion++;
                         $scope.confirmedFilter.offset = portion * $scope.confirmedFilter.limit;
@@ -208,6 +208,7 @@
 
                 if($scope.itemCard.$dirty){
                     console.log("dirty");
+                    console.log($scope.itemCard);
                     if($scope.itemCard.$valid){
                         console.log("valid");
                         if($scope.item.id){

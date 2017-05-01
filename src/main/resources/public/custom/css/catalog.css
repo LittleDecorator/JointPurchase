@@ -54,6 +54,11 @@
     div#catalog md-card._md > .card-image  > img{
         max-height: 223px;
         margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
     .box > .boxInner img {

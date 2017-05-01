@@ -1,0 +1,43 @@
+/********************************** COMMON ******************************/
+
+div#orderConfirm md-content {
+    background-color: transparent;
+}
+
+
+/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
+@media (min-width: 993px) {
+
+}
+
+
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 601px) {
+
+
+    div#orderConfirm .row .col.offset-l3 {
+
+    }
+
+    /* выставляем ширину stepper'а на полную */
+    div#orderConfirm .row .col.s12 {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* не будем ограничивать размер заголовка шага */
+    div#orderConfirm ul.stepper.horizontal .step-title {
+        max-width: none;
+    }
+
+}
+
+
+/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
+@media (max-width: 600px) {
+
+    div#orderConfirm md-steppers-wrapper {
+        display: none;
+    }
+
+}
