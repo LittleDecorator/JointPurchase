@@ -233,13 +233,9 @@
                 itemStatusMap:$resource('clss/item/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         var result = [];
-                        console.log(data);
                         angular.forEach(angular.fromJson(data), function(value, key){
-                            console.log(key);
-                            console.log(value);
                             result.push({id:key,value:value})
                         });
-                        console.log(result);
                         return result;
                     }}
                 }),

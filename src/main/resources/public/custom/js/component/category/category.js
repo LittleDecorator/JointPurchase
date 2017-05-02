@@ -437,6 +437,8 @@
 
                 vm.menu.sections = getSections(vm.categories);
 
+                console.log(vm.menu);
+
             }])
 })();
 

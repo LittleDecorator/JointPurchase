@@ -33,8 +33,13 @@
             $mdThemingProvider.theme('warn','default').dark();
         }])
 
-        .run(['$state', '$rootScope', '$location','$timeout','modal',function ($state, $rootScope, $location,$timeout,modal) {
+        .run(['$state', '$rootScope', '$location','$timeout','modal','$templateCache','$http',function ($state, $rootScope, $location,$timeout,modal, $templateCache, $http) {
 
+            /* попытка добавить страницу в cache */
+            // $http.get('pages/fragment/items/card/item-card-sm.html').then(function(response) {
+            //     $templateCache.put('item-card-sm.html', response.data);
+            // });
+            
             $rootScope.currentUser = {};
             $rootScope.menu = {};
 

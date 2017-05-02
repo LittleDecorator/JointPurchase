@@ -5,24 +5,24 @@
 
         <md-input-container class="md-block no-errors" flex="25">
             <label>Название</label>
-            <input ng-model="filter.name">
+            <input ng-model="vm.filter.name">
         </md-input-container>
 
         <md-input-container class="md-block no-errors" flex="15" style="margin-left: 1%">
             <label>Артикул</label>
-            <input ng-model="filter.article">
+            <input ng-model="vm.filter.article">
         </md-input-container>
 
         <md-input-container class="md-block no-errors" flex="33" style="margin-left: 1%">
             <label>Производитель</label>
-            <md-select ng-model="filter.company" placeholder="Выберите компанию ...">
-                <md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>
+            <md-select ng-model="vm.filter.company" placeholder="Выберите компанию ..." ng-model-options="{trackBy: '$value.id'}">
+                <md-option ng-repeat="company in vm.companyNames" ng-value="company">{{::company.name}}</md-option>
             </md-select>
         </md-input-container>
 
-        <div style="margin: auto 0 auto 25px;" >
-            <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply()">Найти</md-button>
-            <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="clear()">Сбросить</md-button>
+        <div style="margin: auto 0 auto 25px;">
+            <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
+            <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
         </div>
     </div>
 
@@ -33,22 +33,23 @@
         <h4 class="example_head">Товары:</h4>
     </div>
 
-    <div class="list" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
-        <div ng-include="getTemplate()"></div>
+    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
+        <div ng-include="vm.getTemplate()"></div>
     </div>
 
 </div>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.openFilter('fullscreen')"
+           style="bottom: 80px;right:25px" ng-if="width < 601">
     <md-icon>more_vert</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.openFilter('w-50')"
+           style="bottom: 90px;right:25px" ng-if="600 < width && width < 992">
     <md-icon>more_vert</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItem()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
+<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addItem()"
+           ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
     <md-icon>add</md-icon>
 </md-button>
-
-</div>

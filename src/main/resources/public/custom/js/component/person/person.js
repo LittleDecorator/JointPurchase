@@ -6,184 +6,203 @@
     'use strict';
 
     angular.module('person')
-        .controller('personController',['$scope','$state','dataResources','modal', function ($scope, $state, dataResources, modal) {
+        .controller('personController',['$scope','$state','dataResources','modal', 
+            function ($scope, $state, dataResources, modal) {
 
-            var templatePath = "pages/fragment/person/";
-            
-            $scope.customers = [];
+                var templatePath = "pages/fragment/person/";
+                var busy = false;
+                var portion = 0;
+                
+                var vm = this;
 
-            $scope.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
-            var confirmedFilter = angular.copy($scope.filter);
+                vm.loadData = loadData;
+                vm.addPerson = addPerson;
+                vm.editPerson = editPerson;
+                vm.deletePerson = deletePerson;
+                vm.clear = clear;
+                vm.apply = apply;
+                vm.showOrders = showOrders;
+                vm.openFilter = openFilter;
+                vm.getTemplateUrl = getTemplateUrl;
+                
+                vm.customers = [];
+                vm.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
+                
+                var confirmedFilter = angular.copy(vm.filter);
 
-            var busy = false;
-            var portion = 0;
+                vm.scrolling = {stopLoad:false, allDataLoaded:false, infiniteDistance: 2};
+                vm.filterInUse = false;
 
-            $scope.scrolling = {stopLoad:false, allDataLoaded:false, infiniteDistance: 2};
-            $scope.filterInUse = false;
+                /* Получение данных */
+                function loadData(isClean){
+                    if(!vm.scrolling.stopLoad && !busy){
+                        busy = true;
 
-            /* Получение данных */
-            $scope.loadData = function(isClean){
-                if(!$scope.scrolling.stopLoad && !busy){
-                    busy = true;
+                        dataResources.customer.all(confirmedFilter).$promise.then(function(data){
 
-                    dataResources.customer.all(confirmedFilter).$promise.then(function(data){
+                            if(data.length < confirmedFilter.limit){
+                                vm.scrolling.stopLoad = true;
+                            }
 
-                        if(data.length < confirmedFilter.limit){
-                            $scope.scrolling.stopLoad = true;
-                        }
+                            if(isClean){
+                                vm.customers = [];
+                            }
 
-                        if(isClean){
-                            $scope.customers = [];
-                        }
+                            vm.customers = vm.customers.concat(data);
 
-                        $scope.customers = $scope.customers.concat(data);
+                            portion++;
+                            confirmedFilter.offset = portion * confirmedFilter.limit;
+                            vm.scrolling.allDataLoaded = true;
+                            busy = false;
+                        });
+                    }
+                }
 
-                        portion++;
-                        confirmedFilter.offset = portion * confirmedFilter.limit;
-                        $scope.scrolling.allDataLoaded = true;
-                        busy = false;
+                // очистка фильтра
+                function clear() {
+                    portion = 0;
+                    vm.filterInUse = false;
+                    vm.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
+                    confirmedFilter = angular.copy(vm.filter);
+                    // удалим старый фильтр
+                    localStorage.removeItem($state.current.name);
+                    vm.scrolling.stopLoad = false;
+                    loadData(true);
+                }
+
+                // подтверждение фильтра
+                function apply() {
+                    portion = 0;
+                    vm.filterInUse = true;
+                    vm.filter.offset = portion * vm.filter.limit;
+                    confirmedFilter = angular.copy(vm.filter);
+                    // запомним фильтр
+                    localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
+                    vm.scrolling.stopLoad = false;
+                    loadData(true);
+                }
+
+                // редактирование клиента
+                function editPerson(id) {
+                    $state.transitionTo("person.detail", {id:id});
+                }
+
+                // удаление клиента
+                function deletePerson(id) {
+                    dataResources.customer.delete({id: id});
+                    var currPerson = helpers.findInArrayById(vm.customers, id);
+                    var idx = vm.customers.indexOf(currPerson);
+                    vm.customers.splice(idx, 1);
+                }
+
+                // Добавление клиента
+                function addPerson() {
+                    $state.transitionTo("person.detail");
+                }
+
+                // перейти на страницу с заказами выбранного клиента
+                function showOrders(id) {
+                    $state.transitionTo("order", {customerId: id});
+                }
+
+                // модальное окно фильтрации
+                function openFilter(wClass) {
+                    var dialog = modal({
+                        templateUrl: "pages/modal/persons-filter.html",
+                        className: 'ngdialog-theme-default ' + wClass,
+                        closeByEscape: true,
+                        closeByDocument: true,
+                        scope: vm
+                    });
+                
+                    dialog.closePromise.then(function (output) {
+                        if (output.value && output.value != '$escape') {}
                     });
                 }
-            };
 
-            // очистка фильтра
-            $scope.clear = function () {
-                portion = 0;
-                $scope.filterInUse = false;
-                $scope.filter = {fio:null, phone:null, email:null, limit:30, offset:0};
-                confirmedFilter = angular.copy($scope.filter);
-                // удалим старый фильтр
-                localStorage.removeItem($state.current.name);
-                $scope.scrolling.stopLoad = false;
-                $scope.loadData(true);
-            };
-
-            // подтверждение фильтра
-            $scope.apply = function () {
-                portion = 0;
-                $scope.filterInUse = true;
-                $scope.filter.offset = portion * $scope.filter.limit;
-                confirmedFilter = angular.copy($scope.filter);
-                // запомним фильтр
-                localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
-                $scope.scrolling.stopLoad = false;
-                $scope.loadData(true);
-            };
-
-            // редактирование клиента
-            $scope.editPerson = function (id) {
-                $state.transitionTo("person.detail", {id:id});
-            };
-
-            // удаление клиента
-            $scope.deletePerson = function (id) {
-                dataResources.customer.delete({id: id});
-                var currPerson = helpers.findInArrayById($scope.customers, id);
-                var idx = $scope.customers.indexOf(currPerson);
-                $scope.customers.splice(idx, 1);
-            };
-
-            // Добавление клиента
-            $scope.addPerson = function () {
-                $state.transitionTo("person.detail");
-            };
-
-            // перейти на страницу с заказами выбранного клиента
-            $scope.showOrders = function (id) {
-                $state.transitionTo("order", {customerId: id});
-            };
-
-            // модальное окно фильтрации
-            $scope.openFilter = function (wClass) {
-                var dialog = modal({
-                    templateUrl: "pages/modal/persons-filter.html",
-                    className: 'ngdialog-theme-default ' + wClass,
-                    closeByEscape: true,
-                    closeByDocument: true,
-                    scope: $scope
-                });
-                dialog.closePromise.then(function (output) {
-                    if (output.value && output.value != '$escape') {
+                // получение шаблона страницы
+                function getTemplateUrl(){
+                    if($scope.width < 601){
+                        return templatePath + "person-sm.html"
                     }
-                });
-            };
-
-            // получение шаблона страницы
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
-                    return templatePath + "person-sm.html"
-                }
-                if($scope.width > 600){
-                    if($scope.width < 961){
-                        return templatePath + "person-md.html"
+                    if($scope.width > 600){
+                        if($scope.width < 961){
+                            return templatePath + "person-md.html"
+                        }
+                        return templatePath + "person-lg.html"
                     }
-                    return templatePath + "person-lg.html"
                 }
-            };
 
         }])
 
-        .controller('personDetailController',['$scope','$state','dataResources','person','companies','$mdToast','$rootScope','$stateParams', function ($scope, $state, dataResources, person, companies,$mdToast, $rootScope, $stateParams) {
-            var templatePath = "pages/fragment/person/card/";
-            $scope.person = person ? person : {};
-            $scope.companies = companies;
-            $scope.showHints = true;
+        .controller('personDetailController',['$scope','$state','dataResources','person','companies','$mdToast','$rootScope','$stateParams', 
+            function ($scope, $state, dataResources, person, companies,$mdToast, $rootScope, $stateParams) {
+                
+                var templatePath = "pages/fragment/person/card/";
 
-            if($scope.person.companyId && $scope.person.companyId != null){
-                $scope.person.isEmployer = true;
-            } else {
-                $scope.person.companyId = null;
-            }
+                var vm = this;
 
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
-                    return templatePath + "person-card-sm.html";
+                vm.save = save;
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.afterInclude = afterInclude;
+                
+                vm.person = person ? person : {};
+                vm.companies = companies;
+                vm.showHints = true;
+
+                if(vm.person.companyId && vm.person.companyId != null){
+                    vm.person.isEmployer = true;
                 } else {
-                    return templatePath + "person-card-lg.html";
-                }
-            };
-
-            $scope.save = function () {
-
-                console.log($scope);
-                $scope.showHints = false;
-
-                function refreshState(data){
-                    console.log(data);
-                     $scope.personCard.$setPristine();
-                     /* refresh state because name can be changed */
-                     $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                         $scope.person.id = data.result;
-                         $stateParams.id = data.result;
-                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                     });
+                    vm.person.companyId = null;
                 }
 
-                if($scope.personCard.$dirty){
-                    if($scope.personCard.$valid){
-                        var fullName = $scope.person.firstName + ' ' + $scope.person.middleName + ' '+ $scope.person.lastName;
-                        if($scope.person.id){
-                             dataResources.customer.put($scope.person).$promise.then(function(data){
-                                 $mdToast.show($rootScope.toast.textContent('Клиент ['+ fullName +'] успешно изменён').theme('success'));
-                                 refreshState({result:$scope.person.id});
-                             }, function(error){
-                                 $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
-                             })
+                function save() {
+                    vm.showHints = false;
+
+                    function refreshState(data){
+                        vm.personCard.$setPristine();
+                        /* refresh state because name can be changed */
+                        $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                            vm.person.id = data.result;
+                            $stateParams.id = data.result;
+                            $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                        });
+                    }
+
+                    if(vm.personCard.$dirty){
+                        if(vm.personCard.$valid){
+                            var fullName = vm.person.firstName + ' ' + vm.person.middleName + ' '+ vm.person.lastName;
+                            if(vm.person.id){
+                                dataResources.customer.put(vm.person).$promise.then(function(data){
+                                    $mdToast.show($rootScope.toast.textContent('Клиент ['+ fullName +'] успешно изменён').theme('success'));
+                                    refreshState({result:vm.person.id});
+                                }, function(error){
+                                    $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
+                                })
+                            } else {
+                                dataResources.customer.post(vm.person).$promise.then(function(data){
+                                    $mdToast.show($scope.toast.textContent('Клиент ['+ fullName +'] успешно создан').theme('success'));
+                                    refreshState({result:data.id});
+                                }, function(error){
+                                    $mdToast.show($rootScope.toast.textContent('Неудалось создать нового клиента').theme('error'));
+                                })
+                            }
+                            vm.showHints = true;
                         } else {
-                             dataResources.customer.post($scope.person).$promise.then(function(data){
-                                 $mdToast.show($scope.toast.textContent('Клиент ['+ fullName +'] успешно создан').theme('success'));
-                                 refreshState({result:data.id});
-                             }, function(error){
-                                 $mdToast.show($rootScope.toast.textContent('Неудалось создать нового клиента').theme('error'));
-                             })
+                            vm.showHints = false;
                         }
-                        $scope.showHints = true;
-                    } else {
-                        $scope.showHints = false;
                     }
                 }
-            };
 
+                function getTemplateUrl(){
+                    if($scope.width < 601){
+                        return templatePath + "person-card-sm.html";
+                    } else {
+                        return templatePath + "person-card-lg.html";
+                    }
+                }
 
+                // callback загрузки шаблона страницы
+                function afterInclude(){}
         }])
 })();

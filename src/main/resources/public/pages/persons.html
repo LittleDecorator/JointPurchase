@@ -7,22 +7,22 @@
 
             <md-input-container class="md-block no-errors">
                 <label>ФИО</label>
-                <input ng-model="filter.fio">
+                <input ng-model="vm.filter.fio">
             </md-input-container>
 
             <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>Номер телефона</label>
-                <input ng-model="filter.phone">
+                <input ng-model="vm.filter.phone">
             </md-input-container>
 
             <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>Почта</label>
-                <input ng-model="filter.email">
+                <input ng-model="vm.filter.email">
             </md-input-container>
 
             <div style="margin: auto 0 auto 25px;">
-                <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="apply()">Найти</md-button>
-                <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="clear()">Сбросить</md-button>
+                <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
+                <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
             </div>
 
         </div>
@@ -31,27 +31,27 @@
 
     <h4 style="margin-top: 0">Покупатели:</h4>
 
-    <div class="list" infinite-scroll='loadData()' infinite-scroll-disabled='scrolling.stopLoad' infinite-scroll-distance='scrolling.infiniteDistance' infinite-scroll-container="'.main-wrapper'">
-        <div ng-include="getTemplateUrl()" ng-show="customers.length>0"></div>
+    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.scrolling.stopLoad' infinite-scroll-distance='vm.scrolling.infiniteDistance' infinite-scroll-container="'.main-wrapper'">
+        <div ng-include="vm.getTemplateUrl()" ng-show="vm.customers.length > 0"></div>
     </div>
 
-    <div class="table-result" ng-if="customers.length==0 && !filterInUse">
+    <div class="table-result" ng-if="vm.customers.length==0 && !vm.filterInUse">
         <span style="margin-right: 2%">Не создано ни одного покупателя</span>
     </div>
 
-    <div class="table-result" ng-show="customers.length==0 && filterInUse">
+    <div class="table-result" ng-show="vm.customers.length==0 && vm.filterInUse">
         <span style="margin-right: 2%">Нет записей удовлетворяющих критерию поиска</span>
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
         <md-icon>more_vert</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
         <md-icon>more_vert</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addPerson()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addPerson()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
         <md-icon>add</md-icon>
     </md-button>
 </div>

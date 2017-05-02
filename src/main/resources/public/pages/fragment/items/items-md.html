@@ -14,9 +14,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad">
+        <tr id="{{::item.id}}" ng-repeat="item in vm.items" class="collection-item">
             <td style="text-align: right;">
-                <md-checkbox class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
+                <md-checkbox class="filled-in" aria-label="not for sale" ng-model="item.notForSale" ng-change="vm.forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
             </td>
             <td class="center-align">{{::item.name}}</td>
             <td class="center-align">{{::item.companyName}}</td>
@@ -26,11 +26,26 @@
             <td class="center-align" ng-style="item.inOrder>item.inStock && {'color':'red'}">{{item.inOrder|asZero}}</td>
             <td class="right-align">
                 <md-menu flex="nogrow" style="padding: 0">
-                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
+                    <md-button aria-label="item menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i
+                            class="material-icons" style="font-size: 30px;">menu</i></md-button>
                     <md-menu-content width="4">
-                        <md-menu-item><md-button ng-click="editItem(item.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="deleteItem(item.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="showGallery(item.id)"><md-icon>photo</md-icon>Галерея</md-button></md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.editItem(item.id)">
+                                <md-icon>edit</md-icon>
+                                <span>Редактировать</span></md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.deleteItem(item.id,$index)">
+                                <md-icon>clear</md-icon>
+                                Удалить
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="vm.showGallery(item.id)">
+                                <md-icon>photo</md-icon>
+                                Галерея
+                            </md-button>
+                        </md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </td>

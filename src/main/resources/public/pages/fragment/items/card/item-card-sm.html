@@ -3,16 +3,16 @@
 
         <md-input-container style="margin-bottom: 0">
             <label class="required">Название</label>
-            <input name="name" ng-model="item.name" required>
-            <div ng-messages="itemCard.name.$error" ng-if="!showHints">
+            <input name="name" ng-model="vm.item.name" required>
+            <div ng-messages="vm.itemCard.name.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label class="required">Статус</label>
-            <md-select name="status" ng-model="item.status" required ng-model-options="{trackBy: '$value.id'}">
-                <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+            <md-select name="status" ng-model="vm.item.status" required ng-model-options="{trackBy: '$value.id'}">
+                <md-option ng-repeat="status in vm.statuses" ng-value="status">{{::status.value}}</md-option>
             </md-select>
         </md-input-container>
 
@@ -28,17 +28,17 @@
 
         <md-input-container class="md-block" flex="25" class="no-errors">
             <label>Производитель</label>
-            <md-select ng-model="item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>
-                <md-option ng-repeat="company in companyNames" ng-value="company">{{::company.name}}</md-option>
+            <md-select ng-model="vm.item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>
+                <md-option ng-repeat="company in vm.companyNames" ng-value="company">{{::company.name}}</md-option>
             </md-select>
-            <div ng-messages="itemCard.company.$error" ng-if="!showHints">
+            <div ng-messages="vm.itemCard.company.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Не выбран производитель</div>
             </div>
         </md-input-container>
 
         <md-content style="overflow: visible; margin-bottom: 18px">
             <label class="required">Категории</label>
-            <md-chips name="categories" ng-model="item.categories" class="category-chips" md-on-remove="removeCategory($index)" min-items="1">
+            <md-chips name="categories" ng-model="vm.item.categories" class="category-chips" md-on-remove="vm.removeCategory($index)" min-items="1">
                 <md-chip-template>
                     <span>{{::$chip.name}}</span>
                 </md-chip-template>
@@ -46,58 +46,58 @@
                     <md-icon>clear</md-icon>
                 </button>
             </md-chips>
-            <div ng-messages="itemCard.categories.$error" ng-if="!showHints">
+            <div ng-messages="vm.itemCard.categories.$error" ng-if="!vm.showHints">
                 <div ng-message="min-items">Необходимо выбрать хотя бы одну категорию</div>
             </div>
         </md-content>
 
         <md-input-container style="margin-bottom: 0">
             <label class="required">Артикул</label>
-            <input ng-model="item.article" required only-number>
-            <div ng-messages="itemCard.article.$error" ng-if="!showHints">
+            <input ng-model="vm.item.article" required only-number>
+            <div ng-messages="vm.itemCard.article.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
             <label>Описание</label>
-            <textarea ng-model="item.description" md-select-on-focus></textarea>
+            <textarea ng-model="vm.item.description" md-select-on-focus></textarea>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
             <label class="required">Цена (руб)</label>
-            <input ng-model="item.price" required currency-mask>
-            <div ng-messages="itemCard.price.$error" ng-if="!showHints">
+            <input ng-model="vm.item.price" required currency-mask>
+            <div ng-messages="vm.itemCard.price.$error" ng-if="!vm.showHints">
                 <div ng-message-exp="['parse']">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
             <label class="required">Кол-во в наличие</label>
-            <input ng-model="item.inStock" only-number>
-            <div ng-messages="itemCard.inStock.$error" ng-if="!showHints">
+            <input ng-model="vm.item.inStock" only-number>
+            <div ng-messages="vm.itemCard.inStock.$error" ng-if="!vm.showHints">
                 <div ng-message-exp="['parse']">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0">
-            <md-checkbox ng-model="item.notForSale">Исключён из продажи</md-checkbox>
+            <md-checkbox ng-model="vm.item.notForSale">Исключён из продажи</md-checkbox>
         </md-input-container>
 
     </div>
 </div>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showCategoryModal()" style="bottom: 125px; right: 25px;">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.showCategoryModal()" style="bottom: 125px; right: 25px;">
     <md-tooltip md-direction="left">Показать категории</md-tooltip>
     <md-icon>open_in_new</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showGallery()" style="bottom: 70px; right: 25px;">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.showGallery()" style="bottom: 70px; right: 25px;">
     <md-tooltip md-direction="left">Перейти в галерею</md-tooltip>
     <md-icon>photo</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!itemCard.$dirty}" style="right: 25px;">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.save()" ng-class="{'disabled':!vm.itemCard.$dirty}" style="right: 25px;">
     <md-tooltip md-direction="left">Сохранить</md-tooltip>
     <md-icon>save</md-icon>
 </md-button>

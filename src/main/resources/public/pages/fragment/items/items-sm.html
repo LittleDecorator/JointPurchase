@@ -1,22 +1,23 @@
 <md-list>
-    <div class="card" ng-repeat="item in items">
-        <div class="card-content" style="padding: 15px!important;" >
+    <div class="card" ng-repeat="item in vm.items">
+        <div class="card-content" style="padding: 15px!important;">
                         <span class="card-title text-darken-4" style="color: #846C63; line-height: 50px;font-size: 20px;height: 50px;" layout="row">
                             <span flex="80" style="font-size: 1.2rem">{{::item.name}}</span>
                             <div flex></div>
                             <md-menu flex="nogrow" style="padding: 0; line-height: 2">
-                                <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
+                                <md-button aria-label="Open demo menu" class="md-icon-button"
+                                           ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
                                 <md-menu-content width="4">
-                                    <md-menu-item><md-button ng-click="editItem(item.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                                    <md-menu-item><md-button ng-click="deleteItem(item.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
-                                    <md-menu-item><md-button ng-click="showGallery(item.id)"><md-icon>photo</md-icon>Галерея</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="vm.editItem(item.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="vm.deleteItem(item.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="vm.showGallery(item.id)"><md-icon>photo</md-icon>Галерея</md-button></md-menu-item>
                                 </md-menu-content>
                             </md-menu>
                         </span>
             <div class="card-panel" style="margin: 0">
                 <div layout="column">
                     <div layout="row">
-                        <md-input-container flex="50" >
+                        <md-input-container flex="50">
                             <label>Производитель</label>
                             <input value="{{::item.company.name}}" disabled>
                         </md-input-container>
@@ -27,7 +28,7 @@
                     </div>
 
                     <div layout="row">
-                        <md-input-container flex="33" >
+                        <md-input-container flex="33">
                             <label>Цена</label>
                             <input value="{{::item.price|number}}" disabled>
                         </md-input-container>

@@ -1,5 +1,5 @@
 <md-list>
-    <div class="card-panel" ng-repeat="customer in customers" style="padding: 5px 10px">
+    <div class="card-panel" ng-repeat="customer in vm.customers" style="padding: 5px 10px">
         <md-list-item class="md-3-line">
             <md-icon style="font-size: 55px;">portrait</md-icon>
 
@@ -12,9 +12,9 @@
             <md-menu style="margin-top: 15px;">
                 <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
                 <md-menu-content width="4">
-                    <md-menu-item><md-button ng-click="editPerson(customer.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                    <md-menu-item><md-button ng-click="deletePerson(customer.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
-                    <md-menu-item><md-button ng-click="showOrders(customer.id)"><md-icon>shopping_cart</md-icon>Заказы</md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="vm.editPerson(customer.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="vm.deletePerson(customer.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="vm.showOrders(customer.id)"><md-icon>shopping_cart</md-icon>Заказы</md-button></md-menu-item>
                 </md-menu-content>
             </md-menu>
         </md-list-item>

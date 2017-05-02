@@ -4,7 +4,7 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
 
 .md-toolbar-tools {
     background-color: #86A8A8!important;
-    /* padding: 0 30px; */
+     /*padding: 0 30px; */
     /*width: 90%;*/
     max-height: none;
     padding: 0;

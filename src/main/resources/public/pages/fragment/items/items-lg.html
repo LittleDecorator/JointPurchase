@@ -14,10 +14,9 @@
         </tr>
         </thead>
         <tbody>
-        <!--<tr id="{{::item.id}}" ng-repeat="item in items" class="collection-item" infinite-scroll='loadData()' infinite-scroll-distance='2' infinite-scroll-disabled="prop.stopLoad" ng-class="{'bad-row': item.inStock < item.inOrder}">-->
-        <tr id="{{::item.id}}" ng-repeat="item in items " class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
+        <tr id="{{::item.id}}" ng-repeat="item in vm.items " class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
             <td style="text-align: right;">
-                <md-checkbox class="filled-in" ng-model="item.notForSale" ng-change="forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
+                <md-checkbox class="filled-in" aria-label="not for sale" ng-model="item.notForSale" ng-change="vm.forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
             </td>
             <td class="center-align">{{::item.name}}</td>
             <td class="center-align">{{::item.companyName}}</td>
@@ -26,9 +25,9 @@
             <td class="center-align">{{::item.inStock|asZero}}</td>
             <td class="center-align">{{::item.inOrder|asZero}}</td>
             <td class="right-align">
-                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="editItem(item.id)"><md-icon>edit</md-icon></a>
-                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="deleteItem(item.id,$index)"><md-icon>close</md-icon></a>
-                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="showGallery(item.id)"><md-icon>photo</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.editItem(item.id)"><md-icon>edit</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.deleteItem(item.id,$index)"><md-icon>close</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.showGallery(item.id)"><md-icon>photo</md-icon></a>
             </td>
         </tr>
         </tbody>

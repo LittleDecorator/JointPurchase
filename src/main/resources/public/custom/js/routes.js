@@ -186,6 +186,8 @@ var route = {
                     requireLogin: false
                 }
             },
+
+            /*=================================== РЕГИСТРАЦИЯ ====================================*/
                 /* Страница регистрации покупателя */
             {
                 name:'registration',
@@ -214,6 +216,8 @@ var route = {
                     requireLogin: false,
                 }
             },
+
+            /*=================================== ВОССТАНОВЛЕНИЕ ДОСТУПА ====================================*/
                 /* Страница восстановления доступа */
             {
                 name:'restore',
@@ -242,6 +246,9 @@ var route = {
                     requireLogin: false
                 }
             },
+
+            /*=================================== КАТАЛОГ ====================================*/
+            
                 /* Каталог товаров */
             {
                 name: 'catalog',
@@ -249,7 +256,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/catalog.html',
-                        controller: 'catalogController'
+                        controller: 'catalogController',
+                        controllerAs: 'vm'
                     }
                 },
                 data:{
@@ -272,7 +280,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/catalog.html',
-                        controller: 'catalogController'
+                        controller: 'catalogController',
+                        controllerAs: 'vm'
                     }
                 },
                 data:{
@@ -297,7 +306,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/catalogCard.html',
-                        controller: 'catalogCardController'
+                        controller: 'catalogCardController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -310,6 +320,9 @@ var route = {
                     }
                 }
             },
+
+            /*=================================== ПОИСК ====================================*/
+            
                 /* Результат поиска */
             {
                 name: 'search',
@@ -353,6 +366,8 @@ var route = {
                     }
                 }
             },
+
+            /*=================================== ЗАКАЗЫ ====================================*/
                 /* Заказы */
             {
                 name: 'order',
@@ -406,6 +421,8 @@ var route = {
                     }
                 }
             },
+
+            /*=================================== КЛИЕНТЫ ====================================*/
             {
                 name: 'person.detail',
                 url:'/:id',
@@ -413,7 +430,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/personCard.html',
-                        controller: 'personDetailController'
+                        controller: 'personDetailController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -435,7 +453,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/persons.html',
-                        controller: 'personController'
+                        controller: 'personController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -443,6 +462,8 @@ var route = {
                     requireLogin: true
                 }
             },
+
+            /*=================================== ПОСТАВЩИКИ ====================================*/
             {
                 name: 'company',
                 url:'/company',
@@ -477,13 +498,16 @@ var route = {
                     }
                 }
             },
+
+            /*=================================== ТОВАР ====================================*/
             {
                 name:'item',
                 url:'/item?:companyId:orderId',
                 views: {
                     'main@': {
                         templateUrl : 'pages/items.html',
-                        controller: 'itemController'
+                        controller: 'itemController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -503,7 +527,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/itemCard.html',
-                        controller: 'itemDetailController'
+                        controller: 'itemDetailController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -550,6 +575,8 @@ var route = {
                     displayName: 'Редактирование изображения',
                 }
             },
+
+            /*=================================== КАТЕГОРИИ ====================================*/
             {
                 name: 'category',
                 url:'/category',
@@ -579,7 +606,7 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/category.html',
-                        controller: 'categoryListController as vm',
+                        controller: 'categoryListController',
                         controllerAs: 'vm'
                     }
                 },
@@ -624,6 +651,8 @@ var route = {
 
                 }
             },
+
+            /*=================================== АВТОРИЗАЦИЯ ====================================*/
             {
                 name: 'login',
                 url: '/login',

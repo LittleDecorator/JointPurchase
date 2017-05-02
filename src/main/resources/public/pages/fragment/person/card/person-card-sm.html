@@ -3,69 +3,69 @@
 
         <md-input-container>
             <label class="required">Имя</label>
-            <input name="firstName" ng-model="person.firstName">
-            <div ng-messages="personCard.firstName.$error" ng-if="!showHints">
+            <input name="firstName" ng-model="vm.person.firstName">
+            <div ng-messages="vm.personCard.firstName.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container>
             <label class="required">Фамилия</label>
-            <input name="lastName" ng-model="person.lastName">
-            <div ng-messages="personCard.lastName.$error" ng-if="!showHints">
+            <input name="lastName" ng-model="vm.person.lastName">
+            <div ng-messages="vm.personCard.lastName.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Отчество</label>
-            <input name="middleName" ng-model="person.middleName">
+            <input name="middleName" ng-model="vm.person.middleName">
         </md-input-container>
 
         <md-input-container>
             <label>Номер телефона</label>
-            <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
+            <input name="phoneNumber" ng-model="vm.person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
             <div class="hint">Пример: (915) 343-43-45</div>
         </md-input-container>
 
         <md-input-container>
             <label>Почта</label>
-            <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/">
-            <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
-            <div ng-messages="personCard.email.$error" ng-if="!showHints">
+            <input name="email" ng-model="vm.person.email" ng-pattern="/^.+@.+\..+$/">
+            <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+            <div ng-messages="vm.personCard.email.$error" ng-if="!vm.showHints">
                 <div ng-message-exp="['pattern']">Не корректный e-mail</div>
             </div>
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Адрес</label>
-            <input ng-model="person.address">
+            <input ng-model="vm.person.address">
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Индекс</label>
-            <input ng-model="person.postAddress" mask="999 999" mask-restrict="reject">
+            <input ng-model="vm.person.postAddress" mask="999 999" mask-restrict="reject">
         </md-input-container>
 
         <md-input-container style="margin-bottom: 0" >
-            <md-checkbox ng-model="person.isEmployer">Сотрудник компании</md-checkbox>
+            <md-checkbox ng-model="vm.person.isEmployer">Сотрудник компании</md-checkbox>
         </md-input-container>
 
-        <div ng-if="person.isEmployer" layout="column">
+        <div ng-if="vm.person.isEmployer" layout="column">
             <md-input-container md-no-float>
                 <label class="required">Компания</label>
-                <md-select name="company" ng-model="person.companyId" required >
-                    <md-option ng-repeat="company in companies" ng-value="company.id">{{::company.name}}</md-option>
+                <md-select name="company" ng-model="vm.person.companyId" required ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="company in vm.companies" ng-value="company">{{::company.name}}</md-option>
                 </md-select>
-                <div ng-messages="personCard.company.$error" ng-if="!showHints">
+                <div ng-messages="vm.personCard.company.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Компания не выбрана</div>
                 </div>
             </md-input-container>
 
             <md-input-container class="no-errors">
                 <label class="required">Должность</label>
-                <input name="job" ng-model="person.job" required>
-                <div ng-messages="personCard.job.$error" ng-if="!showHints">
+                <input name="job" ng-model="vm.person.job" required>
+                <div ng-messages="vm.personCard.job.$error" ng-if="!showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
@@ -74,7 +74,7 @@
 
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}" style="bottom: 30px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.save()" ng-class="{'disabled':!vm.companyCard.$dirty}" style="bottom: 30px; right: 15px;">
         <md-icon>save</md-icon>
     </md-button>
 </div>
