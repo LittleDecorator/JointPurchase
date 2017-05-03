@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="item in cart.content" class="row cart-item" ng-style="$last && {'border':'none'}">
+        <tr ng-repeat="item in mvm.cart.content" class="row cart-item" ng-style="$last && {'border':'none'}">
 
             <td class="col s2 non-float" style="text-align: center;padding: 5px 0;">
                 <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 120px!important; height: 120px!important;">
@@ -21,7 +21,7 @@
                 </div>
             </td>
             <td class="col s4 non-float">
-                <a ng-click="itemView(item.id)" style="cursor: pointer">
+                <a ng-click="mvm.itemView(item.id)" style="cursor: pointer">
                     <span style="font-size: 20px;">{{::item.name}}</span>
                 </a>
             </td>
@@ -30,16 +30,16 @@
             </td>
             <td class="col s2 non-float" style="text-align: center;">
                 <div>
-                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
+                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
                     <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
-                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
+                    <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
                 </div>
             </td>
             <td class="col s1 non-float" style="text-align: center; width: 12%;">
                 <span class="price">{{(item.price * item.cou)|number}} руб</span>
             </td>
             <td class="col s2 non-float" style="text-align: center">
-                <div style="cursor: pointer" ng-click="removeFromCart($index)">
+                <div style="cursor: pointer" ng-click="mvm.removeFromCart($index)">
                     <md-icon style="color: darksalmon">delete</md-icon>
                 </div>
             </td>
@@ -51,8 +51,8 @@
 
 <div class="gray-row card" style="margin-top:20px">
     <div class="col s6 offset-s6 table-total" style="margin: 10px 15px">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey| number}} руб</span>
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey| number}} руб</span>
     </div>
 </div>
 
-<a class="btn btn-primary" ng-click="toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>
+<a class="btn btn-primary" ng-click="vm.toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>

@@ -2,12 +2,12 @@
 
     <div><h4 class="example_head">Корзина:</h4></div>
 
-    <div ng-if="showContent">
+    <div ng-if="mvm.showContent">
 
-        <div ng-include="getTemplate()"></div>
+        <div ng-include="vm.getTemplate()"></div>
 
     </div>
 
-    <div class="table-result" ng-if="!showContent">Не выбранно ни одного товара</div>
+    <div class="table-result" ng-if="!mvm.showContent">Не выбранно ни одного товара</div>
 
 </div>

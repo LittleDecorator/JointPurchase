@@ -10,30 +10,35 @@
         .controller('cartController',['$scope','$state',function($scope,$state){
 
             var templatePath = "pages/fragment/cart/";
+            var vm = this;
+            var mvm = $scope.$parent.mvm;
 
-            if($scope.cart && $scope.cart.cou==0){
-                $scope.$parent.showContent = false;
+            vm.toOrderCreation = toOrderCreation;
+            vm.getTemplate = getTemplate;
+
+            if(mvm.cart && mvm.cart.cou==0){
+                mvm.showContent = false;
             } else {
-                $scope.$parent.showContent = true;
-                $scope.orderItemsCou = $scope.cart.cou;
+                mvm.showContent = true;
+                vm.orderItemsCou = mvm.cart.cou;
             }
             
             //TODO: here will be check of auth
-            $scope.toOrderCreation = function(){
+            function toOrderCreation(){
                 $state.transitionTo("cart.confirm");
-            };
+            }
 
-            $scope.getTemplate = function(){
-                if($scope.width < 481){
+            function getTemplate(){
+                if(mvm.width < 481){
                     return templatePath + "cart-sm.html"
                 }
-                if($scope.width > 480){
-                    if($scope.width < 841){
+                if(mvm.width > 480){
+                    if(mvm.width < 841){
                         return templatePath + "cart-md.html"
                     }
                     return templatePath + "cart-lg.html"
                 }
-            };
+            }
 
         }])
 

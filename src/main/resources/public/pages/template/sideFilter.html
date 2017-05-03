@@ -1,9 +1,9 @@
 <md-sidenav id="filter" class="md-sidenav-left" md-component-id="left" style="overflow: auto; min-width: 0">
 
     <md-content layout-padding>
-        <div ng-repeat="menu in nodes">
+        <div ng-repeat="menu in mvm.nodes">
             <h2 class="menu-heading md-subhead" style="margin: 0;color: #846C63!important;font-size: 20px;"> {{::menu.title}} </h2>
-            <md-menu-item ng-repeat="menu in menu.nodes"><md-button ng-click="filterProduct(menu)"><span style="color: #676565;">{{::menu.title}}</span></md-button></md-menu-item>
+            <md-menu-item ng-repeat="menu in menu.nodes"><md-button ng-click="mvm.filterProduct(menu)"><span style="color: #676565;">{{::menu.title}}</span></md-button></md-menu-item>
         </div>
     </md-content>
 

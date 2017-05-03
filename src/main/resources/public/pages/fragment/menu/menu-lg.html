@@ -4,7 +4,7 @@
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
             <div layout="row" class="layout-row">
                 <div class="row-wrapper">
-                    <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 56px; line-height: 56px;" ng-click="toggleMenu()">
+                    <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 56px; line-height: 56px;" ng-click="mvm.toggleMenu()">
                         <md-icon style="font-size: 2.2rem; line-height: 34px; width: 34px; height: 34px;">menu</md-icon>
                     </md-button>
                     <!-- логотип -->
@@ -12,13 +12,13 @@
                     <!-- корзина товаров клиента -->
                     <a ui-sref="cart" class="cart">
                         <md-icon>shopping_basket</md-icon>
-                        <span class="badge ng-binding ng-hide" ng-show="cart.cou>0">{{cart.cou}}</span>
+                        <span class="badge ng-binding ng-hide" ng-show="mvm.cart.cou>0">{{mvm.cart.cou}}</span>
                     </a>
                     <!-- строка поиска -->
                     <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px; display: flex; align-items: flex-end">
                         <!--<input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="search.criteria" maxlength="50" style="border-radius:0">-->
                         <md-autocomplete flex style="max-width: 80%"
-                                         ng-keydown="keyPress($event.keyCode)"
+                                         ng-keydown="mvm.keyPress($event.keyCode)"
                                          md-input-minlength="3"
                                          md-min-length="0"
                                          md-input-maxlength="50"
@@ -33,12 +33,12 @@
                                          md-menu-class="autocomplete-custom-template">
 
                             <md-item-template>
-                                <span md-highlight-text="search.criteria">{{item.name}}</span>
+                                <span md-highlight-text="mvm.search.criteria">{{mvm.item.name}}</span>
                             </md-item-template>
 
                         </md-autocomplete>
                         <div style="height: auto">
-                            <md-button ng-click="searchItem()" class="search-button">
+                            <md-button ng-click="mvm.searchItem()" class="search-button">
                                 <md-icon style="color:#846C63;!important;font-size: 22px;">search</md-icon>
                             </md-button>
                         </div>
@@ -61,28 +61,28 @@
                         </md-button>
                         <md-menu-content width="3">
                             <!-- вход в приложение -->
-                            <md-menu-item ng-show="!auth.isAuth()">
-                                <md-button ng-click="goto('login')">
+                            <md-menu-item ng-show="!mvm.auth.isAuth()">
+                                <md-button ng-click="mvm.goto('login')">
                                     <md-icon>vpn_key</md-icon>
                                     Вход
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item ng-show="!auth.isAuth()">
-                                <md-button ng-click="goto('registration')">
+                            <md-menu-item ng-show="!mvm.auth.isAuth()">
+                                <md-button ng-click="mvm.goto('registration')">
                                     <md-icon>person_add</md-icon>
                                     Регистрация
                                 </md-button>
                             </md-menu-item>
                             <!-- кабинет -->
-                            <md-menu-item ng-show="auth.isAuth()">
-                                <md-button ng-click="goto('cabinet')">
+                            <md-menu-item ng-show="mvm.auth.isAuth()">
+                                <md-button ng-click="mvm.goto('cabinet')">
                                     <md-icon>security</md-icon>
                                     Личный кабинет
                                 </md-button>
                             </md-menu-item>
                             <!-- выход -->
-                            <md-menu-item ng-show="auth.isAuth()">
-                                <md-button ng-click="logout()">
+                            <md-menu-item ng-show="mvm.auth.isAuth()">
+                                <md-button ng-click="mvm.logout()">
                                     <md-icon>exit_to_app</md-icon>
                                     Выход
                                 </md-button>
@@ -101,17 +101,17 @@
 </md-toolbar>
 
 <md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="overflow: auto;  width: 250px; min-width: 0; top: 56px; padding-top: 15px">
-    <md-menu-item><md-button ng-click="goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
-    <md-menu-item><md-button ng-click="goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
-    <md-menu-item><md-button ng-click="goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
-    <md-menu-item><md-button ng-click="goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
-    <md-menu-item><md-button ng-click="goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
-    <md-menu-item><md-button ng-click="goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button ng-click="goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
-    <md-menu-item ng-if="auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
 </md-sidenav>

@@ -75,10 +75,10 @@
     <meta charset="utf-8">
 </head>
 
-<body ng-app="purchase" ng-controller="mainController" class="home blog">
+<body ng-app="purchase" ng-controller="mainController as mvm" class="home blog">
 
     <header>
-        <div ng-include="getMenuTemplateUrl()" include-callback="afterInclude()"></div>
+        <div ng-include="mvm.getMenuTemplateUrl()" include-callback="mvm.afterInclude()"></div>
         <div ng-include="'pages/template/sideFilter.html'"></div>
     </header>
 

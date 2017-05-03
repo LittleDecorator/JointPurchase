@@ -16,14 +16,16 @@ var route = {
                     requireLogin: false
                 }
             },
-                /* корзина покупателя */
+
+            /*=================================== КОРЗИНА ====================================*/
             {
                 name: 'cart',
                 url: '/cart',
                 views: {
                     'main@': {
                         templateUrl: 'pages/cart.html',
-                        controller: 'cartController'
+                        controller: 'cartController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {

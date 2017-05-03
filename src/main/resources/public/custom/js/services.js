@@ -169,8 +169,7 @@
         }])
 
         .service('resolveService',['$q','dataResources',function($q,dataResources){
-            console.log("in resolver");
-            
+
             this.getItemDetail = function(id){
                 var deferred = $q.defer();
                 if(id){
@@ -204,8 +203,6 @@
             };
 
             this.getOrder = function(id){
-                console.log("in GetOrder");
-                console.log(id);
                 var deferred = $q.defer();
                 if(id){
                     dataResources.order.get({id:id},function (data) {
@@ -255,7 +252,6 @@
             };
 
             this.getOrderStatusMap = function(){
-                console.log("in getOrderStatusMap");
                 var deferred = $q.defer();
                 dataResources.orderStatusMap.get(function(res){
                     deferred.resolve(res);
@@ -264,7 +260,6 @@
             };
 
             this.getDeliveryMap = function(){
-                console.log("in getDeliveryMap");
                 var deferred = $q.defer();
                 dataResources.deliveryMap.get(function(res){
                     deferred.resolve(res);
@@ -273,8 +268,6 @@
             };
 
             this.getOrderItems = function(id){
-                console.log("in getOrderItems");
-                console.log(id);
                 if(id){
                     var deferred = $q.defer();
                     dataResources.orderItems.get({id:id},function(res){
@@ -289,7 +282,6 @@
             this.getCategoryTreeData = function(){
                 var deferred = $q.defer();
                 dataResources.categoryTree.get().$promise.then(function(data){
-                    console.log(data);
                     deferred.resolve(data);
                 });
                 return deferred.promise;
@@ -341,30 +333,23 @@
             return {
                 data:{},
                 onLogin: function(data){
-                    console.log("in login broad");
                     this.data = data;
                     $rootScope.$broadcast('onLogin');
                 },
                 onComplete: function(){
-                    console.log("in complete broad");
                     $rootScope.$broadcast('onComplete');
                     //перейдем на страницу откуда быва вызвана авторизация
                     $state.transitionTo(helpers.findRouteByUrl($rootScope.oldLocation.substring(1)));
                 },
                 onFilter: function(data){
-                    console.log("in sideMenu broad");
                     this.data = data;
                     $rootScope.$broadcast('onFilter');
                 },
                 onCategoryClssSelected: function(data){
-                    console.log("in clss selected");
-                    console.log(data);
                     this.data = data;
                     $rootScope.$broadcast('onCategoryClssSelected');
                 },
                 onItemClssSelected: function(data){
-                    console.log("in clss selected");
-                    console.log(data);
                     this.data = data;
                     $rootScope.$broadcast('onItemClssSelected');
                 },

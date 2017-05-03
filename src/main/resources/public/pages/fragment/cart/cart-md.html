@@ -1,6 +1,6 @@
 <div >
     <md-list class="row" flex style="margin: 0">
-        <md-list-item class="md-3-line col s12 cart-item" ng-repeat="item in cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
+        <md-list-item class="md-3-line col s12 cart-item" ng-repeat="item in mvm.cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
 
             <div class="md-list-item-inner" style="width: 100%; margin: 5px;">
                 <div class="boxInner md-avatar" style="margin-right: 10px;padding: 0 5px;">
@@ -10,17 +10,17 @@
                 </div>
                 <div class="md-list-item-text" style="margin-bottom: 0;width: 100%; " layout="column">
                     <div layout="row">
-                        <a ng-click="itemView(item.id)" style="cursor: pointer" flex="60">
+                        <a ng-click="mvm.itemView(item.id)" style="cursor: pointer" flex="60">
                             <span style="font-size: 20px">{{::item.name}}</span>
                         </a>
 
                         <div flex="25">
-                            <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
+                            <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.decrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">remove</md-icon></a>
                             <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
-                            <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
+                            <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.incrementCou($index)"><md-icon style="display: block;line-height: 25px;color: #fff;">add</md-icon></a>
                         </div>
 
-                        <md-icon flex ng-click="removeFromCart($index)" style="color: darksalmon;cursor: pointer;font-size: 2rem;height: 2.5rem;margin-left: 20px;">delete</md-icon>
+                        <md-icon flex ng-click="mvm.removeFromCart($index)" style="color: darksalmon;cursor: pointer;font-size: 2rem;height: 2.5rem;margin-left: 20px;">delete</md-icon>
                     </div>
 
                     <div layout="row" style="margin: 3px 0;margin-right: 5px">
@@ -43,8 +43,8 @@
 
 <div class="gray-row card" >
     <div class="table-total" style="margin: 10px 15px">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{cart.content|sumByKey|number}} руб</span>
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey|number}} руб</span>
     </div>
 </div>
 
-<a class="btn btn-primary" ng-click="toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>
+<a class="btn btn-primary" ng-click="vm.toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>

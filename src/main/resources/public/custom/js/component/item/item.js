@@ -13,6 +13,7 @@
 
                 var busy = false;
                 var portion = 0;
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.loadData = loadData;
@@ -36,7 +37,7 @@
                 
                 /* получение данных с сервера */
                 function loadData(isClean){
-                    if(!$scope.stopLoad && !busy){
+                    if(!vm.stopLoad && !busy){
                         busy = true;
 
                         dataResources.item.all(vm.confirmedFilter).$promise.then(function(data){
@@ -126,11 +127,11 @@
                 /* получение адреса шаблона */
                 function getTemplate(){
                     var templatePath = "pages/fragment/items/";
-                    if($scope.width < 601){
+                    if(mvm.width < 601){
                         return templatePath + "items-sm.html"
                     }
-                    if($scope.width > 600){
-                        if($scope.width < 961){
+                    if(mvm.width > 600){
+                        if(mvm.width < 961){
                             return templatePath + "items-md.html"
                         }
                         return templatePath + "items-lg.html"
@@ -266,7 +267,7 @@
                 /* Получения шаблона страницы */
                 function getTemplateUrl(){
                     var templatePath = "pages/fragment/items/card/";
-                    if($scope.width < 601){
+                    if(mvm.width < 601){
                         return templatePath + "item-card-sm.html";
                     } else {
                         return templatePath + "item-card-lg.html";
