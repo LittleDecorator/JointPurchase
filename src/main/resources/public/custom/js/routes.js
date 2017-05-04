@@ -33,7 +33,8 @@ var route = {
                     displayName: 'Корзина'
                 }
             },
-                /* Оформление заказа */
+
+            /*=================================== ОФОРМЛЕНИЕ ЗАКАЗА ====================================*/
             {
                 name: 'cart.confirm',
                 url: '/private/confirm',
@@ -41,7 +42,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl: 'pages/confirm.html',
-                        controller: 'confirmController'
+                        controller: 'confirmController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
