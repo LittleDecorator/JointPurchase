@@ -303,82 +303,114 @@
 
         }])
 
-        .controller('categoryCardController', ['$scope', 'dataResources', 'modal', 'rootCategories', 'category', 'categoryItems', '$timeout', function ($scope, dataResources, modal, rootCategories, category, categoryItems, $timeout) {
-            /* for small only */
-            console.log(rootCategories)
-            console.log(category)
-            console.log(categoryItems)
-            $scope.categoryList = rootCategories;
-            $scope.categoryList.unshift({id: null, name: "Выберите категорию ..."});
-            $scope.data = {parentCategory: null, selectedCategory: category, categoryItems: categoryItems};
+        .controller('categoryCardController', ['$scope', 'dataResources', 'modal', 'rootCategories', 'category', 'categoryItems', '$timeout', '$mdToast',
+            function ($scope, dataResources, modal, rootCategories, category, categoryItems, $timeout, $mdToast) {
+                /* for small only */
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
-            if (category) {
-                $scope.data.parentCategory = category.parentId
-            } else {
-                //TODO: disable delete
-            }
+                var card = this;
 
-            $scope.save = function () {
-                var items = [];
-                if ($scope.data.categoryItems) {
-                    items = $scope.data.categoryItems.map(function (item) {
-                        return item['id'];
-                    })
-                }
-                var dto = {
-                    name: $scope.data.selectedCategory.name,
-                    parentId: $scope.data.parentCategory,
-                    items: items,
-                    id: $scope.data.selectedCategory.id
-                };
+                card.init = init;
+                card.save = save;
+                card.showItemModal = showItemModal;
+                card.deleteCategory = deleteCategory;
+                card.removeItem = removeItem;
 
-                if (category) {
-                    dataResources.category.put(dto).$promise.then(function (data) {
-                        Materialize.toast('Category UPDATE success', 3000);
-                    }, function (error) {
-                        Materialize.toast('Category UPDATE failed', 3000);
-                    })
-                } else {
-                    dataResources.category.post(dto).$promise.then(function (data) {
-                        Materialize.toast('Category CREATE success', 3000);
-                    }, function (error) {
-                        Materialize.toast('Category CREATE failed', 3000);
-                    })
-                }
-            };
+                card.showHints = true;
+                card.categoryList = rootCategories;
+                card.categoryList.unshift({id: null, name: "Выберите категорию ..."});
+                card.data = {parentCategory: null, selectedCategory: category, categoryItems: categoryItems};
 
-            $scope.showItemModal = function () {
-                var dialog = modal({
-                    templateUrl: "pages/modal/itemModal.html",
-                    className: 'ngdialog-theme-default custom-width',
-                    closeByEscape: true,
-                    controller: "itemClssController",
-                    data: $scope.data.categoryItems
-                });
-                dialog.closePromise.then(function (output) {
-                    if (output.value && output.value != '$escape') {
-                        $scope.data.categoryItems = output.value;
+                /**
+                 * Инициализация
+                 */
+                function init() {
+                    if (category) {
+                        card.data.parentCategory = category.parentId
+                    } else {
+                        //TODO: disable delete
                     }
-                });
-            };
+                }
 
-            $scope.delete = function () {
-                dataResources.category.delete({id: $scope.data.selectedCategory.id}).$promise.then(function (data) {
-                    Materialize.toast('Category DELETE success', 3000);
-                }, function (error) {
-                    Materialize.toast('Category DELETE failed', 3000);
-                })
-            };
+                /**
+                 *  Сохранение изменений в категории
+                 */
+                function save () {
+                    var items = [];
 
-            $scope.removeItem = function (idx) {
-                $scope.data.categoryItems.splice(idx, 1);
-            };
+                    if (card.data.categoryItems) {
+                        items = card.data.categoryItems.map(function (item) {
+                            return item['id'];
+                        })
+                    }
 
-            $timeout(function () {
-                // $('.toc-wrapper').pushpin({ offset: 100});
-                $('select').material_select();
-            }, 10);
+                    var dto = {
+                        name: card.data.selectedCategory.name,
+                        parentId: card.data.parentCategory,
+                        items: items,
+                        id: card.data.selectedCategory.id
+                    };
 
+                    if (category) {
+                        dataResources.category.put(dto).$promise.then(function (data) {
+                            $mdToast.show(toast.textContent('Категория ['+ dto.name +'] успешно обновлена').theme('success'));
+                        }, function (error) {
+                            $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
+                        })
+                    } else {
+                        dataResources.category.post(dto).$promise.then(function (data) {
+                            $mdToast.show(toast.textContent('Категория ['+ dto.name +'] успешно создана').theme('success'));
+                        }, function (error) {
+                            $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
+                        })
+                    }
+                }
+
+                /**
+                 * Показ модально окна для выбора товара
+                 */
+                function showItemModal() {
+                    var dialog = modal({
+                        templateUrl: "pages/modal/itemModal.html",
+                        className: 'ngdialog-theme-default custom-width',
+                        closeByEscape: true,
+                        controller: "itemClssController",
+                        data: card.data.categoryItems
+                    });
+
+                    dialog.closePromise.then(function (output) {
+                        if (output.value && output.value != '$escape') {
+                            card.data.categoryItems = output.value;
+                        }
+                    });
+                }
+
+                /**
+                 * Удаление категории
+                 */
+                function deleteCategory(){
+                    dataResources.category.delete({id: card.data.selectedCategory.id}).$promise.then(function (data) {
+                        $mdToast.show(toast.textContent('Категория ['+ card.data.selectedCategory.name +'] успешно удалена').theme('success'));
+                    }, function (error) {
+                        $mdToast.show(toast.textContent('Неудалось удалить категорию').theme('error'));
+                    })
+                }
+
+                /**
+                 * Удаление товара из категории
+                 * @param idx
+                 */
+                function removeItem(idx) {
+                    card.data.categoryItems.splice(idx, 1);
+                }
+
+                init();
+
+                $timeout(function () {
+                    $('select').material_select();
+                }, 10);
+
+                console.log(card)
         }])
 
         .controller('categoryListController', [ '$rootScope', '$log', '$state', '$timeout', '$location', 'menu', 'categoryNodes',

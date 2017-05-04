@@ -143,6 +143,7 @@
         .controller('itemDetailController',['$rootScope','$scope','$stateParams','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses',
             function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses){
 
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.removeCategory = removeCategory;

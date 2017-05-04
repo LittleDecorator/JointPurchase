@@ -16,16 +16,6 @@
             </md-select>
         </md-input-container>
 
-        <!--<md-input-container class="md-block">-->
-            <!--<label class="required">Производитель</label>-->
-            <!--<md-select ng-model="item.companyId" required>-->
-                <!--<md-option ng-repeat="company in companyNames" value="{{company.id}}">{{company.name}}</md-option>-->
-            <!--</md-select>-->
-            <!--<div ng-messages="itemCard.company.$error" ng-if="!showHints">-->
-                <!--<div ng-message="required">Не выбран производитель</div>-->
-            <!--</div>-->
-        <!--</md-input-container>-->
-
         <md-input-container class="md-block" flex="25" class="no-errors">
             <label>Производитель</label>
             <md-select ng-model="vm.item.company" placeholder="Выберите производителя ..." ng-model-options="{trackBy: '$value.id'}" required>

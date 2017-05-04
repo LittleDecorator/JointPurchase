@@ -635,7 +635,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/categoryCard.html',
-                        controller: 'categoryCardController'
+                        controller: 'categoryCardController',
+                        controllerAs: 'card'
                     }
                 },
                 resolve:{

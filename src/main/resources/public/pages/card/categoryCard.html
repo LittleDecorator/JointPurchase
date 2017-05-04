@@ -1,58 +1,44 @@
-<div>
+<div ng-form="card.CategoryCard">
 
-    <div style="margin-top: 50px">
+    <div class="card">
+        <div layout="column" class="md-padding">
 
-        <div class="table-result">
-            <div class="row">
+            <md-input-container class="no-errors">
+                <label class="required">Родительская категория</label>
+                <md-select name="status" ng-model="card.data.parentCategory" ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="category in card.categoryList" ng-value="category">{{::category.name}}</md-option>
+                </md-select>
+            </md-input-container>
 
-                <div class="input-field col s12">
-                    <label for="category" class="active">Родительская категория</label>
-                    <select id="category" name="category" ng-model="data.parentCategory">
-                        <option ng-repeat="category in categoryList" value="{{::category.id}}" ng-selected="category.id==data.parentCategory">{{::category.name}}</option>
-                    </select>
+            <md-input-container style="margin-bottom: 0">
+                <label class="required">Выбранная категории</label>
+                <input name="name" ng-model="card.data.selectedCategory.name" required maxlength="25">
+                <div ng-messages="card.CategoryCard.name.$error" ng-if="!card.showHints">
+                    <div ng-message="required">Поле не может быть пустым</div>
                 </div>
+            </md-input-container>
 
-                <div class="input-field col s12">
-                    <label for="selectedCategory" class="control-label">Выбранная категории</label>
-                    <input type="text" id="selectedCategory" name="selectedCategory" class="form-control" ng-model="data.selectedCategory.name" maxlength="25">
-                </div>
 
-            </div>
         </div>
-
-
-
     </div>
 
     <div style="margin-top: 20px">
         <h5>Связанные товары:</h5>
 
-        <!--<div class="table-result" ng-if="data.categoryItems && data.categoryItems.length>0" style="margin-top: 5px;">
-            <table class="bordered table-result">
-                <tbody>
-                <tr ng-repeat="item in data.categoryItems" class="row" ng-class="{'no-bottom-border':$last}">
-                    <td class="col s3 non-float">{{item.article}}</td>
-                    <td class="col non-float">{{item.name}}</td>
-                    <td class="col s1 non-float" style="text-align: right">
-                        <div style="cursor: pointer" ng-click="removeItem($index)">
-                            <i class="small mdi-content-clear" style="color: #ee6e73"></i>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>-->
-        <md-list>
-            <md-list-item ng-repeat="item in data.categoryItems">
-                <p>{{::item.article}}</p>
-                <p>{{::item.name}}</p>
-                <md-icon ng-click="removeItem($index)" style="color: #ee6e73;cursor: pointer">remove</md-icon>
-            </md-list-item>
-            <!--<md-divider></md-divider>-->
-        </md-list>
+        <div class="card">
+            <md-list>
+                <md-list-item ng-repeat="item in card.data.categoryItems" ng-model-options="{trackBy: '$value.id'}">
+                    <md-button class="md-icon-button" aria-label="More" ng-click="card.removeItem($index)">
+                        <md-icon style="color: #ee6e73">clear</md-icon>
+                    </md-button>
+                    <p style="text-align: center">{{::item.name}}</p>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+            </md-list>
 
-        <div class="table-result" ng-if="(!data.categoryItems || data.categoryItems.length==0)" style="margin-top: 5px;" >
-            <span >Ни одного товара не связано с выбранной категорией</span>
+            <div ng-if="(!card.data.categoryItems || card.data.categoryItems.length==0)" style="margin-top: 5px;" >
+                <span>Ни одного товара не связано с выбранной категорией</span>
+            </div>
         </div>
 
     </div>
@@ -60,15 +46,15 @@
 </div>
 
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="delete()" style="bottom: 45px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.deleteCategory()" style="bottom: 45px; right: 15px;">
         <md-icon>clear</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="save()" style="bottom: 115px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.save()" style="bottom: 105px; right: 15px;">
         <md-icon>save</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="showItemModal()" style="bottom: 185px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.showItemModal()" style="bottom: 165px; right: 15px;">
         <md-icon>open_in_new</md-icon>
     </md-button>
 
