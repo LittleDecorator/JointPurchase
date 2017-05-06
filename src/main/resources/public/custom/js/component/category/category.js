@@ -6,300 +6,377 @@
     'use strict';
 
     angular.module('category')
-        .controller('categoryController', ['$scope', '$state', 'categoryNodes', '$timeout', 'dataResources','itemClssModal','eventService',
-            function ($scope, $state, categoryNodes, $timeout, dataResources, itemClssModal) {
+        .controller('categoryController', ['$rootScope', '$scope', '$log','$state', 'categoryNodes', '$timeout', 'dataResources','itemClssModal', '$location', 'menu',
+            function ($rootScope, $scope, $log, $state, categoryNodes, $timeout, dataResources, itemClssModal, $location, menu) {
+                var templatePath = "pages/fragment/category/";
+                var mvm = $scope.$parent.mvm;
 
-            var templatePath = "pages/fragment/category/";
+                var vm = this;
 
-            /* for big one (TEMPORARY COMMENTED)*/
-            var newCategoryList = [],
-                editCategoryList = [],
-                deleteCategoryList = [];
+                vm.getCategoryItems = getCategoryItems;
+                vm.clearNewNodeField = clearNewNodeField;
+                vm.clearSelected = clearSelected;
+                vm.treeHandler = treeHandler;
+                vm.nodeTitleChange = nodeTitleChange;
+                vm.newNodeTitleChange = newNodeTitleChange;
+                vm.edit = edit;
+                vm.deleteNode = deleteNode;
+                vm.add = add;
+                vm.addAsSibling = addAsSibling;
+                vm.addAsRoot = addAsRoot;
+                vm.removeItem = removeItem;
+                vm.save = save;
+                vm.showClss = showClss;
+                vm.createCategory = createCategory;
+                vm.isOpen = isOpen;
+                vm.toggleOpen = toggleOpen;
+                vm.openSection = openSection;
+                vm.convertNodeToMenu = convertNodeToMenu;
+                vm.getSections = getSections;
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.init = init;
 
-            $scope.categories = categoryNodes;
-            $scope.tree = {};
-            $scope.selected = null;
-            $scope.selectedCopy = null;
-            $scope.currentNode = {title:""};
+                vm.categories = categoryNodes;
+                vm.tree = {};
+                vm.selected = null;
+                vm.selectedCopy = null;
+                vm.currentNode = {title:""};
+                vm.autoFocusContent = false;
+                vm.menu = menu;
+                vm.status = {
+                    isFirstOpen: false,
+                    isFirstDisabled: false
+                };
 
-            // получение товаров выбранного узла
-            function getCategoryItems(categoryId) {
-                var items = [];
-                dataResources.categoryItems.get({id: categoryId}, function (data) {
-                    angular.forEach(data, function (rec) {
-                        items.push(rec);
+                /**
+                 * получение товаров выбранного узла
+                 * @param categoryId
+                 * @returns {Array}
+                 */
+                function getCategoryItems(categoryId) {
+                    var items = [];
+                    dataResources.categoryItems.get({id: categoryId}, function (data) {
+                        angular.forEach(data, function (rec) {
+                            items.push(rec);
+                        });
                     });
-                });
-                return items;
-            }
-            
-            /* очистка поля ввода нового узла */
-            function clearNewNodeField() {
-                $scope.currentNode = {title:""};
-                $("#add_sibling").addClass('disabled');
-                $("#add").addClass('disabled');
-                $("#add_root").addClass('disabled');
-            }
-
-            /* очистка поля после удаления */
-            function clearSelected() {
-                $scope.selected = null;
-                $scope.selectedCopy = {title:""};
-                $scope.nodeTitleChange();
-            }
-
-            // получение выбранного узла
-            $scope.treeHandler = function (branch) {
-                console.log(branch)
-                // если работаем с мобилы, то будет переход на другую страницу
-                if ($scope.width < 601) {
-                    $state.go("category.card", {id: branch.id});
-                } else {
-                    $scope.selected = branch;
-                    $scope.selectedCopy = angular.copy(branch);
-                    if (!$scope.selected.items || !$scope.selected.items.length > 0) {
-                        console.log($scope.selectedCopy)
-                        $scope.selected.items = $scope.selectedCopy.items = getCategoryItems($scope.selectedCopy.id);
-                    }
-                    $scope.nodeTitleChange();
-                    $scope.newNodeTitleChange();
+                    return items;
                 }
-            };
 
-            /* слушатель изменения поля текущего узла */
-            $scope.nodeTitleChange = function(){
-                if($scope.selectedCopy.title === ""){
-                    $("#edit").addClass('disabled');
-                    $("#delete").addClass('disabled');
-                } else {
-                    $("#edit").removeClass('disabled');
-                    $("#delete").removeClass('disabled');
-                }
-            };
-            
-            /* слушатель изменения поля имени нового узла */
-            $scope.newNodeTitleChange = function(){
-                if ($scope.currentNode.title !== "") {
-                    if ($scope.selected) {
-                        $("#add_sibling").removeClass('disabled');
-                        $("#add").removeClass('disabled');
-                    }
-                    $("#add_root").removeClass('disabled');
-                } else {
+                /**
+                 * очистка поля ввода нового узла
+                 */
+                function clearNewNodeField() {
+                    vm.currentNode = {title:""};
                     $("#add_sibling").addClass('disabled');
                     $("#add").addClass('disabled');
                     $("#add_root").addClass('disabled');
                 }
-            };
 
-            // /* toggle listener */
-            // $scope.toggleHandler = function (branch) {
-            //     console.log(branch);
-            //     if (branch.nodes.length == 0 && branch.noLeaf) {
-            //         console.log("bla");
-            //         // dataResources.settings.tournamentLevel.get({},branch).$promise.then(function(data){
-            //         //     angular.forEach(data, function(node){
-            //         //         $scope.tree.add_branch(branch,node);
-            //         //     });
-            //         // })
-            //     }
-            // };
+                /**
+                 * очистка поля после удаления
+                 */
+                function clearSelected() {
+                    vm.selected = null;
+                    vm.selectedCopy = {title:""};
+                    nodeTitleChange();
+                }
 
-            // изменение имени узла
-            $scope.edit = function () {
-                if($scope.selectedCopy.title !== ""){
-                    $scope.selected.title = $scope.selectedCopy.title;
+                /**
+                 * получение выбранного узла
+                 * @param branch
+                 */
+                function treeHandler(branch) {                     
+                    vm.selected = branch;
+                    vm.selectedCopy = angular.copy(branch);
+                    if (!vm.selected.items || !vm.selected.items.length > 0) {
+                        vm.selected.items = vm.selectedCopy.items = getCategoryItems(vm.selectedCopy.id);
+                    }
+                    nodeTitleChange();
+                    newNodeTitleChange();
+                }
 
-                    // проверяем узел в списке новых
-                    var b = helpers.findInArrayById(newCategoryList, $scope.selectedCopy.id);
-                    // если не нашли, меняем имя в сохраненом
-                    if (!helpers.isEmptyObject(b)) {
-                        b.title = $scope.selected.title;
+                /**
+                 * слушатель изменения поля текущего узла
+                 */
+                function nodeTitleChange(){
+                    if(vm.selectedCopy.title === ""){
+                        $("#edit").addClass('disabled');
+                        $("#delete").addClass('disabled');
                     } else {
-                        // проверяем узел в списке измененных
-                        var e = helpers.findInArrayById(editCategoryList, $scope.selectedCopy.id);
-                        // если нашли меняем имя
-                        if (!helpers.isEmptyObject(e)) {
-                            e.title = $scope.selected.title;
-                        } else {
-                            editCategoryList.push($scope.selected);
+                        $("#edit").removeClass('disabled');
+                        $("#delete").removeClass('disabled');
+                    }
+                }
+
+                /**
+                 * слушатель изменения поля имени нового узла
+                 */
+                function newNodeTitleChange(){
+                    if (vm.currentNode.title !== "") {
+                        if (vm.selected) {
+                            $("#add_sibling").removeClass('disabled');
+                            $("#add").removeClass('disabled');
                         }
+                        $("#add_root").removeClass('disabled');
+                    } else {
+                        $("#add_sibling").addClass('disabled');
+                        $("#add").addClass('disabled');
+                        $("#add_root").addClass('disabled');
                     }
                 }
-            };
 
-            /* удаление узла из дерева */
-            $scope.delete = function () {
-                if($scope.selectedCopy.title !== ""){
-                    var selected = $scope.tree.get_selected_branch();
-                    var parent = $scope.tree.get_parent_branch(selected);
-                    if(parent){
-                        var idx = parent.nodes.indexOf(selected);
-                        parent.nodes.splice(idx, 1);
-                    } else {
-                        $scope.tree.delete_branch_by_uid(selected.uid);
-                    }
+                /**
+                 * изменение имени узла
+                 */
+                function edit() {
+                    if(vm.selectedCopy.title !== ""){
+                        vm.selected.title = vm.selectedCopy.title;
 
-                    // проверяем является ли удаляемый узел свежесозданным
-                    var b = helpers.findInArrayById(newCategoryList, selected.id);
-                    // удаляем узел из списка созданных
-                    if (!helpers.isEmptyObject(b)) {
-                        var b_idx = newCategoryList.indexOf(b);
-                        newCategoryList.splice(b_idx, 1);
-                    } else {
-                        // добавляем в список на удаление
-                        deleteCategoryList.push(selected);
-
-                        // проверяем узел в списке измененных
-                        var e = helpers.findInArrayById(editCategoryList, selected.id);
-                        // удаляем узел из списка измененных
-                        if (!helpers.isEmptyObject(e)) {
-                            var e_idx = editCategoryList.indexOf(e);
-                            editCategoryList.splice(e_idx, 1);
-                        }
-                    }
-
-                    // если у родителя больше не осталось детей, помечаем как листовой
-                    if(parent && helpers.isEmptyObject(parent.nodes)){
-                        parent.noLeaf = false;
-                    }
-                    clearSelected();
-                }
-            };
-
-            /* Добавление узла в дерево */
-            $scope.add = function (selected) {
-                if ($scope.selected && $scope.currentNode.title !== "") {
-                    var parent, id = helpers.guid();
-                    if (!selected) {
-                        parent = $scope.tree.get_selected_branch();
-                    } else {
-                        parent = selected;
-                    }
-                    // проверяем что родитель есть и он не пустой
-                    var parentId = (parent && !$.isEmptyObject(parent)) ? parent.id : null;
-                    // подготавливаем узел для добавления
-                    var newNode = {id: id, title: $scope.currentNode.title, nodes: [], parentId: parentId, types: []};
-                    console.log(newNode);
-                    // добавляем новый узел
-                    if (parentId == null) {
-                        $scope.tree.add_branch(null, newNode);
-                    } else {
-                        $scope.tree.add_branch(parent, newNode);
-                    }
-                    // если родитель был листовым, то меняем свойство
-                    if(!parent.noLeaf){
-                        parent.noLeaf = true;
-                    }
-                    // помещаем узел в список новых
-                    newCategoryList.push(newNode);
-                    // очищаем поле
-                    clearNewNodeField();
-                }
-            };
-
-            /* Добавление узла на том же уровне что и выбранный */
-            $scope.addAsSibling = function () {
-                console.log($scope.selected);
-                if ($scope.selected && $scope.currentNode.title !== "") {
-                    var selected = $scope.tree.get_selected_branch();
-                    console.log(selected);
-                    var parent = $scope.tree.get_parent_branch(selected);
-                    if(parent){
-                        $scope.add(parent);
-                    } else {
-                        $scope.add({});
-                    }
-
-                }
-            };
-
-            /* Добавление нового корневого узла */
-            $scope.addAsRoot = function () {
-                if ($scope.currentNode.title !== "") {
-                    $scope.add({});
-                }
-            };
-
-            /* Удаление товара */
-            $scope.removeItem = function (idx) {
-                $scope.selectedCopy.items.splice(idx, 1);
-                $scope.selected.items = $scope.selectedCopy.items;
-                //TODO check in edit and new lists
-                //check branch in new list
-                var b = helpers.findInArrayById(newCategoryList, $scope.selected.id);
-                //if found change stashed title
-                if (!helpers.isEmptyObject(b)) {
-                    b.items = [].concat($scope.selected.items);
-                } else {
-                    //check in edit list
-                    var e = helpers.findInArrayById(editCategoryList, $scope.selected.id);
-                    //if found update title
-                    if (!helpers.isEmptyObject(e)) {
-                        e.items = [].concat($scope.selected.items);
-                    } else {
-                        editCategoryList.push($scope.selected);
-                    }
-                }
-            };
-
-            /* Сохранение изменений */
-            $scope.save = function () {
-                console.log({new: newCategoryList, update: editCategoryList, delete: deleteCategoryList});
-                dataResources.categoryTree.post({
-                    new: newCategoryList,
-                    update: editCategoryList,
-                    delete: deleteCategoryList
-                });
-                // очистка временных списков
-                newCategoryList = [];
-                editCategoryList = [];
-                deleteCategoryList = [];
-            };
-
-            /* показ модального окна для добавления товара */
-            $scope.showClss = function () {
-                console.log($scope.selectedCopy.items);
-                var dialog = itemClssModal($scope.selectedCopy.items);
-                dialog.closePromise.then(function (output) {
-                    if (output.value && output.value != '$escape') {
-                        angular.forEach(output.value, function (item) {
-                            $scope.selectedCopy.items.push(item);
-                        });
-                        $scope.selected.items = $scope.selectedCopy.items;
-
-                        //check branch in new list
-                        var b = helpers.findInArrayById(newCategoryList, $scope.selected.id);
-                        //if found change stashed title
+                        // проверяем узел в списке новых
+                        var b = helpers.findInArrayById(newCategoryList, vm.selectedCopy.id);
+                        // если не нашли, меняем имя в сохраненом
                         if (!helpers.isEmptyObject(b)) {
-                            b.items = [].concat($scope.selected.items);
+                            b.title = vm.selected.title;
                         } else {
-                            //check in edit list
-                            var e = helpers.findInArrayById(editCategoryList, $scope.selected.id);
-                            //if found update title
+                            // проверяем узел в списке измененных
+                            var e = helpers.findInArrayById(editCategoryList, vm.selectedCopy.id);
+                            // если нашли меняем имя
                             if (!helpers.isEmptyObject(e)) {
-                                e.items = [].concat($scope.selected.items);
+                                e.title = vm.selected.title;
                             } else {
-                                editCategoryList.push($scope.selected);
+                                editCategoryList.push(vm.selected);
                             }
                         }
                     }
-                });
-            };
-
-            /* Создание новой категории */
-            $scope.createCategory = function () {
-                $state.go("category.card");
-            };
-
-            $scope.getTemplateUrl = function () {
-                if ($scope.width < 601) {
-                    return templatePath + "category-sm.html"
                 }
-                if ($scope.width > 600) {
-                    return templatePath + "category-lg.html"
+
+                /**
+                 * удаление узла из дерева
+                 */
+                function deleteNode() {
+                    if(vm.selectedCopy.title !== ""){
+                        var selected = vm.tree.get_selected_branch();
+                        var parent = vm.tree.get_parent_branch(selected);
+                        if(parent){
+                            var idx = parent.nodes.indexOf(selected);
+                            parent.nodes.splice(idx, 1);
+                        } else {
+                            vm.tree.delete_branch_by_uid(selected.uid);
+                        }
+
+                        // проверяем является ли удаляемый узел свежесозданным
+                        var b = helpers.findInArrayById(newCategoryList, selected.id);
+                        // удаляем узел из списка созданных
+                        if (!helpers.isEmptyObject(b)) {
+                            var b_idx = newCategoryList.indexOf(b);
+                            newCategoryList.splice(b_idx, 1);
+                        } else {
+                            // добавляем в список на удаление
+                            deleteCategoryList.push(selected);
+
+                            // проверяем узел в списке измененных
+                            var e = helpers.findInArrayById(editCategoryList, selected.id);
+                            // удаляем узел из списка измененных
+                            if (!helpers.isEmptyObject(e)) {
+                                var e_idx = editCategoryList.indexOf(e);
+                                editCategoryList.splice(e_idx, 1);
+                            }
+                        }
+
+                        // если у родителя больше не осталось детей, помечаем как листовой
+                        if(parent && helpers.isEmptyObject(parent.nodes)){
+                            parent.noLeaf = false;
+                        }
+                        clearSelected();
+                    }
                 }
-            };
+
+                /**
+                 * Добавление узла в дерево
+                 * @param selected
+                 */
+                function add(selected) {
+                    if (vm.selected && vm.currentNode.title !== "") {
+                        var parent, id = helpers.guid();
+                        if (!selected) {
+                            parent = vm.tree.get_selected_branch();
+                        } else {
+                            parent = selected;
+                        }
+                        // проверяем что родитель есть и он не пустой
+                        var parentId = (parent && !$.isEmptyObject(parent)) ? parent.id : null;
+                        // подготавливаем узел для добавления
+                        var newNode = {id: id, title: $scope.currentNode.title, nodes: [], parentId: parentId, types: []};
+                        // добавляем новый узел
+                        if (parentId == null) {
+                            vm.tree.add_branch(null, newNode);
+                        } else {
+                            vm.tree.add_branch(parent, newNode);
+                        }
+                        // если родитель был листовым, то меняем свойство
+                        if(!parent.noLeaf){
+                            parent.noLeaf = true;
+                        }
+                        // помещаем узел в список новых
+                        newCategoryList.push(newNode);
+                        // очищаем поле
+                        clearNewNodeField();
+                    }
+                }
+
+                /**
+                 * Добавление узла на том же уровне что и выбранный
+                 */
+                function addAsSibling() {
+                    if (vm.selected && vm.currentNode.title !== "") {
+                        var selected = vm.tree.get_selected_branch();
+                        var parent = vm.tree.get_parent_branch(selected);
+                        if(parent){
+                            add(parent);
+                        } else {
+                            add({});
+                        }
+                    }
+                }
+
+                /**
+                 * Добавление нового корневого узла
+                 */
+                function addAsRoot() {
+                    if (vm.currentNode.title !== "") {
+                        add({});
+                    }
+                }
+
+                /**
+                 * Удаление товара
+                 * @param idx
+                 */
+                function removeItem(idx) {
+                    vm.selectedCopy.items.splice(idx, 1);
+                    vm.selected.items = vm.selectedCopy.items;
+                    //TODO check in edit and new lists
+                    //check branch in new list
+                    var b = helpers.findInArrayById(newCategoryList, vm.selected.id);
+                    //if found change stashed title
+                    if (!helpers.isEmptyObject(b)) {
+                        b.items = [].concat(vm.selected.items);
+                    } else {
+                        //check in edit list
+                        var e = helpers.findInArrayById(editCategoryList, vm.selected.id);
+                        //if found update title
+                        if (!helpers.isEmptyObject(e)) {
+                            e.items = [].concat(vm.selected.items);
+                        } else {
+                            editCategoryList.push(vm.selected);
+                        }
+                    }
+                }
+
+                /**
+                 * Сохранение изменений
+                 */
+                function save() {
+                    dataResources.categoryTree.post({
+                        new: newCategoryList,
+                        update: editCategoryList,
+                        delete: deleteCategoryList
+                    });
+                    // очистка временных списков
+                    newCategoryList = [];
+                    editCategoryList = [];
+                    deleteCategoryList = [];
+                }
+
+                /**
+                 * показ модального окна для добавления товара
+                 */
+                function showClss() {
+                    var dialog = itemClssModal(vm.selectedCopy.items);
+                    dialog.closePromise.then(function (output) {
+                        if (output.value && output.value != '$escape') {
+                            angular.forEach(output.value, function (item) {
+                                vm.selectedCopy.items.push(item);
+                            });
+                            vm.selected.items = vm.selectedCopy.items;
+
+                            //check branch in new list
+                            var b = helpers.findInArrayById(newCategoryList, vm.selected.id);
+                            //if found change stashed title
+                            if (!helpers.isEmptyObject(b)) {
+                                b.items = [].concat(vm.selected.items);
+                            } else {
+                                //check in edit list
+                                var e = helpers.findInArrayById(editCategoryList, vm.selected.id);
+                                //if found update title
+                                if (!helpers.isEmptyObject(e)) {
+                                    e.items = [].concat(vm.selected.items);
+                                } else {
+                                    editCategoryList.push(vm.selected);
+                                }
+                            }
+                        }
+                    });
+                }
+
+                /**
+                 * Создание новой категории
+                 */
+                function createCategory() {
+                    $state.go("category.card");
+                }
+
+                function isOpen(section) {
+                    return menu.isSectionSelected(section);
+                }
+
+                function toggleOpen(section) {
+                    vm.menu.toggleSelectSection(section);
+                }
+
+                function openSection(section){
+                    $state.go("category.card", {id: section.id});
+                }
+
+                function getSections(nodes){
+                    var sections = [];
+                    angular.forEach(nodes, function(node) {
+                        sections.push(convertNodeToMenu(node));
+                    });
+                    return sections;
+                }
+
+                function convertNodeToMenu(node) {
+                    var section = {name:node.title, type: node.nodes.length > 0 ? "toggle":"link", id: node.id};
+                    if(node.nodes.length > 0){
+                        section.pages = getSections(node.nodes)
+                    }
+                    return section;
+                }
+
+                function getTemplateUrl() {
+                    if (mvm.width < 601) {
+                        return templatePath + "category-sm.html"
+                    } else if (mvm.width > 600) {
+                        return templatePath + "category-lg.html"
+                    }
+                }
+
+                /**
+                 * инициализация
+                 */
+                function init(){
+                    if (mvm.width < 601) {
+                        vm.menu.sections = getSections(vm.categories);
+                    } else {
+                        var newCategoryList = [],
+                            editCategoryList = [],
+                            deleteCategoryList = [];
+                    }
+                }
+
+                init();
 
         }])
 
@@ -308,25 +385,25 @@
                 /* for small only */
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
-                var card = this;
+                var vm = this;
 
-                card.init = init;
-                card.save = save;
-                card.showItemModal = showItemModal;
-                card.deleteCategory = deleteCategory;
-                card.removeItem = removeItem;
+                vm.init = init;
+                vm.save = save;
+                vm.showItemModal = showItemModal;
+                vm.deleteCategory = deleteCategory;
+                vm.removeItem = removeItem;
 
-                card.showHints = true;
-                card.categoryList = rootCategories;
-                card.categoryList.unshift({id: null, name: "Выберите категорию ..."});
-                card.data = {parentCategory: null, selectedCategory: category, categoryItems: categoryItems};
+                vm.showHints = true;
+                vm.categoryList = rootCategories;
+                vm.categoryList.unshift({id: null, name: "Выберите категорию ..."});
+                vm.data = {parentCategory: null, selectedCategory: category, categoryItems: categoryItems};
 
                 /**
                  * Инициализация
                  */
                 function init() {
                     if (category) {
-                        card.data.parentCategory = category.parentId
+                        vm.data.parentCategory = category.parentId
                     } else {
                         //TODO: disable delete
                     }
@@ -335,20 +412,20 @@
                 /**
                  *  Сохранение изменений в категории
                  */
-                function save () {
+                function save() {
                     var items = [];
 
-                    if (card.data.categoryItems) {
-                        items = card.data.categoryItems.map(function (item) {
+                    if (vm.data.categoryItems) {
+                        items = vm.data.categoryItems.map(function (item) {
                             return item['id'];
                         })
                     }
 
                     var dto = {
-                        name: card.data.selectedCategory.name,
-                        parentId: card.data.parentCategory,
+                        name: vm.data.selectedCategory.name,
+                        parentId: vm.data.parentCategory,
                         items: items,
-                        id: card.data.selectedCategory.id
+                        id: vm.data.selectedCategory.id
                     };
 
                     if (category) {
@@ -375,12 +452,12 @@
                         className: 'ngdialog-theme-default custom-width',
                         closeByEscape: true,
                         controller: "itemClssController",
-                        data: card.data.categoryItems
+                        data: vm.data.categoryItems
                     });
 
                     dialog.closePromise.then(function (output) {
                         if (output.value && output.value != '$escape') {
-                            card.data.categoryItems = output.value;
+                            vm.data.categoryItems = output.value;
                         }
                     });
                 }
@@ -389,8 +466,8 @@
                  * Удаление категории
                  */
                 function deleteCategory(){
-                    dataResources.category.delete({id: card.data.selectedCategory.id}).$promise.then(function (data) {
-                        $mdToast.show(toast.textContent('Категория ['+ card.data.selectedCategory.name +'] успешно удалена').theme('success'));
+                    dataResources.category.delete({id: vm.data.selectedCategory.id}).$promise.then(function (data) {
+                        $mdToast.show(toast.textContent('Категория ['+ vm.data.selectedCategory.name +'] успешно удалена').theme('success'));
                     }, function (error) {
                         $mdToast.show(toast.textContent('Неудалось удалить категорию').theme('error'));
                     })
@@ -401,75 +478,10 @@
                  * @param idx
                  */
                 function removeItem(idx) {
-                    card.data.categoryItems.splice(idx, 1);
+                    vm.data.categoryItems.splice(idx, 1);
                 }
 
                 init();
-
-                $timeout(function () {
-                    $('select').material_select();
-                }, 10);
-
-                console.log(card)
-        }])
-
-        .controller('categoryListController', [ '$rootScope', '$log', '$state', '$timeout', '$location', 'menu', 'categoryNodes',
-            function ($rootScope, $log, $state, $timeout, $location, menu, categoryNodes) {
-
-                var vm = this;
-                var templatePath = "pages/fragment/category/";
-
-                //functions for menu-link and menu-toggle
-                vm.getTemplateUrl = getTemplateUrl;
-                vm.isOpen = isOpen;
-                vm.toggleOpen = toggleOpen;
-                vm.convertNodeToMenu = convertNodeToMenu;
-                vm.getSections = getSections;
-                vm.openSection = openSection;
-                vm.autoFocusContent = false;
-                vm.menu = menu;
-                vm.categories = categoryNodes;
-
-                vm.status = {
-                    isFirstOpen: false,
-                    isFirstDisabled: false
-                };
-
-                function isOpen(section) {
-                    return menu.isSectionSelected(section);
-                }
-
-                function toggleOpen(section) {
-                    menu.toggleSelectSection(section);
-                }
-                
-                function openSection(section){
-                    $state.go("category.card", {id: section.id});
-                }
-
-                function getTemplateUrl() {
-                    return templatePath + "category-sm.html"
-                }
-
-                function getSections(nodes){
-                    var sections = [];
-                    angular.forEach(nodes, function(node) {
-                        sections.push(convertNodeToMenu(node));
-                    });
-                    return sections;
-                }
-
-                function convertNodeToMenu(node) {
-                    var section = {name:node.title, type: node.nodes.length > 0 ? "toggle":"link", id: node.id};
-                    if(node.nodes.length > 0){
-                        section.pages = getSections(node.nodes)
-                    }
-                    return section;
-                }
-
-                vm.menu.sections = getSections(vm.categories);
-
-                console.log(vm.menu);
 
             }])
 })();

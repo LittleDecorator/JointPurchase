@@ -56,7 +56,8 @@ var route = {
                     }
                 }
             },
-                /* страница О нас */
+
+            /*=================================== О НАС ====================================*/
             {
                 name: 'about',
                 url:'/about',
@@ -68,17 +69,18 @@ var route = {
                 },
                 data:{
                     requireLogin: false,
-                    //base:true
                 }
             },
-                /* Личный кабинет */
+
+            /*=================================== ЛИЧНЫЙ КАБИНЕТ ====================================*/
             {
                 name: 'cabinet',
                 url:'/cabinet',
                 views: {
                     'main@': {
                         templateUrl : 'pages/cabinet.html',
-                        controller: 'cabinetController'
+                        controller: 'cabinetController',
+                        controllerAs: 'vm'
                     }
                 },
                 data:{
@@ -118,7 +120,8 @@ var route = {
                     }
                 }
             },
-                /* Почта */
+
+            /*=================================== ПОЧТА ====================================*/
             {
                 name: 'email',
                 url:'/email',
@@ -133,7 +136,8 @@ var route = {
                     displayName: 'Почта'
                 }
             },
-                /* Настройки приложения */
+
+            /*=================================== НАСТРОЙКИ ====================================*/
             {
                 name: 'settings',
                 url:'/settings',
@@ -148,7 +152,8 @@ var route = {
                     displayName: 'Настройки'
                 }
             },
-                /* Страница с условиями доставки */
+
+            /*=================================== УСЛОВИЯ ДОСТАВКИ ====================================*/
             {
                 name: 'delivery',
                 url:'/delivery',
@@ -163,6 +168,8 @@ var route = {
                     displayName: 'Доставка'
                 }
             },
+
+            /*=================================== АКЦИИ ====================================*/
             {
                 name: 'stock',
                 url:'/stock',
@@ -176,7 +183,8 @@ var route = {
                     requireLogin: false
                 }
             },
-                /* Страца с контактами для связи с нами */
+
+            /*=================================== КОНТАКТЫ ====================================*/
             {
                 name: 'contact',
                 url:'/contact',
@@ -192,7 +200,6 @@ var route = {
             },
 
             /*=================================== РЕГИСТРАЦИЯ ====================================*/
-                /* Страница регистрации покупателя */
             {
                 name:'registration',
                 url:'/registration',
@@ -326,8 +333,6 @@ var route = {
             },
 
             /*=================================== ПОИСК ====================================*/
-            
-                /* Результат поиска */
             {
                 name: 'search',
                 url:'/search/:criteria',
@@ -372,7 +377,6 @@ var route = {
             },
 
             /*=================================== ЗАКАЗЫ ====================================*/
-                /* Заказы */
             {
                 name: 'order',
                 url: '/order?customerId',
@@ -548,6 +552,7 @@ var route = {
                     }
                 }
             },
+            /* Галерея */
             {
                 name:'item.detail.gallery',
                 parent:'item.detail',
@@ -587,30 +592,7 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/category.html',
-                        controller: 'categoryController'
-                    }
-                },
-                resolve:{
-                    categoryNodes: function($stateParams, resolveService) {
-                        return resolveService.getCategoryTreeData();
-                    },
-                    categories: function($stateParams, resolveService){
-                        return resolveService.getCategoryMap();
-                    }
-                },
-                data: {
-                    displayName: 'Категории',
-                    requireLogin: true
-
-                }
-            },
-            {
-                name: 'categoryList',
-                url:'/categoryList',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/category.html',
-                        controller: 'categoryListController',
+                        controller: 'categoryController',
                         controllerAs: 'vm'
                     }
                 },
@@ -631,12 +613,12 @@ var route = {
             {
                 name: 'category.card',
                 url:'/category/:id',
-                parent:'categoryList',
+                parent:'category',
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/categoryCard.html',
                         controller: 'categoryCardController',
-                        controllerAs: 'card'
+                        controllerAs: 'vm'
                     }
                 },
                 resolve:{

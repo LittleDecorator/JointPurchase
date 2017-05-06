@@ -1,12 +1,12 @@
+
 <div class="section" style="padding-top: 0">
 
-        <h4 class="example_head">Категории:</h4>
+    <h4 class="example_head">Категории:</h4>
 
     <div layout="row">
         <!-- дерево категорий -->
         <md-card flex="55">
-            <!--<abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>-->
-            <abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" expand-level="1"></abn-tree>
+            <abn-tree tree-data="vm.categories" tree-control="vm.tree" on-select="vm.treeHandler(branch)" expand-level="1" ></abn-tree>
         </md-card>
 
         <!-- настройки узла -->
@@ -15,25 +15,25 @@
 
                 <md-input-container class="md-block no-errors">
                     <label>Выбранная категория</label>
-                    <input ng-model="selectedCopy.title" ng-change="nodeTitleChange()">
+                    <input ng-model="vm.selectedCopy.title" ng-change="vm.nodeTitleChange()">
                 </md-input-container>
 
                 <div>
-                    <md-button id="edit" md-no-ink class="md-raised btn md disabled" aria-label="edit" ng-click="edit()">Изменить</md-button>
-                    <md-button id="delete" md-no-ink class="md-raised btn md disabled" aria-label="delete" ng-click="delete()">Удалить</md-button>
+                    <md-button id="edit" md-no-ink class="md-raised btn md disabled" aria-label="edit" ng-click="vm.edit()">Изменить</md-button>
+                    <md-button id="delete" md-no-ink class="md-raised btn md disabled" aria-label="delete" ng-click="vm.deleteNode()">Удалить</md-button>
                 </div>
             </md-card>
 
             <md-card class="md-padding">
                 <md-input-container class="md-block no-errors">
                     <label>Новая категория</label>
-                    <input ng-model="currentNode.title" ng-change="newNodeTitleChange()" maxlength="25">
+                    <input ng-model="vm.currentNode.title" ng-change="vm.newNodeTitleChange()" maxlength="25">
                 </md-input-container>
 
                 <div>
-                    <md-button id="add_sibling" md-no-ink class="md-raised btn md disabled" aria-label="sibling" ng-click="addAsSibling()">Добавить</md-button>
-                    <md-button id="add" md-no-ink class="md-raised btn md disabled" aria-label="add" ng-click="add()">Как зависимую</md-button>
-                    <md-button id="add_root" md-no-ink class="md-raised btn md disabled" aria-label="root" ng-click="addAsRoot()">Как корневую</md-button>
+                    <md-button id="add_sibling" md-no-ink class="md-raised btn md disabled" aria-label="sibling" ng-click="vm.addAsSibling()">Добавить</md-button>
+                    <md-button id="add" md-no-ink class="md-raised btn md disabled" aria-label="add" ng-click="vm.add()">Как зависимую</md-button>
+                    <md-button id="add_root" md-no-ink class="md-raised btn md disabled" aria-label="root" ng-click="vm.addAsRoot()">Как корневую</md-button>
                 </div>
 
             </md-card>
@@ -41,15 +41,14 @@
             <md-card class="md-padding" ng-show="selected">
                 <div>
                     <h5>Связанные товары:</h5>
-
-                    <div class="table-result" ng-if="selected.items && selected.items.length>0" style="margin-top: 5px;overflow: auto; max-height: 400px;">
+                    <div class="table-result" ng-if="vm.selected.items && vm.selected.items.length > 0" style="margin-top: 5px;overflow: auto; max-height: 400px;">
                         <table class="bordered table-result">
                             <tbody>
-                            <tr ng-repeat="item in selected.items" class="row" ng-class="{'no-bottom-border':$last}">
-                                <td class="col s3 non-float">{{item.article}}</td>
-                                <td class="col non-float">{{item.name}}</td>
+                            <tr ng-repeat="item in vm.selected.items track by item.id" class="row" ng-class="{'no-bottom-border':$last}">
+                                <td class="col s3 non-float">{{::item.article}}</td>
+                                <td class="col non-float">{{::item.name}}</td>
                                 <td class="col s1 non-float" style="text-align: right">
-                                    <div style="cursor: pointer" ng-click="removeItem($index)">
+                                    <div style="cursor: pointer" ng-click="vm.removeItem($index)">
                                         <i class="small mdi-content-clear" style="color: #ee6e73"></i>
                                     </div>
                                 </td>
@@ -58,19 +57,23 @@
                         </table>
                     </div>
 
-                    <div class="table-result" ng-show="(!selected.items || selected.items.length==0)" style="margin-top: 5px;background-color: rgb(250,250,250); border: 1px solid;" >
+                    <div class="table-result" ng-if="(!vm.selected.items || vm.selected.items.length == 0)" style="margin-top: 5px;background-color: rgb(250,250,250); border: 1px solid;" >
                         <span >Ни одного товара не связано с выбранной категорией</span>
                     </div>
 
                 </div>
             </md-card>
 
-
-            </div>
-
-
-        </md-card>
-
+        </div>
 
     </div>
 </div>
+
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.showClss()" ng-disabled="!vm.selectedCopy" style="bottom: 120px; right: 24px;">
+    <md-icon>add</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" style="bottom: 45px; right: 24px;">
+    <md-icon>save</md-icon>
+</md-button>

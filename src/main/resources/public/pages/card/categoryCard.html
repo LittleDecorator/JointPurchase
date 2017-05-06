@@ -5,15 +5,15 @@
 
             <md-input-container class="no-errors">
                 <label class="required">Родительская категория</label>
-                <md-select name="status" ng-model="card.data.parentCategory" ng-model-options="{trackBy: '$value.id'}">
-                    <md-option ng-repeat="category in card.categoryList" ng-value="category">{{::category.name}}</md-option>
+                <md-select name="status" ng-model="vm.data.parentCategory" ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="category in vm.categoryList" ng-value="category">{{::category.name}}</md-option>
                 </md-select>
             </md-input-container>
 
             <md-input-container style="margin-bottom: 0">
                 <label class="required">Выбранная категории</label>
-                <input name="name" ng-model="card.data.selectedCategory.name" required maxlength="25">
-                <div ng-messages="card.CategoryCard.name.$error" ng-if="!card.showHints">
+                <input name="name" ng-model="vm.data.selectedCategory.name" required maxlength="25">
+                <div ng-messages="vm.CategoryCard.name.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
@@ -26,9 +26,10 @@
         <h5>Связанные товары:</h5>
 
         <div class="card">
-            <md-list>
-                <md-list-item ng-repeat="item in card.data.categoryItems" ng-model-options="{trackBy: '$value.id'}">
-                    <md-button class="md-icon-button" aria-label="More" ng-click="card.removeItem($index)">
+
+            <md-list style="padding: 0">
+                <md-list-item ng-repeat="item in vm.data.categoryItems" ng-model-options="{trackBy: '$value.id'}">
+                    <md-button class="md-icon-button" aria-label="More" ng-click="vm.removeItem($index)">
                         <md-icon style="color: #ee6e73">clear</md-icon>
                     </md-button>
                     <p style="text-align: center">{{::item.name}}</p>
@@ -36,7 +37,7 @@
                 </md-list-item>
             </md-list>
 
-            <div ng-if="(!card.data.categoryItems || card.data.categoryItems.length==0)" style="margin-top: 5px;" >
+            <div ng-if="(!vm.data.categoryItems || vm.data.categoryItems.length==0)" style="padding: 10px" >
                 <span>Ни одного товара не связано с выбранной категорией</span>
             </div>
         </div>
@@ -46,15 +47,15 @@
 </div>
 
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.deleteCategory()" style="bottom: 45px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.deleteCategory()" style="bottom: 45px; right: 15px;">
         <md-icon>clear</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.save()" style="bottom: 105px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.save()" style="bottom: 105px; right: 15px;">
         <md-icon>save</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="card.showItemModal()" style="bottom: 165px; right: 15px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.showItemModal()" style="bottom: 165px; right: 15px;">
         <md-icon>open_in_new</md-icon>
     </md-button>
 

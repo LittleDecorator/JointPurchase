@@ -1,23 +1,23 @@
-<md-tabs md-dynamic-height md-border-bottom md-autoselect="false" id="tabs" md-selected="filter.selectedTab">
-    <md-tab label="Заказы" md-on-select="remember(0);">
+<md-tabs md-dynamic-height md-border-bottom md-autoselect="false" id="tabs" md-selected="vm.filter.selectedTab">
+    <md-tab label="Заказы" md-on-select="vm.remember(0);">
         <md-content class="md-padding">
 
                 <div layout="row" style="margin: 10px 0">
 
-                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="filter.dateFrom" ></mdp-date-picker>
+                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateFrom" ></mdp-date-picker>
 
-                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="filter.dateTo" style="margin-left: 1%"></mdp-date-picker>
+                    <mdp-date-picker flex="20" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateTo" style="margin-left: 1%"></mdp-date-picker>
 
                     <md-input-container class="md-block no-errors" flex="25" style="margin-left: 1%">
                         <label>Статус заказа</label>
-                        <md-select name="status" ng-model="filter.status" ng-model-options="{trackBy: '$value.id'}">
-                            <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+                        <md-select name="status" ng-model="vm.filter.status" ng-model-options="{trackBy: '$value.id'}">
+                            <md-option ng-repeat="status in vm.statuses" ng-value="status">{{::status.value}}</md-option>
                         </md-select>
                     </md-input-container>
 
                     <div style="margin: auto 0 auto 0;">
-                        <a class="waves-effect waves-light md-button btn md" ng-click="apply()">Найти</a>
-                        <a class="waves-effect waves-light md-button btn md" ng-click="clear()">Сбросить</a>
+                        <a class="waves-effect waves-light md-button btn md" ng-click="vm.apply()">Найти</a>
+                        <a class="waves-effect waves-light md-button btn md" ng-click="vm.clear()">Сбросить</a>
                     </div>
                 </div>
 
@@ -35,15 +35,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr id="{{::record.id}}" ng-repeat="record in history" class="collection-item" infinite-scroll='loadData()' infinite-scroll-disabled='stopLoad' infinite-scroll-distance='2' infinite-scroll-container="'.main-wrapper'">
+                    <tr id="{{::record.id}}" ng-repeat="record in vm.history track by record.id" class="collection-item" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.stopLoad' infinite-scroll-distance='2'>
                         <td class="center-align">{{::record.uid}}</td>
                         <td class="center-align">{{::record.delivery}}</td>
-                        <td class="center-align">{{record.status.name}}</td>
+                        <td class="center-align">{{::record.status.name}}</td>
                         <td class="center-align">{{::record.createDate|date:'dd-MM-yyyy'}}</td>
                         <td class="center-align">{{::record.payment|number}} руб</td>
                         <td>
-                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
-                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
                         </td>
                     </tr>
                     </tbody>
@@ -52,7 +52,8 @@
 
         </md-content>
     </md-tab>
-    <md-tab label="Персональная информаия" md-on-select="remember(1);">
+
+    <md-tab label="Персональная информаия" md-on-select="vm.remember(1);">
         <md-content class="md-padding" >
 
             <div layout="column">
@@ -61,23 +62,23 @@
 
                     <md-input-container flex>
                         <label class="required">Имя</label>
-                        <input name="firstName" ng-model="person.firstName">
-                        <div ng-messages="personInfo.firstName.$error" ng-if="!showHints">
+                        <input name="firstName" ng-model="vm.person.firstName">
+                        <div ng-messages="vm.forms.personInfo.firstName.$error" ng-if="!vm.showHints">
                             <div ng-message="required">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
                     <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label class="required">Фамилия</label>
-                        <input name="lastName" ng-model="person.lastName">
-                        <div ng-messages="personInfo.lastName.$error" ng-if="!showHints">
+                        <input name="lastName" ng-model="vm.person.lastName">
+                        <div ng-messages="vm.forms.personInfo.lastName.$error" ng-if="!vm.showHints">
                             <div ng-message="required">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
                     <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label>Отчество</label>
-                        <input name="middleName" ng-model="person.middleName">
+                        <input name="middleName" ng-model="vm.person.middleName">
                     </md-input-container>
 
                 </div>
@@ -86,26 +87,26 @@
 
                     <md-input-container flex>
                         <label>Номер телефона</label>
-                        <input name="phoneNumber" ng-model="person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
-                        <div class="hint" ng-if="showHints">Пример: (915) 343-43-45</div>
-                        <div ng-messages="personInfo.phoneNumber.$error" ng-if="!showHints">
+                        <input name="phoneNumber" ng-model="vm.person.phoneNumber" mask="(999) 999-99-99" mask-restrict="reject">
+                        <div class="hint" ng-if="vm.showHints">Пример: (915) 343-43-45</div>
+                        <div ng-messages="vm.forms.personInfo.phoneNumber.$error" ng-if="!vm.showHints">
                             <div ng-message-exp="['mask']">Не корректный номер телефона</div>
                         </div>
                     </md-input-container>
 
                     <md-input-container flex style="margin-left: 1%">
                         <label class="required">Почта</label>
-                        <input name="email" ng-model="person.email" ng-pattern="/^.+@.+\..+$/" required>
-                        <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
-                        <div ng-messages="personInfo.email.$error" ng-if="!showHints">
+                        <input name="email" ng-model="vm.person.email" ng-pattern="/^.+@.+\..+$/" required>
+                        <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+                        <div ng-messages="vm.forms.personInfo.email.$error" ng-if="!vm.showHints">
                             <div ng-message-exp="['pattern']">Не корректный e-mail</div>
                         </div>
                     </md-input-container>
 
                     <md-input-container flex class="no-errors" style="margin-left: 1%">
                         <label>Индекс</label>
-                        <input name="postAddress" ng-model="person.postAddress" mask="999999" mask-restrict="reject" post-validate>
-                        <div ng-messages="personInfo.postAddress.$error" ng-if="!showHints">
+                        <input name="postAddress" ng-model="vm.person.postAddress" mask="999999" mask-restrict="reject" post-validate>
+                        <div ng-messages="vm.forms.personInfo.postAddress.$error" ng-if="!vm.showHints">
                             <div ng-message="length">Указанный индекс не корректен</div>
                         </div>
                     </md-input-container>
@@ -114,10 +115,26 @@
 
                 <md-input-container class="no-errors">
                     <label>Адрес</label>
-                    <input ng-model="person.address">
+                    <input ng-model="vm.person.address">
                 </md-input-container>
 
             </div>
         </md-content>
     </md-tab>
 </md-tabs>
+
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.removeAccount()" style="bottom: 165px; right: 25px;">
+    <md-tooltip md-direction="left">Удалить учетку</md-tooltip>
+    <md-icon>block</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.changePassword('w-30')" style="bottom: 95px; right: 25px;">
+    <md-tooltip md-direction="left">Изменить пароль</md-tooltip>
+    <md-icon>security</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" ng-class="{'disabled':!vm.forms.personInfo.$dirty}" style="bottom: 25px; right: 25px;">
+    <md-tooltip md-direction="left">Сохранить</md-tooltip>
+    <md-icon>save</md-icon>
+</md-button>

@@ -1,43 +1,12 @@
-<!--<div class="section" style="padding-bottom: 2rem">-->
-    <!--<div style="background:#FFFFFF;border:1px solid lightgray;border-radius:5px;overflow-x: auto;">-->
-        <!--<abn-tree tree-data="categories" tree-control="tree" on-select="treeHandler(branch)" on-toggle="toggleHandler(branch)" expand-level="1"></abn-tree>-->
-    <!--</div>-->
-
-<!--&lt;!&ndash;<md-content flex="" role="navigation" class="_md flex">&ndash;&gt;-->
-    <!--&lt;!&ndash;<ul class="docs-menu">&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<li ng-repeat="category in categories" class="parent-list-item parentActive">&ndash;&gt;-->
-            <!--&lt;!&ndash;<menu-toggle section="section" class="ng-scope ng-isolate-scope">&ndash;&gt;-->
-                <!--&lt;!&ndash;<button>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div flex="" layout="row" class="ng-binding ng-scope layout-row flex">&ndash;&gt;-->
-                        <!--&lt;!&ndash;{{category.title}}&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span flex="" class="flex"></span>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span aria-hidden="true" class="md-toggle-icon toggled">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<md-icon>expand_more</md-icon>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                <!--&lt;!&ndash;</button>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;</menu-toggle>&ndash;&gt;-->
-        <!--&lt;!&ndash;</li>&ndash;&gt;-->
-    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-<!--&lt;!&ndash;</md-content>&ndash;&gt;-->
-
-<!--</div>-->
-
-<!--<md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="createCategory()" style="bottom: 45px; right: 15px;">-->
-    <!--<md-icon>add</md-icon>-->
-<!--</md-button>-->
-
 <h4 class="example_head">Категории:</h4>
 
 
 <div layout="row" id="testMenu">
     <md-content role="navigation" style="width: 100%">
         <ul class="side-menu" style="margin-bottom: 0">
-            <li ng-repeat="section in vm.menu.sections" class="parent-list-item" ng-class="{'parentActive' : vm.isSectionSelected(section)}">
-                <h2 class="menu-heading" ng-if="section.type === 'heading'" id="heading_{{ section.name | nospace }}">
-                    {{section}}
+            <li ng-repeat="section in vm.menu.sections track by section.name" class="parent-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
+                <h2 class="menu-heading" ng-if="section.type === 'heading'" id="heading_{{ ::section.name | nospace }}">
+                    {{::section}}
                 </h2>
                 <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
                 <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>

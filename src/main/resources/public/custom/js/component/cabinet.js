@@ -9,124 +9,169 @@
         .controller('cabinetController',['$scope','$state','$stateParams','dataResources','$timeout','statusMap','deliveryMap','modal','$mdToast','$rootScope',
             function ($scope, $state, $stateParams, dataResources, $timeout, statusMap, deliveryMap, modal, $mdToast,$rootScope) {
 
-            var templatePath = "pages/fragment/cabinet/";
-            // история заказов
-            $scope.history = [];
-            // персональная информация    
-            $scope.person = null;
-            // вспомогательные мапы     
-            $scope.statuses = statusMap;
-            $scope.deliveries = deliveryMap;
-            $scope.showHints = true;
-            
-            // ищем сохраненый фильтр в storage
-            if(localStorage.getItem($state.current.name)){
-                $scope.filter = angular.fromJson(localStorage.getItem($state.current.name));
-            } else {
-                $scope.filter = {dateFrom:null, dateTo:null, status:null, limit:30, offset:0, selectedTab:0};
-            }
-
-            var confirmedFilter = angular.copy($scope.filter);
+                var templatePath = "pages/fragment/cabinet/";
                 
-            var busy = false;
-            var portion = 0;
-            $scope.stopLoad=false;
-            $scope.allDataLoaded = false;
+                var busy = false;
+                var portion = 0;
+                var confirmedFilter = null;
+                
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
+                
+                vm.init = init;
+                vm.loadData = loadData;
+                vm.clear = clear;
+                vm.apply = apply;
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.remember = remember;
+                vm.getPerson = getPerson;
+                vm.save = save;
+                vm.openFilter = openFilter;
+                vm.changePassword = changePassword;
+                vm.deleteAccount = deleteAccount;
+                vm.viewOrder = viewOrder;
+                vm.cancelOrder = cancelOrder;
 
-            $scope.loadData = function(isClean){
-                if(!$scope.stopLoad && !busy){
-                    busy = true;
+                vm.forms = {};
+                // история заказов
+                vm.history = [];
+                // персональная информация    
+                vm.person = null;
+                // вспомогательные мапы     
+                vm.statuses = statusMap;
+                vm.deliveries = deliveryMap;
+                vm.showHints = true;
+                vm.stopLoad=false;
+                vm.allDataLoaded = false;
 
-                    dataResources.orderHistory.all(confirmedFilter).$promise.then(function(data){
-
-                        if(data.length < confirmedFilter.limit){
-                            $scope.stopLoad = true;
-                        }
-
-                        if(isClean){
-                            $scope.history = [];
-                        }
-
-                        $scope.history = data;
-
-                        portion++;
-                        confirmedFilter.offset = portion * confirmedFilter.limit;
-                        $scope.allDataLoaded = true;
-                        busy = false;
-                    });
-                }
-            };
-
-            $scope.clear = function () {
-                portion = 0;
-                $scope.filter = {dateFrom:null, dateTo:null, status:null, limit:30, offset:0, selectedTab:0};
-                confirmedFilter = angular.copy($scope.filter);
-                localStorage.removeItem($state.current.name);
-                $scope.stopLoad = false;
-                $scope.loadData(true);
-            };
-
-            $scope.apply = function () {
-                portion = 0;
-                $scope.filter.offset = portion * $scope.filter.limit;
-                confirmedFilter = angular.copy($scope.filter);
-                localStorage.setItem($state.current.name,angular.toJson($scope.filter));
-
-                if(confirmedFilter.dateTo!=null) confirmedFilter.dateTo = moment(confirmedFilter.dateTo).endOf('day').toDate();
-                if(confirmedFilter.dateFrom!=null) confirmedFilter.dateFrom = moment(confirmedFilter.dateFrom).startOf('day').toDate();
-                if(confirmedFilter.status!=null) confirmedFilter.status = confirmedFilter.status.id;
-
-                $scope.stopLoad = false;
-                $scope.loadData(true);
-            };
-
-            /* получение шаблона страницы */
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
-                    return templatePath + "cabinet-sm.html"
-                }
-                if($scope.width > 600){
-                    if($scope.width < 1025){
-                        return templatePath + "cabinet-md.html"
+                /**
+                 * Инициализация
+                 */
+                function init(){
+                    // ищем сохраненый фильтр в storage
+                    if(localStorage.getItem($state.current.name)){
+                        vm.filter = angular.fromJson(localStorage.getItem($state.current.name));
+                    } else {
+                        vm.filter = {dateFrom:null, dateTo:null, status:null, limit:10, offset:0, selectedTab:0};
                     }
-                    return templatePath + "cabinet-lg.html"
+                    apply();
+                    getPerson();
                 }
-            };
 
-            /* Положить фильтр в хранилище */
-            $scope.remember = function(idx){
-                $scope.filter.selectedTab = idx;
-                localStorage.setItem($state.current.name,angular.toJson($scope.filter));
-            };
+                /**
+                 * Загрузка данных
+                 * @param isClean
+                 */
+                function loadData (isClean){
+                    if(!vm.stopLoad && !busy){
+                        busy = true;
 
-            /* Получение персональных данных */
-            $scope.getPerson = function(){
-                dataResources.customerPrivate.get().$promise.then(function(data){
-                    $scope.person = data;
-                }, function(error){
-                    console.log(error);
-                });
-            };
+                        dataResources.orderHistory.all(confirmedFilter).$promise.then(function(data){
+                            if(data.length < confirmedFilter.limit) {
+                                vm.stopLoad = true;
+                            }  
 
-            /* Сохранить изменения */
-            $scope.save = function(){
-                $scope.showHints = false;
-                console.log($scope);
-                if($scope.personInfo.$valid){
-                    console.log('All data valid');
-                    dataResources.customer.put($scope.person).$promise.then(function(data){
-                        $mdToast.show($rootScope.toast.textContent('Ваши данные успешно изменены').theme('success'));
-                        $scope.showHints = true;
+                            if(isClean){
+                                vm.history = [];
+                            }
+
+                            vm.history = vm.history.concat(data);
+
+                            portion++;
+                            confirmedFilter.offset = portion * confirmedFilter.limit;
+                            vm.allDataLoaded = true;
+                            busy = false;
+                        });
+                    }
+                }
+
+                /**
+                 * Очистка фильтра
+                 */
+                function clear(){
+                    portion = 0;
+                    vm.filter = {dateFrom:null, dateTo:null, status:null, limit:10, offset:0, selectedTab:0};
+                    confirmedFilter = angular.copy(vm.filter);
+                    localStorage.removeItem($state.current.name);
+                    vm.stopLoad = false;
+                    loadData(true);
+                }
+
+                /**
+                 * Применение фильтра
+                 */
+                function apply(){
+                    portion = 0;
+                    vm.filter.offset = portion * vm.filter.limit;
+                    confirmedFilter = angular.copy(vm.filter);
+                    localStorage.setItem($state.current.name, angular.toJson(vm.filter));
+
+                    if(confirmedFilter.dateTo!=null) confirmedFilter.dateTo = moment(confirmedFilter.dateTo).endOf('day').toDate();
+                    if(confirmedFilter.dateFrom!=null) confirmedFilter.dateFrom = moment(confirmedFilter.dateFrom).startOf('day').toDate();
+                    if(confirmedFilter.status!=null) confirmedFilter.status = confirmedFilter.status.id;
+
+                    vm.stopLoad = false;
+                    loadData(true);
+                }
+                
+                /**
+                 * получение шаблона страницы 
+                 * @returns {string}
+                 */
+                function getTemplateUrl(){
+                    if(mvm.width < 601){
+                        return templatePath + "cabinet-sm.html"
+                    }
+                    if(mvm.width > 600){
+                        if(mvm.width < 1025){
+                            return templatePath + "cabinet-md.html"
+                        }
+                        return templatePath + "cabinet-lg.html"
+                    }
+                }
+                
+                /**
+                 * Положить фильтр в хранилище 
+                 * @param idx
+                 */
+                function remember(idx){
+                    vm.filter.selectedTab = idx;
+                    localStorage.setItem($state.current.name, angular.toJson(vm.filter));
+                }
+                
+                /**
+                 * Получение персональных данных 
+                 */
+                function getPerson(){
+                    dataResources.customerPrivate.get().$promise.then(function(data){
+                        vm.person = data;
                     }, function(error){
-                        $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
+                        console.log(error);
                     });
-                } else {
-                    console.log('Some error present')
                 }
-            };
 
-                // модальное окно фильтрации
-                $scope.openFilter = function (wClass) {
+                /**
+                 * Сохранить изменения 
+                 */
+                function save(){
+                    vm.showHints = false;
+                    if(vm.personInfo.$valid){
+                        dataResources.customer.put(vm.person).$promise.then(function(data){
+                            $mdToast.show($rootScope.toast.textContent('Ваши данные успешно изменены').theme('success'));
+                            vm.showHints = true;
+                        }, function(error){
+                            $mdToast.show($rootScope.toast.textContent('Неудалось сохранить изменения').theme('error'));
+                        });
+                    } else {
+                        console.log('Some error present')
+                    }
+                }
+
+                /**
+                 * модальное окно фильтрации
+                 * @param wClass
+                 */
+                function openFilter(wClass) {
                     var dialog = modal({
                         templateUrl: "pages/modal/cabinet-filter.html",
                         className: 'ngdialog-theme-default ' + wClass,
@@ -134,78 +179,101 @@
                         closeByDocument: true,
                         scope: $scope
                     });
+                    
                     dialog.closePromise.then(function (output) {
-                        if (output.value && output.value != '$escape') {
-                        }
+                        if (output.value && output.value != '$escape') {}
                     });
-                };
-
-            /* Изменение пароля клиента */
-            $scope.changePassword = function(){
-                var dialog = modal({templateUrl:"pages/modal/passwordModal.html",className:'ngdialog-theme-default small-width',closeByEscape:true,controller:"passwordModalController",data:null});
-                dialog.closePromise.then(function(output) {
-                    if(output.value && output.value != '$escape'){
-                        $mdToast.show($scope.toast.textContent('ваш пароль успешно изменён').theme('success'));
-                    }
-                });
-            };
-
-            /* Удаление учетной записи */
-            $scope.deleteAccount = function(){
-                //TODO: показать окно подтверждения. Удалить учетку и все что с ней связанно.
-            };
-
-            /* Просмотр заказа */
-            $scope.viewOrder = function(id){
-                $state.go("cabinet.historyDetail",{id:id});
-            };
-
-            /* отменяем заказ */
-            $scope.cancelOrder = function(id){
-                console.log("cabinetController");
-                var order = helpers.findInArrayById($scope.history, id);
-                if(order.status!='canceled' || order.status!='done'){
-                    dataResources.orderCancel.put({id: id}).$promise.then(function(data){
-                        if(data.status){
-                            order.status = data.status;
-                            $mdToast.show($scope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
-                        } else {
-                            if(data.status != null){
-                                $mdToast.show($scope.toast.textContent('Не удалось отменить заказ').theme('error'));
-                            }
+                }
+                
+                /**
+                 * Изменение пароля клиента 
+                 */
+                function changePassword(wClass){
+                    var dialog = modal({
+                        templateUrl:mvm.width< 601?"pages/fragment/modal/passwordChange.html":"pages/modal/passwordModal.html",
+                        className:'ngdialog-theme-default ' + wClass,
+                        closeByEscape:true,
+                        controller:"passwordModalController as passVm",
+                        data:null
+                    });
+                    
+                    dialog.closePromise.then(function(output) {
+                        if(output.value && output.value != '$escape'){
+                            $mdToast.show(mvm.toast.textContent('ваш пароль успешно изменён').theme('success'));
                         }
                     });
                 }
-            };
+                
+                /**
+                 * Удаление учетной записи 
+                 */
+                function deleteAccount(){
+                    //TODO: показать окно подтверждения. Удалить учетку и все что с ней связанно.
+                }
+                
+                /**
+                 * Просмотр заказа 
+                 * @param id
+                 */
+                function viewOrder(id){
+                    $state.go("cabinet.historyDetail",{id:id});
+                }
+                
+                /**
+                 * отменяем заказ 
+                 * @param id
+                 */
+                function cancelOrder(id){
+                    var order = helpers.findInArrayById(vm.history, id);
+                    if(order.status!='canceled' || order.status!='done'){
+                        dataResources.orderCancel.put({id: id}).$promise.then(function(data){
+                            if(data.status){
+                                order.status = data.status;
+                                $mdToast.show(mvm.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                            } else {
+                                if(data.status != null){
+                                    $mdToast.show(mvm.toast.textContent('Не удалось отменить заказ').theme('error'));
+                                }
+                            }
+                        });
+                    }
+                }
 
-            $timeout(function(){
-                $scope.apply();
-                $scope.getPerson();
-            },50)
-
+                init();
 
         }])
 
         /* Контроллер иодального окна изменения пароля */
-        .controller('passwordModalController',['$scope','dataResources','resolved','cryptoService','$mdToast',function($scope,dataResources,resolved,cryptoService,$mdToast){
+        .controller('passwordModalController', ['$scope','dataResources','resolved','cryptoService','$mdToast',
+            function($scope, dataResources, resolved, cryptoService, $mdToast){
+                
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
 
-            $scope.showHints = true;
+                vm.change = change;
 
-            /* изменить пароль */
-            $scope.change = function() {
-                $scope.showHints = false;
-                if($scope.pswChange.$valid){
-                    dataResources.authChange.post({oldPassword:$scope.oldPassword, newPassword:cryptoService.encryptString($scope.newPassword)}).$promise.then(function(data){
+                vm.showHints = true;
+                vm.oldPassword=null;
+                vm.newPassword = null;
+                vm.forms = {};
+
+                /**
+                 * изменить пароль 
+                 */
+                function change () {
+                    vm.showHints = false;
+                    if(vm.forms.pswChange.$valid){
+                        dataResources.authChange.post({oldPassword:vm.oldPassword, newPassword:cryptoService.encryptString(vm.newPassword)}).$promise.then(function(data){
                         if(data.result){
-                            $scope.closeThisDialog(data);
+                            vm.closeThisDialog(data);
                         } else {
-                            $mdToast.show($scope.toast.textContent('Не удалось изменить пароль').theme('error'));
+                            $mdToast.show(mvm.toast.textContent('Не удалось изменить пароль').theme('error'));
                         }
-                    }, function(error){
-                        $mdToast.show($scope.toast.textContent('Не удалось изменить пароль').theme('error'));
-                    });
+                        }, function(error){
+                            $mdToast.show(mvm.toast.textContent('Не удалось изменить пароль').theme('error'));
+                        });
+                    }
                 }
-            };
 
         }])
 
@@ -213,49 +281,57 @@
         .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap', 'dataResources', '$mdToast',
             function ($scope, order, items, deliveryMap, dataResources, $mdToast) {
 
-                console.log(items);
-
                 var templatePath = "pages/fragment/cabinet/history/";
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
 
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.cancelOrder = cancelOrder;
                 // получим заказ
-                $scope.order = order;
+                vm.order = order;
                 // получим способы доставки
-                $scope.order.delivery = helpers.findInArrayById(deliveryMap, $scope.order.delivery)
+                vm.order.delivery = helpers.findInArrayById(deliveryMap, vm.order.delivery)
                 // получим товары из заказа
-                $scope.items = items.map(function(element){
+                vm.items = items.map(function(element){
                     var item = element.item;
                     item.count = element.count;
                     return item
                 });
 
-                /* получение шаблона страницы */
-                $scope.getTemplateUrl = function(){
-                    if($scope.width < 601){
+                /**
+                 * получение шаблона страницы
+                 * @returns {string}
+                 */
+                function getTemplateUrl(){
+                    if(mvm.width < 601){
                         return templatePath + "history-sm.html"
                     }
-                    if($scope.width > 600){
-                        if($scope.width < 1025){
+                    if(mvm.width > 600){
+                        if(mvm.width < 1025){
                             return templatePath + "history-md.html"
                         }
                         return templatePath + "history-lg.html"
                     }
-                };
+                }
 
-                $scope.cancelOrder = function(id){
-                    console.log("cabinetHistoryDetailController");
-                    if($scope.order.status!='canceled' || $scope.order.status!='done'){
+                /**
+                 * Отмена заказа
+                 * @param id
+                 */
+                function cancelOrder(id){
+                    if(vm.order.status!='canceled' || vm.order.status!='done'){
                         dataResources.orderCancel.put({id: id}).$promise.then(function(data){
                             if(data.status){
-                                $scope.order.status = data.status;
-                                $mdToast.show($scope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                                vm.order.status = data.status;
+                                $mdToast.show(mvm.toast.textContent('Ваш заказ успешно отменён').theme('success'));
                             } else {
                                 if(data.status!= null){
-                                    $mdToast.show($scope.toast.textContent('Не удалось отменить заказ').theme('error'));
+                                    $mdToast.show(mvm.toast.textContent('Не удалось отменить заказ').theme('error'));
                                 }
                             }
                         });
                     }
-                };
+                }
 
             }])
 })();

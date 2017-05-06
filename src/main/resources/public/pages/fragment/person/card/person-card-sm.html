@@ -65,7 +65,7 @@
             <md-input-container class="no-errors">
                 <label class="required">Должность</label>
                 <input name="job" ng-model="vm.person.job" required>
-                <div ng-messages="vm.personCard.job.$error" ng-if="!showHints">
+                <div ng-messages="vm.personCard.job.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>

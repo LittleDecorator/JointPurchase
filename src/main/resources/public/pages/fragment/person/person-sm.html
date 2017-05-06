@@ -1,5 +1,5 @@
 <md-list>
-    <div class="card-panel" ng-repeat="customer in vm.customers" style="padding: 5px 10px">
+    <div class="card-panel" ng-repeat="customer in vm.customers track by customer.id" style="padding: 5px 10px">
         <md-list-item class="md-3-line">
             <md-icon style="font-size: 55px;">portrait</md-icon>
 

@@ -8,7 +8,7 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', 
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal',
             function ($scope, $state, dataResources,$timeout, companies, modal) {
 
                 var busy = false;
@@ -26,14 +26,14 @@
                 vm.forSaleToggle = forSaleToggle;
                 vm.openFilter = openFilter;
                 vm.getTemplate = getTemplate;
-                
+
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, category:null, limit:30, offset:0};
+                vm.filter = {name:null, article:null, company:null, category:null, limit:5, offset:0};
                 vm.confirmedFilter = angular.copy(vm.filter);
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
-                vm.infiniteDistance = 2;
+                vm.infiniteDistance = 1;
                 
                 /* получение данных с сервера */
                 function loadData(isClean){
@@ -137,6 +137,7 @@
                         return templatePath + "items-lg.html"
                     }
                 }
+
         }])
 
         /* Карточка товара */

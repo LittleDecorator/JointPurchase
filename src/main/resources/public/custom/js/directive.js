@@ -102,7 +102,7 @@
             };
         })
 
-        .directive('menuToggle', ['$timeout', function ($timeout ) {
+        .directive('menuToggle', function () {
             return {
                 scope: {
                     section: '='
@@ -125,7 +125,7 @@
                     }
                 }
             }
-        }])
+        })
 
         .directive('menuLink', function () {
             return {

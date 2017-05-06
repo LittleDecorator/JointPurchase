@@ -12,7 +12,7 @@
                 var templatePath = "pages/fragment/person/";
                 var busy = false;
                 var portion = 0;
-                
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.loadData = loadData;
@@ -122,11 +122,11 @@
 
                 // получение шаблона страницы
                 function getTemplateUrl(){
-                    if($scope.width < 601){
+                    if(mvm.width < 601){
                         return templatePath + "person-sm.html"
                     }
-                    if($scope.width > 600){
-                        if($scope.width < 961){
+                    if(mvm.width > 600){
+                        if(mvm.width < 961){
                             return templatePath + "person-md.html"
                         }
                         return templatePath + "person-lg.html"
@@ -140,6 +140,7 @@
                 
                 var templatePath = "pages/fragment/person/card/";
 
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.save = save;
@@ -195,7 +196,7 @@
                 }
 
                 function getTemplateUrl(){
-                    if($scope.width < 601){
+                    if(mvm.width < 601){
                         return templatePath + "person-card-sm.html";
                     } else {
                         return templatePath + "person-card-lg.html";
