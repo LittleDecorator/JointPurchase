@@ -1,0 +1,18 @@
+<div layout="column" style="margin: 15px; height: 95%">
+    <div class="card-title">
+        <div class="row valign-wrapper" style="margin-bottom: 0">
+            <div class="col s12">
+                <span style="font-size: 1.8rem; line-height: 55.5px;">Категории:</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-panel virtualRepeatdemoVerticalUsage" style="padding: 0;">
+        <md-virtual-repeat-container id="vertical-container">
+            <div md-virtual-repeat="item in vm.items" class="repeated-item" flex>
+                <md-checkbox id="{{item.id}}" aria-label="{{item.name}}" ng-model="item.selected" style="margin-bottom: 0">{{item.name}}</md-checkbox>
+            </div>
+        </md-virtual-repeat-container>
+    </div>
+    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.select();" style="margin-top: auto">Выбрать</md-button>
+    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+</div>

@@ -18,7 +18,7 @@
                 <div class="box" ng-repeat="img in vm.item.images" ng-click="vm.show(img.contentId)"
                      style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
                     <div class="boxInner">
-                        <img ng-src="{{::PREVIEW_URL+img.contentId}}"
+                        <img ng-src="{{::mvm.PREVIEW_URL+img.contentId}}"
                              style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                     </div>
                 </div>
@@ -29,7 +29,7 @@
             <p style="margin: 0">{{::vm.item.description}}</p>
             <md-divider style="margin-top: 5px;margin-bottom: 10px"></md-divider>
             <div layout="row" style="margin-bottom: 10px; align-self: flex-end; font-size: 1.3rem;">
-                <b>Цена: </b>{{::vm.item.price}} руб
+                <b style="padding-right: 5px">Цена:</b>{{::vm.item.price}} руб
             </div>
 
             <div layout="column" layout-align="center center">

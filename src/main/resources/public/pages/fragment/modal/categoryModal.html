@@ -1,0 +1,15 @@
+<div layout="column" style="margin: 15px; height: 95%">
+    <div class="card-title">
+        <div class="row valign-wrapper" style="margin-bottom: 0">
+            <div class="col s12">
+                <span style="font-size: 1.8rem; line-height: 55.5px;">Категории:</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-panel" style="height: 100%; overflow-y: scroll">
+        <abn-tree tree-data="vm.categories" tree-control="vm.tree" on-select="vm.treeHandler(branch)" expand-level="1" template-url="official/nav-tree/abn-tree-modal-chk.tpl.html"></abn-tree>
+    </div>
+
+    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.select();" style="margin-top: auto">Выбрать</md-button>
+    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+</div>

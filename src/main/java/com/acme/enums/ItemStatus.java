@@ -14,7 +14,8 @@ public enum ItemStatus {
 
     SOLD_OUT("Продано"),
     SHIPPING("Ожидается"),
-    AVAILABLE("В наличие");
+    AVAILABLE("В наличие"),
+    PREORDER("Под заказ");
 
     String text;
 

@@ -1,13 +1,14 @@
 <div>
-    <div ng-if="companies.length>0">
-        <div ng-include="getTemplateUrl()"></div>
+
+    <div ng-if="vm.companies.length > 0">
+        <div ng-include="vm.getTemplateUrl()"></div>
     </div>
 
-    <div class="table-result" ng-if="companies.length==0">
+    <div class="table-result" ng-if="vm.companies.length == 0">
         <span style="margin-right: 2%">Не создано ни одного поставщика</span>
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addCompany()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addCompany()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
         <md-icon>add</md-icon>
     </md-button>
 </div>

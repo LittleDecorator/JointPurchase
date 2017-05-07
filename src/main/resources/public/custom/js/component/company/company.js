@@ -6,121 +6,144 @@
     'use strict';
 
     angular.module('company')
-        .controller('companyController',['$scope','$state','dataResources', function ($scope, $state, dataResources) {
-
-            var templatePath = "pages/fragment/company/";
-            $scope.companies = dataResources.company.query();
-            console.log($scope.companies);
-
-            //create new company
-            $scope.addCompany = function () {
-                $state.transitionTo("company.detail");
-            };
-
-            //show company details
-            $scope.edit = function (id) {
-                $state.go("company.detail",{id:id});
-            };
-
-            $scope.delete = function (id) {
-                var company = helpers.findInArrayById($scope.companies, id);
-                dataResources.company.delete({id: id}).$promise.then(function(data){
-                    var idx = $scope.companies.indexOf(company);
-                    $scope.companies.splice(idx, 1);
-                    Materialize.toast('Поставщик '+ company.name +' успешно удален',3000,'fine');
-                }, function(error){
-                    console.log(error);
-                    Materialize.toast('Не удалось удалить  поставщика '+ company.name ,3000,'error');
-                });
-            };
-
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
-                    return templatePath + "company-sm.html"
-                }
-                if($scope.width > 600){
-                    if($scope.width < 961){
-                        return templatePath + "company-md.html"
-                    }
-                    return templatePath + "company-lg.html"
-                }
-            };
-
-        }])
-        .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources','$mdToast', function ($rootScope,$scope, $state, company, dataResources,$mdToast) {
-
-            var templatePath = "pages/fragment/company/card/";
+        .controller('companyController',['$scope','$state','dataResources','$mdToast','$rootScope', 
+            function ($scope, $state, dataResources, $mdToast, $rootScope) {
+                
+                var templatePath = "pages/fragment/company/";
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
             
-            $scope.company = company;
-            $scope.showHints = true;
+                vm.addCompany = addCompany;
+                vm.edit = edit;
+                vm.deleteCompany = deleteCompany;
+                vm.getTemplateUrl = getTemplateUrl;
+            
+                vm.companies = dataResources.company.query();
+            
+                /**
+                * Создать новую компанию
+                */
+                function addCompany() {
+                    $state.transitionTo("company.detail");
+                }
 
-            var last = {
-                bottom: false,
-                top: true,
-                left: false,
-                right: true
-            };
-            $scope.toastPosition = angular.extend({},last);
-            $scope.getToastPosition = function() {
-                var result = Object.keys($scope.toastPosition).filter(function(pos) { return $scope.toastPosition[pos]; }).join(' ');
-                console.log(result);
-                return result;
-            };
+                /**
+                * Перейти в карточку
+                * @param id
+                */
+                function edit(id) {
+                    $state.go("company.detail",{id:id});
+                }
 
-            $scope.save = function () {
-                var toast = $mdToast.simple().position('top right').hideDelay(3000);
-                if($scope.companyCard.$dirty){
-                    if($scope.companyCard.$valid){
-                        if($scope.company && $scope.company.id){
-                            dataResources.company.put($scope.company).$promise.then(function(data){
-                                $mdToast.show(toast.textContent('Поставщик '+ $scope.company.name +' успешно изменён').theme('success'));
-                            },function(error){
-                                $mdToast.show(toast.textContent('Не удалось изменить поставщика '+ $scope.company.name).theme('error'));
-                            });
-                        } else {
-                            dataResources.company.post($scope.company).$promise.then(function(data){
-                                $mdToast.show(toast.textContent('Поставщик '+ $scope.company.name +' успешно создан').theme('success'));
-                                $scope.companyCard.$setPristine();
-                                $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                                    $rootScope.$broadcast('$refreshBreadcrumbs',$state);
-                                });
-                            },function(error){
-                                console.log(error);
-                                $mdToast.show(toast.textContent('Не удалось создать поставщика '+ $scope.company.name).theme('error'));
-                            });
+                /**
+                * Удаление компании
+                * @param id
+                */
+                function deleteCompany(id) {
+                    var company = helpers.findInArrayById(vm.companies, id);
+                    dataResources.company.delete({id: id}).$promise.then(function(data){
+                        var idx = vm.companies.indexOf(company);
+                        vm.companies.splice(idx, 1);
+                        $mdToast.show($rootScope.toast.textContent('Поставщик '+ company.name +' успешно удален').theme('success'));
+                    }, function(error){
+                        console.log(error);
+                        $mdToast.show($rootScope.toast.textContent('Не удалось удалить  поставщика '+ company.name).theme('error'));
+                    });
+                }
+
+                /**
+                * Получение шаблона
+                * @returns {string}
+                */
+                function getTemplateUrl(){
+                    if(mvm.width < 601){
+                        return templatePath + "company-sm.html"
+                    }
+                    if(mvm.width > 600){
+                        if(mvm.width < 961){
+                            return templatePath + "company-md.html"
                         }
-                        $scope.showHints = true;
-                    } else {
-                        $scope.showHints = false;
+                        return templatePath + "company-lg.html"
                     }
                 }
-            };
+            }])
+        
+        .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources','$mdToast', 
+            function ($rootScope,$scope, $state, company, dataResources,$mdToast) {
 
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601) {
-                    return templatePath + "company-card-sm.html";
+                var templatePath = "pages/fragment/company/card/";
+                var last = { bottom: false, top: true, left: false, right: true };
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
+                
+                vm.getToastPosition = getToastPosition;
+                vm.save = save;
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.afterInclude = afterInclude;
+                vm.showSimpleToast = showSimpleToast;
+                
+                vm.forms = {};
+                vm.company = company;
+                vm.showHints = true;
+                vm.toastPosition = angular.extend({},last);
+                
+                function getToastPosition() {
+                    return Object.keys(vm.toastPosition).filter(function (pos) {
+                        return vm.toastPosition[pos];
+                    }).join(' ');
                 }
-                if($scope.width < 961){
-                    return templatePath + "company-card-md.html";
-                } else {
-                    return templatePath + "company-card-lg.html";
+
+                function save() {
+                    var toast = $mdToast.simple().position('top right').hideDelay(3000);
+                    if(vm.forms.companyCard.$dirty){
+                        if(vm.forms.companyCard.$valid){
+                            if(vm.company && vm.company.id){
+                                dataResources.company.put(vm.company).$promise.then(function(data){
+                                    $mdToast.show(toast.textContent('Поставщик '+ vm.company.name +' успешно изменён').theme('success'));
+                                },function(error){
+                                    $mdToast.show(toast.textContent('Не удалось изменить поставщика '+ vm.company.name).theme('error'));
+                                });
+                            } else {
+                                dataResources.company.post(vm.company).$promise.then(function(data){
+                                    $mdToast.show(toast.textContent('Поставщик '+ vm.company.name +' успешно создан').theme('success'));
+                                    vm.forms.companyCard.$setPristine();
+                                    $state.go($state.current,{id:data.result},{notify:false}).then(function(){
+                                        $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                                    });
+                                },function(error){
+                                    console.log(error);
+                                    $mdToast.show(toast.textContent('Не удалось создать поставщика '+ vm.company.name).theme('error'));
+                                });
+                            }
+                            vm.showHints = true;
+                        } else {
+                            vm.showHints = false;
+                        }
+                    }
                 }
-            };
 
-            $scope.afterInclude = function(){
+                function getTemplateUrl(){
+                    if(mvm.width < 601) {
+                        return templatePath + "company-card-sm.html";
+                    }
+                    if(mvm.width < 961){
+                        return templatePath + "company-card-md.html";
+                    } else {
+                        return templatePath + "company-card-lg.html";
+                    }
+                }
 
-            };
+                function afterInclude(){
+                }
 
-            $scope.showSimpleToast = function() {
-                $mdToast.show(
-                    $mdToast.simple()
-                        .textContent('Simple Toast!')
-                        .position($scope.getToastPosition())
-                        .hideDelay(3000)
-                );
-            };
-
-            console.log($scope);
+                function showSimpleToast() {
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent('Simple Toast!')
+                            .position(getToastPosition())
+                            .hideDelay(3000)
+                    );
+                }
 
         }])
 

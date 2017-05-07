@@ -143,6 +143,7 @@
         .controller('catalogCardController',['$scope','$state','product',
             function ($scope, $state, product) {
 
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.show = show;
@@ -169,7 +170,7 @@
                             }
                         }
                     });
-                    vm.mainImage = $scope.PREVIEW_URL + id;
+                    vm.mainImage = mvm.PREVIEW_URL + id;
                 }
 
                 /**
@@ -182,7 +183,7 @@
                 /* Получения шаблона страницы */
                 function getTemplateUrl(){
                     var templatePath = "pages/fragment/catalog/card/";
-                    if($scope.width < 601){
+                    if(mvm.width < 601){
                         return templatePath + "catalog-card-sm.html";
                     } else {
                         return templatePath + "catalog-card-lg.html";
@@ -191,6 +192,9 @@
 
                 // callback загрузки шаблона страницы
                 function afterInclude(){}
+
+                console.log(vm.item)
+                console.log(mvm)
 
         }]);
 })();

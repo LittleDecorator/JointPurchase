@@ -14,7 +14,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="{{::item.id}}" ng-repeat="item in vm.items " class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
+        <tr id="{{::item.id}}" ng-repeat="item in vm.items track by item.id" class="collection-item" ng-class="{'bad-row': item.inStock < item.inOrder}">
             <td style="text-align: right;">
                 <md-checkbox class="filled-in" aria-label="not for sale" ng-model="item.notForSale" ng-change="vm.forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
             </td>

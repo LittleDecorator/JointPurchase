@@ -9,6 +9,6 @@
 
 <ul ng-show="isOpen()" id="docs-menu-{{::section.name|nospace}}" class="menu-toggle-list">
     <li ng-repeat="page in section.pages track by page.name" style="border-top: 1px solid rgba(0, 0, 0, 0.12);">
-        <menu-link section="page"></menu-link>
+        <menu-link section="page" ></menu-link>
     </li>
 </ul>

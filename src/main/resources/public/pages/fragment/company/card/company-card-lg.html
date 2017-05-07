@@ -3,30 +3,30 @@
         <div layout="row">
             <md-input-container flex="25">
                 <label class="required">Название</label>
-                <input name="name" ng-model="company.name" required >
-                <div ng-messages="companyCard.name.$error" ng-if="!showHints">
+                <input name="name" ng-model="vm.company.name" required >
+                <div ng-messages="vm.forms.companyCard.name.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="25" style="margin-left: 1%">
                 <label>Сайт</label>
-                <input ng-model="company.url">
+                <input ng-model="vm.company.url">
                 <div class="hint">Пример: http://website.com</div>
             </md-input-container>
 
             <md-input-container flex="25" style="margin-left: 1%">
                 <label>Почта</label>
-                <input name="email" ng-model="company.email" ng-pattern="/^.+@.+\..+$/">
-                <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
-                <div ng-messages="companyCard.email.$error" ng-if="!showHints">
+                <input name="email" ng-model="vm.company.email" ng-pattern="/^.+@.+\..+$/">
+                <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+                <div ng-messages="vm.forms.companyCard.email.$error" ng-if="!vm.showHints">
                     <div ng-message-exp="['pattern']">Не корректный e-mail</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="25" style="margin-left: 1%">
                 <label>Телефон</label>
-                <input ng-model="company.phone" mask="(999) 999-99-99" mask-restrict="reject">
+                <input ng-model="vm.company.phone" mask="(999) 999-99-99" mask-restrict="reject">
                 <div class="hint">Пример: (915) 343-43-45</div>
             </md-input-container>
 
@@ -34,17 +34,17 @@
 
         <md-input-container class="no-errors">
             <label>Описание</label>
-            <input ng-model="company.description">
+            <input ng-model="vm.company.description">
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Адрес</label>
-            <input ng-model="company.address">
+            <input ng-model="vm.company.address">
         </md-input-container>
 
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!companyCard.$dirty}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.save()" ng-class="{'disabled':!vm.forms.companyCard.$dirty}">
         <md-icon>save</md-icon>
     </md-button>
 </div>

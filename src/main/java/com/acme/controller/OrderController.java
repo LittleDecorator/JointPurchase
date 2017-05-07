@@ -14,6 +14,7 @@ import com.acme.repository.*;
 import com.acme.service.AuthService;
 import com.acme.service.EmailService;
 import com.acme.service.ItemService;
+import com.acme.service.NotificationService;
 import com.google.common.collect.Lists;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,9 @@ public class OrderController {
 
 	@Autowired
 	private ItemService itemService;
+
+	@Autowired
+	private NotificationService notificationService;
 
 	/**
 	 * Получение всех заказов по фильтру
@@ -198,6 +202,8 @@ public class OrderController {
 			transactionManager.commit(status);
 			/* отправляем на почту писмо с подтверждением заказа */
 			emailService.sendOrderStatus(order);
+			/* отправляем уведомление администраторам о новом заказе */
+			notificationService.sendOrderNotification(order);
 			return order;
 		} catch (Exception ex) {
 			ex.printStackTrace(System.out);

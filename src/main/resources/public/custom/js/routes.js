@@ -68,7 +68,7 @@ var route = {
                     }
                 },
                 data:{
-                    requireLogin: false,
+                    requireLogin: false
                 }
             },
 
@@ -259,8 +259,6 @@ var route = {
             },
 
             /*=================================== КАТАЛОГ ====================================*/
-            
-                /* Каталог товаров */
             {
                 name: 'catalog',
                 url:'/catalog',
@@ -478,7 +476,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/companies.html',
-                        controller: 'companyController'
+                        controller: 'companyController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -493,7 +492,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/card/companyCard.html',
-                        controller: 'companyDetailController'
+                        controller: 'companyDetailController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {

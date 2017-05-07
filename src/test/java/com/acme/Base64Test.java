@@ -15,8 +15,9 @@ public class Base64Test {
 
 	public static void main(String[] args){
 //		checkEQ();
-		checkBASE("UTF-8");
+//		checkBASE("UTF-8");
 //		checkHex();
+
 	}
 
 	private static byte[] hexToByte(String s) {

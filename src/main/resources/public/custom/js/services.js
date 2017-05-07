@@ -90,14 +90,14 @@
 
         }])
 
-        .service('itemClssModal', ['ngDialog','$rootScope',function (ngDialog, $rootScope) {
+        .service('itemClssModal', ['ngDialog',function (ngDialog) {
 
-            return function(data) {
+            return function(data, wClass) {
                 return ngDialog.open({
                     templateUrl:'pages/modal/itemModal.html',
-                    className: 'ngdialog-theme-default',
-                    controller: 'itemClssController',
-                    showClose: true,
+                    className: 'ngdialog-theme-default ' + wClass,
+                    controller: 'itemClssController as vm',
+                    showClose: false,
                     closeByEscape: true,
                     closeByDocument:false,
                     resolve: {

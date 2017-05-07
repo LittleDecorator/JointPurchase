@@ -29,7 +29,7 @@
 
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, category:null, limit:5, offset:0};
+                vm.filter = {name:null, article:null, company:null, category:null, limit:30, offset:0};
                 vm.confirmedFilter = angular.copy(vm.filter);
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
@@ -84,7 +84,7 @@
                     portion = 0;
                     vm.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
                     vm.confirmedFilter = angular.copy(vm.filter);
-                    localStorage.removeItem(vm.current.name);
+                    localStorage.removeItem($state.current.name);
                     vm.stopLoad = false;
                     loadData(true);
                 }
@@ -94,7 +94,7 @@
                     portion = 0;
                     vm.filter.offset = portion * vm.filter.limit;
                     vm.confirmedFilter = angular.copy(vm.filter);
-                    localStorage.setItem(vm.current.name,angular.toJson(vm.confirmedFilter));
+                    localStorage.setItem($state.current.name,angular.toJson(vm.confirmedFilter));
                     vm.stopLoad = false;
                     loadData(true);
                 }
@@ -116,7 +116,7 @@
                         className: 'ngdialog-theme-default ' + wClass,
                         closeByEscape: true,
                         closeByDocument: true,
-                        scope: vm
+                        scope: $scope
                     });
                     
                     dialog.closePromise.then(function (output) {
@@ -147,7 +147,7 @@
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
 
-                vm.removeCategory = removeCategory;
+                vm.validate = validate;
                 vm.showCategoryModal = showCategoryModal;
                 vm.save = save;
                 vm.showGallery = showGallery;
@@ -179,18 +179,21 @@
                     vm.item.inOrder = 0;
                 }
 
-                /* Удаление категории из товара */
-                function removeCategory(idx){
-                    vm.item.categories.splice(idx,1);
+                /* Валидация категории из товара */
+                function validate(){
                     if(vm.item.categories.length == 0){
+                        vm.showHints = false;
                         vm.itemCard.categories.$error.required = true;
-                        vm.itemCard.categories.$setValidity("required", false);
-                        $('md-chips-wrap').addClass('md-chips-invalid');
+                        vm.itemCard.categories.$setValidity("min-items", false);
+                    } else {
+                        vm.showHints = true;
+                        vm.itemCard.categories.$error.required = true;
+                        vm.itemCard.categories.$setValidity("min-items", true);
                     }
                 }
 
                 /* Открытие модального окна для выбора категории */
-                function showCategoryModal(){
+                function showCategoryModal(wClass){
                     var selected = [];
                     if(vm.item.categories && vm.item.categories.length > 0){
                         selected = vm.item.categories.map(function(category){
@@ -199,20 +202,20 @@
                     }
 
                     var dialog = modal({
-                        templateUrl:"pages/modal/categoryModal.html",
-                        className:'ngdialog-theme-default custom-width',
-                        closeByEscape:true,
-                        controller:"categoryClssController",
-                        data:selected
+                        templateUrl: mvm.width < 601 ? "pages/fragment/modal/categoryModal.html" : "pages/modal/categoryModal.html",
+                        className:'ngdialog-theme-default ' + wClass,
+                        controller:"categoryClssController as vm",
+                        closeByEscape: true,
+                        closeByDocument: false,
+                        data:selected,
+                        scope: $scope
                     });
 
                     //получение данных при закрытие модального окна категорий
                     dialog.closePromise.then(function(output) {
                         if(output.value && output.value != '$escape'){
                             vm.item.categories = output.value;
-                            vm.itemCard.categories.$error = {};
-                            vm.itemCard.categories.$setValidity("required", true);
-                            $('md-chips-wrap').removeClass('md-chips-invalid');
+                            validate();
                         }
                     });
                 }
@@ -231,6 +234,7 @@
                             $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                         });
                     }
+
 
                     if(vm.itemCard.$dirty){
                         if(vm.itemCard.$valid){

@@ -1,6 +1,7 @@
-<div>
+<div style="padding-top: 20px;">
+    <h4 class="example_head">Компании:</h4>
     <md-list>
-        <div class="card-panel" ng-repeat="company in companies" style="padding: 5px 10px">
+        <div class="card-panel" ng-repeat="company in vm.companies track by company.id" style="padding: 5px 10px">
             <md-list-item class="md-3-line">
                 <div class="md-list-item-text" layout="column">
                     <h3>{{::company.name}}</h3>
@@ -9,8 +10,8 @@
                 <md-menu style="margin-top: 15px;">
                     <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
                     <md-menu-content width="4">
-                        <md-menu-item><md-button ng-click="edit(company.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="delete(company.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="vm.edit(company.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="vm.deleteCompany(company.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </md-list-item>

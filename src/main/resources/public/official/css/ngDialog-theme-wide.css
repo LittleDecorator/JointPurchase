@@ -30,6 +30,11 @@
     border-radius: 0;
 }
 
+.ngdialog.ngdialog-theme-default.wp-50 .ngdialog-content{
+    top: 80px;
+    width: 50%;
+}
+
 .ngdialog.ngdialog-theme-default.w-30 .ngdialog-content{
     top: 80px;
     width: 30%;

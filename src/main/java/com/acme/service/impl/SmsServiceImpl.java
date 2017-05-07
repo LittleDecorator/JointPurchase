@@ -1,8 +1,13 @@
 package com.acme.service.impl;
 
+import com.acme.model.dto.sms.BalanceDto;
+import com.acme.model.dto.sms.LimitDto;
+import com.acme.model.dto.sms.SendDto;
 import com.acme.service.SmsService;
 import com.acme.sms.CredentialKey;
 import com.acme.sms.SMSAccount;
+import com.acme.util.StringTemplate;
+import com.google.api.client.util.Maps;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
@@ -10,75 +15,76 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 @Service
 public class SmsServiceImpl implements SmsService {
 
-    private static final String SEND_URL = "http://safexi.ru/api.php?action=send";
-    private static final String CODE_URL = "http://safexi.ru/api.php?action=code_sms";
-    private static final String STATUS_URL = "http://safexi.ru/api.php?action=status";
-
-    @Override
-    public void sendCallback(SMSAccount account, String from, String to, String text){
-        System.out.println("Testing 1 - Send Http GET request");
-        try {
-            send(account, from, to, text);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void send(SMSAccount account, String from, String to, String text) throws Exception{
-
-        URI uri = null;
-        try {
-            URIBuilder b = new URIBuilder(SEND_URL)
-                    .setParameter("login", account.get(CredentialKey.EMAIL))
-                    .setParameter("pass", account.get(CredentialKey.PASSWORD))
-                    .setParameter("mess", text)
-                    .setParameter("number", to)
-                    .setParameter("name", from);
-            uri = b.build();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-        final String result = execute(uri);
-
-        //print result
-        System.out.println(result);
-    }
-
-    private String execute(HttpClient httpClient, URI uri) throws IOException {
-        System.out.println("\nSending 'GET' request to URL : " + uri);
-        final HttpGet get = new HttpGet(uri);
-        return httpClient.execute(get, new BasicResponseHandler());
-    }
-
-    private String execute(URI uri) throws IOException {
-        HttpClient httpClient = HttpClientBuilder
-                .create()
-                .setConnectionManager(ConnectionManagerHolder.connectionManager)
-                .build();
-        return execute(httpClient, uri);
-    }
-
-    private static class ConnectionManagerHolder {
-        private static final HttpClientConnectionManager connectionManager = init();
-
-        private static HttpClientConnectionManager init() {
-            PoolingHttpClientConnectionManager ccm = new PoolingHttpClientConnectionManager();
-            ccm.setMaxTotal(10);
-            return ccm;
-        }
-    }
+    private final static String ID = "68322532-51b1-d4b4-3dd5-752cf2c20589";
+    private final static String SMS_HOST = "https://sms.ru/";
+    private final static String BASE_TEMPLATE = "{host}{prefix}?api_id={id}";
 
     @Override
     public void passChangeConfirm() {
         System.out.println("passChangeConfirm call");
+    }
+
+
+    @Override
+    public void getDayLimitInfo() {
+        String pathFragment = "/my/limit";
+        RestTemplate restTemplate = new RestTemplate();
+        String limit = restTemplate.getForObject(SMS_HOST + pathFragment + "?api_id="+ID, String.class);
+        System.out.println(limit);
+    }
+
+    @Override
+    public void getBalanceInfo() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        StringTemplate template = new StringTemplate(BASE_TEMPLATE);
+
+        Map<String, String> params = Maps.newHashMap();
+        params.put("host", SMS_HOST);
+        params.put("prefix", "/my/balance");
+        params.put("id", ID);
+
+        String balance = restTemplate.getForObject(template.format(params), String.class);
+        System.out.println(balance);
+    }
+
+    @Override
+    public void sendSimple(SMSAccount account, String from, String to, String text) {
+        //TODO: нужна поддержка SMSAccount'а клиента
+    }
+
+    @Override
+    public void sendSimple(String to, String text) {
+        sendSimple(to, text, false);
+    }
+
+    @Override
+    public void sendSimple(String to, String text, boolean isTest) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        StringTemplate template = new StringTemplate(BASE_TEMPLATE+"&to={to}&text={text}");
+
+        Map<String, String> params = Maps.newHashMap();
+        params.put("host", SMS_HOST);
+        params.put("prefix", "/sms/send");
+        params.put("id", ID);
+        params.put("to", to);
+        params.put("text", text);
+
+        String send = restTemplate.getForObject(template.format(params), String.class);
+        System.out.println(send);
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Created by kobzev on 16.02.17.
@@ -26,6 +28,8 @@ public interface SubjectRepository extends JpaRepository<Subject, String>, JpaSp
 	 * @return
 	 */
 	Subject findByEmail(String email);
+
+	List<Subject> findAllByIdIn(List<String> ids);
 
 //	@Query("update Subject s set s.enabled = true where s.id = :id")
 //	@Modifying(clearAutomatically = true)

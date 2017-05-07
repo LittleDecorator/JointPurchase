@@ -9,8 +9,11 @@
         .controller('categoryController', ['$rootScope', '$scope', '$log','$state', 'categoryNodes', '$timeout', 'dataResources','itemClssModal', '$location', 'menu',
             function ($rootScope, $scope, $log, $state, categoryNodes, $timeout, dataResources, itemClssModal, $location, menu) {
                 var templatePath = "pages/fragment/category/";
-                var mvm = $scope.$parent.mvm;
+                var newCategoryList = [],
+                    editCategoryList = [],
+                    deleteCategoryList = [];
 
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.getCategoryItems = getCategoryItems;
@@ -207,7 +210,7 @@
                         // проверяем что родитель есть и он не пустой
                         var parentId = (parent && !$.isEmptyObject(parent)) ? parent.id : null;
                         // подготавливаем узел для добавления
-                        var newNode = {id: id, title: $scope.currentNode.title, nodes: [], parentId: parentId, types: []};
+                        var newNode = {id: id, title: vm.currentNode.title, nodes: [], parentId: parentId, types: []};
                         // добавляем новый узел
                         if (parentId == null) {
                             vm.tree.add_branch(null, newNode);
@@ -293,7 +296,7 @@
                  * показ модального окна для добавления товара
                  */
                 function showClss() {
-                    var dialog = itemClssModal(vm.selectedCopy.items);
+                    var dialog = itemClssModal(vm.selectedCopy.items, 'wp-50');
                     dialog.closePromise.then(function (output) {
                         if (output.value && output.value != '$escape') {
                             angular.forEach(output.value, function (item) {
@@ -369,14 +372,12 @@
                 function init(){
                     if (mvm.width < 601) {
                         vm.menu.sections = getSections(vm.categories);
-                    } else {
-                        var newCategoryList = [],
-                            editCategoryList = [],
-                            deleteCategoryList = [];
                     }
                 }
 
                 init();
+
+                console.log(vm.menu)
 
         }])
 
@@ -448,10 +449,10 @@
                  */
                 function showItemModal() {
                     var dialog = modal({
-                        templateUrl: "pages/modal/itemModal.html",
-                        className: 'ngdialog-theme-default custom-width',
+                        templateUrl: "pages/fragment/modal/itemModal.html",
+                        className: 'ngdialog-theme-default fullscreen',
                         closeByEscape: true,
-                        controller: "itemClssController",
+                        controller: "itemClssController as vm",
                         data: vm.data.categoryItems
                     });
 
