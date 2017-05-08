@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "order_view")
-public class OrderView {
+public class OrderView implements BaseModel{
 
     @Id
     private String id;

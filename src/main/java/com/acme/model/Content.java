@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "content")
-public class Content {
+public class Content implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -24,8 +24,8 @@ public class Content {
     @Column(name = "is_default")
     private boolean isDefault;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     private String content;
 

@@ -276,62 +276,68 @@ public class EmailServiceImpl implements EmailService {
 //        TODO: добавить обновление ID истории
     }
 
-    @Async
-    public void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException {
-        EmailBuilder builder = EmailBuilder.getBuilder();
+    public Boolean sendOrderStatus(Order order){
+        Boolean result = Boolean.TRUE;
+        try {
+            EmailBuilder builder = EmailBuilder.getBuilder();
 
         /* порлучаем всю информацию по заказу */
-        Map<String, Object> info = orderService.getOrderInfo(order.getId());
-        Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
-        Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
-        Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
+            Map<String, Object> info = orderService.getOrderInfo(order.getId());
+            Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
+            Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
+            Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
 
-        List<Map<String, String>> list = Lists.newArrayList();
+            List<Map<String, String>> list = Lists.newArrayList();
         /* перебираем товар */
-        if(itemMap!=null && !itemMap.isEmpty()){
-            itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
-                    .put("imageName", contentMap.get(itemId).getId())
-                    .put("itemName", itemMap.get(itemId).getName())
-                    .put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
-                    .put("itemCount", orderItemMap.get(itemId).getCount() + " шт")
-                    .build()));
-        }
+            if(itemMap!=null && !itemMap.isEmpty()){
+                itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
+                        .put("imageName", contentMap.get(itemId).getId())
+                        .put("itemName", itemMap.get(itemId).getName())
+                        .put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
+                        .put("itemCount", orderItemMap.get(itemId).getCount() + " шт")
+                        .build()));
+            }
 
         /* сформируем шаблон сообщения */
-        final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
+            final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
 				/* основной текст письма */
-                .put("order_number", order.getUid())
-                .put("order_status", order.getStatus().getNotifyText())
-                .put("isAuth", order.getSubjectId() != null)
-                .put("cabinet_link", Constants.CABINET_LINK)
+                    .put("order_number", order.getUid())
+                    .put("order_status", order.getStatus().getNotifyText())
+                    .put("isAuth", order.getSubjectId() != null)
+                    .put("cabinet_link", Constants.CABINET_LINK)
 				/* информация о заказе */
-                .put("orderDate", order.getDateAdd() == null ? new Date() : order.getDateAdd())
-                .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
-                .put("orderPayment", order.getPayment()+ " руб")
+                    .put("orderDate", order.getDateAdd() == null ? new Date() : order.getDateAdd())
+                    .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
+                    .put("orderPayment", order.getPayment()+ " руб")
 				/* данные о товаре */
-                .put("item", list)
-                .build();
+                    .put("item", list)
+                    .build();
 
         /* Создадим сообщение */
-        Email email = EmailImpl.builder()
-                .from(new InternetAddress(senderAddress, senderName))
-                .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
-                .subject("Информация о заказе, "+order.getRecipientFname())
-                .sentAt(new Date())
-                .body("")
-                .encoding(Charset.forName("UTF-8"))
-                .build();
+            Email email = EmailImpl.builder()
+                    .from(new InternetAddress(senderAddress, senderName))
+                    .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
+                    .subject("Информация о заказе, "+order.getRecipientFname())
+                    .sentAt(new Date())
+                    .body("")
+                    .encoding(Charset.forName("UTF-8"))
+                    .build();
 
-        String emailContent = templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data);
+            String emailContent = templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data);
 
-        MimeMessage message = builder.setMessage(convert(email))
-                .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
-                .setEmailContent(emailContent)
-                .build();
+            MimeMessage message = builder.setMessage(convert(email))
+                    .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
+                    .setEmailContent(emailContent)
+                    .build();
 
         /* отправим письмо */
-        mailSender.send(message);
+            mailSender.send(message);
+        } catch (IOException | MessagingException | TemplateException ex){
+            result = Boolean.FALSE;
+            log.error("Ошибка отправки письма", ex);
+        }
         //TODO: добавить обновление ID истории
+        return result;
     }
 
     @Override

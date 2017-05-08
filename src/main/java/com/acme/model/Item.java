@@ -17,7 +17,7 @@ import java.util.List;
 @Document(indexName = "item-index",type = "item-type")
 @Setting(settingPath = "/elastic/item/settings.json")
 @Mapping(mappingPath = "/elastic/item/mappings.json")
-public class Item {
+public class Item implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -40,8 +40,8 @@ public class Item {
     @Column(name = "price")
     private Integer price;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     @Column(name = "not_for_sale")
     private boolean notForSale;

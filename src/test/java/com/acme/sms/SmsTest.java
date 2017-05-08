@@ -10,7 +10,7 @@ public class SmsTest {
 
     public static void main(String args[]){
         SmsService service = new SmsServiceImpl();
-        service.sendSimple("79258552096","Создан новый заказ!", false);
+//        service.sendSimple("79258552096","Создан новый заказ!", false);
     }
 
 }

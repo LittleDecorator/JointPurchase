@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "category_item")
-public class CategoryItem {
+public class CategoryItem implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -21,8 +21,8 @@ public class CategoryItem {
     @Column(name = "item_id")
     private String itemId;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getId() {
         return id;

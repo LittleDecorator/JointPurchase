@@ -125,10 +125,10 @@ public class CatalogController {
         Item item = itemRepository.findOne(itemId);
         List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
         if(itemContents.isEmpty()){
-            item.setUrl(Constants.PREVIEW_URL+defContent.getId());
+            item.setUrl(Constants.VIEW_URL+defContent.getId());
         } else {
             item.setItemContents(itemContents);
-            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
+            item.setUrl(Constants.VIEW_URL + itemContents.stream().filter(ItemContent::isMain).findFirst().get().getContentId());
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         return item;

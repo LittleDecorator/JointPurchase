@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "order_item")
-public class OrderItem implements Serializable{
+public class OrderItem implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -24,8 +24,8 @@ public class OrderItem implements Serializable{
 
     private Integer count;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getId() {
         return id;

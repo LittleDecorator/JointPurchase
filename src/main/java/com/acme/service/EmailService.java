@@ -1,6 +1,5 @@
 package com.acme.service;
 
-import com.acme.email.Email;
 import com.acme.exception.TemplateException;
 import com.acme.model.Order;
 import com.acme.model.gmail.SimpleDraft;
@@ -23,7 +22,7 @@ public interface EmailService {
 	 * @throws MessagingException
 	 * @throws TemplateException
 	 */
-	void sendOrderStatus(Order order) throws IOException, MessagingException, TemplateException;
+	Boolean sendOrderStatus(Order order);
 
 	/**
 	 * Отправка ссылки для подтверждения регистрации

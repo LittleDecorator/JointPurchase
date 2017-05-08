@@ -112,6 +112,13 @@
             <version>v1-rev62-1.22.0</version>
         </dependency>
 
+        <!-- SMS -->
+        <dependency>
+            <groupId>ru.dezhik</groupId>
+            <artifactId>sms-sender</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
         <!-- JWT-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

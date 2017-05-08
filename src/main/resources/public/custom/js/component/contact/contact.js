@@ -7,20 +7,32 @@
 
     angular.module('contact')
 
-        .controller('contactController',['$scope','dataResources','$timeout', function($scope,dataResources, $timeout){
+        .controller('contactController',['$scope','dataResources','$timeout', 
+            function($scope,dataResources, $timeout){
 
-            var templatePath = "pages/fragment/contact/";
-            $scope.request = {phone:null,message:null};
+                var templatePath = "pages/fragment/contact/";
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
+                
+                vm.send = send;
+                vm.load = load;
+                vm.getTemplateUrl = getTemplateUrl;
+                vm.afterInclude = afterInclude;
+                
+                vm.forms = {};
+                vm.request = { phone:null, message:null };
+                vm.showHints = true;
 
-            $scope.showHints = true;
-
-            $scope.send = function(){
-                $scope.showHints = false;
-                if($scope.contactForm.phone.$valid){
-                    console.log('BLA')
-                } else {
-                    console.log('FLA')
-                }
+                /**
+                 * Отправка сообщения от клиента админам
+                 */
+                function send(){
+                    if(vm.forms.contactForm.phone.$valid){
+                        console.log(" тут должна быть отправка сообщения ")
+                        vm.showHints = true;
+                    } else {
+                        vm.showHints = false;
+                    }
                 //    $scope.showHints = false;
                 //} else {
                 //    dataResources.contactCallback.post($scope.request,
@@ -33,40 +45,48 @@
                 //    $scope.request = {phone:null,message:null};
                 //    $scope.showHints = true;
                 //}
-            };
+                }
 
-            $scope.load = function(){
-                console.log("in load");
-                var map;
+                /**
+                 * Загрузка карты
+                 */
+                function load(){
+                    var map;
 
-                DG.then(function () {
-                    map = DG.map('map', {
-                        center: [55.794430, 37.392815],
-                        zoom: 15
+                    DG.then(function () {
+                        map = DG.map('map', {
+                            center: [55.794430, 37.392815],
+                            zoom: 15
+                        });
+
+                        DG.marker([55.794388, 37.392799]).addTo(map).bindPopup('Вы нашли нас!');
                     });
 
-                    DG.marker([55.794388, 37.392799]).addTo(map).bindPopup('Вы нашли нас!');
-                });
-
-            };
-
-            $scope.getTemplateUrl = function(){
-                if($scope.width < 601){
-                    return templatePath + "contact-sm.html";
                 }
-                if($scope.width > 600){
-                    if($scope.width < 1025){
-                        return templatePath + "contact-md.html"
+
+                /**
+                 * Получение шаблона
+                 * @returns {string}
+                 */
+                function getTemplateUrl(){
+                    if(mvm.width < 601){
+                        return templatePath + "contact-sm.html";
                     }
-                    return templatePath + "contact-lg.html";
+                    if(mvm.width > 600){
+                        if(mvm.width < 1025){
+                            return templatePath + "contact-md.html"
+                        }
+                        return templatePath + "contact-lg.html";
+                    }
                 }
-            };
 
-            $scope.afterInclude = function(){
-                //$scope.load();
-                $timeout(function() {
-                    $scope.load();
-                }, 300);
-            };
+                /**
+                 * События после загрузки шаблона
+                 */
+                function afterInclude(){
+                    $timeout(function() {
+                        load();
+                    }, 300);
+                }
         }])
 })();

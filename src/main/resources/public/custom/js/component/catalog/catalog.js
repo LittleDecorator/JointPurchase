@@ -170,7 +170,7 @@
                             }
                         }
                     });
-                    vm.mainImage = mvm.PREVIEW_URL + id;
+                    vm.mainImage = (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL) + id;
                 }
 
                 /**
@@ -192,9 +192,6 @@
 
                 // callback загрузки шаблона страницы
                 function afterInclude(){}
-
-                console.log(vm.item)
-                console.log(mvm)
 
         }]);
 })();

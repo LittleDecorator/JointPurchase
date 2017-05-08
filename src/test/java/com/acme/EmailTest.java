@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = TestApplication.class)
 @WebAppConfiguration
-@TestPropertySource(locations="classpath:test.properties")
+@TestPropertySource(locations="classpath:application.properties")
 @IntegrationTest("server.port:0")
 public class EmailTest {
 
@@ -42,6 +42,9 @@ public class EmailTest {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ContentRepository contentRepository;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -302,7 +305,7 @@ public class EmailTest {
     @Test
     public void sendOrderStatus() throws MessagingException {
         try{
-            Order order = orderRepository.findOne("082c0f3e-133c-4569-a576-8019c982bfe3");
+            Order order = orderRepository.findOne("ff8081815be46325015be463a0a40000");
             order.setRecipientEmail("kobzeff.inc@mail.ru");
             emailService.sendOrderStatus(order);
         } catch (Exception e) {
@@ -328,18 +331,17 @@ public class EmailTest {
 //    }
 
 
-//    @Test
+    @Test
     public void sendOrderConformationWithImageHtml() throws MessagingException, IOException {
-//        Content content = contentRepository.getById("d54be40a-143e-4a7f-8a18-a234b30d7c82");
-        Content content = null;
+        Content content = contentRepository.findOneByIsDefault(true);
         Multipart multipart = new MimeMultipart("related");
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo("npkobzev@mail.ru");
+//        helper.setTo("npkobzev@mail.ru");
+        helper.setTo("kobzeff.inc@mail.ru");
         helper.setFrom(new InternetAddress("robot.grimmstory@gmail.com","GrimmStory"));
         helper.setSubject("Your order");
-
 
         BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(orderTemplate, "text/html; charset=utf-8");

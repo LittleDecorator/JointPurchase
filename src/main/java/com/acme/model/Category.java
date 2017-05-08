@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
-public class Category {
+public class Category implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -20,8 +20,8 @@ public class Category {
     @Column(name = "parent_id")
     private String parentId;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     @Transient
     private List<Item> items;

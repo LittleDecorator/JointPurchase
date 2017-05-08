@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "credential")
-public class Credential {
+public class Credential{
 
     @Id
     private String subjectId;
@@ -19,8 +19,8 @@ public class Credential {
     @Column(name = "role_id")
     private String roleId;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getSubjectId() {
         return subjectId;

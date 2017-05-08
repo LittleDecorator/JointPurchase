@@ -1,10 +1,12 @@
 package com.acme;
 
 //import com.acme.servlet.PublicServlet;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
@@ -30,13 +32,16 @@ public class TestApplication extends WebMvcConfigurerAdapter {
         return registrationBean;
     }
 
-//    @Bean
-//    public ServletRegistrationBean publicServlet(){
-//        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-//        registrationBean.setServlet(new PublicServlet());
-//        registrationBean.addUrlMappings("/public/auth/*");
-//        return registrationBean;
-//    }
+    @Bean
+    public FlywayMigrationStrategy createFlyway(){
+        final FlywayMigrationStrategy migrationStrategy = new FlywayMigrationStrategy() {
+            @Override
+            public void migrate(Flyway flyway) {
+
+            }
+        };
+        return migrationStrategy;
+    }
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

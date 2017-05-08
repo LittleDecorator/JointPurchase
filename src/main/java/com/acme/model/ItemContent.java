@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "item_content")
-public class ItemContent {
+public class ItemContent implements BaseModel {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -27,8 +27,8 @@ public class ItemContent {
 
     private boolean main;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     @Transient
     private String url;

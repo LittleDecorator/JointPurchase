@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "delivery")
-public class Delivery {
+public class Delivery implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -22,8 +22,8 @@ public class Delivery {
 
     private String hint;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getId() {
         return id;

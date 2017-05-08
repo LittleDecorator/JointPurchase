@@ -7,42 +7,42 @@
         <div layout="row" style="justify-content:space-between">
             <md-input-container flex="25" class="no-errors">
                 <label>Номер заказа</label>
-                <input value="{{::order.uid}}" disabled>
+                <input value="{{::vm.order.uid}}" disabled>
             </md-input-container>
 
             <md-input-container flex="25" class="no-errors">
                 <label>Дата создания</label>
-                <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+                <input value="{{::vm.order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
             </md-input-container>
 
             <md-input-container flex="25" class="no-errors">
                 <label>Дата закрытия</label>
-                <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
+                <input value="{{::vm.order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" disabled>
             </md-input-container>
 
             <md-input-container flex="25" class="no-errors">
                 <label>Сумма к оплате</label>
-                <input value="{{order.payment | number}}" disabled>
+                <input value="{{vm.order.payment | number}}" disabled>
             </md-input-container>
         </div>
 
         <div layout="row">
             <md-input-container flex>
                 <label class="required">Статус заказа</label>
-                <md-select name="status" ng-model="order.status" required ng-model-options="{trackBy: '$value.id'}">
-                    <md-option ng-repeat="status in statuses" ng-value="status">{{status.value}}</md-option>
+                <md-select name="status" ng-model="vm.order.status" required ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="status in vm.statuses" ng-value="status">{{::status.value}}</md-option>
                 </md-select>
-                <div ng-messages="orderCard.status.$error" ng-if="!showHints">
+                <div ng-messages="vm.forms.orderCard.status.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Не указан статус заказа</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="50">
                 <label class="required">Тип доставки</label>
-                <md-select name="delivery" ng-model="order.delivery" required >
-                    <md-option ng-repeat="delivery in deliveries" ng-value="delivery.id">{{delivery.value}}</md-option>
+                <md-select name="delivery" ng-model="vm.order.delivery" required ng-model-options="{trackBy: '$value.id'}">
+                    <md-option ng-repeat="delivery in vm.deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
                 </md-select>
-                <div ng-messages="orderCard.delivery.$error" ng-if="!showHints">
+                <div ng-messages="vm.forms.orderCard.delivery.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Не указан тип доставки</div>
                 </div>
             </md-input-container>
@@ -51,14 +51,14 @@
 
         <md-input-container>
             <label class="required">Адрес</label>
-            <input name="address" ng-model="order.recipientAddress" required>
-            <div ng-messages="orderCard.address.$error" ng-if="!showHints">
+            <input name="address" ng-model="vm.order.recipientAddress" required>
+            <div ng-messages="vm.forms.orderCard.address.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>
         </md-input-container>
 
         <md-input-container class="no-errors">
-            <input ng-model="order.comment" placeholder="Комментарий">
+            <input ng-model="vm.order.comment" placeholder="Комментарий">
         </md-input-container>
     </div>
 
@@ -68,22 +68,22 @@
         <div layout="row">
             <md-input-container flex="33">
                 <label class="required">Имя</label>
-                <input name="firstName" ng-model="order.recipientFname" required>
-                <div ng-messages="orderCard.firstName.$error" ng-if="!showHints">
+                <input name="firstName" ng-model="vm.order.recipientFname" required>
+                <div ng-messages="vm.forms.orderCard.firstName.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="33">
                 <label class="required">Фамилия</label>
-                <input name="lastName" ng-model="order.recipientLname" required>
-                <div ng-messages="orderCard.lastName.$error" ng-if="!showHints">
+                <input name="lastName" ng-model="vm.order.recipientLname" required>
+                <div ng-messages="vm.forms.orderCard.lastName.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="33" class="no-errors">
-                <input ng-model="order.recipientMname" placeholder="Отчество">
+                <input ng-model="vm.order.recipientMname" placeholder="Отчество">
             </md-input-container>
         </div>
 
@@ -91,16 +91,16 @@
 
             <md-input-container flex>
                 <label>Email</label>
-                <input name="email" ng-model="order.recipientEmail" ng-pattern="/^.+@.+\..+$/">
-                <div class="hint" ng-if="showHints">Пример: test@mail.com</div>
-                <div ng-messages="orderCard.email.$error" ng-if="!showHints">
+                <input name="email" ng-model="vm.order.recipientEmail" ng-pattern="/^.+@.+\..+$/">
+                <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+                <div ng-messages="vm.forms.orderCard.email.$error" ng-if="!vm.showHints">
                     <div ng-message-exp="['pattern']">Не корректный e-mail</div>
                 </div>
             </md-input-container>
 
             <md-input-container flex="50" style="margin-left:1%">
                 <label>Телефон</label>
-                <input ng-model="order.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
+                <input ng-model="vm.order.recipientPhone" mask="(999) 999-99-99" mask-restrict="reject">
                 <div class="hint">Пример: (915) 343-43-45</div>
             </md-input-container>
 
@@ -108,7 +108,7 @@
     </div>
 
     <h3 class="md-title centered">Содержимое заказа</h3>
-    <div ng-if="items.length>0">
+    <div ng-if="vm.items.length>0">
 
         <div class="card-panel">
             <table>
@@ -122,19 +122,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="item in items" id="{{item.id}}" class="collection-item">
-                    <td class="col s6 non-float" style="text-align: center">{{item.name}}</td>
-                    <td class="col s1 non-float" style="text-align: center">{{item.article}}</td>
-                    <td class="col s2 non-float" style="text-align: center">{{item.price|number}}р.</td>
+                <tr ng-repeat="item in vm.items track by item.id" id="{{item.id}}" class="collection-item">
+                    <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
+                    <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
+                    <td class="col s2 non-float" style="text-align: center">{{::item.price|number}}р.</td>
                     <td class="col s2 non-float" style="text-align: center">
                         <div>
-                            <md-icon ng-click="decrementCou($index)" style="cursor: pointer" ng-hide="item.count < 1">chevron_left</md-icon>
+                            <md-icon ng-click="vm.decrementCou($index)" style="cursor: pointer" ng-hide="vm.item.count < 1">chevron_left</md-icon>
                             <span>{{item.count}}</span>
-                            <md-icon ng-click="incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
+                            <md-icon ng-click="vm.incrementCou($index)" style="cursor: pointer">chevron_right</md-icon>
                         </div>
                     </td>
                     <td class="col s1 non-float" style="text-align: center">
-                        <md-icon ng-click="remItemsFromOrder($index)" style="color: darksalmon;margin-right: 0;cursor: pointer;font-size: 2rem;height: 2rem; ">delete</md-icon>
+                        <md-icon ng-click="vm.remItemsFromOrder($index)" style="color: darksalmon;margin-right: 0;cursor: pointer;font-size: 2rem;height: 2rem; ">delete</md-icon>
                     </td>
                 </tr>
                 </tbody>
@@ -143,15 +143,15 @@
 
     </div>
 
-    <div class="card-panel" ng-if="items.length==0" style="padding: 5px; text-align: center; background-color: cadetblue; color: white;">
+    <div class="card-panel" ng-if="vm.items.length==0" style="padding: 5px; text-align: center; background-color: cadetblue; color: white;">
         <span style="margin-right: 2%">Не добавлено ни одного товара</span>
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="addItemsInOrder()" style="bottom: 115px; right: 24px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addItemsInOrder('wp-50')" style="bottom: 115px; right: 24px;">
         <md-icon>add</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="save()" ng-class="{'disabled':!orderCard.$dirty}" style="bottom: 45px; right: 24px;">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.save()" ng-class="{'disabled':!vm.forms.orderCard.$dirty || vm.items.length==0}" style="bottom: 45px; right: 24px;">
         <md-icon>save</md-icon>
     </md-button>
 </div>

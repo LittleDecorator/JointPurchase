@@ -17,4 +17,6 @@ public interface SubjectService {
 
 	List<Subject> getAdmins();
 
+	Subject getRoot();
+
 }

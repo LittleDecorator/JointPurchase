@@ -1,5 +1,5 @@
 <md-list>
-    <div class="card" ng-repeat="order in orders">
+    <div class="card" ng-repeat="order in vm.orders track by order.id">
         <div class="card-content" style="padding: 15px!important;" >
             <span class="card-title text-darken-4" style="color: #846C63; line-height: 50px;font-size: 20px;height: 50px;" layout="row">
                 <span flex="80" style="font-size: 1.2rem">Заказ #{{::order.uid}}</span>
@@ -7,8 +7,8 @@
                 <md-menu flex="nogrow" style="padding: 0; line-height: 2">
                     <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
                     <md-menu-content width="4">
-                        <md-menu-item><md-button ng-click="editOrder(order.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
-                        <md-menu-item><md-button ng-click="deleteOrder(order.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="vm.editOrder(order.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="vm.deleteOrder(order.id)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </span>

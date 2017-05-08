@@ -1,6 +1,5 @@
 package com.acme.controller;
 
-import com.acme.enums.OrderStatus;
 import com.acme.exception.TemplateException;
 import com.acme.model.Item;
 import com.acme.model.Order;
@@ -11,18 +10,12 @@ import com.acme.model.dto.OrderRequest;
 import com.acme.model.filter.OrderFilter;
 import com.acme.repository.specification.OrderViewSpecifications;
 import com.acme.repository.*;
-import com.acme.service.AuthService;
-import com.acme.service.EmailService;
-import com.acme.service.ItemService;
-import com.acme.service.NotificationService;
+import com.acme.service.*;
 import com.google.common.collect.Lists;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -56,13 +49,10 @@ public class OrderController {
 	EmailService emailService;
 
 	@Autowired
+	OrderService orderService;
+
+	@Autowired
 	OrderItemRepository  orderItemRepository;
-
-	@Autowired
-	private PlatformTransactionManager transactionManager;
-
-	@Autowired
-	private ItemService itemService;
 
 	@Autowired
 	private NotificationService notificationService;
@@ -86,38 +76,6 @@ public class OrderController {
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public Order getOrder(@PathVariable("id") String id) {
 		return orderRepository.findOne(id);
-	}
-
-	/**
-	 * Отмена заказа по ID
-	 * @param id - order ID
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/cancel")
-	public Order cancelOrder(@PathVariable("id") String id) {
-		Order order = orderRepository.findOne(id);
-		// получим заблокированные статусы
-		List<OrderStatus> lockedStatuses = Lists.newArrayList(OrderStatus.CANCELED, OrderStatus.DONE);
-		if(!lockedStatuses.contains(order.getStatus())){
-			// изменим статус заказа если возможно
-			TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-			try{
-				// изменяем статус заказа на "ОТМЕНЕН"
-				order.setStatus(OrderStatus.CANCELED);
-				orderRepository.save(order);
-				// обновим кол-во товара в наличие
-				itemService.increaseCountByOrder(order.getId());
-				transactionManager.commit(status);
-				//отправляем письмо об изменение статуса заказа
-				emailService.sendOrderStatus(order);
-			} catch (Exception ex){
-				ex.printStackTrace(System.out);
-				transactionManager.rollback(status);
-			}
-		} else {
-			order = null;
-		}
-		return order;
 	}
 
 	/**
@@ -146,7 +104,7 @@ public class OrderController {
 		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
 		request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
-		return persistOrder(request);
+		return createOrder(request);
 	}
 
 	/**
@@ -167,49 +125,42 @@ public class OrderController {
 	 *
 	 * @param request
 	 * @return
-	 * @throws ParseException
-	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public Order persistOrder(@RequestBody OrderRequest request) throws ParseException, IOException {
-		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-		try {
-			/* сохраним заказ из запроса. */
-			request.getOrder().setStatus(OrderStatus.NEW);
-			Order order = orderRepository.save(request.getOrder());
-
-			/* добавим записи в таблицу связи заказ-товар */
-			if(request.getItems() == null || request.getItems().isEmpty()){
-				throw new IllegalArgumentException("NO items in request");
-			}
-			for (OrderItemsList itemsList : request.getItems()) {
-				// собираем товар для дальнейшей обработки
-				OrderItem orderItem = new OrderItem();
-				orderItem.setItemId(itemsList.getItem().getId());
-				orderItem.setOrderId(order.getId());
-				orderItem.setCount(itemsList.getCount());
-				orderItemRepository.save(orderItem);
-				// изменить кол-во товара в наличие
-				Item item = itemRepository.findOne(itemsList.getItem().getId());
-				item.setInStock(item.getInStock() - itemsList.getCount());
-				item.setInOrder(item.getInOrder() + itemsList.getCount());
-				itemRepository.save(item);
-			}
-
-			//удаляем записи, где заказ совпадает, а товар нет.
-			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
-			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
-			transactionManager.commit(status);
+	public Order createOrder(@RequestBody OrderRequest request){
+		Order order = orderService.createOrder(request);
+		if(order != null){
 			/* отправляем на почту писмо с подтверждением заказа */
-			emailService.sendOrderStatus(order);
-			/* отправляем уведомление администраторам о новом заказе */
-			notificationService.sendOrderNotification(order);
-			return order;
-		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
-			transactionManager.rollback(status);
-			return null;
+			if(emailService.sendOrderStatus(order)){
+				/* отправляем уведомление администраторам о новом заказе */
+				notificationService.sendOrderNotification(order);
+			} else {
+				//TODO: отправляем мне уведомление, что ничего не работает
+				notificationService.sendErrorNotification(order);
+			}
 		}
+		return order;
+	}
+
+	/**
+	 * Отмена заказа по ID
+	 * @param id - order ID
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/{id}/cancel")
+	public Order cancelOrder(@PathVariable("id") String id) {
+		Order order = orderService.cancelOrder(id);
+		if(order != null){
+			//отправляем письмо об изменение статуса заказа
+			if(emailService.sendOrderStatus(order)){
+				/* отправляем уведомление администраторам об отмене заказа */
+				notificationService.sendOrderNotification(order);
+			} else {
+				//TODO: отправляем мне уведомление, что ничего не работает
+				notificationService.sendErrorNotification(order);
+			}
+		}
+		return order;
 	}
 
 	/**
@@ -218,22 +169,7 @@ public class OrderController {
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
 	public void deleteOrder(@PathVariable("id") String id) {
-		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-		try{
-			Order order = orderRepository.findOne(id);
-			if(!order.getStatus().equals(OrderStatus.CANCELED)){
-				// если удаляемый заказ небыл отменен, то необходимо обновить кол-во товара
-				itemService.increaseCountByOrder(id);
-			}
-			// удаляем выбранные товары заказа
-			orderItemRepository.deleteByOrderId(id);
-			// удаляем заказ
-			orderRepository.delete(id);
-			transactionManager.commit(status);
-		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
-			transactionManager.rollback(status);
-		}
+		orderService.deleteOrder(id);
 	}
 
 

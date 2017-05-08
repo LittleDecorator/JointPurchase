@@ -36,11 +36,22 @@ public class SubjectServiceImpl implements SubjectService {
 		return subjectRepository.findByEmail(email);
 	}
 
+	@Override
 	public List<Subject> getAdmins(){
 		List<Subject> result = Lists.newArrayList();
 		List<Credential> admins = credentialRepository.findAllByRoleId("admin");
 		if(!admins.isEmpty()){
 			result = subjectRepository.findAllByIdIn(admins.stream().map(Credential::getSubjectId).collect(Collectors.toList()));
+		}
+		return result;
+	}
+
+	@Override
+	public Subject getRoot() {
+		Subject result = null;
+		Credential root = credentialRepository.findByRoleId("root");
+		if(root!=null){
+			result = subjectRepository.findOne(root.getSubjectId());
 		}
 		return result;
 	}

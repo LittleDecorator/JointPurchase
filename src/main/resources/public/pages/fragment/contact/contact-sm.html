@@ -10,9 +10,9 @@
 
                     <md-input-container style="margin-left: 1%">
                         <label>Телефон</label>
-                        <input name="phone" ng-model="request.phone" mask="(999) 999-99-99" mask-restrict="reject" required>
-                        <div class="hint" ng-if="showHints">Пример: (915) 343-43-45</div>
-                        <div ng-messages="contactForm.phone.$error" ng-if="!showHints">
+                        <input name="phone" ng-model="vm.request.phone" mask="(999) 999-99-99" mask-restrict="reject" required>
+                        <div class="hint" ng-if="vm.showHints">Пример: (915) 343-43-45</div>
+                        <div ng-messages="vm.forms.contactForm.phone.$error" ng-if="!vm.showHints">
                             <div ng-message="required">Необходимо указать номер телефона</div>
                             <div ng-message-exp="['mask']">Не корректный номер телефона</div>
                         </div>
@@ -20,13 +20,13 @@
 
                     <md-input-container class="md-block">
                         <label>Сообщение</label>
-                        <textarea name="message" ng-model="request.message" md-maxlength="150" rows="2" md-select-on-focus required></textarea>
-                        <div ng-messages="contactForm.message.$error" ng-if="!showHints">
+                        <textarea name="message" ng-model="vm.request.message" md-maxlength="150" md-select-on-focus required></textarea>
+                        <div ng-messages="vm.forms.contactForm.message.$error" ng-if="!vm.showHints">
                             <div ng-message="required">Сообщение не может быть пустым</div>
                         </div>
                     </md-input-container>
 
-                    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="send()" style="width: 100%">Отправить</md-button>
+                    <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.send()" style="width: 100%">Отправить</md-button>
                 </div>
             </div>
         </div>

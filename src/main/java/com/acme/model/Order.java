@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_order")
-public class Order {
+public class Order implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -41,8 +41,8 @@ public class Order {
     @Column(name = "recipient_address")
     private String recipientAddress;
 
-    @Column(name = "date_add", nullable = false, insertable = false, updatable = false)
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     @Column(name = "close_order_date")
     private Date closeOrderDate;

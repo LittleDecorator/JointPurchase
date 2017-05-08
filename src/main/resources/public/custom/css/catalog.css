@@ -16,6 +16,17 @@
     div#catalog md-card._md > div.card-image {
         min-height: 223px;
     }
+
+    md-card-actions {
+        height: auto;
+        min-height: 100px;
+    }
+
+    md-card-actions span.md-headline {
+        font-size: 1.2rem;
+        text-align: center;
+        padding-bottom: 5px;
+    }
 }
 
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
@@ -38,6 +49,36 @@
         right: 0;
         bottom: 0;
     }
+
+    md-card-actions {
+        height: auto;
+        min-height: 100px;
+    }
+
+    md-card-actions span.md-headline {
+        font-size: 1.2rem;
+        text-align: center;
+        padding-bottom: 5px;
+    }
+
+    div#catalog-card  div.box img {
+        max-height: 445px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    div#catalog-card div#description {
+        padding: 0 0.2rem;
+    }
+
+    div#catalog-card div#description div.card-panel {
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+    }
+
 }
 
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
@@ -63,5 +104,20 @@
 
     .box > .boxInner img {
         height: 100%;
+    }
+
+    md-card-actions {
+        height: auto;
+        min-height: 100px;
+    }
+
+    md-card-actions span.md-headline {
+        font-size: 1.3rem;
+        text-align: center;
+        padding-bottom: 10px;
+    }
+
+    md-card-actions button {
+        width: 80%;
     }
 }

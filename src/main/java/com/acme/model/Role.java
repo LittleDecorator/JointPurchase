@@ -18,8 +18,8 @@ public class Role {
 	@Column(name = "parent_role_id")
     private String parentRoleId;
 
-	@Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
 
     public String getId() {

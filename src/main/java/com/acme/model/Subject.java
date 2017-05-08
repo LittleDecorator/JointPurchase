@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "subject")
-public class Subject {
+public class Subject implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -41,8 +41,8 @@ public class Subject {
     @Column(name = "post_address")
     private Integer postAddress;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getId() {
         return id;

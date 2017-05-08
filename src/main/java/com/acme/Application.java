@@ -2,6 +2,7 @@ package com.acme;
 
 import com.acme.util.CustomResolver;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -16,6 +17,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import ru.dezhik.sms.sender.SenderService;
+import ru.dezhik.sms.sender.SenderServiceConfiguration;
+import ru.dezhik.sms.sender.SenderServiceConfigurationBuilder;
 
 import java.util.List;
 import java.util.Locale;
@@ -32,9 +36,16 @@ import java.util.Locale;
 @PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 
+    @Value("${sms.api_id}")
+    private String apiId;
+
 //    @Autowired
 //    private ResourceProperties resourceProperties = new ResourceProperties();
 
+    /**
+     * Фильтр jwt
+     * @return
+     */
     @Bean
     public FilterRegistrationBean jwtFilter() {
         final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -43,13 +54,26 @@ public class Application extends WebMvcConfigurerAdapter {
         return registrationBean;
     }
 
-//    @Bean
-//    public ServletRegistrationBean publicServlet(){
-//        ServletRegistrationBean registrationBean = new ServletRegistrationBean();
-//        registrationBean.setServlet(new PublicServlet());
-//        registrationBean.addUrlMappings("/public/auth/*");
-//        return registrationBean;
-//    }
+    /**
+     * Конфигуратор сервиса sms.ru
+     * @return
+     */
+    @Bean
+    public SenderServiceConfiguration senderConfiguration(){
+        SenderServiceConfiguration senderConfiguration = SenderServiceConfigurationBuilder.create()
+                .setApiId(apiId)
+                .build();
+        return senderConfiguration;
+    }
+
+    /**
+     * Сервис sms.ru
+     * @return
+     */
+    @Bean
+    public SenderService senderService(){
+        return new SenderService(senderConfiguration());
+    }
 
     /**
      * Redirect HTTP to HTTPS

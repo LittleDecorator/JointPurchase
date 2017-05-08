@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "company")
-public class Company {
+public class Company implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -38,8 +38,8 @@ public class Company {
 
     private String rs;
 
-    @Column(name = "date_add")
-    private Date dateAdd;
+    @Column(name = "date_add", nullable = false, updatable = false)
+    private Date dateAdd = new Date();
 
     public String getId() {
         return id;

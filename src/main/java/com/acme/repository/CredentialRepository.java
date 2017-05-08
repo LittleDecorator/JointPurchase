@@ -13,10 +13,24 @@ import java.util.List;
 public interface CredentialRepository extends JpaRepository<Credential, String> {
 
     /**
-     * Получение админов
+     * Получение списка credential по роли
      * @param roleId
      * @return
      */
     List<Credential> findAllByRoleId(String roleId);
+
+    /**
+     * Получение списка credential по списку ролей
+     * @param roleId
+     * @return
+     */
+    List<Credential> findAllByRoleIdIn(List<String> roleId);
+
+    /**
+     * Получение credential по роли
+     * @param roleId
+     * @return
+     */
+    Credential findByRoleId(String roleId);
 
 }

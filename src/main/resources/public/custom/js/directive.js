@@ -148,4 +148,18 @@
             };
         })
 
+        .directive("docsScrollClass", function () {
+            return {
+                restrict: "A", link: function (e, t, a) {
+                    function n() {
+                        var e = 0 !== o[0].scrollTop;
+                        e !== l && t.toggleClass(a.docsScrollClass, e), l = e
+                    }
+
+                    var o = t.parent(), l = !1;
+                    n(), o.on("scroll", n)
+                }
+            }
+        })
+
 })();

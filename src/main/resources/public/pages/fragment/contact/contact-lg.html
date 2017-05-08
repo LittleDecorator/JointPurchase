@@ -10,20 +10,20 @@
 
                     <md-input-container>
                         <label>Телефон</label>
-                        <input name="phone" ng-model="selected.article" required mask="(999) 999-99-99" mask-restrict="reject">
-                        <div class="hint" ng-show="showHints">Номер указывается начиная с кода оператора: (915) 343-43-45</div>
-                        <div ng-messages="contactForm.phone.$error" ng-show="!showHints">
+                        <input name="phone" ng-model="vm.selected.article" required mask="(999) 999-99-99" mask-restrict="reject">
+                        <div class="hint" ng-show="vm.showHints">Номер указывается начиная с кода оператора: (915) 343-43-45</div>
+                        <div ng-messages="vm.forms.contactForm.phone.$error" ng-show="!vm.showHints">
                             <div ng-message-exp="['required']">Поле не может быть пустым</div>
                         </div>
                     </md-input-container>
 
                     <md-input-container class="md-block">
                         <label>Сообщение</label>
-                        <textarea ng-model="request.message" rows="3"></textarea>
+                        <textarea ng-model="vm.request.message"></textarea>
                     </md-input-container>
 
                     <div class="login-control-wrapper" style="float: right">
-                        <a class="waves-effect waves-green btn" ng-click="send()">Отправить</a>
+                        <a class="waves-effect waves-green btn" ng-click="vm.send()">Отправить</a>
                     </div>
                 </div>
             </div>

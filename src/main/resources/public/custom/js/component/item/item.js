@@ -8,8 +8,8 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal',
-            function ($scope, $state, dataResources,$timeout, companies, modal) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil',
+            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil) {
 
                 var busy = false;
                 var portion = 0;
@@ -26,6 +26,7 @@
                 vm.forSaleToggle = forSaleToggle;
                 vm.openFilter = openFilter;
                 vm.getTemplate = getTemplate;
+                vm.scrollTop = scrollTop;
 
                 vm.items = [];
                 vm.companyNames = companies;
@@ -136,6 +137,11 @@
                         }
                         return templatePath + "items-lg.html"
                     }
+                }
+                
+                function scrollTop(){
+                    var j = document.querySelector(".main"), P = j.querySelector(".item_result");
+                    $mdUtil.animateScrollTo(P, 0, 200)
                 }
 
         }])
