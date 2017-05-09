@@ -1,4 +1,10 @@
-
+/********************************** OFFICIAL CHANGE (HUGE DESKTOP) ******************************/
+@media (min-width: 1530px) {
+    md-sidenav.md-locked-open {
+        position: fixed!important;
+        top:56px
+    }
+}
 
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
 @media (min-width: 993px) {
@@ -19,7 +25,7 @@
 
     md-card-actions {
         height: auto;
-        min-height: 100px;
+        /*min-height: 100px;*/
     }
 
     md-card-actions span.md-headline {
@@ -27,6 +33,7 @@
         text-align: center;
         padding-bottom: 5px;
     }
+
 }
 
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
@@ -52,7 +59,7 @@
 
     md-card-actions {
         height: auto;
-        min-height: 100px;
+        /*min-height: 100px;*/
     }
 
     md-card-actions span.md-headline {
@@ -108,7 +115,7 @@
 
     md-card-actions {
         height: auto;
-        min-height: 100px;
+        /*min-height: 100px;*/
     }
 
     md-card-actions span.md-headline {
@@ -119,5 +126,9 @@
 
     md-card-actions button {
         width: 80%;
+    }
+
+    div#catalog md-card md-card-actions.layout-column > .md-button.btn {
+        margin-bottom: 10px;
     }
 }

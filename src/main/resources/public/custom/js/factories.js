@@ -262,7 +262,22 @@
                         });
                         return result;
                     }}
-                })
+                }),
+                notification:{
+                    newCount: $resource('/notification/new/count',{},{
+                        get:{method:'GET',isArray:false, transformResponse:function(data, headers){
+                            return {result: data}
+                        }}
+                    }),
+                    core: $resource('/notification/:notificationId',{},{
+                            all:{method:'GET',isArray:true},
+                            get:{method:'GET',isArray:false},
+                            put:{method:'PUT',isArray:false},
+                            post:{method:'POST',isArray:false},
+                            delete:{method:'DELETE',isArray:false}
+                        }
+                    )
+                }
             }
         }])
 

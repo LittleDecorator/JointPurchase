@@ -150,7 +150,7 @@
             return {
                 isAdmin: function () {
                     if (typeof $rootScope.currentUser != 'undefined') {
-                        return $rootScope.currentUser.isAdmin;
+                        return $rootScope.currentUser.role == "admin" || $rootScope.currentUser.role == "root";
                     } else {
                         return false;
                     }
@@ -323,6 +323,23 @@
             this.getProduct = function(itemId){
                 var deferred = $q.defer();
                 dataResources.catalog.itemDetail.get({id: itemId},function(data){
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
+
+            this.getNewNotifications = function(){
+                var deferred = $q.defer();
+                dataResources.notification.newCount.get(function (data) {
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
+
+            this.getNotification = function(id){
+                console.log(id);
+                var deferred = $q.defer();
+                dataResources.notification.core.get({notificationId: id},function(data){
                     deferred.resolve(data);
                 });
                 return deferred.promise;

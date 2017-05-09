@@ -1,9 +1,7 @@
 package com.acme.service.impl;
 
-import com.acme.model.BaseModel;
-import com.acme.model.Notification;
-import com.acme.model.Order;
-import com.acme.model.Subject;
+import com.acme.enums.NotificationType;
+import com.acme.model.*;
 import com.acme.repository.NotificationRepository;
 import com.acme.service.NotificationService;
 import com.acme.service.SmsService;
@@ -12,18 +10,13 @@ import com.acme.util.GmailHelper;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.Strings;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.web.client.RestTemplate;
 
-import javax.mail.MessagingException;
-import javax.persistence.Entity;
-import java.io.IOException;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
@@ -52,29 +45,35 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendOrderNotification(Order order) {
         String receivers = Joiner.on(",").skipNulls().join(subjectService.getAdmins().stream().map(Subject::getPhoneNumber).collect(Collectors.toList()));
-        String smsText;
+        String smsTitle, smsText;
         switch (order.getStatus()){
             case NEW:
-                smsText = "Создан новый заказ!"; break;
+                smsTitle = "Создан новый заказ";
+                smsText = "Клиент создал новый заказ. Номер - " + order.getUid();
+                break;
             case CANCELED:
-                smsText = "Заказ отменен клиентом!"; break;
+                smsTitle = "Заказ отменен";
+                smsText = "Клиент отменил заказ " + order.getUid();
+                break;
             default:
+                smsTitle = "";
                 smsText = "";
         }
-        sendNotification(createNotification(smsText, order), receivers);
+        sendNotification(createNotification(smsTitle, smsText, order), receivers);
     }
 
     public <T extends BaseModel> void sendErrorNotification(T resource) {
-        sendNotification(createNotification("Произошла ошибка! Проверь лог!", resource));
+        sendNotification(createNotification("Ошибка!","Проверь лог.", NotificationType.ERROR, resource));
     }
 
-    @Override
-    public <T extends BaseModel> Notification createNotification(String text, T resource) {
+    public <T extends BaseModel> Notification createNotification(String title, String text, NotificationType type, T resource) {
         Notification result = null;
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
             Notification notification = new Notification();
+            notification.setTitle(title);
             notification.setText(text);
+            notification.setType(type);
             if(resource!=null){
                 notification.setTargetId(resource.getId());
                 notification.setTargetResource(resource.getClass().getSimpleName());
@@ -89,13 +88,26 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification createNotification(String text) {
-        return createNotification(text, null);
+    public <T extends BaseModel> Notification createNotification(String title, String text, T resource) {
+        return createNotification(title, text, NotificationType.NORMAL, resource);
     }
 
     @Override
-    public void viewNotification(String id) {
-        //TODO: добавить логику отметки что уведомление просмотренно
+    public Notification createNotification(String title, String text) {
+        return createNotification(title, text, null);
+    }
+
+    @Override
+    public void viewNotification(String id, Credential credential) {
+        Notification notification = notificationRepository.findOne(id);
+        if(!notification.isViewed()){
+            if(notification.isRootOnly() && !credential.getRoleId().contentEquals("root")){
+                return;
+            }
+            notification.setViewedSubjectId(credential.getSubjectId());
+            notification.setViewDate(new Date());
+            notificationRepository.save(notification);
+        }
     }
 
     @Override

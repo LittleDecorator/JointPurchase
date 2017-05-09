@@ -129,8 +129,9 @@ img:focus, img:active{
 
 .container {
     margin: 0 auto;
-    max-width: 1280px;
-    width: 90%; }
+    /*max-width: 1280px;*/
+    /*width: 90%; */
+}
 
 /********************************** SMALL SCREEN'S ******************************/
 @media (max-width: 456px) {
@@ -160,7 +161,22 @@ img:focus, img:active{
 @media only screen and (min-width : 993px) {
     /*@media only screen and (min-width : 1350px) {*/
     .container {
-        width: 85%; }
+        width: 85%;
+    }
+}
+
+@media only screen and (min-width : 1350px) {
+
+    .container {
+        width: 75%;
+    }
+}
+
+@media only screen and (min-width : 1500px) {
+
+    .container {
+        width: 65%;
+    }
 }
 
 /*@media only screen and (min-width : 993px) {*/
@@ -507,6 +523,13 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
     }
 }
 
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 601px) {
+    md-sidenav#filter.md-sidenav-left {
+        top:49px;
+    }
+}
+
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
 @media (min-width: 993px) {
 
@@ -522,4 +545,13 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
         min-height: 0;
     }
 
+    md-sidenav#filter.md-sidenav-left {
+        top:56px;
+    }
+}
+
+/********************************** OFFICIAL CHANGE (COMMON) ******************************/
+
+md-sidenav#filter.md-sidenav-left {
+    position: fixed!important;
 }

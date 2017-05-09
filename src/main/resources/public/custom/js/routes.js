@@ -72,6 +72,43 @@ var route = {
                     requireLogin: false
                 }
             },
+            /*=================================== УВЕДОМЛЕНИЯ * ====================================*/
+            {
+                name: 'notification',
+                url:'/notification',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/notifications.html',
+                        controller: 'notificationController',
+                        controllerAs: 'vm'
+                    }
+                },
+                data:{
+                    displayName: 'Уведомления',
+                    requireLogin: true
+                }
+            },
+            {
+                name:'notification.detail',
+                url:'/:id',
+                parent:'notification',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/card/notificationCard.html',
+                        controller: 'notificationCardController',
+                        controllerAs: 'vm'
+                    }
+                },
+                data: {
+                    displayName: '{{notification.title}}',
+                    requireLogin: true
+                },
+                resolve: {
+                    notification: function($stateParams, resolveService) {
+                        return resolveService.getNotification($stateParams.id);
+                    }
+                }
+            },
 
             /*=================================== ЛИЧНЫЙ КАБИНЕТ * ====================================*/
             {

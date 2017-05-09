@@ -1,0 +1,39 @@
+<div ng-cloak class="ng-cloak">
+
+    <!-- переделать на модальное окно с кнопкой вызова -->
+    <div class="filter-item">
+
+        <div layout="row" style="margin: 10px 0" ng-if="width > 992">
+
+            <div style="margin: auto 0 auto 25px;">
+                <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
+                <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <h4 style="margin-top: 0">Уведомления:</h4>
+
+    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.scrolling.stopLoad' infinite-scroll-distance='vm.scrolling.infiniteDistance'>
+        <div ng-include="vm.getTemplateUrl()" ng-if="vm.notifications.length > 0"></div>
+    </div>
+
+    <div class="table-result" ng-if="vm.notifications.length==0 && !vm.filterInUse">
+        <span style="margin-right: 2%">Уведомления отсутствуют</span>
+    </div>
+
+    <div class="table-result" ng-if="vm.notifications.length==0 && vm.filterInUse">
+        <span style="margin-right: 2%">Нет записей удовлетворяющих критерию поиска</span>
+    </div>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
+        <md-icon>more_vert</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
+        <md-icon>more_vert</md-icon>
+    </md-button>
+
+</div>

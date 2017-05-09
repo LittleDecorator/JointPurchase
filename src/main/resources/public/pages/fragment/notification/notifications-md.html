@@ -1,0 +1,25 @@
+<div class="table-result">
+
+    <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+        <thead>
+        <tr>
+            <th style="width: 10%"></th>
+            <th style="width: 25%">Дата создания</th>
+            <th style="width: 55%">Заголовок</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="notification in vm.notifications track by notification.id" class="collection-item">
+            <td class="center-align">
+                <md-icon class="md-avatar-icon yellow-text text-darken-2" ng-if="!notification.viewed" style="margin: auto 15px auto auto; background-color: transparent; font-size: 30px;">star</md-icon>
+            </td>
+            <td class="center-align" style="width: 10%">{{::notification.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            <td class="center-align" style="width: 10%">{{::notification.title}}</td>
+            <td class="right-align" style="width: 60%">
+                <md-button class="md-button btn" ng-click="vm.checkNotification(notification)" style="padding: 0 1rem;"><span>Просмотреть</span></md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,14 +1,16 @@
 package com.acme.model;
 
+import com.acme.util.StringTemplate;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "subject")
@@ -41,8 +43,18 @@ public class Subject implements BaseModel{
     @Column(name = "post_address")
     private Integer postAddress;
 
+    @Transient
+    private String fullName;
+
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
+
+    @PostLoad
+    public void initTransient(){
+        StringTemplate stringTemplate = new StringTemplate("{firstName} {middleName} {lastName}");
+        Map<String, String> params = ImmutableMap.of("firstName", Strings.nullToEmpty(firstName),"middleName", Strings.nullToEmpty(middleName),"lastName",Strings.nullToEmpty(lastName));
+        setFullName(stringTemplate.format(params));
+    }
 
     public String getId() {
         return id;
@@ -124,6 +136,14 @@ public class Subject implements BaseModel{
         this.dateAdd = dateAdd;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     @Override
     public String toString() {
         return "Subject{" +
@@ -136,6 +156,7 @@ public class Subject implements BaseModel{
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postAddress=" + postAddress +
+                ", fullName='" + fullName + '\'' +
                 ", dateAdd=" + dateAdd +
                 '}';
     }
