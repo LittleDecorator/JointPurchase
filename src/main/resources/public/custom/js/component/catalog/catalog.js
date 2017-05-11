@@ -13,34 +13,34 @@
 
                 var busy = false;
                 var portion = 0;
-                
                 var vm = this;
 
                 vm.loadData = loadData;
                 vm.itemView = itemView;
+                vm.init = init;
+
                 // используется только под администратором
                 vm.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
-                // список товаров
                 vm.items = [];
-                // набор фильтров категорий товара из бокового меню. Данные используются для ElasticSearch. ВРЕМЕННО УБЕРЕМ
-                // $scope.sideFilters = [];
-
-                // выбранный узел бокового меню
-                if(node){
-                    if($stateParams.type == 'category') {
-                        // если выбранный узел относится к Категориям
-                        vm.searchFilter.category = $stateParams.id
-                    } else {
-                        // если выбранный узел относится к Производителям
-                        vm.searchFilter.company = $stateParams.id
-                    }
-                }
-
                 vm.showSideFilter = false;
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
                 vm.infiniteDistance = 2;
+                // набор фильтров категорий товара из бокового меню. Данные используются для ElasticSearch. ВРЕМЕННО УБЕРЕМ
+                // $scope.sideFilters = [];
 
+                function init(){
+                    // выбранный узел бокового меню
+                    if(node){
+                        if($stateParams.type == 'category') {
+                            // если выбранный узел относится к Категориям
+                            vm.searchFilter.category = $stateParams.id
+                        } else {
+                            // если выбранный узел относится к Производителям
+                            vm.searchFilter.company = $stateParams.id
+                        }
+                    }
+                }
 
                 /**
                 * получение данных с сервера
@@ -68,6 +68,7 @@
                             //говорим что можно отображать
                             vm.allDataLoaded = true;
                             busy = false;
+                            console.log(vm.items)
                         });
                     }
                 }
@@ -136,7 +137,7 @@
             //     }
             // }
 
-
+                init();
         }])
 
         /* Контроллер работы с карточкой товара */

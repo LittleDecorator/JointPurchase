@@ -19,6 +19,7 @@ import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -69,7 +70,7 @@ public class CatalogController {
     public List<Item> getCategoriesPreviewItems(@RequestBody ItemFilter filter) throws Exception {
         Content defContent = contentRepository.findOneByIsDefault(true);
         /* выставляем offset, limit и order by */
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.ASC, "status","name");
         Page<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter), pageable);
         for (Item item : items){
             itemService.fillItem(item, defContent);

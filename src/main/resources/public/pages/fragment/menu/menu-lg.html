@@ -50,9 +50,9 @@
                     <!-- отображаем имя только авторизованного -->
                     <!--<span ng-if="auth.isAuth()">Добро пожальвать, {{::currentUser.name}}</span>-->
                     <!-- уведомления -->
-                    <a style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;">
+                    <a ui-sref="notification" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;">
                         <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">notifications</md-icon>
-                        <span class="badge ng-binding ng-hide" ng-show="true" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;">4</span>
+                        <span class="badge ng-binding" ng-if="mvm.notifications > 0" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;" >{{::mvm.notifications}}</span>
                     </a>
                     <!-- меню -->
                     <md-menu>
@@ -100,7 +100,7 @@
 
 </md-toolbar>
 
-<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="overflow: auto;  width: 250px; min-width: 0; top: 56px; padding-top: 15px">
+<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto;  width: 260px; min-width: 0; top: 56px; padding-top: 15px">
     <md-menu-item><md-button ng-click="mvm.goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
     <md-menu-item><md-button ng-click="mvm.goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
     <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>

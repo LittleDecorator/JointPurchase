@@ -4,11 +4,11 @@ nav > .container-fluid {
 
 /* scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 2px;
 }
 
 ::-webkit-scrollbar-track {
-    width: 10px;
+    width: 2px;
     border-radius: 2px;
     background-color: #dddddd;
 }

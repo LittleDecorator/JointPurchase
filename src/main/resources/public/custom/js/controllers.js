@@ -24,6 +24,7 @@
                 'cabinet',
                 'confirm',
                 'settings',
-                'crop'
+                'crop',
+                'notification'
             ]);
 })();

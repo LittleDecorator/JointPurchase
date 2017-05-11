@@ -40,7 +40,15 @@
                 <md-icon>shopping_basket</md-icon>
                 <span flex >Корзина</span>
                 <span class="badge contain menu-badge" ng-show="mvm.cart.cou>0">{{mvm.cart.cou}}</span>
-            </md-button></md-menu-item>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">
+            <md-button ng-click="mvm.goto('notification')">
+                <md-icon>notifications</md-icon>
+                <span flex>Уведомления</span>
+                <span class="badge contain menu-badge" ng-if="mvm.notifications > 0">{{::mvm.notifications}}</span>
+            </md-button>
+        </md-menu-item>
         <md-divider></md-divider>
         <!--<md-menu-divider></md-menu-divider>-->
 

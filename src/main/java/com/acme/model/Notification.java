@@ -1,5 +1,9 @@
 package com.acme.model;
 
+import com.acme.enums.ItemStatus;
+import com.acme.enums.NotificationType;
+import com.acme.enums.converters.ItemStatusConverter;
+import com.acme.enums.converters.NotificationTypeConverter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +21,9 @@ public class Notification implements BaseModel{
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
+
+    @Column(name = "title")
+    private String title;
 
     @Column(name = "text")
     private String text;
@@ -36,8 +43,22 @@ public class Notification implements BaseModel{
     @Column(name = "is_root_only")
     private boolean isRootOnly;
 
+    @Convert(converter = NotificationTypeConverter.class)
+    private NotificationType type = NotificationType.NORMAL;
+
+    @Transient
+    private Subject viewedSubject;
+
+    @Transient
+    private boolean isViewed;
+
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
+
+    @PostLoad
+    public void initTransient(){
+        setViewed(viewedSubjectId != null);
+    }
 
     public String getId() {
         return id;
@@ -103,16 +124,56 @@ public class Notification implements BaseModel{
         this.dateAdd = dateAdd;
     }
 
+    public boolean isRootOnly() {
+        return isRootOnly;
+    }
+
+    public boolean isViewed() {
+        return isViewed;
+    }
+
+    public void setViewed(boolean viewed) {
+        isViewed = viewed;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public NotificationType getType() {
+        return type;
+    }
+
+    public void setType(NotificationType type) {
+        this.type = type;
+    }
+
+    public Subject getViewedSubject() {
+        return viewedSubject;
+    }
+
+    public void setViewedSubject(Subject viewedSubject) {
+        this.viewedSubject = viewedSubject;
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
                 "id='" + id + '\'' +
+                ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", viewedSubjectId='" + viewedSubjectId + '\'' +
                 ", viewDate=" + viewDate +
                 ", targetId='" + targetId + '\'' +
                 ", targetResource='" + targetResource + '\'' +
                 ", isRootOnly=" + isRootOnly +
+                ", type=" + type +
+                ", viewedSubject=" + viewedSubject +
+                ", isViewed=" + isViewed +
                 ", dateAdd=" + dateAdd +
                 '}';
     }

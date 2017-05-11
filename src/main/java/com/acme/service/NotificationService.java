@@ -1,8 +1,7 @@
 package com.acme.service;
 
-import com.acme.model.BaseModel;
-import com.acme.model.Notification;
-import com.acme.model.Order;
+import com.acme.enums.NotificationType;
+import com.acme.model.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -14,13 +13,15 @@ public interface NotificationService {
 
     void sendOrderNotification(Order order);
 
-    Notification createNotification(String text);
+    Notification createNotification(String title, String text);
 
     <T extends BaseModel> void sendErrorNotification(T resource);
 
-    <T extends BaseModel> Notification createNotification(String text, T resource);
+    <T extends BaseModel> Notification createNotification(String title, String text, T resource);
 
-    void viewNotification(String id);
+    <T extends BaseModel> Notification createNotification(String title, String text, NotificationType type, T resource);
+
+    void viewNotification(String id, Credential credential);
 
     void sendNotification(Notification notification);
 

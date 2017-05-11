@@ -12,10 +12,10 @@ import javax.persistence.AttributeConverter;
 @JsonDeserialize(using = ItemStatusDeserializer.class)
 public enum ItemStatus {
 
-    SOLD_OUT("Продано"),
-    SHIPPING("Ожидается"),
     AVAILABLE("В наличии"),
-    PREORDER("Под заказ");
+    AWAIT("Ожидается"),
+    PREORDER("Под заказ"),
+    SOLD_OUT("Продано");
 
     String text;
 

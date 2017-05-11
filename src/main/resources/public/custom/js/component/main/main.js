@@ -6,8 +6,8 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$log', 'modal', '$mdToast','$q',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $log, modal, $mdToast, $q) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$log', 'modal', '$mdToast', 'resolveService',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $log, modal, $mdToast, resolveService) {
 
 					var templatePath = "pages/fragment/menu/";
 					var mvm = this;
@@ -28,6 +28,7 @@
 					mvm.initCartAndMenu = initCartAndMenu;
 					mvm.hideInfoPanel = hideInfoPanel;
 					mvm.itemView = itemView;
+					mvm.toggleMenu = toggleMenu;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -40,6 +41,7 @@
 					mvm.isCollapsed = false;
 					mvm.showContent = false;
 					mvm.cart = null;
+					mvm.notifications = 0;
 					mvm.auth = authService;
 					// удаление всех promises для login из сервиса, отмена login'а
 					mvm.cancel = $scope.$dismiss;
@@ -51,6 +53,9 @@
 						$scope.$digest();
 					});
 
+					/**
+					 * Инициализация корзины
+					 */
 					function initCart() {
 						mvm.cart = {cou: 0, content: []};
 						var cart = store.get("cart");
@@ -67,8 +72,8 @@
 						dataResources.customer.get({id: decodedToken.jti}, function (data) {
 							$rootScope.currentUser = data;
 							$rootScope.currentUser.name = data.firstName;
+							$rootScope.currentUser.role = decodedToken.role;
 						});
-						$rootScope.currentUser.roles = decodedToken.roles;
 					}
 
 					/**
@@ -255,6 +260,12 @@
 						dataResources.categoryMenu.get(function (data) {
 							mvm.nodes = data;
 						});
+
+						// получим кол-во новых уведомлений
+						resolveService.getNewNotifications().then(function(data){
+							mvm.notifications = data.result;
+						});
+
 					}
 
 					/**
@@ -280,14 +291,14 @@
 										//try get customer name
 										dataResources.customer.get({id: decodedToken.jti}, function (data) {
 											$rootScope.currentUser.name = data.firstName;
+											$rootScope.currentUser.role = decodedToken.role;
 										});
-
-										$rootScope.currentUser.roles = decodedToken.roles;
 
 										/* store expired token */
 										localStorage.setItem('token', token);
 										//set current user promises
 										$timeout(eventService.onComplete(), 100);
+										console.log("OnLogin", $rootScope.currentUser);
 									} else {
 										$mdToast.show($rootScope.toast.textContent('Неверные Логин/Пароль').theme('error'));
 									}
@@ -386,7 +397,7 @@
 					mvm.openSearch = openSearch;
 
 					mvm.toggleLeft = buildToggler('left');
-					mvm.toggleMenu = buildToggler('menu');
+					// mvm.toggleMenu = buildToggler('menu');
 
 					/**
 					 * Отложенный вызов
@@ -404,6 +415,12 @@
 								func.apply(context, args);
 							}, wait || 10);
 						};
+					}
+
+					function toggleMenu(){
+						$mdSidenav("menu").toggle().then(function(){
+							$mdSidenav("left").close();
+						});
 					}
 
 					/**
@@ -425,7 +442,7 @@
 					 * Открытие модального окна поиска
 					 * @param event
 					 */
-					function openSearch(event) {
+					function openSearch() {
 						var dialog = modal({
 							templateUrl: "pages/modal/searchModal.html",
 							className: 'ngdialog-theme-default fixed-full-width',

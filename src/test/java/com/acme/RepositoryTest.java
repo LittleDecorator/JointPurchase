@@ -96,7 +96,7 @@ public class RepositoryTest {
 
         saved.setNotForSale(false);
         saved.setInStock(10);
-        saved.setStatus(ItemStatus.SHIPPING);
+        saved.setStatus(ItemStatus.AWAIT);
 
         Item updated = repository.save(saved);
         log.info(updated.toString());

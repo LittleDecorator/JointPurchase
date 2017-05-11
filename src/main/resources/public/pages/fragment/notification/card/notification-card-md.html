@@ -1,0 +1,46 @@
+<div class="card">
+    <div class="card-content" layout="column">
+
+        <div layout="row">
+
+            <md-input-container class="no-errors" flex="25">
+                <label>Дата создания</label>
+                <input ng-model="::vm.notification.dateAdd" disabled>
+            </md-input-container>
+
+            <md-input-container class="no-errors" flex="20" style="margin-left:2%">
+                <label>Тип уведомления</label>
+                <input ng-model="::vm.notification.type.name" disabled>
+            </md-input-container>
+
+            <md-input-container class="no-errors" flex style="margin-left:2%">
+                <label>Заголовок</label>
+                <input ng-model="::vm.notification.title" disabled>
+            </md-input-container>
+
+        </div>
+
+        <md-input-container style="margin-bottom: 0">
+            <label>Текст уведомления</label>
+            <textarea ng-model="::vm.notification.text" disabled></textarea>
+        </md-input-container>
+
+        <div layout="row" >
+
+            <md-input-container class="no-errors" flex="50">
+                <label>Просмотрено</label>
+                <input ng-model="::vm.notification.viewedSubject.fullName" disabled>
+            </md-input-container>
+
+            <md-input-container class="no-errors" flex style="margin-left:2%">
+                <label>Дата просмотра</label>
+                <input ng-model="::vm.notification.viewDate" disabled>
+            </md-input-container>
+
+        </div>
+        <!-- Доделать формирование ссылки на причину уведомления -->
+        <!--<a ui-sref="">Ссылка на причину уведомления</a>-->
+
+    </div>
+
+</div>

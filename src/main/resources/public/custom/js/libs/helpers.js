@@ -179,8 +179,6 @@ var helpers = {
     findRouteByUrl: function(url){
         var res = "home";
         route.getRoutes().some(function(route){
-            console.log(url);
-            console.log(route.url);
             if(helpers.endsWith(url,route.url)){
                 res = route.name;
                 return true;
@@ -193,9 +191,7 @@ var helpers = {
 
     endsWith: function (str, suffix) {
         var startPos = str.length - suffix.length;
-        console.log(startPos);
         var idx = str.indexOf(suffix,startPos);
-        console.log(idx);
         return idx > -1;
         //return str.indexOf(suffix, str.length - suffix.length) !== -1;
     },
