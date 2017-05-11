@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -70,17 +71,8 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getItems(ItemFilter filter) {
         /* выставляем offset, limit и order by */
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit());
-        List<Item> items = Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
-        // подсчитаем кол-во товара в заказах
-        //TODO: сейчас пересчет происходит при создании, отмене и удалении заказа
-//        List<Order> orders = orderRepository.findAllByStatusIn(Lists.newArrayList(OrderStatus.ACCEPTED, OrderStatus.IN_PROCESS, OrderStatus.NEW, OrderStatus.READY));
-//        List<OrderItem> orderItems = orderItemRepository.findAllByOrderIdIn(orders.stream().map(Order::getId).collect(Collectors.toList()));
-//        Map<String, Integer> result = orderItems.stream().collect(Collectors.groupingBy(OrderItem::getItemId, Collectors.summingInt(OrderItem::getCount)));
-//        for(Item item : items){
-//            item.setInOrder(result.get(item.getId()));
-//        }
-        return items;
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd","name");
+        return Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
     }
 
     /**

@@ -9,7 +9,7 @@
 
         /* Контроллер списочной формы */
         .controller('orderController',['$scope','$state','$stateParams','dataResources','deliveryMap','statusMap','modal', 
-            function ($scope, $state, $stateParams, dataResources, deliveryMap,statusMap, modal ) {
+            function ($scope, $state, $stateParams, dataResources, deliveryMap, statusMap, modal ) {
             //TODO: Написать сервис подсчета товаров при заказах
             //TODO: Определиться со статусами заказа (можно ли редактировать и когда, или же это будет работать автоматом)
 
@@ -17,7 +17,6 @@
                 var confirmedFilter = {};
                 var busy = false;
                 var portion = 0;
-                
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
                 
@@ -25,6 +24,7 @@
                 vm.loadData = loadData;
                 vm.clear = clear;
                 vm.apply = apply;
+                vm.applyKeyPress = applyKeyPress;
                 vm.editOrder = editOrder;
                 vm.deleteOrder = deleteOrder;
                 vm.addOrder = addOrder;
@@ -42,13 +42,21 @@
                  * Инициализация
                  */
                 function init(){
-                    confirmedFilter = angular.copy(vm.filter);
                     /* если в фильтре должен участвовать клиент */
                     if($stateParams.customerId != null){
                         vm.filter.subjectId = $stateParams.customerId;
+                        dataResources.customer.get({id:$stateParams.customerId}).$promise.then(function(data){
+                            vm.filter.subject = data.fullName;
+                        })
+                    }
+                    confirmedFilter = angular.copy(vm.filter);
+                }
+
+                function applyKeyPress(event) {
+                    if (event.keyCode == 13) {
+                        apply();
                     }
                 }
-                
                 
                 /**
                  * Получение данных
@@ -85,6 +93,10 @@
                     portion = 0;
                     vm.filterInUse = false;
                     vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0 };
+                    /* если в фильтре должен участвовать клиент */
+                    if($stateParams.customerId != null){
+                        vm.filter.subjectId = $stateParams.customerId;
+                    }
                     confirmedFilter = angular.copy(vm.filter);
                     // удалим старый фильтр
                     localStorage.removeItem($state.current.name);

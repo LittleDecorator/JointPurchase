@@ -27,10 +27,11 @@
                 vm.openFilter = openFilter;
                 vm.getTemplate = getTemplate;
                 vm.scrollTop = scrollTop;
+                vm.applyKeyPress = applyKeyPress;
 
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, category:null, limit:30, offset:0};
+                vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
                 vm.confirmedFilter = angular.copy(vm.filter);
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
@@ -83,11 +84,17 @@
                 /* сброс фильтра */
                 function clear() {
                     portion = 0;
-                    vm.filter = {name:null, article:null, companyId:null, categoryId:null, limit:30, offset:0};
+                    vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
                     vm.confirmedFilter = angular.copy(vm.filter);
                     localStorage.removeItem($state.current.name);
                     vm.stopLoad = false;
                     loadData(true);
+                }
+
+                function applyKeyPress(keyCode) {
+                    if (keyCode == 13) {
+                        apply();
+                    }
                 }
 
                 /* применение фильтра */
@@ -95,6 +102,10 @@
                     portion = 0;
                     vm.filter.offset = portion * vm.filter.limit;
                     vm.confirmedFilter = angular.copy(vm.filter);
+                    /* берем только id, т.к spring с jpa сможет найти Entity сам. Но как? */
+                    if(vm.confirmedFilter.company){
+                        vm.confirmedFilter.company = vm.confirmedFilter.company.id;
+                    }
                     localStorage.setItem($state.current.name,angular.toJson(vm.confirmedFilter));
                     vm.stopLoad = false;
                     loadData(true);

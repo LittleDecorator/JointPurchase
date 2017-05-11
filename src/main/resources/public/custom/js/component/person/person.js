@@ -23,6 +23,7 @@
                 vm.apply = apply;
                 vm.showOrders = showOrders;
                 vm.openFilter = openFilter;
+                vm.applyKeyPress = applyKeyPress;
                 vm.getTemplateUrl = getTemplateUrl;
                 
                 vm.customers = [];
@@ -89,6 +90,7 @@
 
                 // удаление клиента
                 function deletePerson(id) {
+                    console.log("delete&")
                     dataResources.customer.delete({id: id});
                     var currPerson = helpers.findInArrayById(vm.customers, id);
                     var idx = vm.customers.indexOf(currPerson);
@@ -103,6 +105,12 @@
                 // перейти на страницу с заказами выбранного клиента
                 function showOrders(id) {
                     $state.transitionTo("order", {customerId: id});
+                }
+
+                function applyKeyPress(keyCode) {
+                    if (keyCode == 13) {
+                        apply();
+                    }
                 }
 
                 // модальное окно фильтрации

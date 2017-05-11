@@ -5,24 +5,23 @@
 
         <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed"
                  ng-disabled="vm.data.maxStep == vm.data.stepProgress">
-            <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; ">
+            <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; min-height: 480px">
                 <md-step-body>
 
                     <h5>Способ доставки</h5>
 
                     <md-content ng-form="vm.forms.step1" style="background-color:transparent">
-                        <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; margin-top: 1px">
+
+                        <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; margin-top: 1px;min-height: 330px;">
                             <div layout="column">
-                                <md-radio-group ng-model="vm.data.stepData[0].data.delivery" class="md-primary">
-                                    <md-radio-button class="delivery"
-                                                     ng-repeat="delivery in vm.data.stepData[0].data.deliveries"
-                                                     ng-value="delivery">
-                                        <div layout="column">
-                                            <span>{{::delivery.value }}</span>
-                                            <span>{{::delivery.hint}}</span>
-                                        </div>
-                                    </md-radio-button>
-                                </md-radio-group>
+
+                                <md-input-container class="md-block" style="margin-left: 1%" flex="15">
+                                    <md-select ng-model="vm.data.stepData[0].data.delivery" ng-model-options="{trackBy: '$value.id'}" >
+                                        <md-option ng-repeat="delivery in vm.data.stepData[0].data.deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <span style="margin: 0 5px;">{{vm.data.stepData[0].data.delivery.hint}}</span>
                             </div>
                         </md-card>
 
@@ -40,12 +39,12 @@
 
         <md-step label="Информация о получателе" md-complete="vm.data.stepData[1].completed"
                  ng-disabled="!vm.data.stepData[0].completed || (vm.data.maxStep == vm.data.stepProgress)">
-            <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px">
+            <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px;min-height: 480px">
                 <md-step-body>
                     <h5>Информация о получателе</h5>
                     <md-content ng-form="vm.forms.step2" style="background-color:transparent">
 
-                        <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; margin-top: 1px">
+                        <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; margin-top: 1px;min-height: 330px;">
 
                             <div layout="row" ng-if="mvm.auth.isAuth()">
                                 <md-switch ng-model="vm.data.usePrivate" aria-label="myData" ng-change="vm.switchUserInfo()">
@@ -139,9 +138,8 @@
             </md-card>
         </md-step>
 
-        <md-step label="Статус заказа" md-complete="vm.data.stepData[2].completed"
-                 ng-disabled="!vm.data.stepData[1].completed">
-            <md-card class="md-padding">
+        <md-step label="Статус заказа" md-complete="vm.data.stepData[2].completed" ng-disabled="!vm.data.stepData[1].completed">
+            <md-card class="md-padding" style="min-height: 480px">
                 <md-step-body>
                     <md-content>
                         <div layout="column">

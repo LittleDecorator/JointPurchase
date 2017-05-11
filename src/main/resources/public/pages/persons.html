@@ -3,19 +3,19 @@
     <!-- переделать на модальное окно с кнопкой вызова -->
     <div class="filter-item">
 
-        <div layout="row" style="margin: 10px 0" ng-if="width > 992">
+        <div layout="row" style="margin: 10px 0" ng-if="mvm.width > 992">
 
             <md-input-container class="md-block no-errors">
                 <label>ФИО</label>
-                <input ng-model="vm.filter.fio">
+                <input ng-model="vm.filter.fio" ng-keydown="vm.applyKeyPress($event.keyCode)">
             </md-input-container>
 
             <md-input-container class="md-block no-errors" style="margin-left: 1%">
                 <label>Номер телефона</label>
-                <input ng-model="vm.filter.phone">
+                <input ng-model="vm.filter.phone" only-number ng-keydown="vm.applyKeyPress($event.keyCode)">
             </md-input-container>
 
-            <md-input-container class="md-block no-errors" style="margin-left: 1%">
+            <md-input-container class="md-block no-errors" style="margin-left: 1%" ng-keydown="vm.applyKeyPress($event.keyCode)">
                 <label>Почта</label>
                 <input ng-model="vm.filter.email">
             </md-input-container>

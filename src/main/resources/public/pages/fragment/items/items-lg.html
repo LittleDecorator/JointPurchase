@@ -19,7 +19,7 @@
                 <md-checkbox class="filled-in" aria-label="not for sale" ng-model="item.notForSale" ng-change="vm.forSaleToggle(item)" style="vertical-align: -15px;"></md-checkbox>
             </td>
             <td class="center-align">{{::item.name}}</td>
-            <td class="center-align">{{::item.companyName}}</td>
+            <td class="center-align">{{::item.company.name}}</td>
             <td class="center-align">{{::item.article}}</td>
             <td class="center-align">{{::item.price|number}} руб</td>
             <td class="center-align">{{::item.inStock|asZero}}</td>

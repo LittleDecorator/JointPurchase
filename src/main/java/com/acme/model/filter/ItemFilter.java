@@ -1,11 +1,12 @@
 package com.acme.model.filter;
 
+import com.acme.model.Company;
+
 public class ItemFilter {
 
     private String name;
     private String article;
-    private String company;
-    private String category;
+    private Company company;
     private int limit;
     private int offset;
 
@@ -17,11 +18,11 @@ public class ItemFilter {
         this.name = name;
     }
 
-    public String getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 
@@ -49,20 +50,14 @@ public class ItemFilter {
         this.offset = offset;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     @Override
     public String toString() {
         return "ItemFilter{" +
-                "name='" + name + '\'' +
-                ", company='" + company + '\'' +
-                ", article='" + article + '\'' +
-                '}';
+               "name='" + name + '\'' +
+               ", article='" + article + '\'' +
+               ", company=" + company +
+               ", limit=" + limit +
+               ", offset=" + offset +
+               '}';
     }
 }

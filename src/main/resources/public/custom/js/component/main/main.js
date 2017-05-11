@@ -6,13 +6,16 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$log', 'modal', '$mdToast', 'resolveService',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $log, modal, $mdToast, resolveService) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService) {
+
+					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
 					var templatePath = "pages/fragment/menu/";
 					var mvm = this;
 
 					mvm.initCart = initCart;
+					mvm.initMenu = initMenu;
 					mvm.addToCart = addToCart;
 					mvm.clearCart = clearCart;
 					mvm.clearCookieInfo = clearCookieInfo;
@@ -23,12 +26,18 @@
 					mvm.removeFromCart = removeFromCart;
 					mvm.goto = goto;
 					mvm.getMenuTemplateUrl = getMenuTemplateUrl;
-					mvm.afterInclude = afterInclude;
+					mvm.afterMenuInclude = afterMenuInclude;
 					mvm.isCurrent = isCurrent;
-					mvm.initCartAndMenu = initCartAndMenu;
+					mvm.initInfoPanel = initInfoPanel;
 					mvm.hideInfoPanel = hideInfoPanel;
 					mvm.itemView = itemView;
 					mvm.toggleMenu = toggleMenu;
+					mvm.toggleSideFilter = toggleSideFilter;
+					mvm.querySearch   = querySearch;
+					mvm.searchItem = searchItem;
+					mvm.searchKeyPress = searchKeyPress;
+					mvm.toggleSideFilter = toggleSideFilter;
+					mvm.openSearch = openSearch;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -45,22 +54,18 @@
 					mvm.auth = authService;
 					// удаление всех promises для login из сервиса, отмена login'а
 					mvm.cancel = $scope.$dismiss;
-
-					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
-
-					angular.element($window).bind('resize', function () {
-						mvm.width = $window.innerWidth;
-						$scope.$digest();
-					});
+					mvm.states        = [];
+					mvm.selectedItem  = null;
+					mvm.searchText    = null;
+					mvm.lockSideFilter = false;
 
 					/**
-					 * Инициализация корзины
+					 * Обработка нажатия Enter для поиска
+					 * @param keyCode
 					 */
-					function initCart() {
-						mvm.cart = {cou: 0, content: []};
-						var cart = store.get("cart");
-						if (!helpers.isArray(cart)) {
-							mvm.cart = cart;
+					function searchKeyPress(keyCode) {
+						if (keyCode == 13) {
+							searchItem();
 						}
 					}
 
@@ -154,7 +159,9 @@
 					 * @param node
 					 */
 					function filterProduct(node) {
-						$mdSidenav('left').close();
+						if($mdSidenav('left').isOpen() && mvm.width < 1530){
+							$mdSidenav('left').close();
+						}
 						eventService.onFilter(node);
 					}
 
@@ -207,12 +214,176 @@
 					 * @param name
 					 */
 					function goto(name) {
-						localStorage.setItem('tab', name);
-						helpers.centerItFixedWidth('#' + name, 'div#menu-tabs');
-						$state.go(name);
-						if ($mdSidenav('menu').isOpen()) {
-							$mdSidenav('menu').close();
+						// если переходим на не "Каталог", то скрываем панель
+						if(name!="catalog" && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
+							mvm.lockSideFilter = false;
+							$mdSidenav('left').close();
 						}
+						// после того как перешли
+						$state.go(name).then(function() {
+							//закрываем панель меню
+							if ($mdSidenav('menu').isOpen()) {
+								$mdSidenav('menu').close().then(function(){
+									//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
+									var shouldLock = (name == 'catalog' && mvm.width > 1530);
+									if(shouldLock!=mvm.lockSideFilter){
+										mvm.lockSideFilter = shouldLock;
+									}
+								})
+							}
+						});
+					}
+
+					/**
+					 * Проверка что требуемый state является текущим
+					 * @param name
+					 * @returns {boolean}
+					 */
+					function isCurrent(name) {
+						if(name){
+							return $state.current.name == name;
+						} else {
+							return false;
+						}
+					}
+
+					/**
+					 * Для перехода в карточку из корзины
+					 * @param id
+					 */
+					function itemView(id) {
+						$state.go("catalog.detail", {itemId: id});
+					}
+
+					/**
+					 * Скрытие info панели касательно тестового режима
+					 */
+					function hideInfoPanel() {
+						localStorage.setItem('hideInfo', true);
+						mvm.isInfoPanelClosed = true;
+					}
+
+					/**
+					 * нажатие кнопки поиск
+					 */
+					function searchItem (){
+						if(mvm.search.criteria){
+							// обновляем state т.к имя могло измениться
+							if($state.current == 'search'){
+								$state.go('search', {criteria: mvm.search.criteria},{notify:false}).then(function(){
+									$stateParams.criteria = name.search.criteria;
+									$rootScope.$broadcast('$refreshBreadcrumbs',$state);
+								});
+							} else {
+								$state.go('search', {criteria: mvm.search.criteria});
+							}
+						}
+					}
+
+					/**
+					 * Search for states... use $timeout to simulate
+					 * remote dataservice call.
+					 */
+					function querySearch (query) {
+						//TODO: показывать загрузку
+						return query ? dataResources.catalog.search.get({criteria: query}).$promise : $scope.states;
+					}
+
+					/**
+					 * Показ\сокрытие панели меню
+					 */
+					function toggleMenu(){
+						$mdSidenav("menu").toggle().then(function(){
+							if($mdSidenav("left").isOpen()){
+								$mdSidenav("left").close();
+							}
+						});
+					}
+
+					function toggleSideFilter(){
+						$mdSidenav("left").toggle()
+					}
+					/**
+					 * Отложенное выполнение
+					 */
+					// function isSideFilterLocked(){
+					// 	var result = $mdUtil.debounce(function(){
+					// 		console.log("val",val);
+					// 	},300);
+					// 	return result
+					// }
+
+					/**
+					 * Открытие модального окна поиска
+					 * @param event
+					 */
+					function openSearch() {
+						var dialog = modal({
+							templateUrl: "pages/modal/searchModal.html",
+							className: 'ngdialog-theme-default fixed-full-width',
+							closeByEscape: true,
+							closeByDocument: true,
+							controller: "searchController"
+						});
+
+						dialog.closePromise.then(function (output) {
+							if (output.value && output.value != '$escape') {
+							}
+						});
+					}
+
+					/*========================== INITIALIZATION ============================*/
+
+					/**
+					 * Инициализация корзины
+					 */
+					function initCart() {
+						mvm.cart = {cou: 0, content: []};
+						var cart = store.get("cart");
+						if (!helpers.isArray(cart)) {
+							mvm.cart = cart;
+						}
+					}
+
+					/**
+					 * Инициализация информационной панели
+					 */
+					function initInfoPanel(){
+						if (localStorage.getItem('hideInfo')) {
+							mvm.isInfoPanelClosed = localStorage.getItem('hideInfo');
+						} else {
+							mvm.isInfoPanelClosed = false;
+						}
+					}
+
+					/**
+					 * Основная инициализация
+					 */
+					function initMenu(){
+						//slider content (for now left only root's)
+						dataResources.categoryMenu.get(function (data) {
+							mvm.nodes = data;
+						});
+
+						// получим кол-во новых уведомлений
+						// resolveService.getNewNotifications().then(function(data){
+						// 	mvm.notifications = data.result;
+						// });
+					}
+
+					/**
+					 * Основная инициализация
+					 */
+					function init(){
+
+						angular.element($window).bind('resize', function () {
+							mvm.width = $window.innerWidth;
+							$scope.$digest();
+						});
+
+						initCart();
+						initMenu();
+						initInfoPanel()
 					}
 
 					/**
@@ -233,48 +404,8 @@
 					/**
 					 * Событие загрузки шаблона
 					 */
-					function afterInclude() {
-						$timeout(function () {
-							$('.dropdown-button').dropdown();
-							$(".button-collapse").sideNav();
-							$('ul.tabs').tabs();
-						}, 100);
-					}
+					function afterMenuInclude() {}
 
-					/**
-					 * Проверка что требуемый state является текущим
-					 * @param name
-					 * @returns {boolean}
-					 */
-					function isCurrent(name) {
-						return $state.current.name == name;
-					}
-
-					/**
-					 * Основная инициализация
-					 */
-					function initCartAndMenu(){
-						initCart();
-
-						//slider content (for now left only root's)
-						dataResources.categoryMenu.get(function (data) {
-							mvm.nodes = data;
-						});
-
-						// получим кол-во новых уведомлений
-						resolveService.getNewNotifications().then(function(data){
-							mvm.notifications = data.result;
-						});
-
-					}
-
-					/**
-					 * Для перехода в карточку из корзины
-					 * @param id
-					 */
-					function itemView(id) {
-						$state.go("catalog.detail", {itemId: id});
-					}
 
 					/* подтверждение аутентификации, получение token'а */
 					//TODO: перенести в login контроллер
@@ -298,7 +429,6 @@
 										localStorage.setItem('token', token);
 										//set current user promises
 										$timeout(eventService.onComplete(), 100);
-										console.log("OnLogin", $rootScope.currentUser);
 									} else {
 										$mdToast.show($rootScope.toast.textContent('Неверные Логин/Пароль').theme('error'));
 									}
@@ -307,155 +437,12 @@
 								});
 					});
 
-					initCartAndMenu();
-
-					/* инициализация swipebox */
+					/* инициализация swipebox и отложеных компонентов */
 					$timeout(function () {
 						$('.swipebox').swipebox();
 					}, 10);
 
-					// ВРЕМЕННО УБРАНО
-					// $scope.handleClick = function (event) {
-					// 	if (event.toElement.className.indexOf('search') == -1) {
-					// 		eventService.onSearchHide();
-					// 	}
-					// };
-
-					// ВРЕМЕННО УБРАНО
-					// if (localStorage.getItem('tab')) {
-					// 	var tab = localStorage.getItem('tab');
-					// 	$('.tab > a').removeClass('active');
-					// 	$('#' + tab + '.tab > a').addClass('active');
-					// 	$('ul.tabs').tabs();
-					// }
-
-					/*========================== INFO PANEL ============================*/
-
-					if (localStorage.getItem('hideInfo')) {
-						mvm.isInfoPanelClosed = localStorage.getItem('hideInfo');
-					} else {
-						mvm.isInfoPanelClosed = false;
-					}
-
-					/**
-					 * Скрытие info панели касательно тестового режима
-					 */
-					function hideInfoPanel() {
-						localStorage.setItem('hideInfo', true);
-						mvm.isInfoPanelClosed = true;
-					}
-
-					/*======================== SEARCH ==============================*/
-
-					mvm.querySearch   = querySearch;
-					mvm.searchItem = searchItem;
-					mvm.keyPress = keyPress;
-					mvm.states        = [];
-					mvm.selectedItem  = null;
-					mvm.searchText    = null;
-
-					/**
-					 * нажатие кнопки поиск
-					 */
-					function searchItem (){
-						if(mvm.search.criteria){
-							// обновляем state т.к имя могло измениться
-							if($state.current == 'search'){
-								$state.go('search', {criteria: mvm.search.criteria},{notify:false}).then(function(){
-									$stateParams.criteria = name.search.criteria;
-									$rootScope.$broadcast('$refreshBreadcrumbs',$state);
-								});
-							} else {
-								$state.go('search', {criteria: mvm.search.criteria});
-							}
-						}
-					}
-
-					/**
-					 * Обработка нажатия Enter
-					 * @param keyCode
-					 */
-					function keyPress(keyCode) {
-						if (keyCode == 13) {
-							searchItem();
-						}
-					}
-
-					/**
-					 * Search for states... use $timeout to simulate
-					 * remote dataservice call.
-					 */
-					function querySearch (query) {
-						//TODO: показывать загрузку
-						return query ? dataResources.catalog.search.get({criteria: query}).$promise : $scope.states;
-					}
-
-					/*========================== SIDE NAV ============================*/
-					//TODO: move all this to directive
-					mvm.debounce = debounce;
-					mvm.buildToggler = buildToggler;
-					mvm.openSearch = openSearch;
-
-					mvm.toggleLeft = buildToggler('left');
-					// mvm.toggleMenu = buildToggler('menu');
-
-					/**
-					 * Отложенный вызов
-					 * @param func
-					 * @param wait
-					 * @returns {debounced}
-					 */
-					function debounce(func, wait) {
-						var timer;
-						return function debounced() {
-							var context = $scope, args = Array.prototype.slice.call(arguments);
-							$timeout.cancel(timer);
-							timer = $timeout(function () {
-								timer = undefined;
-								func.apply(context, args);
-							}, wait || 10);
-						};
-					}
-
-					function toggleMenu(){
-						$mdSidenav("menu").toggle().then(function(){
-							$mdSidenav("left").close();
-						});
-					}
-
-					/**
-					 * Построитель Toggle для sideNav
-					 * @param navID
-					 * @returns {Function}
-					 */
-					function buildToggler(navID) {
-						return function () {
-							$mdSidenav(navID)
-									.toggle()
-									.then(function () {
-										$log.debug("toggle " + navID + " is done");
-									});
-						}
-					}
-
-					/**
-					 * Открытие модального окна поиска
-					 * @param event
-					 */
-					function openSearch() {
-						var dialog = modal({
-							templateUrl: "pages/modal/searchModal.html",
-							className: 'ngdialog-theme-default fixed-full-width',
-							closeByEscape: true,
-							closeByDocument: true,
-							controller: "searchController"
-						});
-
-						dialog.closePromise.then(function (output) {
-							if (output.value && output.value != '$escape') {
-							}
-						});
-					}
+					init();
 
 				}])
 

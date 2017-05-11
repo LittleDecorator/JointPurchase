@@ -26,16 +26,16 @@ public class SubjectSpecifications {
 			final List<Predicate> predicates = Lists.newArrayList();
 			final List<Predicate> fioPredicates = Lists.newArrayList();
 			if (filter.getFio() != null) {
-				fioPredicates.add(builder.like(firstName, "%" + filter.getFio()+ "%"));
-				fioPredicates.add(builder.like(middleName, "%" + filter.getFio()+ "%"));
-				fioPredicates.add(builder.like(lastName, "%" + filter.getFio()+ "%"));
+				fioPredicates.add(builder.like(builder.lower(firstName), "%" + filter.getFio().toLowerCase()+ "%"));
+				fioPredicates.add(builder.like(builder.lower(middleName), "%" + filter.getFio().toLowerCase()+ "%"));
+				fioPredicates.add(builder.like(builder.lower(lastName), "%" + filter.getFio().toLowerCase()+ "%"));
 				predicates.add(builder.or(fioPredicates.toArray(new Predicate[fioPredicates.size()])));
 			}
 			if (filter.getPhone() != null) {
 				predicates.add(builder.like(phone, "%" + filter.getPhone() + "%"));
 			}
 			if (filter.getEmail() != null) {
-				predicates.add(builder.like(email, "%" + filter.getEmail() + "%"));
+				predicates.add(builder.like(builder.lower(email), "%" + filter.getEmail().toLowerCase() + "%"));
 			}
 
 			return builder.and(predicates.toArray(new Predicate[predicates.size()]));

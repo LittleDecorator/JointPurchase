@@ -68,7 +68,6 @@
                             //говорим что можно отображать
                             vm.allDataLoaded = true;
                             busy = false;
-                            console.log(vm.items)
                         });
                     }
                 }

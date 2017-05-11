@@ -80,14 +80,14 @@
 <body ng-app="purchase" ng-controller="mainController as mvm" class="home blog">
 
     <header>
-        <div ng-include="mvm.getMenuTemplateUrl()" include-callback="mvm.afterInclude()"></div>
+        <div ng-include="mvm.getMenuTemplateUrl()" include-callback="mvm.afterMenuInclude()"></div>
         <div ng-include="'pages/template/sideFilter.html'"></div>
     </header>
 
     <main class="main-wrapper">
         <!-- отображение пользователя и основное меню для LG -->
         <!--<div ng-include="'pages/template/sideMenu.html'"></div>-->
-        <div class="main container" style="margin-top: 25px;padding-bottom: 30px;">
+        <div class="main container" style="margin-top: 25px;padding-bottom: 0;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main" class="template-wrapper"></div>
         </div>

@@ -7,7 +7,9 @@ import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.dto.SearchResultElement;
+import com.acme.model.filter.CatalogFilter;
 import com.acme.model.filter.ItemFilter;
+import com.acme.repository.specification.CatalogSpecifications;
 import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
 import com.acme.service.ElasticService;
@@ -67,11 +69,12 @@ public class CatalogController {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST)
-    public List<Item> getCategoriesPreviewItems(@RequestBody ItemFilter filter) throws Exception {
+    public List<Item> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
+        //TODO: Заменить на QueryDsl с учетом иерархии категорий
         Content defContent = contentRepository.findOneByIsDefault(true);
         /* выставляем offset, limit и order by */
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.ASC, "status","name");
-        Page<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter), pageable);
+        Page<Item> items = itemRepository.findAll(CatalogSpecifications.filter(filter), pageable);
         for (Item item : items){
             itemService.fillItem(item, defContent);
         }
