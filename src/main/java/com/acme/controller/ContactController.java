@@ -1,5 +1,7 @@
 package com.acme.controller;
 
+import com.acme.model.dto.CallbackRequest;
+import com.acme.service.NotificationService;
 import com.acme.service.SmsService;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,11 @@ import java.io.IOException;
 public class ContactController {
 
     @Autowired
-    SmsService smsService;
+    NotificationService notificationService;
 
-    @RequestMapping(method = RequestMethod.POST,value = "/callback/sms")
-    public void sendForCallback(@RequestBody String input) throws ParseException, IOException {
-        System.out.println(input);
-//        smsService.sendCallback();
+    @RequestMapping(method = RequestMethod.POST, value = "/callback/sms")
+    public void sendForCallback(@RequestBody CallbackRequest request) throws ParseException, IOException {
+        notificationService.createNotification("Клиент "+ request.getPhone() + " отправил сообщение", request.getMessage());
     }
 
 }

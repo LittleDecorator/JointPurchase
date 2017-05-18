@@ -204,7 +204,9 @@
                     delete: {method:'DELETE'},
                     update: {method:'POST'}
                 }),
-                contactCallback: $resource('/contact/callback/sms',{},{post:{method:'POST',isArray:false}}),
+                contactCallback: $resource('/contact/callback/sms',{},{
+                    post:{method:'POST',isArray:false}
+                }),
                 customer: $resource('/customer/:id',{},{
                         all:{method:'GET',isArray:true},
                         get:{method:'GET',isArray:false},

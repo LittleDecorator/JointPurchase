@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="official/stepper/md-steppers.min.css">
     <link rel="stylesheet" href="official/css/mdPickers.min.css">
     <link rel="stylesheet" href="official/css/cropper.css">
+    <link rel="stylesheet" href="official/back-to-top/gm-back-to-top.min.css">
 
     <!-- build:css custom/css/all.css -->
     <link rel="stylesheet" href="custom/css/app.css">
@@ -91,6 +92,8 @@
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main" class="template-wrapper"></div>
         </div>
+        <!-- Возврат на вверх -->
+        <gm-back-to-top gmspeed="1000" gmstyle="red lighten-3 fixed-action-btn btn-x-small"> </gm-back-to-top>
     </main>
 
     <div id="spinner" class="spinner-wrapper">
@@ -138,8 +141,7 @@
     <script src="official/ngMask.min.js"></script>
     <script src="official/mdPickers.js"></script>
     <script src="official/crypto/crypto-js.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/0.9.1/cropper.min.js"></script>-->
-    <!--<script src="official/cropper.js"></script>-->
+    <script src="official/back-to-top/gm-back-to-top.min.js"></script>
 
     <!-- build:js custom/js/all.js -->
     <script src="custom/js/libs/ngBreadcrumbs.js"></script>

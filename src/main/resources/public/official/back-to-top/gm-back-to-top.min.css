@@ -1,0 +1,28 @@
+#arrowIcon {
+	/*color: #fff;*/
+	/*padding-top: .1rem !important;*/
+	/*font-size: 2.5rem !important*/
+	font-size: 1.8rem !important;
+}
+
+.md-fab.docs-scroll-fab.showBackToTop {
+	transform: scale(1);
+	-webkit-transform: scale(1);
+}
+
+.md-fab.docs-scroll-fab.hideBackToTop {
+	transform: scale(0);
+	-webkit-transform: scale(0);
+}
+
+.md-button.md-fab.md-fab-bottom-right {
+	position: fixed;
+	right:75px;
+	bottom: 25px;
+	background-color: #ff5252;
+	transition: transform .2s, -webkit-transform .2s
+}
+
+.md-button.md-fab.md-fab-bottom-right:hover {
+	background-color: #d90000
+}

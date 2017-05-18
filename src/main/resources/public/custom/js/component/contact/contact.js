@@ -7,8 +7,8 @@
 
     angular.module('contact')
 
-        .controller('contactController',['$scope','dataResources','$timeout', 
-            function($scope,dataResources, $timeout){
+        .controller('contactController',['$rootScope','$scope','dataResources','$timeout', '$mdToast',
+            function($rootScope, $scope, dataResources, $timeout, $mdToast){
 
                 var templatePath = "pages/fragment/contact/";
                 var mvm = $scope.$parent.mvm;
@@ -27,24 +27,16 @@
                  * Отправка сообщения от клиента админам
                  */
                 function send(){
+                    vm.showHints = false;
                     if(vm.forms.contactForm.phone.$valid){
-                        console.log(" тут должна быть отправка сообщения ")
-                        vm.showHints = true;
-                    } else {
-                        vm.showHints = false;
+                        dataResources.contactCallback.post(vm.request, function(data){
+                            $mdToast.show($rootScope.toast.textContent('Ваше сообщение успешно отправлено').theme('success'));
+                            vm.showHints = true;
+                        }, function(error){
+                            $mdToast.show($rootScope.toast.textContent('Неудалось отправить сообщение').theme('error'));
+                        });
+                        vm.request = {phone:null,message:null};
                     }
-                //    $scope.showHints = false;
-                //} else {
-                //    dataResources.contactCallback.post($scope.request,
-                //        function(response){
-                //            console.log("success");
-                //        },
-                //        function(response){
-                //            console.log("failed");
-                //        });
-                //    $scope.request = {phone:null,message:null};
-                //    $scope.showHints = true;
-                //}
                 }
 
                 /**
@@ -85,8 +77,9 @@
                  */
                 function afterInclude(){
                     $timeout(function() {
+                        console.log($scope);
                         load();
-                    }, 300);
+                    }, 500);
                 }
         }])
 })();

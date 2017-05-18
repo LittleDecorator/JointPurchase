@@ -1,5 +1,5 @@
 (function(){
-    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'ngMessages','angularBootstrapNavTree', 'ngResource','mdPickers','ngMask', 'angularFileUpload', 'angular-jwt','md-steppers',
+    angular.module('purchase', ['ui.router', 'ngDialog','ngMaterial', 'ngMessages','angularBootstrapNavTree', 'ngResource','mdPickers','ngMask', 'angularFileUpload', 'angular-jwt','md-steppers','backToTop',
         'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators']);
 
     // angular.module("purchase").run(["$templateCache", function (e) {
