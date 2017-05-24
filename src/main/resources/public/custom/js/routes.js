@@ -327,7 +327,7 @@ var route = {
                 parent:'catalog',
                 views: {
                     'main@': {
-                        templateUrl : 'pages/catalog.html',
+                        templateUrl : 'pages/catalog-list.html',
                         controller: 'catalogController',
                         controllerAs: 'vm'
                     }
@@ -338,7 +338,6 @@ var route = {
                 },
                 resolve: {
                     node: function($stateParams,resolveService) {
-                        console.log($stateParams);
                         if($stateParams.type == 'category'){
                             return resolveService.getCategory($stateParams.id);
                         } else {

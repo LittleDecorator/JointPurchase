@@ -1,10 +1,10 @@
 package com.acme.repository;
 
 import com.acme.model.Item;
-import com.acme.model.OrderItem;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -25,5 +25,8 @@ public interface ItemRepository extends JpaRepository<Item, String>, JpaSpecific
     List<Item> findByIdIn(List<String> ids);
 
 //    List<Item> findByOrderItems(List<OrderItem> orderItems);
+
+    @Query(value = "select * from get_limited_category_items(:categoryId, :offset, :limit)", nativeQuery = true)
+    List<Item> findAllByCategoryId(@Param("categoryId") String categoryId, @Param("offset") int offset, @Param("limit") int limit);
 
 }

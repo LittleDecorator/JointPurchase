@@ -14,6 +14,7 @@ import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
 import com.acme.service.ElasticService;
 import com.acme.service.ItemService;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.pushtorefresh.javac_warning_annotation.Warning;
@@ -26,6 +27,7 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -70,15 +72,20 @@ public class CatalogController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public List<Item> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
-        //TODO: Заменить на QueryDsl с учетом иерархии категорий
+        List<Item> result;
         Content defContent = contentRepository.findOneByIsDefault(true);
-        /* выставляем offset, limit и order by */
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.ASC, "status","name");
-        Page<Item> items = itemRepository.findAll(CatalogSpecifications.filter(filter), pageable);
-        for (Item item : items){
+
+        // если в фильтре отсутствует категория, то используем спецификацию
+        if(Strings.isNullOrEmpty(filter.getCategory())){
+            Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.ASC, "status","name");
+            result = Lists.newArrayList(itemRepository.findAll(CatalogSpecifications.filter(filter), pageable));
+        } else {
+            result = itemRepository.findAllByCategoryId(filter.getCategory(), filter.getOffset(), filter.getLimit());
+        }
+        for (Item item : result){
             itemService.fillItem(item, defContent);
         }
-        return Lists.newArrayList(items);
+        return result;
     }
 
     /**

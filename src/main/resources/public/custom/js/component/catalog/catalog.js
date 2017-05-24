@@ -26,8 +26,6 @@
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
                 vm.infiniteDistance = 2;
-                // набор фильтров категорий товара из бокового меню. Данные используются для ElasticSearch. ВРЕМЕННО УБЕРЕМ
-                // $scope.sideFilters = [];
 
                 function init(){
                     // выбранный узел бокового меню
@@ -72,22 +70,6 @@
                     }
                 }
 
-            /* ПОКА НЕ ПОНЯТНО ДЛЯ ЧЕГО ЭТО БЫЛО ОСТАВЛЕНО */
-
-            // var getRootNodesScope = function() {
-            //     return angular.element(document.getElementById("tree-root")).scope();
-            // };
-            //
-            // $scope.collapseAll = function() {
-            //     var scope = getRootNodesScope();
-            //     scope.collapseAll();
-            // };
-            //
-            // $scope.expandAll = function() {
-            //     var scope = getRootNodesScope();
-            //     scope.expandAll();
-            // };
-
                 /**
                 * Переход на карточку товара
                 * @param id
@@ -114,7 +96,7 @@
                         type = 'category';
                     }
                     // переходим на страницу результата фильтрации
-                    $state.go('catalog.type', {id:node.id, type:type}, {notify:false}).then(function(){
+                    $state.go('catalog.type', {id:node.id, type:type}, {notify:true}).then(function(){
                         // неявно обновим Breadcrumbs
                         $rootScope.$broadcast('$refreshBreadcrumbs',$state);
                     });
@@ -125,16 +107,6 @@
                     // запросим данные
                     loadData(true);
                 });
-
-            /* ВОЗМОЖНО ПРЕДПОЛАГАЛОСЬ ДЛЯ ИСКЛЮЧЕНИЯ ДЕТЕЙ ВЫБРАННЫХ ЭЛЕМЕНТОВ ФИЛЬТРА КАТЕГОРИЙ */
-            // $scope.removeFilterElem = function(idx){
-            //     $scope.sideFilters.splice(idx,1);
-            //     //TODO: maybe change to server clean
-            //
-            //     if($scope.sideFilters.length==0){
-            //         $scope.showSideFilter = false;
-            //     }
-            // }
 
                 init();
         }])

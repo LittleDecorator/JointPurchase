@@ -6,8 +6,8 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location) {
 
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
@@ -215,7 +215,7 @@
 					 */
 					function goto(name) {
 						// если переходим на не "Каталог", то скрываем панель
-						if(name!="catalog" && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
+						if(name!="catalog"  && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
 							mvm.lockSideFilter = false;
 							$mdSidenav('left').close();
 						}
@@ -375,7 +375,6 @@
 					 * Основная инициализация
 					 */
 					function init(){
-
 						angular.element($window).bind('resize', function () {
 							mvm.width = $window.innerWidth;
 							$scope.$digest();
@@ -383,7 +382,12 @@
 
 						initCart();
 						initMenu();
-						initInfoPanel()
+						initInfoPanel();
+
+						// показываем боковое меню категорий
+						if($location.$$url.includes("catalog")){
+							mvm.lockSideFilter = (mvm.width > 1530);
+						}
 					}
 
 					/**

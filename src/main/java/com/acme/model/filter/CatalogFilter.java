@@ -9,7 +9,7 @@ import com.acme.model.Company;
 public class CatalogFilter {
 
 	private Company company;
-	private Category category;
+	private String category;
 	private int limit;
 	private int offset;
 
@@ -21,11 +21,11 @@ public class CatalogFilter {
 		this.company = company;
 	}
 
-	public Category getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
 
