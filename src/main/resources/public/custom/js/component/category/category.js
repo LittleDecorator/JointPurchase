@@ -381,8 +381,8 @@
 
         }])
 
-        .controller('categoryCardController', ['$scope', 'dataResources', 'modal', 'rootCategories', 'category', 'categoryItems', '$timeout', '$mdToast',
-            function ($scope, dataResources, modal, rootCategories, category, categoryItems, $timeout, $mdToast) {
+        .controller('categoryCardController', ['$scope', 'dataResources', 'modal', 'rootCategories', 'category', 'categoryItems', '$timeout', '$mdToast', '$mdDialog',
+            function ($scope, dataResources, modal, rootCategories, category, categoryItems, $timeout, $mdToast, $mdDialog) {
                 /* for small only */
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
@@ -466,12 +466,25 @@
                 /**
                  * Удаление категории
                  */
-                function deleteCategory(){
-                    dataResources.category.delete({id: vm.data.selectedCategory.id}).$promise.then(function (data) {
-                        $mdToast.show(toast.textContent('Категория ['+ vm.data.selectedCategory.name +'] успешно удалена').theme('success'));
-                    }, function (error) {
-                        $mdToast.show(toast.textContent('Неудалось удалить категорию').theme('error'));
+                function deleteCategory(event){
+                    var confirm = $mdDialog.confirm()
+                            .title('Подтверждение удаления')
+                            .textContent('Вы уверены, что хотите удалить данную категорию?')
+                            .ariaLabel('delete category')
+                            .targetEvent(event)
+                            .ok('Удалить')
+                            .cancel('Отмена');
+
+                    $mdDialog.show(confirm).then(function() {
+                        dataResources.category.delete({id: vm.data.selectedCategory.id}).$promise.then(function (data) {
+                            $mdToast.show(toast.textContent('Категория ['+ vm.data.selectedCategory.name +'] успешно удалена').theme('success'));
+                        }, function (error) {
+                            $mdToast.show(toast.textContent('Неудалось удалить категорию').theme('error'));
+                        })
+                    }, function(){
+                        // отмена операции
                     })
+
                 }
 
                 /**

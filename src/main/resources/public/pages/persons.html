@@ -43,15 +43,27 @@
         <span style="margin-right: 2%">Нет записей удовлетворяющих критерию поиска</span>
     </div>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.openFilter('fullscreen')" style="bottom: 80px;right:25px" ng-if="width < 601" >
-        <md-icon>more_vert</md-icon>
-    </md-button>
+    <div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; bottom: 22px; margin-bottom: 0;">
+        <md-fab-speed-dial md-open="false" md-direction="left" ng-class="'md-scale'">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab blue lighten-2 fixed-action-btn" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+                    <md-icon>more_vert</md-icon>
+                </md-button>
+            </md-fab-trigger>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.openFilter('w-50')" style="bottom: 90px;right:25px" ng-if="600 < width && width < 992" >
-        <md-icon>more_vert</md-icon>
-    </md-button>
+            <md-fab-actions>
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.openFilter('fullscreen')" ng-if="mvm.width < 601">
+                    <md-icon>filter_list</md-icon>
+                </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addPerson()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}" style="right:25px;bottom:25px">
-        <md-icon>add</md-icon>
-    </md-button>
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.openFilter('w-50')" ng-if="600 < mvm.width && mvm.width < 992">
+                    <md-icon>filter_list</md-icon>
+                </md-button>
+
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.addPerson()">
+                    <md-icon>add</md-icon>
+                </md-button>
+            </md-fab-actions>
+        </md-fab-speed-dial>
+    </div>
 </div>

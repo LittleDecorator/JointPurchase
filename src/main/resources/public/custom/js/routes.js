@@ -591,7 +591,7 @@ var route = {
                     }
                 }
             },
-            /* Галерея */
+            /*=================================== ГАЛЕРЕЯ ====================================*/
             {
                 name:'item.detail.gallery',
                 parent:'item.detail',
@@ -599,12 +599,13 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/gallery.html',
-                        controller: 'galleryController'
+                        controller: 'galleryController',
+                        controllerAs: 'vm'
                     }
                 },
                 data: {
                     requireLogin: true,
-                    displayName: 'Изображения',
+                    displayName: 'Изображения'
                 }
             },
                 /* Страница редактирования конкретного изображения */
@@ -651,7 +652,7 @@ var route = {
             },
             {
                 name: 'category.card',
-                url:'/category/:id',
+                url:'/:id',
                 parent:'category',
                 views: {
                     'main@': {

@@ -46,16 +46,26 @@
 
 </div>
 
+<div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; bottom: 22px; margin-bottom: 0;">
+    <md-fab-speed-dial md-open="false" md-direction="left" ng-class="'md-scale'">
+        <md-fab-trigger>
+            <md-button aria-label="menu" class="md-fab blue lighten-2 fixed-action-btn" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+                <md-icon>more_vert</md-icon>
+            </md-button>
+        </md-fab-trigger>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.deleteCategory()" style="bottom: 45px; right: 15px;">
-        <md-icon>clear</md-icon>
-    </md-button>
+        <md-fab-actions>
+            <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.save()" ng-class="{'disabled':!card.CategoryCard.$dirty}">
+                <md-icon>save</md-icon>
+            </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.save()" style="bottom: 105px; right: 15px;">
-        <md-icon>save</md-icon>
-    </md-button>
+            <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.deleteCategory($event)">
+                <md-icon>clear</md-icon>
+            </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-x-small" ng-click="vm.showItemModal()" style="bottom: 165px; right: 15px;">
-        <md-icon>open_in_new</md-icon>
-    </md-button>
-
+            <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.showItemModal()">
+                <md-icon>open_in_new</md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+</div>

@@ -5,13 +5,13 @@
         top:56px
     }
 
-    .virtualRepeatdemoHorizontalUsage #horizontal-container {
+    .horizontal-repeater #horizontal-container {
         height: 50px;
         width: 100%;
         max-width: 1210px;
     }
 
-    .virtualRepeatdemoHorizontalUsage .repeated-item {
+    .horizontal-repeater .repeated-item {
         /*border-right: 1px solid #ddd;*/
         box-sizing: border-box;
         display: inline-block;
@@ -26,29 +26,16 @@
         color: rgba(0,0,0,0.54);
     }
 
-    /*.virtualRepeatdemoHorizontalUsage .repeated-item:hover{*/
-        /*background-color: rgba(0, 0, 0, 0.04)*/
-    /*}*/
-
-    /*.virtualRepeatdemoHorizontalUsage .repeated-item button:hover{*/
-        /*background-color: rgba(0, 0, 0, 0.04)*/
-    /*}*/
-
-    .virtualRepeatdemoHorizontalUsage md-content {
+    .horizontal-repeater md-content {
         margin: 16px;
     }
 
-    .virtualRepeatdemoHorizontalUsage md-virtual-repeat-container {
-        /*border: solid 1px grey; */
-    }
-
-    .virtualRepeatdemoHorizontalUsage .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
         bottom: 0;
         height: 100%;
         margin: auto;
         line-height: 2.3;
         position: relative;
-        /*display: flex;*/
     }
 }
 
@@ -78,6 +65,39 @@
         font-size: 1.2rem;
         text-align: center;
         padding-bottom: 5px;
+    }
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 980px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
     }
 
 }
@@ -132,6 +152,39 @@
         box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
     }
 
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 840px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
+    }
+
 }
 
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
@@ -176,5 +229,39 @@
 
     div#catalog md-card md-card-actions.layout-column > .md-button.btn {
         margin-bottom: 10px;
+    }
+
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 540px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
     }
 }

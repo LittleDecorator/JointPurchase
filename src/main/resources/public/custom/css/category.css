@@ -8,6 +8,7 @@ div:focus, div:focus{
     outline: none;
 }
 
+
 /********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
 @media (min-width: 993px) {
 
@@ -23,5 +24,55 @@ div:focus, div:focus{
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
 @media (max-width: 600px) {
 
+    /* стили окна подтверждения */
+    md-dialog {
+        max-width: 85%;
+    }
 
+    md-dialog-content.md-dialog-content {
+        padding: 15px;
+    }
+
+    h2.md-title {
+        text-align: center;
+        font-size: 1.8rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 15px;
+        font-family: Ubuntu Condensed;
+        letter-spacing: 0.5pt;
+        color: #846C63;
+    }
+
+    div.md-dialog-content-body > p {
+        text-align: center;
+    }
+
+    md-dialog-actions {
+        display: flex;
+    }
+
+    button.md-cancel-button {
+        flex-grow: 1;
+    }
+
+    .md-button.md-primary.md-confirm-button,
+    .md-button.md-primary.md-confirm-button:focus{
+        flex-grow: 1;
+        color: rgba(255,255,255,0.87);
+        background-color: #86A8A8
+    }
+
+    button.md-confirm-button:not([disabled]){
+        color: rgba(255,255,255,0.87);
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+    }
+
+    .md-button.md-primary.md-confirm-button:not([disabled]):hover{
+        color: rgba(255,255,255,0.87);
+        background-color: #86A8A8;
+    }
+
+    .md-button.md-default-theme.md-primary, .md-button.md-primary{
+        color: #86A8A8
+    }
 }

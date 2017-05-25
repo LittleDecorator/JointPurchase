@@ -120,7 +120,7 @@
                         className: 'ngdialog-theme-default ' + wClass,
                         closeByEscape: true,
                         closeByDocument: true,
-                        scope: vm
+                        scope: $scope
                     });
                 
                     dialog.closePromise.then(function (output) {

@@ -4,7 +4,7 @@
 
 <div class="gallery">
     <div class="wrap">
-        <div class="box" ng-repeat="image in images">
+        <div class="box" ng-repeat="image in vm.images track by image.id">
             <div class="boxInner">
                 <a ng-href="media/image/{{::image.contentId}}" class="swipebox" title="Some Title">
                     <img ng-src="{{::image.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
@@ -14,13 +14,13 @@
         </div>
     </div>
 
-    <div class="table-result" ng-if="images.length==0">
+    <div class="table-result" ng-if="vm.images.length==0">
         <span style="margin-right: 2%">Не добавлено ни одного изображения</span>
     </div>
 
     <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple style="display: none"/>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="add()" ng-class="{'btn-large':width>600, 'btn-x-small': width < 601}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.add()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
         <md-icon>add</md-icon>
     </md-button>
 </div>

@@ -35,9 +35,7 @@
                         if($stateParams.type == 'category') {
                             // если выбранный узел относится к Категориям
                             vm.searchFilter.category = $stateParams.id;
-                            // for (var i = 0; i < 15; i++) {
-                            //     vm.categories.push("Категория" + i);
-                            // }
+                            vm.categories.push({id:$stateParams.id, name:"Все"});
                         } else {
                             // если выбранный узел относится к Производителям
                             vm.searchFilter.company = $stateParams.id;
@@ -49,7 +47,7 @@
                 * получение данных с сервера
                 * @param isClean - нужно ли очищать существующий набор данных
                 */
-                function loadData(isClean){
+                function loadData(isClean, isCategoryFill){
                     // если загрузка разрешена и не заняты
                     if(!vm.stopLoad && !busy){
                         busy = true;
@@ -58,7 +56,7 @@
                             if(data.length < vm.searchFilter.limit){
                                 vm.stopLoad = true;
                             }
-                            
+
                             // очистим данные если требуется
                             if(isClean){
                                 vm.items = [];
@@ -67,6 +65,9 @@
                             if($stateParams.type == 'category'){
                                 data.forEach(function(e){
                                     e.categories.forEach(function(c){
+                                        if(!helpers.arrayContainById(vm.categories, c.id)){
+                                            vm.categories.push(c);
+                                        }
                                         var categoryId = c.id;
                                         var result = vm.items.filter(function(e){return e.id == categoryId});
                                         if(result.length > 0){
@@ -98,6 +99,9 @@
                  */
                 function filterBySubcategory(id){
                     vm.searchFilter.category = id;
+                    vm.searchFilter.offset = 0;
+                    console.log(vm.searchFilter);
+                    vm.stopLoad = false;
                     loadData(true);
                 }
 

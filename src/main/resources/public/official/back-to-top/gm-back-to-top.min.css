@@ -17,8 +17,8 @@
 
 .md-button.md-fab.md-fab-bottom-right {
 	position: fixed;
-	right:75px;
-	bottom: 25px;
+	right:25px;
+	bottom: 75px;
 	background-color: #ff5252;
 	transition: transform .2s, -webkit-transform .2s
 }

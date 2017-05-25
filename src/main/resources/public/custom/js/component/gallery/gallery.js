@@ -11,13 +11,25 @@
             function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
 
                 var uploader = $scope.uploader = new FileUploader();
-                //var dialog;
                 var mCou=0;
-                
-                $scope.images = [];
 
-                //загрузка файлов
-                $scope.upload = function () {
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
+
+                vm.upload = upload;
+                vm.add = add;
+                vm.init = init;
+                vm.deleteImage = deleteImage;
+                vm.toggleMain = toggleMain;
+                vm.toggleShow = toggleShow;
+
+                vm.images = [];
+                vm.currentImage = {};
+
+                /**
+                 * загрузка файлов
+                 */
+                function upload() {
                     //var items = $scope.uploader.getNotUploadedItems();
                     var items = uploader.getNotUploadedItems();
                     var formData = new FormData();
@@ -31,113 +43,109 @@
 
                     dataResources.itemContent.upload(formData, function(data){
                         angular.forEach(data, function (image) {
-                            $scope.images.push(image);
-                            //$scope.uploader.clearQueue();
-                            //$scope.closeThisDialog();
+                            vm.images.push(image);
                             uploader.clearQueue();
                         });
                     });
-                };
-
-                /* callback on file select */
-                uploader.onAfterAddingAll = function () {
-                    $scope.upload();
-                };
-
-                $scope.add = function(){
-                    $('#uploadBtn').click();
-                };
-
-                /* init section */
-                if ($stateParams.id) {
-                    $scope.images = dataResources.itemImage.get({itemId: $stateParams.id});
-                    $scope.images.$promise.then(function (result) {
-
-                        $scope.images = result;
-                        $scope.images.some(function(elem){
-                            if(elem.main) {
-                                mCou++;
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        });
-                        $timeout(function(){
-                            if($scope.images.length>0 && mCou==0){
-                                $scope.images[0].main = true;
-                                $scope.images[0].show = true;
-                            }
-
-                            $('.materialboxed').materialbox();
-                        },100);
-                    });
-                } else {
-                    $scope.images = dataResources.itemImage.get();
                 }
 
-                $scope.currentImage = {};
+                /**
+                 * proxy добаление
+                 */
+                function add(){
+                    $('#uploadBtn').click();
+                }
 
-                $scope.deleteImage = function(id){
-                    var currImage = helpers.findInArrayById($scope.images, id);
-                    var idx = $scope.images.indexOf(currImage);
-                    $scope.images.splice(idx, 1);
+                /**
+                 * init section
+                 */
+                function init(){
+                    if ($stateParams.id) {
+                        vm.images = dataResources.itemImage.get({itemId: $stateParams.id});
+                        vm.images.$promise.then(function (result) {
+
+                            vm.images = result;
+                            vm.images.some(function(elem){
+                                if(elem.main) {
+                                    mCou++;
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            });
+
+                            $timeout(function(){
+                                if(vm.images.length > 0 && mCou==0){
+                                    vm.images[0].main = true;
+                                    vm.images[0].show = true;
+                                }
+
+                                $('.materialboxed').materialbox();
+                            },100);
+                        });
+                    } else {
+                        vm.images = dataResources.itemImage.get();
+                    }
+                }
+
+                function deleteImage(id){
+                    var currImage = helpers.findInArrayById(vm.images, id);
+                    var idx = vm.images.indexOf(currImage);
+                    vm.images.splice(idx, 1);
                     //remove from DB
-                    console.log(currImage);
-                    // dataResources.image.remove({contentId:id,itemId:$stateParams.id});
                     dataResources.image.remove({id:currImage.id});
                     //find new main if delete one
-                    if(currImage.main && $scope.images.length>0){
-                        currImage = $scope.images[0];
+                    if(currImage.main && vm.images.length>0){
+                        currImage = vm.images[0];
                         currImage.main = true;
                         currImage.show = true;
                         $('.hiden-option:first > i:first').addClass("main")
                         var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
                         dataResources.galleryMain.toggle(itemContent);
                     }
-                };
+                }
 
-                $scope.toggleMain = function(id){
+                function toggleMain(id){
                     //remove main class from all
                     $('.main').removeClass("main");
-                    var currImage = helpers.findInArrayById($scope.images, id);
+                    var currImage = helpers.findInArrayById(vm.images, id);
                     currImage.main = !currImage.main;
                     //update others
-                    angular.forEach($scope.images,function(elem){
+                    angular.forEach(vm.images,function(elem){
                         if(elem.id!==id){
                             elem.main = false;
                         }
                     });
                     //check if any main present
                     if(!currImage.main){
-                        currImage = $scope.images[0];
+                        currImage = vm.images[0];
                         currImage.main = true;
                         currImage.show = true;
                         $('.hiden-option:first > i:first').addClass("main")
                     } else {
                         currImage.show = true;
                     }
-                    console.log(currImage);
                     var itemContent = {contentId:currImage.contentId,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
-                    console.log(itemContent);
                     dataResources.galleryMain.toggle(itemContent);
-                };
+                }
 
-                $scope.toggleShow = function($event,id){
-                    var currImage = helpers.findInArrayById($scope.images, id);
+                function toggleShow($event,id){
+                    var currImage = helpers.findInArrayById(vm.images, id);
                     currImage.show = !currImage.show;
                     if(currImage.show){
                         $($event.currentTarget).addClass("show")
                     } else {
                         $($event.currentTarget).removeClass("show")
                     }
-                    console.log(currImage);
                     var itemContent = {contentId:currImage.id,show:currImage.show,itemId:$stateParams.id};
-                    console.log(itemContent);
                     dataResources.galleryShow.toggle(itemContent);
-                };
+                }
 
-                $scope.showCrop = function($event,id){
-                    $state.go("item.detail.gallery.crop", {imageId: id, itemId:$stateParams.id});
+                /**
+                 * callback on file select
+                 */
+                uploader.onAfterAddingAll = function () {
+                    upload();
                 };
 
                 // FILTERS
@@ -149,6 +157,7 @@
                     }
                 });
 
+                init();
 
             }])
 })();
