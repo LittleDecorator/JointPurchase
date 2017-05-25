@@ -17,11 +17,13 @@
 
                 vm.loadData = loadData;
                 vm.itemView = itemView;
+                vm.filterBySubcategory = filterBySubcategory;
                 vm.init = init;
 
                 // используется только под администратором
                 vm.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
                 vm.items = [];
+                vm.categories = [];
                 vm.showSideFilter = false;
                 vm.stopLoad=false;
                 vm.allDataLoaded = false;
@@ -32,10 +34,13 @@
                     if(node){
                         if($stateParams.type == 'category') {
                             // если выбранный узел относится к Категориям
-                            vm.searchFilter.category = $stateParams.id
+                            vm.searchFilter.category = $stateParams.id;
+                            // for (var i = 0; i < 15; i++) {
+                            //     vm.categories.push("Категория" + i);
+                            // }
                         } else {
                             // если выбранный узел относится к Производителям
-                            vm.searchFilter.company = $stateParams.id
+                            vm.searchFilter.company = $stateParams.id;
                         }
                     }
                 }
@@ -59,7 +64,24 @@
                                 vm.items = [];
                             }
 
-                            vm.items = vm.items.concat(data);
+                            if($stateParams.type == 'category'){
+                                data.forEach(function(e){
+                                    e.categories.forEach(function(c){
+                                        var categoryId = c.id;
+                                        var result = vm.items.filter(function(e){return e.id == categoryId});
+                                        if(result.length > 0){
+                                            result[0].values.push(e);
+                                        } else {
+                                            var newElem = {id: c.id, name: c.name, values:[]};
+                                            newElem.values.push(e);
+                                            vm.items.push(newElem)
+                                        }
+                                    });
+                                });
+                            } else {
+                                vm.items = vm.items.concat(data);
+                            }
+
 
                             portion++;
                             vm.searchFilter.offset = portion * vm.searchFilter.limit;
@@ -68,6 +90,15 @@
                             busy = false;
                         });
                     }
+                }
+
+                /**
+                 * Новая загрузка после смены подкатегории
+                 * @param id
+                 */
+                function filterBySubcategory(id){
+                    vm.searchFilter.category = id;
+                    loadData(true);
                 }
 
                 /**
