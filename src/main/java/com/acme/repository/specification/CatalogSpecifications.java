@@ -19,13 +19,12 @@ public class CatalogSpecifications {
 	public static Specification<Item> filter(CatalogFilter filter) {
 
 		return (root, criteriaQuery, builder) -> {
-//            Path<List<String>> categories = root.join(CategoryItem_.itemId).get(Item_.categories);
 			Path<String> company = root.join(Item_.company).get(Company_.id);
 
 			final List<Predicate> predicates = new ArrayList<>();
 
 			if (filter.getCompany() != null) {
-				predicates.add(builder.equal(company, filter.getCompany().getId()));
+				predicates.add(builder.equal(company, filter.getCompany()));
 			}
 			return builder.and(predicates.toArray(new Predicate[predicates.size()]));
 		};

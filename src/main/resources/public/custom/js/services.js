@@ -360,6 +360,7 @@
                 },
                 onFilter: function(data){
                     this.data = data;
+                    console.log("in eventService");
                     $rootScope.$broadcast('onFilter');
                 },
                 onCategoryClssSelected: function(data){

@@ -151,6 +151,9 @@
                 categoryRootMap:$resource("/category/map/roots",{},{
                     get:{method:'GET',isArray:true}
                 }),
+                categoryChildrenMap:$resource("/category/:id/children",{},{
+                    get:{method:'GET',isArray:true}
+                }),
                 categorySubList:$resource("/category/:id/sub",{},{
                     get:{method:'GET',isArray:true}
                 }),

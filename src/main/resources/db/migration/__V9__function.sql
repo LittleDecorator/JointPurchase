@@ -13,7 +13,7 @@
  	SELECT i.* FROM item i
  	INNER JOIN category_item ci ON i.id=ci.item_id
  	INNER JOIN stash s ON ci.category_id=s.id
- 	ORDER BY s.name ASC, i.name ASC
+ 	ORDER BY s.name ASC, i.status , i.name ASC
  	LIMIT limit_value
  	OFFSET offset_value;
    END;

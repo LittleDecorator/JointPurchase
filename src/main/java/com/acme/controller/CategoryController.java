@@ -105,6 +105,19 @@ public class CategoryController {
     }
 
     /**
+     * Получение полного списка зависимых категорий
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/children")
+    public List<CategoryMap> getChildren(@PathVariable(value = "id") String id){
+        List<CategoryMap> result = Lists.newArrayList(new CategoryMap(id, "Все"));
+        result.addAll(categoryRepository.getChildCategories(id).stream()
+                .map(category -> new CategoryMap(category.getId(), category.getName()))
+                .collect(Collectors.toList()));
+        return result;
+    }
+
+    /**
      * Получение мапы категории
      * @return
      */

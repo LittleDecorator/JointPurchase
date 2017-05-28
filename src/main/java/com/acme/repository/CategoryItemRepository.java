@@ -1,7 +1,8 @@
 package com.acme.repository;
 
 import com.acme.model.CategoryItem;
-import com.acme.model.Item;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface CategoryItemRepository extends CrudRepository<CategoryItem, Str
 
     List<CategoryItem> findAllByCategoryId(String categoryId);
 
+    List<CategoryItem> findAllByCategoryIdIn(List<String> ids);
+
     List<CategoryItem> findAllByItemIdIn(List<String> ids);
 
     void deleteByItemId(String itemId);
@@ -24,5 +27,7 @@ public interface CategoryItemRepository extends CrudRepository<CategoryItem, Str
     void deleteByItemIdAndCategoryIdNotIn(String itemId, List<String> categoryIdList);
 
     void deleteByCategoryIdAndItemIdNotIn(String categoryId, List<String> itemIdList);
+
+    Page<CategoryItem> findAll(Pageable pageable);
 
 }

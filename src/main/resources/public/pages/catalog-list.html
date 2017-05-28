@@ -1,10 +1,10 @@
 <div id="catalog" class="section" ng-cloak>
 
-    <md-toolbar style="background-color: white!important;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12); min-height: 50px">
+    <md-toolbar ng-if="vm.currentNodeType == 'category'" style="background-color: white!important;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12); min-height: 50px">
         <div class="md-toolbar-tools horizontal-repeater" style="padding: 0; width: 100%; background-color: white!important;">
             <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
                 <div md-virtual-repeat="group in vm.categories" class="repeated-item" flex>
-                    <md-button ng-click="vm.filterBySubcategory(group.id)">{{::group.name}}</md-button>
+                    <md-button class="md-raised btn md" style="margin: 0" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
                 </div>
             </md-virtual-repeat-container>
         </div>
@@ -12,16 +12,37 @@
 
 
 
-    <div class="row isotope" infinite-scroll="vm.loadData()" infinite-scroll-distance='1' infinite-scroll-disabled="vm.stopLoad" style="margin: 0">
+    <div class="row isotope" infinite-scroll="vm.loadData()" infinite-scroll-distance='2' infinite-scroll-disabled="vm.stopLoad" style="margin: 0">
 
         <md-content style="background-color: transparent;margin-top: 10px">
 
-            <div ng-repeat="group in vm.items track by group.id">
+            <div ng-repeat="group in vm.items track by group.id" ng-if="vm.currentNodeType == 'category'">
                 <md-subheader style="font-size: 1.5rem; background-color: transparent;">{{::group.name}}</md-subheader>
                 <md-divider ></md-divider>
                 <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak >
-                    <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout layout-align="center center" ng-repeat="item in group.values track by item.id"
-                    style="box-shadow: none;padding: 0;margin: 8px;">
+                    <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in group.values track by item.id + $index"
+                    style="box-shadow: none;padding: 0;margin: 8px;" >
+                        <md-card style="margin: 0; width: 100%">
+                            <div class="card-image waves-effect waves-block waves-light md-card-image">
+                                <img ng-src="{{::item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
+                                <a class="btn-price btn-floating btn-large light-green lighten-2">{{::item.price}}р</a>
+                                <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
+                            </div>
+
+                            <md-card-actions layout="column" layout-align="center center">
+                                <span class="md-headline">{{::item.name}}</span>
+                                <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
+                                <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                            </md-card-actions>
+
+                        </md-card>
+                    </md-whiteframe>
+                </div>
+            </div>
+
+                <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak ng-if="vm.currentNodeType == 'company'">
+                    <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in vm.items track by item.id"
+                                   style="box-shadow: none;padding: 0;margin: 8px;" >
                         <md-card style="margin: 0; width: 100%">
                             <div class="card-image waves-effect waves-block waves-light md-card-image">
                                 <img ng-src="{{::item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
@@ -39,11 +60,16 @@
                     </md-whiteframe>
                 </div>
 
+
+            <div class="section" style="margin-top: 20px;" ng-if="vm.items.length == 0 && vm.currentNodeType == 'category'">
+                <div class="table-result">В данной категории нет товаров</div>
+            </div>
+
+            <div class="section" style="margin-top: 20px;" ng-if="vm.items.length == 0 && vm.currentNodeType == 'company'">
+                <div class="table-result">Для данного производителя нет товаров</div>
             </div>
 
         </md-content>
-
-
 
         </div>
 

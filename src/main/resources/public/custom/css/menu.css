@@ -1,3 +1,23 @@
+/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
+@media (min-width: 993px) {
+
+    div#itemCard md-content {
+        background-color: transparent;
+    }
+
+    /* ЕСЛИ МНОГОСТРОЧНЫЙ ПУНКТ */
+    md-sidenav#filter md-menu-item {
+        height: auto;
+    }
+
+    md-sidenav#filter md-menu-item .md-button span {
+        display: block;
+        white-space: normal;
+        line-height: 24px;
+    }
+}
+
+
 @media (min-width: 456px) {
     md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
         min-height: 40px;
@@ -151,6 +171,6 @@ md-sidenav {
 }
 
 /* side lg */
-md-sidenav md-menu-item:hover{
-    background-color: rgba(0, 0, 0, 0.04)
-}
+/*md-sidenav md-menu-item:hover{*/
+    /*background-color: rgba(0, 0, 0, 0.04)*/
+/*}*/

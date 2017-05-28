@@ -162,6 +162,7 @@
 						if($mdSidenav('left').isOpen() && mvm.width < 1530){
 							$mdSidenav('left').close();
 						}
+						console.log("FIRE")
 						eventService.onFilter(node);
 					}
 

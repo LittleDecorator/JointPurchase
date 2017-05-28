@@ -1,23 +1,20 @@
 package com.acme.model.filter;
 
-import com.acme.model.Category;
-import com.acme.model.Company;
-
 /**
  * Created by kobzev on 11.05.17.
  */
 public class CatalogFilter {
 
-	private Company company;
+	private String company;
 	private String category;
 	private int limit;
 	private int offset;
 
-	public Company getCompany() {
+	public String getCompany() {
 		return company;
 	}
 
-	public void setCompany(Company company) {
+	public void setCompany(String company) {
 		this.company = company;
 	}
 

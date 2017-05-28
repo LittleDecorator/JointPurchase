@@ -40,4 +40,15 @@
 --       RETURN NEXT ref2;                                                                              -- Return the cursor to the caller
 --     END;
 --     $$ LANGUAGE plpgsql;
-
+/* Возвращение рекурсивного запроса */
+--  CREATE OR REPLACE FUNCTION get_child_categories(root_id varchar) RETURNS SETOF category AS $$
+--    BEGIN
+--    RETURN QUERY
+-- 	WITH RECURSIVE r AS (
+-- 		SELECT * FROM category WHERE id = root_id
+-- 		UNION ALL
+-- 		SELECT c.* FROM category c JOIN r ON c.parent_id = r.id
+-- 	)
+-- 	SELECT * FROM r;
+--    END; $$
+--    LANGUAGE plpgsql;
