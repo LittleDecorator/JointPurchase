@@ -1,0 +1,26 @@
+#!/bin/sh
+
+NAME=@project.final.name@
+#PROJECT_JCE=@deb.jce.path@
+#ORIGN_JCE_PART="lib/security"
+## Collect path to jre security lib dir
+#ORIGN_JCE=$(readlink -f $(which java) | awk 'match($0, /jre/) { print substr( $0, 0,RSTART + RLENGTH)"'${ORIGN_JCE_PART}'"}')
+#
+## Remove default JCE files from JRE
+#echo "Rename old policy files ..."
+#cd ${ORIGN_JCE}
+#if [ -f "local_policy.jar" ]; then
+#    mv -v local_policy.jar _local_policy.jar
+#fi
+#if [ -f "US_export_policy.jar" ]; then
+#    mv -v US_export_policy.jar _US_export_policy.jar
+#fi
+#
+## Create new symbolic links
+#echo "Create links to new policy files ..."
+#ln -s ${PROJECT_JCE}/US_export_policy.jar ${ORIGN_JCE}/US_export_policy.jar
+#ln -s ${PROJECT_JCE}/local_policy.jar ${ORIGN_JCE}/local_policy.jar
+
+#register service
+echo "Register service ..."
+update-rc.d ${NAME} defaults 95

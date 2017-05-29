@@ -1,0 +1,7 @@
+Package: [[project.final.name]]
+Version: [[version]]
+Section: misc
+Priority: low
+Architecture: all
+Description: [[description]]
+Maintainer: nikolay.kobzev.ru

@@ -2,6 +2,7 @@
 
     <md-steppers  md-dynamic-height md-stretch-steppers="always" md-selected="vm.data.selectedStep" md-busy-text="'Processing...'" md-busy="vm.data.showBusyText" md-on-select="onTabSelect()">
 
+        <!-- Первый шаг - Способ доставки -->
         <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed" ng-disabled="vm.data.maxStep == vm.data.stepProgress">
             <md-card class="md-padding">
                 <md-step-body>
@@ -33,6 +34,39 @@
 
         </md-step>
 
+        <!-- Второй шаг - Информация о получателе -->
+        <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed" ng-disabled="vm.data.maxStep == vm.data.stepProgress">
+            <md-card class="md-padding">
+                <md-step-body>
+                    <md-content ng-form="vm.forms.step1">
+
+                        <md-card class="md-padding">
+                            <div layout="column">
+
+                                <md-radio-group ng-model="vm.data.stepData[0].data.delivery" class="md-primary">
+                                    <md-radio-button class="delivery" ng-repeat="delivery in vm.data.stepData[0].data.deliveries" ng-value="delivery" >
+                                        <div layout="column">
+                                            <span>{{::delivery.value }}</span>
+                                            <span>{{::delivery.hint}}</span>
+                                        </div>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </md-card>
+
+                        <div flex style="justify-content: flex-end" layout="row">
+                            <md-button ng-click="vm.cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить</md-button>
+                            <div flex></div>
+                            <md-button ng-click="vm.submitCurrentStep(vm.data.stepData[0])" class="btn">Далее</md-button>
+                        </div>
+
+                    </md-content>
+                </md-step-body>
+            </md-card>
+
+        </md-step>
+
+        <!-- Третий шаг - Адрес доставки -->
         <md-step label="Информация о получателе" md-complete="vm.data.stepData[1].completed" ng-disabled="!vm.data.stepData[0].completed || (vm.data.maxStep == vm.data.stepProgress)">
             <md-card class="md-padding">
                 <md-step-body>
@@ -134,6 +168,39 @@
             </md-card>
         </md-step>
 
+        <!-- Четвертый шаг - Сводная информация о заказе -->
+        <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed" ng-disabled="vm.data.maxStep == vm.data.stepProgress">
+            <md-card class="md-padding">
+                <md-step-body>
+                    <md-content ng-form="vm.forms.step1">
+
+                        <md-card class="md-padding">
+                            <div layout="column">
+
+                                <md-radio-group ng-model="vm.data.stepData[0].data.delivery" class="md-primary">
+                                    <md-radio-button class="delivery" ng-repeat="delivery in vm.data.stepData[0].data.deliveries" ng-value="delivery" >
+                                        <div layout="column">
+                                            <span>{{::delivery.value }}</span>
+                                            <span>{{::delivery.hint}}</span>
+                                        </div>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </md-card>
+
+                        <div flex style="justify-content: flex-end" layout="row">
+                            <md-button ng-click="vm.cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить</md-button>
+                            <div flex></div>
+                            <md-button ng-click="vm.submitCurrentStep(vm.data.stepData[0])" class="btn">Далее</md-button>
+                        </div>
+
+                    </md-content>
+                </md-step-body>
+            </md-card>
+
+        </md-step>
+
+        <!-- Пятый шаг - Результат заказа-->
         <md-step label="Статус заказа" md-complete="vm.data.stepData[2].completed" ng-disabled="!vm.data.stepData[1].completed">
             <md-card class="md-padding">
                 <md-step-body>

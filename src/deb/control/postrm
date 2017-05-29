@@ -1,0 +1,47 @@
+#!/bin/sh
+
+USER=@deb.user.name@
+GROUP=@deb.group.name@
+LOG_DIR=@deb.log.path@
+CONF_DIR=@deb.config.path@
+NAME=${USER}
+
+#PROJECT_JCE=@deb.jce.path@
+#ORIGN_JCE_PART="lib/security"
+## Collect path to jre security lib dir
+#ORIGN_JCE=$(readlink -f $(which java) | awk 'match($0, /jre/) { print substr( $0, 0,RSTART + RLENGTH)"'${ORIGN_JCE_PART}'"}')
+
+if [ "$1" = "remove" ] ; then
+    echo "Removing user '${USER}' ..."
+    deluser ${USER}
+#    Don't need remove GROUP explicitly, because GROUP we'll be deleted when no users in it
+#    echo "Removing group '${GROUP}' ..."
+#    groupdel ${GROUP}
+    echo "Removing app log dir '${LOG_DIR}' ..."
+    rm -rf ${LOG_DIR}
+    echo "Removing app config dir '${CONF_DIR}' ..."
+    rm -rf ${CONF_DIR}
+
+#    # Remove symbolic links
+#    echo "Removing links to custom policy files ..."
+#    if [ -L ${ORIGN_JCE}/US_export_policy.jar ]; then
+#        unlink ${ORIGN_JCE}/US_export_policy.jar
+#    fi
+#    if [ -L ${ORIGN_JCE}/local_policy.jar ]; then
+#        unlink ${ORIGN_JCE}/local_policy.jar
+#    fi
+
+#    # Restore default JCE files to JRE
+#    echo "Restore old policy files ..."
+#    cd ${ORIGN_JCE}
+#    if [ -f "_local_policy.jar" ]; then
+#        mv -v _local_policy.jar local_policy.jar
+#    fi
+#    if [ -f "_US_export_policy.jar" ]; then
+#        mv -v _US_export_policy.jar US_export_policy.jar
+#    fi
+
+    # remove from startup
+    echo "Unregister service ..."
+    update-rc.d -f ${NAME} remove
+fi

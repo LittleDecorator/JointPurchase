@@ -558,7 +558,7 @@
                                 <exclude>**/logback.xml</exclude>
                                 <exclude>**/logrotate.conf</exclude>
                                 <exclude>**/application.properties</exclude>
-                                <exclude>**/application.vmoptions</exclude>
+                                <!--<exclude>**/application.vmoptions</exclude>-->
                             </excludes>
                         </configuration>
                     </plugin>
@@ -595,55 +595,55 @@
                         </executions>
                     </plugin>
 
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.3</version>
+                    <!--<plugin>-->
+                        <!--<groupId>com.github.eirslett</groupId>-->
+                        <!--<artifactId>frontend-maven-plugin</artifactId>-->
+                        <!--<version>1.3</version>-->
 
-                        <configuration>
-                            <installDirectory>target</installDirectory>
-                            <workingDirectory>target</workingDirectory>
-                        </configuration>
+                        <!--<configuration>-->
+                            <!--<installDirectory>target</installDirectory>-->
+                            <!--<workingDirectory>target</workingDirectory>-->
+                        <!--</configuration>-->
 
-                        <executions>
-                            <!-- install node and npm -->
-                            <execution>
-                                <id>install node and npm</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>v5.9.1</nodeVersion>
-                                    <npmVersion>3.8.6</npmVersion>
-                                </configuration>
-                            </execution>
+                        <!--<executions>-->
+                            <!--&lt;!&ndash; install node and npm &ndash;&gt;-->
+                            <!--<execution>-->
+                                <!--<id>install node and npm</id>-->
+                                <!--<phase>prepare-package</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>install-node-and-npm</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<nodeVersion>v5.9.1</nodeVersion>-->
+                                    <!--<npmVersion>3.8.6</npmVersion>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
 
-                            <!-- running npm -->
-                            <execution>
-                                <id>npm install</id>
-                                <phase>prepare-package</phase>
-                                <!--<phase>generate-resources</phase>-->
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>install</arguments>
-                                </configuration>
-                            </execution>
+                            <!--&lt;!&ndash; running npm &ndash;&gt;-->
+                            <!--<execution>-->
+                                <!--<id>npm install</id>-->
+                                <!--<phase>prepare-package</phase>-->
+                                <!--&lt;!&ndash;<phase>generate-resources</phase>&ndash;&gt;-->
+                                <!--<goals>-->
+                                    <!--<goal>npm</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<arguments>install</arguments>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
 
-                            <execution>
-                                <id>grunt build</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>grunt</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>--no-color</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+                            <!--<execution>-->
+                                <!--<id>grunt build</id>-->
+                                <!--<phase>prepare-package</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>grunt</goal>-->
+                                <!--</goals>-->
+                                <!--<configuration>-->
+                                    <!--<arguments>&#45;&#45;no-color</arguments>-->
+                                <!--</configuration>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
 
                     <plugin>
                         <groupId>org.vafer</groupId>
@@ -675,16 +675,16 @@
                                         </data>
 
                                         <!-- security policy -->
-                                        <data>
-                                            <src>${project.basedir}/src/policy</src>
-                                            <type>directory</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>${deb.jce.path}</prefix>
-                                                <user>root</user>
-                                                <group>rsdoot</group>
-                                            </mapper>
-                                        </data>
+                                        <!--<data>-->
+                                            <!--<src>${project.basedir}/src/policy</src>-->
+                                            <!--<type>directory</type>-->
+                                            <!--<mapper>-->
+                                                <!--<type>perm</type>-->
+                                                <!--<prefix>${deb.jce.path}</prefix>-->
+                                                <!--<user>root</user>-->
+                                                <!--<group>rsdoot</group>-->
+                                            <!--</mapper>-->
+                                        <!--</data>-->
 
                                         <!-- app config -->
                                         <data>
@@ -699,16 +699,16 @@
                                         </data>
 
                                         <!-- rmi option -->
-                                        <data>
-                                            <src>${project.build.outputDirectory}/application.vmoptions</src>
-                                            <type>file</type>
-                                            <mapper>
-                                                <type>perm</type>
-                                                <prefix>${deb.config.path}</prefix>
-                                                <user>${deb.user.name}</user>
-                                                <group>${deb.group.name}</group>
-                                            </mapper>
-                                        </data>
+                                        <!--<data>-->
+                                            <!--<src>${project.build.outputDirectory}/application.vmoptions</src>-->
+                                            <!--<type>file</type>-->
+                                            <!--<mapper>-->
+                                                <!--<type>perm</type>-->
+                                                <!--<prefix>${deb.config.path}</prefix>-->
+                                                <!--<user>${deb.user.name}</user>-->
+                                                <!--<group>${deb.group.name}</group>-->
+                                            <!--</mapper>-->
+                                        <!--</data>-->
 
                                         <!-- app logging config -->
                                         <data>
