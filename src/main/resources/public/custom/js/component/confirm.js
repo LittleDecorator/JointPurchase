@@ -22,15 +22,17 @@
                 vm.enableNextStep = enableNextStep;
                 vm.moveToPreviousStep = moveToPreviousStep;
                 vm.submitCurrentStep = submitCurrentStep;
-                vm.confirmInfoStep = confirmInfoStep;
+                vm.confirmRecipientStep = confirmRecipientStep;
+                vm.confirmAddressStep = confirmAddressStep;
                 vm.switchUserInfo = switchUserInfo;
+                vm.switchAddressInfo = switchAddressInfo;
                 vm.cancel = cancel;
                 vm.toCatalog = toCatalog;
                 vm.getTemplateUrl = getTemplateUrl;
 
                 vm.showHints = true;
                 vm.forms = {};
-                vm.data = {selectedStep: 0, stepProgress: 1, maxStep: 3, showBusyText: false, usePrivate: false, userInfoStash: null};
+                vm.data = {selectedStep: 0, stepProgress: 1, maxStep: 5, showBusyText: false, usePrivate: false, userInfoStash: null};
                 vm.fragmentUrl = getTemplateUrl();
 
                 /**
@@ -60,18 +62,31 @@
                                 recipientLname:null,
                                 recipientMname:null,
                                 recipientPhone:null,
-                                recipientEmail:null,
+                                recipientEmail:null
+                            }
+                        },
+                        { step: 3, completed: false, optional: false,
+                            data: {
                                 recipientAddress:null,
                                 postAddress:null,
                                 comment:null
                             }
                         },
-                        { step: 3, completed: false, optional: false,
+                        { step: 4, completed: false, optional: false,
+                            data: {
+
+                            }
+                        },
+                        { step: 5, completed: false, optional: false,
                             data: {
 
                             }
                         }
                     ];
+                }
+
+                function reviewOrder(){
+
                 }
 
                 /**
@@ -177,11 +192,22 @@
                 /**
                  * Валидация данных о получателе и подтверждение текущего шага
                  */
-                function confirmInfoStep(){
+                function confirmRecipientStep(){
                     vm.showHints = false;
                     if(vm.forms.step2.$valid){
                         vm.showHints = true;
                         submitCurrentStep(vm.data.stepData[1]);
+                    }
+                }
+
+                /**
+                 * Валидация данных об адресе получателя и подтверждение текущего шага
+                 */
+                function confirmAddressStep(){
+                    vm.showHints = false;
+                    if(vm.forms.step3.$valid){
+                        vm.showHints = true;
+                        submitCurrentStep(vm.data.stepData[2]);
                     }
                 }
 
@@ -201,6 +227,17 @@
                         vm.data.stepData[1].data.postAddress = $rootScope.currentUser.postAddress;
                     } else {
                         vm.data.stepData[1].data = vm.data.userInfoStash;
+                    }
+                }
+
+                function switchAddressInfo(){
+                    if(vm.data.usePrivate){
+                        vm.data.userAddressStash = angular.copy(vm.data.stepData[2].data);
+
+                        vm.data.stepData[2].data.recipientAddress = $rootScope.currentUser.address;
+                        vm.data.stepData[2].data.postAddress = $rootScope.currentUser.postAddress;
+                    } else {
+                        vm.data.stepData[2].data = vm.data.userAddressStash;
                     }
                 }
 

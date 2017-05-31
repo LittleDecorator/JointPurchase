@@ -791,5 +791,7 @@
         <deb.group.name>${project.final.name}</deb.group.name>
 
         <it.skip>true</it.skip>
+
+        <elastic.path>${deb.lib.path}/elastic</elastic.path>
     </properties>
 </project>

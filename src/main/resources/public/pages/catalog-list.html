@@ -16,7 +16,7 @@
 
         <md-content style="background-color: transparent;margin-top: 10px">
 
-            <div ng-repeat="group in vm.items track by group.id" ng-if="vm.currentNodeType == 'category'">
+            <div ng-repeat="group in vm.items track by group.id" ng-if="vm.currentNodeType == 'category' && vm.items.length > 0">
                 <md-subheader style="font-size: 1.5rem; background-color: transparent;">{{::group.name}}</md-subheader>
                 <md-divider ></md-divider>
                 <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak >
@@ -40,25 +40,25 @@
                 </div>
             </div>
 
-                <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak ng-if="vm.currentNodeType == 'company'">
-                    <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in vm.items track by item.id"
-                                   style="box-shadow: none;padding: 0;margin: 8px;" >
-                        <md-card style="margin: 0; width: 100%">
-                            <div class="card-image waves-effect waves-block waves-light md-card-image">
-                                <img ng-src="{{::item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
-                                <a class="btn-price btn-floating btn-large light-green lighten-2">{{::item.price}}р</a>
-                                <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
-                            </div>
+            <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak ng-if="vm.currentNodeType == 'company' && vm.items.length > 0">
+                <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in vm.items track by item.id"
+                               style="box-shadow: none;padding: 0;margin: 8px;" >
+                    <md-card style="margin: 0; width: 100%">
+                        <div class="card-image waves-effect waves-block waves-light md-card-image">
+                            <img ng-src="{{::item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
+                            <a class="btn-price btn-floating btn-large light-green lighten-2">{{::item.price}}р</a>
+                            <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
+                        </div>
 
-                            <md-card-actions layout="column" layout-align="center center">
-                                <span class="md-headline">{{::item.name}}</span>
-                                <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
-                                <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
-                            </md-card-actions>
+                        <md-card-actions layout="column" layout-align="center center">
+                            <span class="md-headline">{{::item.name}}</span>
+                            <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
+                            <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                        </md-card-actions>
 
-                        </md-card>
-                    </md-whiteframe>
-                </div>
+                    </md-card>
+                </md-whiteframe>
+            </div>
 
 
             <div class="section" style="margin-top: 20px;" ng-if="vm.items.length == 0 && vm.currentNodeType == 'category'">

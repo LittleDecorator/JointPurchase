@@ -162,4 +162,19 @@
             }
         })
 
+        .directive('preventScroll', [function () {
+            return {
+                restrict: 'A',
+                link: function(scope, element){
+                    element.bind('mousewheel DOMMouseScroll', function(event) {
+                        var delta = event.originalEvent.wheelDelta;
+                        if ((this.scrollTop + this.offsetHeight >= this.scrollHeight && delta<0) || (this.scrollTop == 0 && delta>0)){
+                            event.preventDefault();
+                        }
+                    });
+                }
+            };
+
+    }]);
+
 })();

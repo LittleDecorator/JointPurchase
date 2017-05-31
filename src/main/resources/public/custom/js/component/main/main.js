@@ -92,7 +92,7 @@
 								.action('ПЕРЕЙТИ')
 								.hideDelay(3500)
 								.highlightAction(true)
-								.highlightClass('md-accent')
+								.highlightClass('md-default')
 								.position('top right');
 
 						// проверка что товар уже в корзине
@@ -114,7 +114,7 @@
 						// Показываем тост и добавляем действие
 						$mdToast.show(toast).then(function(response) {
 							if ( response == 'ok' ) {
-								$state.go('cart');
+								goto('cart');
 							}
 						});
 					}
@@ -162,7 +162,6 @@
 						if($mdSidenav('left').isOpen() && mvm.width < 1530){
 							$mdSidenav('left').close();
 						}
-						console.log("FIRE")
 						eventService.onFilter(node);
 					}
 
@@ -220,18 +219,16 @@
 							mvm.lockSideFilter = false;
 							$mdSidenav('left').close();
 						}
-						// после того как перешли
-						$state.go(name).then(function() {
-							//закрываем панель меню
-							if ($mdSidenav('menu').isOpen()) {
-								$mdSidenav('menu').close().then(function(){
-									//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
-									var shouldLock = (name == 'catalog' && mvm.width > 1530);
-									if(shouldLock!=mvm.lockSideFilter){
-										mvm.lockSideFilter = shouldLock;
-									}
-								})
-							}
+						//закрываем панель меню
+						$mdSidenav('menu').close().then(function(){
+							// после того как перешли
+							$state.go(name).then(function() {
+								//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
+								var shouldLock = (name == 'catalog' && mvm.width > 1530);
+								if(shouldLock!=mvm.lockSideFilter){
+									mvm.lockSideFilter = shouldLock;
+								}
+							})
 						});
 					}
 
@@ -253,6 +250,7 @@
 					 * @param id
 					 */
 					function itemView(id) {
+						console.log("itemView");
 						$state.go("catalog.detail", {itemId: id});
 					}
 
@@ -268,6 +266,7 @@
 					 * нажатие кнопки поиск
 					 */
 					function searchItem (){
+						console.log("searchItem");
 						if(mvm.search.criteria){
 							// обновляем state т.к имя могло измениться
 							if($state.current == 'search'){
@@ -287,7 +286,8 @@
 					 */
 					function querySearch (query) {
 						//TODO: показывать загрузку
-						return query ? dataResources.catalog.search.get({criteria: query}).$promise : $scope.states;
+						console.log("querySearch");
+						return query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states;
 					}
 
 					/**
