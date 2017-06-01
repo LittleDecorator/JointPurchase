@@ -2,7 +2,9 @@
   "item-type": {
     "properties": {
       "name": {
-        "type": "string"
+        "type": "string",
+        "index_analyzer": "title_ngram_analyzer",
+        "search_analyzer": "title_search_analyzer"
       }
     }
   }

@@ -6,8 +6,8 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location','$q',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location, $q) {
 
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
@@ -285,9 +285,19 @@
 					 * remote dataservice call.
 					 */
 					function querySearch (query) {
-						//TODO: показывать загрузку
-						console.log("querySearch");
-						return query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states;
+						// без искуственных задержек
+						// return query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states;
+
+						// искуственно добавим задержку в 2 сек
+						var results = query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states, deferred;
+						if(!helpers.isArray(results)){
+							deferred = $q.defer();
+							$timeout(function () { deferred.resolve( results ); }, Math.random() * 2000, false);
+							return deferred.promise;
+						} else {
+							return results;
+						}
+
 					}
 
 					/**

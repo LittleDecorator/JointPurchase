@@ -432,6 +432,20 @@
     </build>
 
     <profiles>
+
+        <profile>
+            <id>develop</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!${elastic.path}</name>
+                </property>
+            </activation>
+            <properties>
+                <elastic.path>${project.build.directory}/elastic</elastic.path>
+            </properties>
+        </profile>
+
         <profile>
             <id>minify</id>
             <activation>

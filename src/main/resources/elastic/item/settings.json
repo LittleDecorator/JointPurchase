@@ -1,27 +1,66 @@
 {
   "analysis": {
-    "filter": {
-      "ru_stop": {
-        "type": "stop",
-        "stopwords": "_russian_"
+
+      "tokenizer": {
+          "title_tokenizer": {
+              "type": "whitespace"
+          },
+
+          "punctuation": {
+              "type": "pattern",
+              "pattern": "[ ().,!?]"
+          }
       },
-      "ru_stemmer": {
-        "type": "stemmer",
-        "language": "russian"
+
+      "char_filter": {
+
+          "bracket_filter": {
+              "type": "pattern_replace",
+              "pattern": "\\((\\w+)\\)",
+              "replacement": "$1"
+          }
+      },
+
+      "filter": {
+
+          "ru_stop": {
+              "type": "stop",
+              "stopwords": "_russian_"
+          },
+
+          "ru_stemmer": {
+              "type": "stemmer",
+              "language": "russian"
+          },
+
+          "title_ngram_filter": {
+              "type": "edgeNGram",
+              "min_gram": 1,
+              "max_gram": 16,
+              "side": "front",
+              "token_chars": [
+                  "letter",
+                  "digit",
+                  "symbol"
+              ]
+          }
+      },
+
+      "analyzer": {
+
+          "title_ngram_analyzer": {
+              "char_filter": [ "html_strip" , "bracket_filter"],
+              "type":      "custom",
+              "tokenizer": "punctuation",
+              "filter":    ["lowercase", "ru_stop", "ru_stemmer", "asciifolding", "title_ngram_filter"]
+          },
+
+          "title_search_analyzer": {
+              "char_filter": [ "html_strip", "bracket_filter" ],
+              "type":      "custom",
+              "tokenizer": "punctuation",
+              "filter":    ["lowercase", "ru_stop", "ru_stemmer", "asciifolding"]
+          }
       }
-    },
-    "analyzer": {
-      "default": {
-        "char_filter": [
-          "html_strip"
-        ],
-        "tokenizer": "standard",
-        "filter": [
-          "lowercase",
-          "ru_stop",
-          "ru_stemmer"
-        ]
-      }
-    }
   }
 }
