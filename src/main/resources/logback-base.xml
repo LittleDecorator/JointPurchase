@@ -48,32 +48,3 @@
     </if>
 
 </included>
-
-
-
-<!--&lt;!&ndash;<configuration>-->
-
-    <!--<appender name="NORMAL" class="ch.qos.logback.core.FileAppender">-->
-        <!--<file>${deb.log.path}/${deb.log.out.name}</file>-->
-        <!--&lt;!&ndash;<file>C:\\data\\preline/${deb.log.out.name}</file>&ndash;&gt;-->
-<!--<encoder>-->
-<!--<pattern>%d{"yyyy-MM-dd'T'HH:mm:ss,SSSZ",UTC} %-5level app: ${project.artifactId} %msg%n</pattern>-->
-<!--</encoder>-->
-<!--<filter class="com.ligastavok.prematch.publisher.log.FineFilter" />-->
-        <!--</appender>-->
-
-<!--<appender name="ERROR" class="ch.qos.logback.core.FileAppender">-->
-<!--<file>${deb.log.path}/${deb.log.err.name}</file>-->
-<!--&lt;!&ndash;<file>C:\\data\\preline/${deb.log.err.name}</file>&ndash;&gt;-->
-<!--<encoder>-->
-    <!--<pattern>%d{"yyyy-MM-dd'T'HH:mm:ss,SSSZ",UTC} %-5level app: ${project.artifactId} %msg%n</pattern>-->
-<!--</encoder>-->
-<!--<filter class="com.ligastavok.prematch.publisher.log.ErrorFilter" />-->
-<!--</appender>-->
-
-<!--<root level="INFO">-->
-<!--<appender-ref ref="NORMAL" />-->
-<!--<appender-ref ref="ERROR" />-->
-<!--</root>-->
-
-        <!--</configuration>&ndash;&gt;-->

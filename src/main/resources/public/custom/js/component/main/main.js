@@ -6,8 +6,8 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location','$q',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location, $q) {
 
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
@@ -92,7 +92,7 @@
 								.action('ПЕРЕЙТИ')
 								.hideDelay(3500)
 								.highlightAction(true)
-								.highlightClass('md-accent')
+								.highlightClass('md-default')
 								.position('top right');
 
 						// проверка что товар уже в корзине
@@ -114,7 +114,7 @@
 						// Показываем тост и добавляем действие
 						$mdToast.show(toast).then(function(response) {
 							if ( response == 'ok' ) {
-								$state.go('cart');
+								goto('cart');
 							}
 						});
 					}
@@ -162,7 +162,6 @@
 						if($mdSidenav('left').isOpen() && mvm.width < 1530){
 							$mdSidenav('left').close();
 						}
-						console.log("FIRE")
 						eventService.onFilter(node);
 					}
 
@@ -220,18 +219,16 @@
 							mvm.lockSideFilter = false;
 							$mdSidenav('left').close();
 						}
-						// после того как перешли
-						$state.go(name).then(function() {
-							//закрываем панель меню
-							if ($mdSidenav('menu').isOpen()) {
-								$mdSidenav('menu').close().then(function(){
-									//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
-									var shouldLock = (name == 'catalog' && mvm.width > 1530);
-									if(shouldLock!=mvm.lockSideFilter){
-										mvm.lockSideFilter = shouldLock;
-									}
-								})
-							}
+						//закрываем панель меню
+						$mdSidenav('menu').close().then(function(){
+							// после того как перешли
+							$state.go(name).then(function() {
+								//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
+								var shouldLock = (name == 'catalog' && mvm.width > 1530);
+								if(shouldLock!=mvm.lockSideFilter){
+									mvm.lockSideFilter = shouldLock;
+								}
+							})
 						});
 					}
 
@@ -253,6 +250,7 @@
 					 * @param id
 					 */
 					function itemView(id) {
+						console.log("itemView");
 						$state.go("catalog.detail", {itemId: id});
 					}
 
@@ -268,6 +266,7 @@
 					 * нажатие кнопки поиск
 					 */
 					function searchItem (){
+						console.log("searchItem");
 						if(mvm.search.criteria){
 							// обновляем state т.к имя могло измениться
 							if($state.current == 'search'){
@@ -286,8 +285,19 @@
 					 * remote dataservice call.
 					 */
 					function querySearch (query) {
-						//TODO: показывать загрузку
-						return query ? dataResources.catalog.search.get({criteria: query}).$promise : $scope.states;
+						// без искуственных задержек
+						// return query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states;
+
+						// искуственно добавим задержку в 2 сек
+						var results = query ? dataResources.catalog.search.get({criteria: query}).$promise : mvm.states, deferred;
+						if(!helpers.isArray(results)){
+							deferred = $q.defer();
+							$timeout(function () { deferred.resolve( results ); }, Math.random() * 2000, false);
+							return deferred.promise;
+						} else {
+							return results;
+						}
+
 					}
 
 					/**

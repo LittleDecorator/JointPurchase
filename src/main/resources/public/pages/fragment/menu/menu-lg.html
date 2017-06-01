@@ -16,7 +16,6 @@
                     </a>
                     <!-- строка поиска -->
                     <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 35%; padding-left: 50px; display: flex; align-items: flex-end">
-                        <!--<input id="search" type="text" class="col s12 menu-search" ng-keydown="keyPress($event.keyCode)" ng-model="search.criteria" maxlength="50" style="border-radius:0">-->
                         <md-autocomplete flex style="max-width: 80%"
                                          ng-keydown="mvm.searchKeyPress($event.keyCode)"
                                          md-input-minlength="3"
@@ -24,19 +23,20 @@
                                          md-input-maxlength="50"
                                          md-selected-item="selectedItem"
                                          md-selected-item-change="itemView(item.id)"
-                                         md-search-text="search.criteria"
-                                         md-delay="1000"
-                                         md-items="item in querySearch(search.criteria)"
+                                         md-search-text="mvm.search.criteria"
+                                         md-delay="500"
+                                         md-items="item in mvm.querySearch(mvm.search.criteria)"
                                          md-item-text="item.name"
                                          md-floating-label="Не должно быть пустым"
                                          md-dropdown-position="bottom"
                                          md-menu-class="autocomplete-custom-template">
 
                             <md-item-template>
-                                <span md-highlight-text="mvm.search.criteria">{{mvm.item.name}}</span>
+                                <span md-highlight-text="mvm.search.criteria">{{item.name}}</span>
                             </md-item-template>
 
                         </md-autocomplete>
+
                         <div style="height: auto">
                             <md-button ng-click="mvm.searchItem()" class="search-button">
                                 <md-icon style="color:#846C63;!important;font-size: 22px;">search</md-icon>
@@ -100,7 +100,7 @@
 
 </md-toolbar>
 
-<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto;  width: 260px; min-width: 0; top: 56px; padding-top: 15px">
+<md-sidenav id="menu" class="md-sidenav-left" prevent-scroll md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto;  width: 260px; min-width: 0; top: 56px; padding-top: 15px">
     <md-menu-item><md-button ng-click="mvm.goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
     <md-menu-item><md-button ng-click="mvm.goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
     <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>

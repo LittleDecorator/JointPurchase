@@ -41,7 +41,9 @@
 --     END;
 --     $$ LANGUAGE plpgsql;
 /* Возвращение рекурсивного запроса */
---  CREATE OR REPLACE FUNCTION get_child_categories(root_id varchar) RETURNS SETOF category AS $$
+-- CREATE OR REPLACE FUNCTION get_child_categories(root_id character varying)
+--   RETURNS SETOF category AS
+-- $BODY$
 --    BEGIN
 --    RETURN QUERY
 -- 	WITH RECURSIVE r AS (
@@ -49,6 +51,10 @@
 -- 		UNION ALL
 -- 		SELECT c.* FROM category c JOIN r ON c.parent_id = r.id
 -- 	)
--- 	SELECT * FROM r;
---    END; $$
---    LANGUAGE plpgsql;
+-- 	SELECT * FROM r where r.id!=root_id;
+--    END; $BODY$
+--   LANGUAGE plpgsql VOLATILE
+--   COST 100
+--   ROWS 1000;
+-- ALTER FUNCTION get_child_categories(character varying)
+--   OWNER TO postgres;

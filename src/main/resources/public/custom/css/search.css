@@ -12,87 +12,6 @@ md-input-container input[type=search]{
 	box-shadow: 0 0 0 0 transparent;
 }
 
-/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
-@media (min-width: 993px) {
-
-	/* Убираем задний белый фон */
-	div.search md-content, div.search md-content > section {
-		background-color: transparent;
-	}
-
-	/* Выставим белй фон для каждого элемента */
-	div.search md-content > section md-list-item > button{
-		background-color: white;
-	}
-
-	/* Установим размер картинки */
-	div.search md-content > section md-list-item > button img.md-avatar {
-		width: 70px;
-		height: 70px;
-	}
-
-    /* Изменим цвет текста поиска */
-	div.search > h5 > span {
-		color: #86A8A8;
-	}
-
-	div#search md-input-container{
-		margin-bottom: 0;
-		padding-top: 0;
-		padding-right: 0;
-		margin-top: 0;
-	}
-
-	/* это общий контейнер меню */
-	.menu-lg md-input-container .md-input {
-		border-color: transparent;
-		background-color: white;
-	}
-
-	.input-field input[type=search] {
-		padding-left: 5px;
-		margin-bottom: 0;
-		width: 100%;
-	}
-
-	/* Делаем фиксированный отступ под поиском */
-	div#search md-autocomplete-wrap {
-	    margin-bottom: 0;
-    }
-
-	div#search md-input-container .md-errors-spacer {
-		min-width: 0;
-	}
-
-    /* Линейный процессинг строго под input'ом */
-	div#search md-autocomplete md-autocomplete-wrap md-progress-linear.md-inline {
-		bottom: 0;
-	    padding-right: 0;
-	    right: 0;
-    }
-
-	/* Уменьшим */
-	div#search .md-virtual-repeat-container {
-		margin-top: 2px;
-	}
-
-	/* Стили кнопки поиска */
-	div#search button.search-button {
-	    /*position: absolute;*/
-	    right: 0;
-	    min-width: 70px;
-	    margin: 0;
-	    min-height: initial;
-	    line-height: inherit;
-	    border-left: 1px solid #d3d3d3;
-	    border-radius: 0;
-	    background-color: #f8f8f8;
-	    z-index: 1;
-	    padding-bottom: 0;
-    }
-
-}
-
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
 @media (min-width: 601px) {
 
@@ -171,6 +90,91 @@ md-input-container input[type=search]{
 		z-index: 1;
 		padding-bottom: 0;
 	}
+
+}
+
+/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
+@media (min-width: 993px) {
+
+	/* Убираем задний белый фон */
+	div.search md-content, div.search md-content > section {
+		background-color: transparent;
+	}
+
+	/* Выставим белй фон для каждого элемента */
+	div.search md-content > section md-list-item > button{
+		background-color: white;
+	}
+
+	/* Установим размер картинки */
+	div.search md-content > section md-list-item > button img.md-avatar {
+		width: 70px;
+		height: 70px;
+	}
+
+    /* Изменим цвет текста поиска */
+	div.search > h5 > span {
+		color: #86A8A8;
+	}
+
+	div#search md-input-container{
+		margin-bottom: 0;
+		padding-top: 0;
+		padding-right: 0;
+		margin-top: 0;
+	}
+
+	/* это общий контейнер меню */
+	.menu-lg md-input-container .md-input {
+		border-color: transparent;
+		background-color: white;
+	}
+
+	.input-field input[type=search] {
+		padding-left: 5px;
+		margin-bottom: 0;
+		width: 100%;
+	}
+
+	.md-autocomplete-suggestions-container{
+		margin-top: 1px;
+	}
+
+	/* Делаем фиксированный отступ под поиском */
+	div#search md-autocomplete-wrap {
+	    margin-bottom: 0;
+    }
+
+	div#search md-input-container .md-errors-spacer {
+		min-width: 0;
+	}
+
+    /* Линейный процессинг строго под input'ом */
+	div#search md-autocomplete md-autocomplete-wrap md-progress-linear.md-inline {
+		bottom: -2px;
+	    padding-right: 0;
+	    right: 0;
+    }
+
+	/* Уменьшим */
+	div#search .md-virtual-repeat-container {
+		margin-top: 2px;
+	}
+
+	/* Стили кнопки поиска */
+	div#search button.search-button {
+	    /*position: absolute;*/
+	    right: 0;
+	    min-width: 70px;
+	    margin: 0;
+	    min-height: initial;
+	    line-height: inherit;
+	    border-left: 1px solid #d3d3d3;
+	    border-radius: 0;
+	    background-color: #f8f8f8;
+	    z-index: 1;
+	    padding-bottom: 0;
+    }
 
 }
 

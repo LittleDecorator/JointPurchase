@@ -103,25 +103,25 @@ public final class GmailHelper {
 
     private String user;
 
-    @PostConstruct
-    private void init(){
-        try {
-            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-            InputStream in = GmailHelper.class.getResourceAsStream(CLIENT_SECRET);
-            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPE)
-                    .setDataStoreFactory(DATA_STORE_FACTORY)
-                    .setAccessType("offline")
-                    .build();
-            credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(user);
-
-            service = getGmailService();
-        } catch (Throwable t) {
-            t.printStackTrace();
-            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, t);
-        }
-    }
+//    @PostConstruct
+//    private void init(){
+//        try {
+//            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+//            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+//            InputStream in = GmailHelper.class.getResourceAsStream(CLIENT_SECRET);
+//            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+//            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPE)
+//                    .setDataStoreFactory(DATA_STORE_FACTORY)
+//                    .setAccessType("offline")
+//                    .build();
+//            credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(user);
+//
+//            service = getGmailService();
+//        } catch (Throwable t) {
+//            t.printStackTrace();
+//            Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, t);
+//        }
+//    }
 
     /**
      * Constructor initializes the Google Authorization Code Flow with CLIENT
