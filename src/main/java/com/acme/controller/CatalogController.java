@@ -18,6 +18,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.pushtorefresh.javac_warning_annotation.Warning;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -32,6 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 
 @RestController
@@ -112,12 +120,20 @@ public class CatalogController {
 
         Content defContent = contentRepository.findOneByIsDefault(true);
 
-        /* Указываем в каких полях с каким приоритетом */
-        SimpleQueryStringBuilder builder = new SimpleQueryStringBuilder(criteria);
-        builder.field("name",4).field("title",3).field("tags",2).field("content");
+        /* формируем запрос */
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(multiMatchQuery(criteria)
+                        .field("name^10")
+                        .field("name.stemmed^2")
+                        .field("name.shingles^2")
+                        .field("name.ngrams")
+                        .operator(MatchQueryBuilder.Operator.AND)
+                        .fuzziness(Fuzziness.ONE)
+                )
+                .build();
 
         /* ищем документы */
-        List<Item> result = Lists.newArrayList(catalogRepository.search(builder));
+        List<Item> result = Lists.newArrayList(catalogRepository.search(searchQuery));
         for(Item item : result){
             itemService.fillItem(item, defContent);
         }

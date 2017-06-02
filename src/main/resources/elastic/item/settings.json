@@ -3,21 +3,7 @@
 
       "tokenizer": {
           "title_tokenizer": {
-              "type": "whitespace"
-          },
-
-          "punctuation": {
-              "type": "pattern",
-              "pattern": "[ ().,!?]"
-          }
-      },
-
-      "char_filter": {
-
-          "bracket_filter": {
-              "type": "pattern_replace",
-              "pattern": "\\((\\w+)\\)",
-              "replacement": "$1"
+              "type": "standard"
           }
       },
 
@@ -38,28 +24,42 @@
               "min_gram": 1,
               "max_gram": 16,
               "side": "front",
-              "token_chars": [
-                  "letter",
-                  "digit",
-                  "symbol"
-              ]
+              "token_chars": [ "letter", "digit" ]
           }
       },
 
       "analyzer": {
 
-          "title_ngram_analyzer": {
-              "char_filter": [ "html_strip" , "bracket_filter"],
+          "title_default_analyzer": {
+              "type":       "custom",
+              "tokenizer": "title_tokenizer",
+              "filter":    ["lowercase", "asciifolding"]
+          },
+
+          "title_snowball_analyzer": {
               "type":      "custom",
-              "tokenizer": "punctuation",
-              "filter":    ["lowercase", "ru_stop", "ru_stemmer", "asciifolding", "title_ngram_filter"]
+              "tokenizer": "title_tokenizer",
+              "filter":    ["lowercase", "asciifolding", "ru_stop", "ru_stemmer", "snowball"]
+          },
+
+          "title_shingle_analyzer": {
+              "type":      "custom",
+              "tokenizer": "title_tokenizer",
+              "filter":    ["shingle", "lowercase", "asciifolding"]
+          },
+
+          "title_ngram_analyzer": {
+              "char_filter": "html_strip",
+              "type":      "custom",
+              "tokenizer": "title_tokenizer",
+              "filter":    ["lowercase", "asciifolding", "title_ngram_filter"]
           },
 
           "title_search_analyzer": {
-              "char_filter": [ "html_strip", "bracket_filter" ],
+              "char_filter": "html_strip",
               "type":      "custom",
-              "tokenizer": "punctuation",
-              "filter":    ["lowercase", "ru_stop", "ru_stemmer", "asciifolding"]
+              "tokenizer": "title_tokenizer",
+              "filter":    ["lowercase", "asciifolding"]
           }
       }
   }

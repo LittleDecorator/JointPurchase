@@ -205,18 +205,19 @@ md-input-container input[type=search]{
 
 	div.modalSearch  #searchInput {
 		z-index: 100;
-		height: 64px !important;
+		height: auto;
+		margin: auto;
 		border-radius: 0 !important;
 		box-shadow: none !important;
-		font-size: 2rem !important;
-		color: darkgray !important;
+		font-size: 1.4rem;
+		color: rgb(0,0,0);
 		box-sizing: border-box;
 		border: none;
 		outline: 0;
 		background: 0 0;
 		width: 100%;
 		padding: 0 15px;
-		line-height: 40px;
+		line-height: 45px;
 		-webkit-appearance: textfield;
 		flex: 1;
 		vertical-align: baseline;
@@ -228,7 +229,6 @@ md-input-container input[type=search]{
 		text-shadow: none;
 		display: inline-block;
 		text-align: start;
-		margin: 0;
 	}
 
 	div.modalSearch  .clearSearch {
@@ -302,5 +302,11 @@ md-input-container input[type=search]{
 	div.modalSearch  #menu-tabs .tab, .vertical-align-middle {
 		display: inline-block;
 		vertical-align: middle;
+	}
+
+	/* изменим высоту результатов в мобильном поиске */
+	.modalSearch .md-autocomplete-suggestions li {
+		line-height: 50px;
+		height: 50px;
 	}
 }

@@ -2,9 +2,13 @@
   "item-type": {
     "properties": {
       "name": {
-        "type": "string",
-        "index_analyzer": "title_ngram_analyzer",
-        "search_analyzer": "title_search_analyzer"
+        "type": "multi_field",
+        "fields": {
+          "name":    { "type": "string", "analyzer": "title_default_analyzer" },
+          "stemmed":  { "type": "string", "analyzer": "title_snowball_analyzer" },
+          "shingles": { "type": "string", "analyzer": "title_shingle_analyzer" },
+          "ngrams":   { "type": "string", "index_analyzer": "title_ngram_analyzer", "search_analyzer": "title_search_analyzer" }
+        }
       }
     }
   }

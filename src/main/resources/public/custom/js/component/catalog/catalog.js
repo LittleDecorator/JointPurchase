@@ -13,6 +13,7 @@
 
                 var busy = false;
                 var portion = 0;
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.loadData = loadData;
@@ -25,7 +26,7 @@
                 vm.items = [];
                 vm.categories = [];
                 vm.showSideFilter = false;
-                vm.stopLoad=false;
+                vm.showLoadMore = vm.stopLoad = mvm.width < 601;
                 vm.allDataLoaded = false;
                 vm.infiniteDistance = 2;
                 vm.currentCategory = null;
@@ -62,6 +63,11 @@
                     } else {
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
                         localStorage.setItem($state.current.name,angular.toJson(vm.confirmedFilter));
+                    }
+
+                    // инициируем первый запрос если просмотр с мобильника
+                    if(vm.showLoadMore){
+                        loadData();
                     }
 
                     if($stateParams.type == 'category'){
@@ -104,12 +110,13 @@
                     }
 
                     // если загрузка разрешена и не заняты
-                    if(!vm.stopLoad && !busy){
+                    if((!vm.stopLoad || mvm.width<601) && !busy){
                         busy = true;
                         dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
                             // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                             if(data.length < vm.confirmedFilter.limit){
                                 vm.stopLoad = true;
+                                vm.showLoadMore = false;
                             }
 
                             // очистим данные если требуется

@@ -1,10 +1,10 @@
 <div class="modalSearch">
-    <div flex layout="row" class="layout-row md-whiteframe-z1">
+    <div flex layout="row" class="layout-row" style="height: 50px">
         <button type="button" ng-click="closeThisDialog()" class="clearSearch">
-            <md-icon>keyboard_backspace</md-icon>
+            <md-icon>arrow_back</md-icon>
         </button>
         <md-input-container style="margin: 0" flex class="no-errors">
-            <input flex type="search" id="searchInput" style=" font-size: 1.4rem; margin: 0; height: 52px;"
+            <input flex type="search" id="searchInput"
                    ng-model="searchText" ng-keydown="keyPress($event.keyCode)"
                    class="flex" ng-model-options="{debounce:200}" ng-change="querySearch()">
         </md-input-container>
@@ -19,9 +19,11 @@
         <ul class="md-autocomplete-suggestions">
             <div md-virtual-repeat="item in filtered">
                 <li>
+                    <md-button type="button" ng-click="itemView(item.id);closeThisDialog()" style=" min-width: 30px; min-height: 30px;margin-left: 0">
+                        <md-icon>search</md-icon>
+                    </md-button>
                     <span ng-click="itemView(item.id);closeThisDialog()" style=" font-size: 20px;">{{item.name}}</span>
                 </li>
-                <md-divider style="width: 95%; margin: auto;"></md-divider>
             </div>
             <li style="display: flex; padding: 0" ng-if="filtered.length > 5">
                 <md-button ng-click="searchItem()" class="md-raised" style="width: 100%; position: relative; text-align:center; font-size: 20px;">Показать все</md-button>
