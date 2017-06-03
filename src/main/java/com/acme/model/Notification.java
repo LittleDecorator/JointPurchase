@@ -1,8 +1,6 @@
 package com.acme.model;
 
-import com.acme.enums.ItemStatus;
 import com.acme.enums.NotificationType;
-import com.acme.enums.converters.ItemStatusConverter;
 import com.acme.enums.converters.NotificationTypeConverter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,7 +17,7 @@ public class Notification implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
     @Column(name = "title")

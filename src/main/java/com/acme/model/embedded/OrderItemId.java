@@ -1,11 +1,7 @@
 package com.acme.model.embedded;
 
-import com.acme.model.Item;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 /**

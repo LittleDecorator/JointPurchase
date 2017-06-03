@@ -1,4 +1,4 @@
-package com.acme;
+package com.acme.util;
 
 import java.util.HashMap;
 

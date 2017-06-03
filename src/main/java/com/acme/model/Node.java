@@ -1,6 +1,5 @@
 package com.acme.model;
 
-
 import com.google.common.collect.Lists;
 
 import java.io.Serializable;

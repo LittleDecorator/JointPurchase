@@ -1,0 +1,36 @@
+/********************************** COMMON ******************************/
+.fullscreen {
+
+    /* slider */
+    touch-action: pan-y;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+    position: fixed;
+
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+
+.fullscreen > img {
+    height: 100%;
+    width: 100%;
+    background: url(../img/IMG_3287.JPG) center;
+    background-size: cover;
+}
+
+/* Заголовок на домашней странице */
+.caption {
+    color: #fff;
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    opacity: 1;
+    transform: translateY(0px) translateX(0px);
+}

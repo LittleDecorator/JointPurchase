@@ -17,6 +17,11 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * Класс предоставляющий доступ к телу запроса.
+ * Позволяет получать свойства из POST-запроса аналогично @PathParams
+ */
+
 public class CustomResolver implements HandlerMethodArgumentResolver{
 
     private static final String JSON_BODY_ATTRIBUTE = "JSON_REQUEST_BODY";

@@ -296,32 +296,64 @@
 
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
+                var gallery = null;
+                var sliderNum = 0;
 
                 vm.show = show;
                 vm.showGallery = showGallery;
                 vm.getTemplateUrl = getTemplateUrl;
                 vm.afterInclude = afterInclude;
+                vm.openSlider = openSlider;
+                
                 vm.item = angular.extend({}, product);
                 vm.mainImage = vm.item.url;
 
                 /**
-                * Установка изображения активным на просмотр
-                * @param id - изображение которое нужно показать как main
-                */
+                 * Установка изображения активным на просмотр
+                 * @param id - изображение которое нужно показать как main
+                 * @param event
+                 */
                 function show(id){
-                    var keepGoing = true;
-                    var res = null;
-
                     // поиск выбранного в списке
-                    vm.item.images.forEach(function(elem, index){
-                        if (keepGoing) {
-                            if(elem === id) {
-                                res = index;
-                                keepGoing = false;
-                            }
+                    sliderNum = vm.item.images.map(function(obj, index) {
+                        if (obj.contentId === id) {
+                            return index;
+                        } else {
+                            return null
+                        }
+                    }).filter(function(idx){
+                        return idx !=null;
+                    })[0];
+                    vm.mainImage = (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL) + id;
+                }
+
+                /**
+                 * Открываем слайдер
+                 */
+                function openSlider(){
+                    var el = vm.item.images.map(function(elem){
+                        return {
+                            src: (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL)+elem.contentId,
+                            thumb: mvm.THUMB_URL+elem.contentId
                         }
                     });
-                    vm.mainImage = (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL) + id;
+                    // настройки для swipe
+                    var options = {
+                        selector: '.item',
+                        dynamic: true,
+                        getCaptionFromTitleOrAlt: false,
+                        dynamicEl: el
+                    };
+                    // изменим отображение для маленького экрана
+                    if(mvm.width < 601){
+                        options.controls=false;
+                        options.thumbnail=false;
+                    }
+                    gallery = $(this).lightGallery(options);
+                    gallery.one('onAfterOpen.lg',function(){
+                        gallery.data('lightGallery').slide(sliderNum);
+                    });
+
                 }
 
                 $scope.$on('onFilter', function() {

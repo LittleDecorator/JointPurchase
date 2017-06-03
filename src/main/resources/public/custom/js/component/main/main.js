@@ -453,9 +453,9 @@
 					});
 
 					/* инициализация swipebox и отложеных компонентов */
-					$timeout(function () {
-						$('.swipebox').swipebox();
-					}, 10);
+					// $timeout(function () {
+					// 	$('.swipebox').swipebox();
+					// }, 10);
 
 					init();
 

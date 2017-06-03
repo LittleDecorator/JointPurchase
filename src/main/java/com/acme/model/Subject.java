@@ -3,13 +3,10 @@ package com.acme.model;
 import com.acme.util.StringTemplate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -18,7 +15,7 @@ public class Subject implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
     @Column(name = "enabled")

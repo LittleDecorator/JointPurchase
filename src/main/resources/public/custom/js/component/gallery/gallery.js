@@ -79,8 +79,20 @@
                                     vm.images[0].main = true;
                                     vm.images[0].show = true;
                                 }
+                                
+                                // настройки слайдера
+                                var options = {
+                                    selector: '.item',
+                                    getCaptionFromTitleOrAlt: false
+                                };
 
-                                $('.materialboxed').materialbox();
+                                if(mvm.width < 601){
+                                    options.controls=false;
+                                    options.thumbnail=false;
+                                }
+                                
+                                // инициализируем галлерею
+                                $(".wrap").lightGallery(options);
                             },100);
                         });
                     } else {

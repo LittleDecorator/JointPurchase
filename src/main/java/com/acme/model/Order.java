@@ -1,13 +1,11 @@
 package com.acme.model;
 
-
 import com.acme.enums.OrderStatus;
 import com.acme.enums.converters.OrderStatusConverter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "purchase_order")
@@ -15,7 +13,7 @@ public class Order implements BaseModel{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
     @Column(name = "subject_id")

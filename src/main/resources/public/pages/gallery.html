@@ -6,8 +6,8 @@
     <div class="wrap">
         <div class="box" ng-repeat="image in vm.images track by image.id">
             <div class="boxInner">
-                <a ng-href="media/image/{{::image.contentId}}" class="swipebox" title="Some Title">
-                    <img ng-src="{{::image.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                <a class="item" ng-href="media/image/{{::image.contentId}}" title="Some Title">
+                    <img ng-src="{{::image.url}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
                 </a>
                 <img-title></img-title>
             </div>

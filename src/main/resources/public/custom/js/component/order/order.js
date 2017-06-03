@@ -210,6 +210,7 @@
                 vm.deliveries = deliveryMap;
                 vm.showHints = true;
                 vm.order = order ? order: {};
+                console.log(vm.order)
 
                 /**
                  * Инициализация
@@ -228,6 +229,8 @@
                     if(!vm.order) {
                         var time = new Date().getTime();
                         vm.order = { status:null, payment:0, uid:time, dateAdd:time, delivery:null};
+                    } else {
+                        vm.order.delivery = helpers.findInArrayById(deliveryMap, vm.order.delivery);
                     }
                 }
 

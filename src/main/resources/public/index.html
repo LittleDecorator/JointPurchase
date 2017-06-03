@@ -3,25 +3,23 @@
 <head>
     <!-- SCROLLS -->
     <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
-    <link rel="stylesheet" href="official/css/material.css">
+    <!--<link rel="stylesheet" href="official/css/material.css">-->
+    <link rel="stylesheet" href="official/css/md-material.css">
     <link rel="stylesheet" href="webjars/angular-material/1.1.3/angular-material.min.css">
+    <link rel="stylesheet" href="webjars/lightgallery/1.2.21/dist/css/lightgallery.min.css">
 
-    <link rel="stylesheet" href="official/css/swipebox.min.css">
     <link rel="stylesheet" href="official/css/ngDialog.css">
     <link rel="stylesheet" href="official/css/ngDialog-theme-default.css">
     <link rel="stylesheet" href="official/css/ngDialog-theme-flat.css">
     <link rel="stylesheet" href="official/css/ngDialog-theme-wide.css">
     <link rel="stylesheet" href="official/stepper/md-steppers.min.css">
     <link rel="stylesheet" href="official/css/mdPickers.min.css">
-    <link rel="stylesheet" href="official/css/cropper.css">
     <link rel="stylesheet" href="official/back-to-top/gm-back-to-top.min.css">
 
     <!-- build:css custom/css/all.css -->
     <link rel="stylesheet" href="custom/css/app.css">
     <link rel="stylesheet" href="custom/css/main.css">
     <link rel="stylesheet" href="custom/css/gallery.css">
-    <!--<link rel="stylesheet" href="custom/css/side.css">-->
-    <!--<link rel="stylesheet" href="custom/css/styles.css">-->
     <link rel="stylesheet" href="custom/css/spinner.css">
     <link rel="stylesheet" href="custom/css/login.css">
     <link rel="stylesheet" href="custom/css/menu.css">
@@ -58,6 +56,7 @@
     <link rel="stylesheet" href="custom/css/test.css">
     <link rel="stylesheet" href="custom/css/repeater.css">
     <link rel="stylesheet" href="custom/css/notification.css">
+    <link rel="stylesheet" href="custom/css/home.css">
     <!-- endbuild -->
 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
@@ -87,7 +86,6 @@
 
     <main class="main-wrapper">
         <!-- отображение пользователя и основное меню для LG -->
-        <!--<div ng-include="'pages/template/sideMenu.html'"></div>-->
         <div class="main container" style="margin-top: 25px;padding-bottom: 0;">
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
             <div ui-view="main" class="template-wrapper"></div>
@@ -105,37 +103,27 @@
 
     <!--  Scripts-->
     <script src="/webjars/jquery/2.2.4/jquery.min.js"></script>
-    <!--<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>-->
     <script src="/webjars/angular/1.5.7/angular.min.js"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>-->
 
     <script src="/webjars/ngDialog/0.5.8/js/ngDialog.min.js"></script>
     <script src="/webjars/angular-ui-router/0.3.1/release/angular-ui-router.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.min.js"></script>-->
     <script src="/webjars/angular-resource/1.5.7/angular-resource.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-resource.min.js"></script>-->
     <script src="/webjars/angular-animate/1.5.7/angular-animate.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-animate.min.js"></script>-->
     <script src="/webjars/angular-aria/1.5.7/angular-aria.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-aria.min.js"></script>-->
     <script src="/webjars/angular-touch/1.5.7/angular-touch.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-touch.min.js"></script>-->
     <script src="/webjars/angular-messages/1.5.7/angular-messages.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.3/angular-messages.min.js"></script>-->
     <script src="/webjars/momentjs/2.17.1/min/moment.min.js"></script>
     <script src="/webjars/momentjs/2.17.1/min/locales.min.js"></script>
     <script src="/webjars/angular-material/1.1.3/angular-material.min.js"></script>
 
+    <script src="/webjars/lightgallery/1.2.21/dist/js/lightgallery.min.js"></script>
+    <script src="/webjars/lightgallery/1.2.21/dist/js/lg-thumbnail.min.js"></script>
+
     <script src="official/angular/angular-file-upload.min.js" ></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-file-upload/2.5.0/angular-file-upload.min.js" ></script>-->
     <script src="official/ng-infinite-scroll.min.js"></script>
     <script src="official/nav-tree/abn-tree.js"></script>
     <script src="official/stepper/md-steppers.js"></script>
 
-    <!--materialize-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
-
-    <script src="official/jquery.swipebox.min.js"></script>
     <script src="official/auth0/angular-jwt.min.js"></script>
     <script src="official/mask.js"></script>
     <script src="official/ngMask.min.js"></script>
@@ -148,7 +136,6 @@
     <script src="custom/js/libs/helpers.js"></script>
 
     <script src="custom/js/routes.js"></script>
-    <!--<script src="custom/js/menu.js"></script>-->
     <script src="custom/js/app.js"></script>
     <script src="custom/js/factories.js"></script>
     <script src="custom/js/services.js"></script>

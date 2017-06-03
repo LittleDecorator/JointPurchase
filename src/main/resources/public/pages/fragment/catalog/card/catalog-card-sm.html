@@ -7,10 +7,8 @@
 
             <!-- изображения -->
             <div class="box" style="width: 100%; padding-bottom: 65%; background-color: rgba(253,253,253,.6);">
-                <div class="boxInner">
-                    <a ng-href="{{vm.mainImage}}" class="swipebox" title="Some Title">
-                        <img ng-src="{{vm.mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
-                    </a>
+                <div class="boxInner" ng-click="vm.openSlider()">
+                    <img ng-src="{{vm.mainImage}}" class="responsive-img" style="cursor: pointer;margin: auto;transform: translateX(-50%);left: 50%;position: relative;"/>
                 </div>
             </div>
 
