@@ -8,11 +8,12 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil',
-            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil', 'ngDialog',
+            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil, ngDialog) {
 
                 var busy = false;
                 var portion = 0;
+                var filterDialog = null;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
 
@@ -91,8 +92,12 @@
                     loadData(true);
                 }
 
-                function applyKeyPress(keyCode) {
-                    if (keyCode == 13) {
+                function applyKeyPress(event) {
+                    if (event.keyCode == 13) {
+                        if(ngDialog.isOpen(filterDialog.id)){
+                            filterDialog.close();
+                            event.preventDefault();
+                        }
                         apply();
                     }
                 }
@@ -123,15 +128,16 @@
 
                 /* модальное окно фильтрации */
                 function openFilter(wClass) {
-                    var dialog = modal({
+                    console.log("openFilter");
+                    filterDialog = modal({
                         templateUrl: "pages/modal/items-filter.html",
                         className: 'ngdialog-theme-default ' + wClass,
                         closeByEscape: true,
                         closeByDocument: true,
                         scope: $scope
                     });
-                    
-                    dialog.closePromise.then(function (output) {
+
+                    filterDialog.closePromise.then(function (output) {
                         if (output.value && output.value != '$escape') {}
                     });
                 }

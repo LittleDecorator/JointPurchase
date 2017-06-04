@@ -37,6 +37,7 @@
                 vm.convertNodeToMenu = convertNodeToMenu;
                 vm.getSections = getSections;
                 vm.getTemplateUrl = getTemplateUrl;
+                vm.afterInclude = afterInclude;
                 vm.init = init;
 
                 vm.categories = categoryNodes;
@@ -46,6 +47,7 @@
                 vm.currentNode = {title:""};
                 vm.autoFocusContent = false;
                 vm.menu = menu;
+                vm.isReady = false;
                 vm.status = {
                     isFirstOpen: false,
                     isFirstDisabled: false
@@ -372,12 +374,16 @@
                 function init(){
                     if (mvm.width < 601) {
                         vm.menu.sections = getSections(vm.categories);
+                        $timeout(function(){
+                            vm.isReady = true;
+                        }, 100)
                     }
                 }
 
-                init();
+                // callback загрузки шаблона страницы
+                function afterInclude(){}
 
-                console.log(vm.menu)
+                init();
 
         }])
 

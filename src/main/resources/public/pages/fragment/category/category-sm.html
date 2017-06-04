@@ -1,17 +1,19 @@
-<h4 class="example_head">Категории:</h4>
+<div ng-show="vm.isReady">
+    <h4 class="example_head">Категории:</h4>
 
 
-<div layout="row" id="testMenu">
-    <md-content role="navigation" style="width: 100%">
-        <ul class="side-menu" style="margin-bottom: 0">
-            <li ng-repeat="section in vm.menu.sections track by section.name" class="parent-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
-                <h2 class="menu-heading" ng-if="section.type === 'heading'" id="heading_{{ ::section.name | nospace }}">
-                    {{::section}}
-                </h2>
-                <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
-                <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
-            </li>
-        </ul>
-    </md-content>
+    <div layout="row" id="testMenu">
+        <md-content role="navigation" style="width: 100%;margin-bottom: 30px">
+            <ul class="side-menu" style="margin-bottom: 0">
+                <li ng-repeat="section in vm.menu.sections track by section.name" class="parent-list-item" ng-class="{'parentActive' : isSectionSelected(section)}">
+                    <h2 class="menu-heading" ng-if="section.type === 'heading'" id="heading_{{ ::section.name | nospace }}">
+                        {{::section}}
+                    </h2>
+                    <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
+                    <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
+                </li>
+            </ul>
+        </md-content>
 
+    </div>
 </div>

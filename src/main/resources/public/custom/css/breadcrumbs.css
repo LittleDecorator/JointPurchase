@@ -15,6 +15,7 @@
     .breadcrumb {
         height: 30px;
         line-height: 30px;
+        padding: 0 10px;
     }
 
     .breadcrumb > li {
@@ -24,7 +25,10 @@
     .breadcrumb md-icon {
         height: 30px;
         line-height: 30px!important;
-        font-size: 20px;
+        font-size: 23px;
+        margin-left: -8px;
+        min-width: 15px;
+        width: 20px;
     }
 }
 

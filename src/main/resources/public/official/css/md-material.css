@@ -1659,14 +1659,14 @@
 
 /*!* HTML5 display definitions*/
    /*========================================================================== *!*/
-/*!***/
- /** Correct `block` display not defined for any HTML5 element in IE 8/9.*/
- /** Correct `block` display not defined for `details` or `summary` in IE 10/11*/
- /** and Firefox.*/
- /** Correct `block` display not defined for `main` in IE 11.*/
- /**!*/
-/*article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {*/
-    /*display: block; }*/
+/**
+ * Correct `block` display not defined for any HTML5 element in IE 8/9.
+ * Correct `block` display not defined for `details` or `summary` in IE 10/11
+ * and Firefox.
+ * Correct `block` display not defined for `main` in IE 11.
+ */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+    display: block; }
 
 /*!***/
  /** 1. Correct `inline-block` display not defined in IE 8/9.*/
@@ -1695,11 +1695,11 @@
 
 /*!* Links*/
    /*========================================================================== *!*/
-/*!***/
- /** Remove the gray background color from active links in IE 10.*/
- /**!*/
-/*a {*/
-    /*background-color: transparent; }*/
+/**
+ * Remove the gray background color from active links in IE 10.
+ */
+a {
+    background-color: transparent; }
 
 /*!***/
  /** Improve readability when focused and also mouse hovered in all browsers.*/
@@ -1818,13 +1818,13 @@ a:active, a:hover {
  /** 2. Correct font properties not being inherited.*/
  /** 3. Address margins set differently in Firefox 4+, Safari, and Chrome.*/
  /**!*/
-/*button, input, optgroup, select, textarea {*/
-    /*color: inherit;*/
-    /*!* 1 *!*/
-    /*font: inherit;*/
-    /*!* 2 *!*/
-    /*margin: 0;*/
-    /*!* 3 *! }*/
+button, input, optgroup, select, textarea {
+    color: inherit;
+    /* 1 */
+    font: inherit;
+    /* 2 */
+    margin: 0;
+    /* 3 */ }
 
 /*!***/
  /** Address `overflow` set to `hidden` in IE 8/9/10/11.*/
@@ -1960,19 +1960,19 @@ table {
 td, th {
     padding: 0; }
 
-/*html {*/
-    /*box-sizing: border-box; }*/
+html {
+    box-sizing: border-box; }
 
 *, *:before, *:after {
     box-sizing: inherit; }
 
-/*ul {*/
-    /*list-style-type: none; }*/
+ul {
+    list-style-type: none; }
 
-/*a {*/
-    /*color: #039be5;*/
-    /*text-decoration: none;*/
-    /*-webkit-tap-highlight-color: transparent; }*/
+a {
+    color: #039be5;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent; }
 
 /*.valign-wrapper {*/
     /*display: -webkit-box;*/
@@ -1987,8 +1987,8 @@ td, th {
 /*.valign-wrapper .valign {*/
     /*display: block; }*/
 
-/*ul {*/
-    /*padding: 0; }*/
+ul {
+    padding: 0; }
 /*ul li {*/
     /*list-style-type: none; }*/
 

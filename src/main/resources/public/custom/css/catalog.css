@@ -201,6 +201,7 @@
 
     div#catalog md-card._md > .card-image  > img{
         max-height: 223px;
+        max-width: 270px;
         margin: auto;
         position: absolute;
         top: 0;

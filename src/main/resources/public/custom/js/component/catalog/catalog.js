@@ -11,10 +11,12 @@
         .controller('catalogController', ['$scope', '$state','dataResources','$timeout','eventService','$stateParams','$rootScope','node', 
             function ($scope, $state, dataResources, $timeout, eventService, $stateParams, $rootScope, node) {
 
-                var busy = false;
-                var portion = 0;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
+
+                var busy = false;
+                var portion = 0;
+                var limit = mvm.width < 601 ? 15 : 30;
 
                 vm.loadData = loadData;
                 vm.itemView = itemView;
@@ -22,7 +24,7 @@
                 vm.init = init;
 
                 // используется только под администратором
-                vm.searchFilter = {category:null, company:null, criteria:null, offset:0, limit:30};
+                vm.searchFilter = {category:null, company:null, criteria:null, offset:0, limit: limit};
                 vm.items = [];
                 vm.categories = [];
                 vm.showSideFilter = false;

@@ -37,6 +37,7 @@
                     scope:params.scope,
                     showClose: showClose,
                     closeByEscape: closeByEscape,
+                    // closeByNavigation: true,
                     closeByDocument: closeByDocument,
                     resolve: {
                         resolved: function getData() {

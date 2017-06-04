@@ -17,7 +17,10 @@
             </md-card>
         </div>
 
-        <md-button ng-if="vm.showLoadMore" ng-click="vm.loadData();">Показать ещё</md-button>
+        <div style="width: 100%; display: flex;">
+            <md-button class="btn md-plain md-raised" ng-if="vm.showLoadMore" ng-click="vm.loadData();" style="width: 88%; margin: 10px auto auto;">Показать ещё</md-button>
+        </div>
+
     </div>
 </div>
 

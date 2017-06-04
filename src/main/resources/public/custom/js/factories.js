@@ -422,7 +422,6 @@
 
                     toggleSelectSection: function (section) {
                         self.openedSection = (self.openedSection === section ? null : section);
-                        console.log(self)
                     },
 
                     isSectionSelected: function (section) {

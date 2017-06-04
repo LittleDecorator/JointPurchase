@@ -4,6 +4,7 @@
                 'main',
                 'cart',
                 'about',
+                'delivery',
                 'company',
                 'contact',
                 'gallery',
