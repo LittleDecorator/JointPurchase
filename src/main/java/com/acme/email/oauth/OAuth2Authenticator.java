@@ -4,6 +4,7 @@ import com.sun.mail.imap.IMAPSSLStore;
 import com.sun.mail.imap.IMAPStore;
 import com.sun.mail.smtp.SMTPTransport;
 
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
 import java.security.Provider;
@@ -77,19 +78,16 @@ public class OAuth2Authenticator {
      * @param port Port of the smtp server, for example 587.
      * @param userEmail Email address of the user to authenticate, for example
      *     {@code oauth@gmail.com}.
-     * @param oauthToken The user's OAuth token.
-     * @param debug Whether to enable debug logging on the connection.
      *
      * @return An authenticated SMTPTransport that can be used for SMTP
      *     operations.
      */
-    public static SMTPTransport connectToSmtp(String host, int port, String userEmail, Session session) throws Exception {
+    public static SMTPTransport connectToSmtp(String host, int port, String userEmail, Session session) throws MessagingException {
         final URLName unusedUrlName = null;
         SMTPTransport transport = new SMTPTransport(session, unusedUrlName);
         // If the password is non-null, SMTP tries to do AUTH LOGIN.
-        final String emptyPassword = "25oct87!";
+        final String emptyPassword = "";
         transport.connect(host, port, userEmail, emptyPassword);
-
         return transport;
     }
 
@@ -106,24 +104,5 @@ public class OAuth2Authenticator {
         session.setDebug(debug);
         return session;
     }
-
-    /**
-     * Authenticates to IMAP with parameters passed in on the commandline.
-     */
-//    public static void main(String args[]) throws Exception {
-//        if (args.length != 2) {
-//            System.err.println(
-//                    "Usage: OAuth2Authenticator <email> <oauthToken>");
-//            return;
-//        }
-//        String email = args[0];
-//        String oauthToken = args[1];
-//
-//        initialize();
-//
-//        IMAPStore imapStore = connectToImap("imap.gmail.com", 993, email, oauthToken, true); System.out.println("Successfully authenticated to IMAP.\n");
-//        SMTPTransport smtpTransport = connectToSmtp("smtp.gmail.com", 587, email, oauthToken, true);
-//        System.out.println("Successfully authenticated to SMTP.");
-//    }
 
 }

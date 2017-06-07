@@ -1,4 +1,28 @@
 /********************************** COMMON ******************************/
+
+@keyframes fullwidth-header-bounce {
+    0% { transform:translateY(0%); }
+    12.5% { transform:translateY(20%); }
+    25% { transform:translateY(0%); }
+    37.5% { transform:translateY(20%); }
+    50% { transform:translateY(0%); }
+}
+
+.scroll-down-btn {
+    border-radius: 40%;
+    min-width: 30px;
+    padding: 0;
+}
+
+.scroll-down-btn:hover{
+
+}
+
+.scroll-down {
+    color: rgba(253,251,251,0.9);
+    animation: fullwidth-header-bounce 2.2s ease-out infinite;
+}
+
 .fullscreen {
 
     /* slider */

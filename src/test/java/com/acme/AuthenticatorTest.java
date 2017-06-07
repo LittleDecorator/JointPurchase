@@ -1,6 +1,6 @@
 package com.acme;
 
-import com.acme.util.OAuth2Authenticator;
+import com.acme.email.oauth.OAuth2Authenticator;
 import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
@@ -10,7 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 
-import static com.acme.util.OAuth2Authenticator.initialize;
+import static com.acme.email.oauth.OAuth2Authenticator.initialize;
 
 /**
  * Created by kobzev on 07.06.17.
