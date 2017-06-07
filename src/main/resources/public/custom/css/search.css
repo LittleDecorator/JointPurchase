@@ -131,9 +131,10 @@ md-input-container input[type=search]{
 	}
 
 	.input-field input[type=search] {
-		padding-left: 5px;
+		padding: 2px 5px;
 		margin-bottom: 0;
 		width: 100%;
+		font-size: 1.2rem;
 	}
 
 	.md-autocomplete-suggestions-container{

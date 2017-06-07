@@ -22,6 +22,20 @@ import com.acme.service.SubjectService;
 import com.acme.service.TemplateService;
 import com.acme.util.EmailBuilder;
 import com.acme.util.GmailHelper;
+import com.acme.util.OAuth2Authenticator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.auth.oauth2.TokenResponseException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.model.Draft;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -30,10 +44,12 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.io.ByteStreams;
+import com.sun.mail.smtp.SMTPTransport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -42,15 +58,24 @@ import javax.annotation.PostConstruct;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.acme.util.OAuth2Authenticator.initialize;
 import static com.google.common.base.Optional.fromNullable;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
@@ -89,13 +114,21 @@ public class EmailServiceImpl implements EmailService {
     private List<SimpleMessage> messages;
     private BigInteger lastHistoryId;
 
-//    @PostConstruct
-//    private void init() throws IOException {
-//        /* получение всех сообщений (полная синхронизация) */
+    /* время жизни ключа доступа к сервису Gmail */
+    private long tokenExpires = -1L;
+    /* ключ доступа к сервису Gmail */
+    private String accessToken = "";
+
+    @PostConstruct
+    private void init() throws IOException {
+        /* получение всех сообщений (полная синхронизация) */
 //        messages = helper.getMessages();
-//        /* получение последнего ID в истории */
+        /* получение последнего ID в истории */
 //        lastHistoryId = messages.get(0).getHistoryId();
-//    }
+
+        /* инициализация аутентификатора */
+        initialize();
+    }
 
     @Override
     @Async
@@ -130,10 +163,19 @@ public class EmailServiceImpl implements EmailService {
                     .build();
 
             /* отправляем */
-            mailSender.send(message);
-//            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-//            /* добавим сообщение во исходящие */
-//            messages.add(sended);
+            //TODO: либо можо использовать JavaMailSender
+//            getTransport().sendMessage(message, message.getAllRecipients());
+
+            /* сперва добаляем auth токен и сессию, затем отправляем */
+            prepareOAuthSender().send(message);
+
+            //TODO: если не используется OAuth, то можно сразу отправлять
+            //mailSender.send(message);
+
+            //TODO: если gmail научится работать с inlineImage, то полностью перейдем на его API
+            //SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+            ///* добавим сообщение во исходящие */
+            //messages.add(sended);
             //TODO: добавить обновление ID истории
 
         } catch (MessagingException | IOException | TemplateException ex){
@@ -172,10 +214,20 @@ public class EmailServiceImpl implements EmailService {
                 .build();
 
         /* отправляем */
-        mailSender.send(message);
-//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-//        /* добавим сообщение во исходящие */
-//        messages.add(sended);
+        //TODO: либо можо использовать JavaMailSender
+        //getTransport().sendMessage(message, message.getAllRecipients());
+
+        /* сперва добаляем auth токен и сессию, затем отправляем */
+        prepareOAuthSender().send(message);
+
+        //TODO: если не используется OAuth, то можно сразу отправлять
+        //mailSender.send(message);
+        //TODO: spring mail sender пока не используем. Нужен конкретный механизм отключения PLAIN LOGIN
+        //mailSender.send(message);
+        //TODO: если gmail научится работать с inlineImage, то полностью перейдем на его API
+        //SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+        ///* добавим сообщение во исходящие */
+        //messages.add(sended);
         //TODO: добавить обновление ID истории
     }
 
@@ -208,22 +260,29 @@ public class EmailServiceImpl implements EmailService {
                     .encoding(Charset.forName("UTF-8"))
                     .build();
 
-        /* Параметры */
+            /* Параметры */
             Map<String, Object> paramMap = Maps.newHashMap();
             paramMap.put("fullName",subjectFullName);
             paramMap.put("site", HOME);
             paramMap.put("confirm", tokenLink);
 
-        /* Конвертим его в Message */
+            /* Конвертим его в Message */
             MimeMessage message = builder.setMessage(convert(email))
                     .setEmailContent(templateService.mergeTemplateIntoString(Constants.PASSWORD_CHANGE_REQUEST, paramMap))
                     .build();
 
-        /* отправляем */
-            mailSender.send(message);
-//            SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-//        /* добавим сообщение в общий список */
-//            messages.add(sended);
+            /* отправляем */
+            //TODO: либо можо использовать JavaMailSender
+            //getTransport().sendMessage(message, message.getAllRecipients());
+
+            /* сперва добаляем auth токен и сессию, затем отправляем */
+            prepareOAuthSender().send(message);
+            //TODO: spring mail sender пока не используем. Нужен конкретный механизм отключения PLAIN LOGIN
+            //mailSender.send(message);
+            //TODO: если gmail научится работать с inlineImage, то полностью перейдем на его API
+            //SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+            ///* добавим сообщение в общий список */
+            //messages.add(sended);
             //TODO: добавить обновление ID истории
         } catch (MessagingException | IOException | TemplateException ex){
             log.error("Не удалось отправить письмо для подтверждения изменения пароля");
@@ -269,11 +328,18 @@ public class EmailServiceImpl implements EmailService {
                 .build();
 
         /* отправляем */
-        mailSender.send(message);
-//        SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
-//        /* добавим сообщение в общий список */
-//        messages.add(sended);
-//        TODO: добавить обновление ID истории
+        //TODO: либо можо использовать JavaMailSender
+        //getTransport().sendMessage(message, message.getAllRecipients());
+
+        /* сперва добаляем auth токен и сессию, затем отправляем */
+        prepareOAuthSender().send(message);
+        //TODO: spring mail sender пока не используем. Нужен конкретный механизм отключения PLAIN LOGIN
+        //mailSender.send(message);
+        //TODO: если gmail научится работать с inlineImage, то полностью перейдем на его API
+        //SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+        ///* добавим сообщение в общий список */
+        //messages.add(sended);
+        //TODO: добавить обновление ID истории
     }
 
     public Boolean sendOrderStatus(Order order){
@@ -281,14 +347,14 @@ public class EmailServiceImpl implements EmailService {
         try {
             EmailBuilder builder = EmailBuilder.getBuilder();
 
-        /* порлучаем всю информацию по заказу */
+            /* получаем всю информацию по заказу */
             Map<String, Object> info = orderService.getOrderInfo(order.getId());
             Map<String, OrderItem> orderItemMap = (Map<String, OrderItem>) info.get("orderItems");
             Map<String, Item> itemMap = (Map<String, Item>) info.get("items");
             Map<String, Content> contentMap = (Map<String, Content>) info.get("contents");
 
             List<Map<String, String>> list = Lists.newArrayList();
-        /* перебираем товар */
+            /* перебираем товар */
             if(itemMap!=null && !itemMap.isEmpty()){
                 itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
                         .put("imageName", contentMap.get(itemId).getId())
@@ -300,20 +366,20 @@ public class EmailServiceImpl implements EmailService {
 
         /* сформируем шаблон сообщения */
             final Map<String, Object> data = new ImmutableMap.Builder<String, Object>()
-				/* основной текст письма */
+    				/* основной текст письма */
                     .put("order_number", order.getUid())
                     .put("order_status", order.getStatus().getNotifyText())
                     .put("isAuth", order.getSubjectId() != null)
                     .put("cabinet_link", Constants.CABINET_LINK)
-				/* информация о заказе */
+				    /* информация о заказе */
                     .put("orderDate", order.getDateAdd() == null ? new Date() : order.getDateAdd())
                     .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
                     .put("orderPayment", order.getPayment()+ " руб")
-				/* данные о товаре */
+				    /* данные о товаре */
                     .put("item", list)
                     .build();
 
-        /* Создадим сообщение */
+            /* Создадим сообщение */
             Email email = EmailImpl.builder()
                     .from(new InternetAddress(senderAddress, senderName))
                     .to(Lists.newArrayList(new InternetAddress(order.getRecipientEmail(), order.getRecipientFname())))
@@ -330,8 +396,14 @@ public class EmailServiceImpl implements EmailService {
                     .setEmailContent(emailContent)
                     .build();
 
-        /* отправим письмо */
-            mailSender.send(message);
+            /* отправляем */
+            //TODO: либо можо использовать JavaMailSender
+            //getTransport().sendMessage(message, message.getAllRecipients());
+
+            /* сперва добаляем auth токен и сессию, затем отправляем */
+            prepareOAuthSender().send(message);
+            //TODO: spring mail sender пока не используем. Нужен конкретный механизм отключения PLAIN LOGIN
+            //mailSender.send(message);
         } catch (IOException | MessagingException | TemplateException ex){
             result = Boolean.FALSE;
             log.error("Ошибка отправки письма", ex);
@@ -555,7 +627,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     * Получение нитий сообщений конкретных Label без фильтрации и со стандартным размером
+     * Получение нитей сообщений конкретных Label без фильтрации и со стандартным размером
      * @param label
      * @return
      * @throws IOException
@@ -594,5 +666,103 @@ public class EmailServiceImpl implements EmailService {
      */
     private void refreshHistory(){
         //TODO: Добавить обновление ID последней записи в истории
+    }
+
+    /**
+     * Получение сессии нашего ключа доступа
+     * @return
+     */
+    private Session getSession(){
+        refreshTokenApi();
+//        refreshToken();
+        return OAuth2Authenticator.getSmtpSession(accessToken, true);
+    }
+
+    /**
+     * Получение корректного транспорта для обращения к SMTP GMail с XOAUTH
+     * @return
+     * @throws MessagingException
+     */
+    private SMTPTransport getTransport() throws MessagingException {
+        return OAuth2Authenticator.connectToSmtp("smtp.gmail.com", 587, senderAddress, getSession());
+    }
+
+    /**
+     * Получение свежего ключа доступа через API Google
+     */
+    private void refreshTokenApi(){
+        if(System.currentTimeMillis() > tokenExpires) {
+            try{
+                HttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+                JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+                String oauthClientId = "379305360127-98jeqeehb4k2f9jcd97atnp7levi5cbl.apps.googleusercontent.com";
+                String oauthSecret = "YA9liGGrxDsTLsxYw-u-R9g5";
+                String refreshToken = "1/u4U3ozvJuOPCRz23PDhfCYS4H0OvB06Jllmc28I-Jdc";
+
+                TokenResponse response = new GoogleRefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY, refreshToken, oauthClientId, oauthSecret).execute();
+                accessToken = response.getAccessToken();
+                tokenExpires = System.currentTimeMillis() + response.getExpiresInSeconds()*1000;
+            } catch (Throwable ex){
+                ex.printStackTrace();
+                Logger.getLogger(GmailHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * Получение свежего ключа доступа
+     */
+    private void refreshToken(){
+        //TODO: TOKEN_URL можно перенести в .properties. Проверить, можно ли использовать GMAIL API для обновления token'а
+        String oauthClientId = "379305360127-98jeqeehb4k2f9jcd97atnp7levi5cbl.apps.googleusercontent.com";
+        String oauthSecret = "YA9liGGrxDsTLsxYw-u-R9g5";
+        String refreshToken = "1/u4U3ozvJuOPCRz23PDhfCYS4H0OvB06Jllmc28I-Jdc";
+        String TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token";
+
+        if(System.currentTimeMillis() > tokenExpires) {
+            try {
+                String request = "client_id=" + URLEncoder.encode(oauthClientId, "UTF-8")
+                                 + "&client_secret=" + URLEncoder.encode(oauthSecret, "UTF-8")
+                                 + "&refresh_token=" + URLEncoder.encode(refreshToken, "UTF-8")
+                                 + "&grant_type=refresh_token";
+                HttpURLConnection conn = (HttpURLConnection) new URL(TOKEN_URL).openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestMethod("POST");
+                PrintWriter out = new PrintWriter(conn.getOutputStream());
+                out.print(request); // note: println causes error
+                out.flush();
+                out.close();
+                conn.connect();
+                try {
+                    HashMap<String,Object> result;
+                    result = new ObjectMapper().readValue(conn.getInputStream(), new TypeReference<HashMap<String,Object>>() {});
+                    accessToken = (String) result.get("access_token");
+                    tokenExpires = System.currentTimeMillis()+(((Number)result.get("expires_in")).intValue()*1000);
+                } catch (IOException e) {
+                    String line;
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                    while((line = in.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    System.out.flush();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Добавление необходимых свойств отправителю
+     */
+    private JavaMailSenderImpl prepareOAuthSender(){
+        JavaMailSenderImpl sender = (JavaMailSenderImpl) mailSender;
+        //TODO: нужно если без .properties
+//        sender.setUsername(senderAddress);
+//        sender.setHost("smtp.gmail.com");
+//        sender.setPort(587);
+        sender.setSession(getSession());
+        sender.setPassword(accessToken);
+        return sender;
     }
 }

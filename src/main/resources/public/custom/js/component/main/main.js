@@ -213,6 +213,7 @@
 					 * Видимо переход из бокового меню
 					 * @param name
 					 */
+					//TODO: перевесить на слушателя события, а само событие генерить при попытке изменения URL
 					function goto(name) {
 						// если переходим на не "Каталог", то скрываем панель
 						if(name!="catalog"  && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
@@ -420,8 +421,6 @@
 					 * Событие загрузки шаблона
 					 */
 					function afterMenuInclude() {}
-
-
 					/* подтверждение аутентификации, получение token'а */
 					//TODO: перенести в login контроллер
 					$scope.$on('onLogin', function () {
