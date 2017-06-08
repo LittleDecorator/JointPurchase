@@ -38,12 +38,14 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public void sendSimple(String to, String text){
+    public Boolean sendSimple(String to, String text){
+        Boolean result;
         SMSRuSendRequest request = new SMSRuSendRequest();
         request.setText(text);
         request.addReceiver(to);
         SMSRuSendResponse sendResponse = senderService.execute(request);
-        if (request.getStatus() == InvocationStatus.SUCCESS) {
+        result = request.getStatus() == InvocationStatus.SUCCESS;
+        if (result) {
             log.info("request was executed successfully now you can handle sendResponse");
             log.info(sendResponse.toString());
         } else {
@@ -51,6 +53,7 @@ public class SmsServiceImpl implements SmsService {
             log.info(sendResponse.toString());
         }
 //        senderService.shutdown();
+        return result;
     }
 
 }

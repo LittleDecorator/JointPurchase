@@ -168,7 +168,36 @@
                 //itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
                 itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
                 /* AUTH SECTION */
-                authRegister: $resource('/auth/register',{},{post:{method:'POST',isArray:false}}),
+                authRegister: $resource('/auth/register',{},{
+                    post:{
+                        method:'POST',
+                        isArray:false,
+                        transformResponse: function(data){
+                            console.log(data);
+                            return {result:data}
+                        }
+                    }
+                }),
+                authRegisterConfirmRequest: $resource('/auth/register/confirm/request/:type',{type:'@type'},{
+                    post:{
+                        method:'POST',
+                        isArray:false,
+                        transformResponse: function(data){
+                            console.log(data);
+                            return {result:data}
+                        }
+                    }
+                }),
+                authRegisterConfirm: $resource('/auth/register/confirm',{},{
+                    post:{
+                        method:'POST',
+                        isArray:false,
+                        transformResponse: function(data){
+                            console.log(data);
+                            return {result:angular.fromJson(data)}
+                        }
+                    }
+                }),
                 authRestore: $resource('/auth/restore',{},{post:{method:'POST',isArray:false}}),
 
                 authLogin: $resource('/auth/login',{},{

@@ -252,6 +252,20 @@ var route = {
                     requireLogin: false
                 }
             },
+            /* Страница альтернативного подтверждения регистрации */
+            {
+                name:'registrationConfirm',
+                url:'/registration/confirm',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/registrationConfirm.html',
+                        controller: 'registrationConfirmController'
+                    }
+                },
+                data: {
+                    requireLogin: false
+                }
+            },
             /* Страница результата регистрации */
             {
                 name:'registrationResult',

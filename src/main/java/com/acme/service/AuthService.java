@@ -17,7 +17,7 @@ public interface AuthService {
 
     Credential validate(SubjectCredential subjectCredential);
 
-    boolean register(RegistrationData data);
+    String register(RegistrationData data);
 
     boolean isAdmin(String username);
 
@@ -26,4 +26,6 @@ public interface AuthService {
     void restore(String login, String password) throws TemplateException, IOException, MessagingException;
 
     String decryptPassword(String password);
+
+    boolean confirmBySms(String subjectId, String phone);
 }

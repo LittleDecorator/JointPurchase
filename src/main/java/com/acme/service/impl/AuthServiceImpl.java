@@ -9,6 +9,7 @@ import com.acme.model.Subject;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.AuthService;
+import com.acme.service.ConfirmService;
 import com.acme.service.EmailService;
 import com.acme.service.SmsService;
 import com.acme.service.TokenService;
@@ -57,6 +58,9 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	SmsService smsService;
+
+	@Autowired
+	ConfirmService confirmService;
 
 	/**
 	 * Получение пользователя по логину
@@ -145,10 +149,10 @@ public class AuthServiceImpl implements AuthService {
 	 * Регистрация нового пользователя.
 	 * Новый пользователь будет не активированным, поэтому он не сможет авторизовываться.
 	 * @param data
-	 * @return
+	 * @return ID созданного субъекта (клиента)
 	 */
 	@Override
-	public boolean register(RegistrationData data) {
+	public String register(RegistrationData data) {
 		Subject subject = getSubject(data.getMail());
 		Credential credential;
 		if (subject != null) {
@@ -179,11 +183,28 @@ public class AuthServiceImpl implements AuthService {
 			credential = credentialRepository.save(credential);
 		}
 
-		// создадим token для подтверждения
-		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
-		// создадим внешнюю ссылку на наш ресурс
-		String tokenLink = HOST +"/public/auth/confirm?jwt=" + tmpToken;
-		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
+		return subject.getId();
+
+//		// создадим token для подтверждения
+//		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
+//		// создадим внешнюю ссылку на наш ресурс
+//		String tokenLink = HOST +"/public/auth/confirm?jwt=" + tmpToken;
+//		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
+	}
+
+	/**
+	 * Отправка SMS с кодом подтверждения регистрации
+	 * @param subjectId
+	 * @param phone
+	 * @return
+	 */
+	@Override
+	public boolean confirmBySms(String subjectId, String phone) {
+		Subject subject = subjectRepository.findByIdAndEnabledFalse(subjectId);
+		if (subject == null) {
+			throw new InvalidRequestException("Пользователь не запрашивал регистрацию или уже активирован", subjectId);
+		}
+		return !Boolean.FALSE.equals(smsService.sendSimple(phone, "Code: "+ confirmService.generateSmsCode(subjectId)));
 	}
 
 	/**

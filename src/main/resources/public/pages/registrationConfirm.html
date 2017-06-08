@@ -1,0 +1,48 @@
+<!--<div class="registration-card" ng-class="{send:isSend}" ng-form="registrationForm" style="width: 30%;padding: 20px;">-->
+<div class="registration-confirm-card" ng-class="{send:isSend}" style="padding: 20px;margin-bottom: 30px;">
+    <h4 style="text-align: center">Подтверждение регистрации</h4>
+
+    <div ng-if="!isSend" ng-form="registrationConfirmRequestForm">
+
+        <md-content style="background-color: rgba(0,0,0,0)">
+            <div layout="column">
+
+                <md-input-container>
+                    <label>Телефон</label>
+                    <input name="phoneNumber" ng-model="data.phone" mask="(999) 999-99-99" mask-restrict="reject">
+                    <div class="hint">Пример: (915) 343-43-45</div>
+                    <div ng-messages="registrationConfirmRequestForm.phoneNumber.$error" ng-if="!showHints">
+                        <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                    </div>
+                </md-input-container>
+
+            </div>
+        </md-content>
+
+        <div layout="column" layout-align="center center">
+            <a class="btn btn-default" ng-click="sendPhone()" ng-class="{'disabled':registrationConfirmRequestForm.$invalid || !registrationConfirmRequestForm.$dirty}" style="width: 100%">Подтвердить</a>
+        </div>
+    </div>
+
+    <div ng-if="isSend" ng-form="registrationConfirmForm">
+        <md-divider/>
+        <div class="table-container" style="text-align: center">
+            <p class="valign">На указанный Вами номер было отправленно смс с кодом подтверждения регистрации</p>
+            <div layout="column">
+
+                <md-input-container>
+                    <label class="required">Код из смс</label>
+                    <input name="code" ng-model="data.code" mask="99999" mask-restrict="reject" required>
+                    <div ng-messages="registrationConfirmForm.code.$error" ng-if="!showHints">
+                        <div ng-message="length">Указанный код не корректен</div>
+                    </div>
+                </md-input-container>
+
+            </div>
+            <div layout="column" layout-align="center center">
+                <a class="btn btn-default" ng-click="confirmCode()" ng-class="{'disabled':registrationConfirmForm.$invalid || !registrationConfirmForm.$dirty}" style="width: 100%">Отправить</a>
+            </div>
+            <md-button class="btn" ng-click="requestNew()">запросить код</md-button>
+        </div>
+    </div>
+</div>

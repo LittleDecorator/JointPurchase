@@ -17,6 +17,6 @@ public interface SmsService {
 
     void sendSimple(SMSAccount account, String from, String to, String text);
 
-    void sendSimple(String to, String text);
+    Boolean sendSimple(String to, String text);
 
 }

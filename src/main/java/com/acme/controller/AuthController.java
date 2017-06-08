@@ -14,9 +14,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -66,8 +68,24 @@ public class AuthController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public boolean registrationConfirm(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
+    public String registrationConfirm(@RequestBody RegistrationData input) throws ServletException, ParseException, UnsupportedEncodingException {
         return authService.register(input);
+    }
+
+    /**
+     * Запрос на подтверждение регистрации.
+     * Используется если если по каким-то причинам не прошла стандартная
+     * @param subjectId - ID клиента запрашивающего подтверждения регистрации
+     * @param type - тип выбранного подтверждения (sms или email). По умолчанию используется SMS
+     * @return
+     * @throws ServletException
+     * @throws ParseException
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/register/confirm/request/{type}",method = RequestMethod.POST)
+    public boolean registrationConfirm(@JsonAttribute("id") String subjectId, @JsonAttribute("phone") String phone, @PathVariable("type") String type) throws ServletException, ParseException, UnsupportedEncodingException {
+        //TODO: пока только SMS, то должно быть разделению по типу
+        return authService.confirmBySms(subjectId, phone);
     }
 
     /**

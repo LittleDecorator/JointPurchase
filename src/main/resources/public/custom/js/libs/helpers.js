@@ -22,6 +22,14 @@ var helpers = {
     return true;
     },
 
+    isPropertyNotEmpty : function(obj, propName){
+        var result = false;
+        if(obj.hasOwnProperty(propName) && obj[propName]){
+            result = true;
+        }
+        return result;
+    },
+
     dateTimeFormat : function(dateMilliseconds) {
         var YYYY, M, D,MM,DD, h,hh, m,mm, s,ss;
         var date = new Date(dateMilliseconds);

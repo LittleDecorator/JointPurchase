@@ -31,6 +31,8 @@ public interface SubjectRepository extends JpaRepository<Subject, String>, JpaSp
 
 	List<Subject> findAllByIdIn(List<String> ids);
 
+	Subject findByIdAndEnabledFalse(String subjectId);
+
 //	@Query("update Subject s set s.enabled = true where s.id = :id")
 //	@Modifying(clearAutomatically = true)
 //	@Transactional
