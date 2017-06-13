@@ -1,48 +1,67 @@
-<!--<div class="registration-card" ng-class="{send:isSend}" ng-form="registrationForm" style="width: 30%;padding: 20px;">-->
-<div class="registration-confirm-card" ng-class="{send:isSend}" style="padding: 20px;margin-bottom: 30px;">
+<div class="registration-confirm-card" ng-class="{send:vm.isSend}" style="padding: 20px;margin-bottom: 30px;">
     <h4 style="text-align: center">Подтверждение регистрации</h4>
+    <md-divider />
 
-    <div ng-if="!isSend" ng-form="registrationConfirmRequestForm">
+    <div ng-form="vm.form.registrationConfirmRequest">
 
-        <md-content style="background-color: rgba(0,0,0,0)">
-            <div layout="column">
+        <div ng-if="!vm.isSend">
 
-                <md-input-container>
-                    <label>Телефон</label>
-                    <input name="phoneNumber" ng-model="data.phone" mask="(999) 999-99-99" mask-restrict="reject">
-                    <div class="hint">Пример: (915) 343-43-45</div>
-                    <div ng-messages="registrationConfirmRequestForm.phoneNumber.$error" ng-if="!showHints">
-                        <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+            <md-content style="background-color: rgba(0,0,0,0)">
+                <div layout="column" layout-align="center center">
+
+                    <div class="table-container" style="text-align: center">
+                        <p class="valign" style="font-family: Ubuntu Condensed; letter-spacing: 0.5pt; color: #846C63;">
+                            Укажите Ваш номер телефона, для подтверждения регистрации
+                        </p>
                     </div>
-                </md-input-container>
 
+                    <md-input-container style="width: 70%; margin-top:25px">
+                        <label>Телефон</label>
+                        <input name="phoneNumber" ng-model="vm.data.phone" mask="(999) 999-99-99" mask-restrict="reject">
+                        <div class="hint">Пример: (915) 343-43-45</div>
+                        <div ng-messages="vm.form.registrationConfirmRequest.phoneNumber.$error" ng-if="!vm.showHints">
+                            <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                        </div>
+                    </md-input-container>
+
+                </div>
+            </md-content>
+
+            <div layout="column" layout-align="center center" style="margin-top: 15px">
+                <a class="btn btn-default" style="width: 30%;" ng-click="vm.sendPhone()"
+                   ng-class="{'disabled':vm.form.registrationConfirmRequest.$invalid || !vm.form.registrationConfirmRequest.$dirty}">Подтвердить</a>
             </div>
-        </md-content>
-
-        <div layout="column" layout-align="center center">
-            <a class="btn btn-default" ng-click="sendPhone()" ng-class="{'disabled':registrationConfirmRequestForm.$invalid || !registrationConfirmRequestForm.$dirty}" style="width: 100%">Подтвердить</a>
         </div>
     </div>
 
-    <div ng-if="isSend" ng-form="registrationConfirmForm">
-        <md-divider/>
-        <div class="table-container" style="text-align: center">
-            <p class="valign">На указанный Вами номер было отправленно смс с кодом подтверждения регистрации</p>
-            <div layout="column">
+    <div ng-form="vm.form.registrationConfirm">
+        <div ng-if="vm.isSend">
 
-                <md-input-container>
-                    <label class="required">Код из смс</label>
-                    <input name="code" ng-model="data.code" mask="99999" mask-restrict="reject" required>
-                    <div ng-messages="registrationConfirmForm.code.$error" ng-if="!showHints">
-                        <div ng-message="length">Указанный код не корректен</div>
-                    </div>
-                </md-input-container>
+            <div class="table-container" style="text-align: center">
+                <p class="valign">На указанный Вами номер было отправленно смс с кодом подтверждения регистрации</p>
+            </div>
+                <div layout="column" layout-align="center center" >
 
+                    <md-input-container style="width:40%;margin-bottom: 0" md-no-float class=" no-errors">
+                        <input name="code" ng-model="vm.data.code" mask="99999" mask-restrict="reject" required style="font-size: 40px;text-align: center; min-height: 50px;height: 50px">
+                    </md-input-container>
+
+                    <span class="cc-message" style="line-height: 2rem;">
+                        новый код будет выслан через:
+                        <md-icon style=" font-size: 20px; min-width: 20px; width: 20px; margin: 0 2px; padding: 2px 0px; ">update</md-icon>
+                        {{vm.timer.minutes() +" мин "+ vm.timer.seconds() +" сек"}}
+                    </span>
+
+                </div>
+                <div layout="column" layout-align="center center" style="min-height: 85px">
+                    <!--<md-button class="btn btn-small" ng-click="vm.confirmCode()" style="margin-top: 15px;width: 160px;"-->
+                    <md-button class="btn" ng-click="vm.confirmCode()" style="width: 160px;"
+                               ng-class="{'disabled':vm.form.registrationConfirm.$invalid || !vm.form.registrationConfirm.$dirty}">Отправить</md-button>
+
+
+                </div>
             </div>
-            <div layout="column" layout-align="center center">
-                <a class="btn btn-default" ng-click="confirmCode()" ng-class="{'disabled':registrationConfirmForm.$invalid || !registrationConfirmForm.$dirty}" style="width: 100%">Отправить</a>
-            </div>
-            <md-button class="btn" ng-click="requestNew()">запросить код</md-button>
         </div>
     </div>
+
 </div>

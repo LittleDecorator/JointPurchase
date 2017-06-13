@@ -9,7 +9,7 @@ var route = {
                 name: 'home',
                 url: '/',
                 views: {
-                    'main@': {
+                    'base@': {
                         templateUrl: 'pages/home.html'
                     }
                 },
@@ -245,7 +245,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/registration.html',
-                        controller: 'registrationController'
+                        controller: 'registrationController',
+	                    controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -259,7 +260,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/registrationConfirm.html',
-                        controller: 'registrationConfirmController'
+                        controller: 'registrationConfirmController',
+	                    controllerAs: 'vm'
                     }
                 },
                 data: {
@@ -273,7 +275,8 @@ var route = {
                 views: {
                     'main@': {
                         templateUrl : 'pages/registrationResult.html',
-                        controller: 'registrationResultController'
+                        controller: 'registrationResultController',
+	                    controllerAs: 'vm'
                     }
                 },
                 data: {

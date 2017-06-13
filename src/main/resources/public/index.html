@@ -57,6 +57,7 @@
     <link rel="stylesheet" href="custom/css/repeater.css">
     <link rel="stylesheet" href="custom/css/notification.css">
     <link rel="stylesheet" href="custom/css/home.css">
+    <link rel="stylesheet" href="custom/css/sections.css">
     <!-- endbuild -->
 
     <link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
@@ -79,26 +80,36 @@
 
 <body ng-app="purchase" ng-controller="mainController as mvm" class="home blog">
 
+    <!-- Боковые меню -->
     <header>
         <div ng-include="mvm.getMenuTemplateUrl()" include-callback="mvm.afterMenuInclude()"></div>
         <div ng-include="'pages/template/sideFilter.html'"></div>
     </header>
 
+    <!-- Основной контейнер -->
     <main class="main-wrapper">
-        <!-- отображение пользователя и основное меню для LG -->
+
+        <!--содержит домашнюю страницу-->
+        <div ui-view="base" class="main container template-wrapper" style="margin: 0 auto; width: 100%;"></div>
+
+        <!-- контэйнер всех остальных страниц -->
         <div class="main container" style="margin-top: 25px;padding-bottom: 0;">
+            <!-- путь навигации -->
             <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
+
             <div ui-view="main" class="template-wrapper"></div>
         </div>
-        <!-- Возврат на вверх -->
-        <gm-back-to-top gmspeed="1000" gmstyle="red lighten-2 fixed-action-btn btn-x-small"> </gm-back-to-top>
     </main>
 
+    <!-- Возврат на вверх -->
+    <gm-back-to-top gmspeed="1000" gmstyle="red lighten-2 fixed-action-btn btn-x-small"> </gm-back-to-top>
+
+    <!-- Перделка загрузки (пока выключена) -->
     <div id="spinner" class="spinner-wrapper">
         <div id="loader"></div>
     </div>
 
-    <!-- RAW INFORM PANEL -->
+    <!-- Панель уведомления, что сайт в тестовом режиме -->
     <div ng-include="'pages/fragment/informPanel.html'"></div>
 
     <!--  Scripts-->

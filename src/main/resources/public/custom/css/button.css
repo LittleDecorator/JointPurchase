@@ -134,11 +134,15 @@ md-card .md-icon-button:hover{
 }
 
 .btn.btn-small {
-    width: 70px;
+    min-width: 70px;
+    min-height: 30px;
     height: 30px;
-    padding: 0 5px;
-    font-size: 17px;
+    padding: 0 10px!important;
     line-height: 30px;
+}
+
+.btn.btn-small > span {
+	font-size: 14px!important;
 }
 
 .md-button.btn, .md-button.btn-flat {

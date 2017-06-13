@@ -1,9 +1,13 @@
-.registration-card {
+.registration-card, .registration-confirm-card {
     width: 60%;
     margin: 10% auto auto;
     padding: 10px 10px 20px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     background: white;
+}
+
+.registration-confirm-card {
+	width: 45%!important;
 }
 
 @media only screen and (min-width : 1280px){
