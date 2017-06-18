@@ -8,6 +8,7 @@ import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
 import com.acme.repository.CredentialRepository;
 import com.acme.service.AuthService;
+import com.acme.service.EmailService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
 import org.json.simple.JSONObject;
@@ -42,6 +43,9 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    private EmailService emailService;
 
     /**
      * Авторизация клиента
@@ -83,9 +87,15 @@ public class AuthController {
      * @throws UnsupportedEncodingException
      */
     @RequestMapping(value = "/register/confirm/request/{type}",method = RequestMethod.POST)
-    public boolean registrationConfirm(@JsonAttribute("id") String subjectId, @JsonAttribute("phone") String phone, @PathVariable("type") String type) throws ServletException, ParseException, UnsupportedEncodingException {
+    public boolean registrationConfirmRequest(@JsonAttribute("id") String subjectId, @JsonAttribute("phone") String phone, @PathVariable("type") String type) throws ServletException, ParseException, UnsupportedEncodingException {
         //TODO: пока только SMS, то должно быть разделению по типу
-        return authService.confirmBySms(subjectId, phone);
+        return authService.confirmRequestBySms(subjectId, phone);
+    }
+
+    @RequestMapping(value = "/register/confirm/{type}",method = RequestMethod.POST)
+    public boolean registrationConfirm(@JsonAttribute("id") String subjectId, @JsonAttribute("code") int code, @PathVariable("type") String type) throws ServletException, ParseException, UnsupportedEncodingException {
+        //TODO: пока только SMS, то должно быть разделению по типу
+        return authService.confirmBySms(subjectId, code);
     }
 
     /**

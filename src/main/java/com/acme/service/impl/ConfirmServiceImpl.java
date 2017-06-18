@@ -1,6 +1,7 @@
 package com.acme.service.impl;
 
 import com.acme.service.ConfirmService;
+import com.google.api.client.repackaged.com.google.common.base.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class ConfirmServiceImpl implements ConfirmService{
 		int code = generateSmsCode();
 		storeSmsCode(subjectId, code);
 		return code;
+	}
+
+	@Override
+	public boolean compareSmsCodes(String subjectId, int code) {
+		return Objects.equal(code, findSmsCode(subjectId));
 	}
 
 	@Override

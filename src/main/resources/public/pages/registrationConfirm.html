@@ -35,26 +35,27 @@
     </div>
 
     <div ng-form="vm.form.registrationConfirm">
-        <div ng-if="vm.isSend">
+        <div ng-if="vm.isSend && !vm.isFailed">
+            <div style="text-align: center; margin-top: 10px;margin-bottom: 25px;">
+                <span style="font-size: 1.3rem; margin: 1.14rem 0 0.912rem 0; color: #000;">Подтверждение SMS-паролем</span>
+            </div>
 
-            <div class="table-container" style="text-align: center">
+            <div class="table-container" style="text-align: center;margin-top: 0;">
                 <p class="valign">На указанный Вами номер было отправленно смс с кодом подтверждения регистрации</p>
             </div>
                 <div layout="column" layout-align="center center" >
 
                     <md-input-container style="width:40%;margin-bottom: 0" md-no-float class=" no-errors">
-                        <input name="code" ng-model="vm.data.code" mask="99999" mask-restrict="reject" required style="font-size: 40px;text-align: center; min-height: 50px;height: 50px">
+                        <input name="code" ng-model="vm.data.code" mask="99999" mask-restrict="reject" required auto-focus style="font-size: 40px;text-align: center; min-height: 50px;height: 50px">
                     </md-input-container>
 
                     <span class="cc-message" style="line-height: 2rem;">
-                        новый код будет выслан через:
-                        <md-icon style=" font-size: 20px; min-width: 20px; width: 20px; margin: 0 2px; padding: 2px 0px; ">update</md-icon>
-                        {{vm.timer.minutes() +" мин "+ vm.timer.seconds() +" сек"}}
+                        <md-icon style=" font-size: 19px; min-width: 19px; width: 19px; margin: 0 2px; padding: 2px 0px; ">access_time</md-icon>
+                        {{vm.timer.minutes() > 0 && (vm.timer.minutes() +" мин "+ vm.timer.seconds() +" сек") || vm.timer.seconds() +" сек"}}
                     </span>
 
                 </div>
-                <div layout="column" layout-align="center center" style="min-height: 85px">
-                    <!--<md-button class="btn btn-small" ng-click="vm.confirmCode()" style="margin-top: 15px;width: 160px;"-->
+                <div layout="column" layout-align="center center" style="min-height: 60px">
                     <md-button class="btn" ng-click="vm.confirmCode()" style="width: 160px;"
                                ng-class="{'disabled':vm.form.registrationConfirm.$invalid || !vm.form.registrationConfirm.$dirty}">Отправить</md-button>
 
@@ -62,6 +63,21 @@
                 </div>
             </div>
         </div>
+
+        <div ng-if="vm.isSend && vm.isFailed">
+            <div style="text-align: center; margin-top: 10px;margin-bottom: 25px;">
+                <span style="font-size: 1.3rem; margin: 1.14rem 0 0.912rem 0; color: #000;">SMS-пароль больше не работает</span>
+            </div>
+
+            <div class="table-container" style="text-align: center; margin-top: 0; margin-bottom: 20px">
+                <p class="valign">Истек срок действия пароля или пароль введен несколько раз неправильно.</p>
+            </div>
+
+            <div layout="column" layout-align="center center" >
+                <md-button class="btn" ng-click="vm.requestNew()" >Получить новый SMS-пароль</md-button>
+            </div>
+        </div>
     </div>
+
 
 </div>

@@ -91,7 +91,6 @@ public class PublicController {
 						// если пользователь уже активирован
 						res.sendRedirect(appMainPage);
 					} else {
-
 						subject.setEnabled(true);
 						subjectRepository.save(subject);
 						// если регистрация прошла успешно, то отправим письмо о результате

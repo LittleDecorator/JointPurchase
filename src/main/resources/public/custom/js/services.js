@@ -114,11 +114,10 @@
             return {
                 get: function (key) {
                     if ($window.localStorage [key]) {
-                        console.log("in get");
                         //var cart = angular.fromJson($window.localStorage [key]);
-                        var cart = $window.localStorage [key];
+                        var value = $window.localStorage [key];
                         //console.log(cart);
-                        return JSON.parse(cart);
+                        return JSON.parse(value);
                         //return cart
                     }
                     //return false;

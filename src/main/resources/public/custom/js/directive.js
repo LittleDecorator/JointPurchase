@@ -162,7 +162,7 @@
             }
         })
 
-        .directive('preventScroll', [function () {
+        .directive('preventScroll', function () {
             return {
                 restrict: 'A',
                 link: function(scope, element){
@@ -173,8 +173,18 @@
                         }
                     });
                 }
-            };
+            }
+        })
 
-    }]);
+        .directive('autoFocus', function($timeout) {
+            return {
+                restrict: 'AC',
+                link: function(_scope, _element) {
+                    $timeout(function(){
+                        _element[0].focus();
+                    }, 0);
+                }
+            };
+        });
 
 })();

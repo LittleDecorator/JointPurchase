@@ -60,9 +60,11 @@
 
     <div ng-if="vm.isSend">
         <md-divider />
-        <div class="table-container" style="text-align: center">
-            <p class="valign" style="font-family: Ubuntu Condensed; letter-spacing: 0.5pt; color: #846C63;">На указанный Вами почтовый ящик было отправленно письмо для подтверждения регистрации</p>
-            <md-button class="btn btn-small" ng-click="vm.noEmail()" style="margin-top: 15px">Не получал письма</md-button>
+        <div class="table-container" style="text-align: center;margin-top: 10px;margin-bottom: 0">
+            <p class="valign" style="font-family: Ubuntu Condensed; letter-spacing: 0.5pt; color: #000;">На указанный Вами почтовый ящик было отправленно письмо для подтверждения регистрации</p>
+            <div layout="column" layout-align="center center" style="min-height: 80px">
+                <md-button class="btn btn-small" ng-click="vm.noEmail()" style="margin-top: 15px">Не получал письма</md-button>
+            </div>
         </div>
     </div>
 </div>

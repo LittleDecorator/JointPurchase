@@ -9,6 +9,8 @@ public interface ConfirmService {
 
 	int generateSmsCode(String subjectId);
 
+	boolean compareSmsCodes(String subjectId, int code);
+
 	void storeSmsCode(String subjectId, int code);
 
 	int findSmsCode(String subjectId);

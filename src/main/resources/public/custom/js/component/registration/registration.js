@@ -7,10 +7,10 @@
 
     angular.module('registration')
         /* Контроллер регистрации */
-        .controller('registrationController',['$rootScope','$scope','$state','dataResources','$mdToast','cryptoService',
-            function($rootScope, $scope, $state, dataResources, $mdToast, cryptoService){
+        .controller('registrationController',['$rootScope','$scope','$state','dataResources','$mdToast','cryptoService','store',
+            function($rootScope, $scope, $state, dataResources, $mdToast, cryptoService, store){
 
-                $rootScope.currentUser.id = "873e2c78-2407-4093-979f-beefb03445f0";
+                // $rootScope.currentUser.id = "873e2c78-2407-4093-979f-beefb03445f0";
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
                 var vm = this;
@@ -20,8 +20,8 @@
                 vm.noEmail = noEmail;
 
 	            // флаг что заявка на регистрацию отправлена
-	            vm.isSend = helpers.isPropertyNotEmpty($rootScope.currentUser,"id");
-                vm.form = {registration:null};
+	            vm.isSend = helpers.isPropertyNotEmpty(store.get("id"));
+                vm.form = { registration:null };
                 vm.showHints = true;
 
                 // объект регистрационных данных
@@ -44,7 +44,7 @@
                                 vm.isSend = true;
                                 vm.showHints = true;
                                 // запомним свежесозданый id регистрирующегося
-                                $rootScope.currentUser.id = data.result;
+                                store.set("id",data.result);
                             }, function(error){
                                 console.log(error);
                                 vm.isSend = false;
@@ -63,10 +63,10 @@
                 }
             }])
 
-		.controller('registrationConfirmController',['$rootScope','$scope','$state','dataResources','$mdToast', '$interval',
-            function($rootScope, $scope, $state, dataResources, $mdToast, $interval){
+		.controller('registrationConfirmController',['$rootScope','$scope','$state','dataResources','$mdToast', '$interval', 'store',
+            function($rootScope, $scope, $state, dataResources, $mdToast, $interval, store){
 
-	            $rootScope.currentUser.id = "873e2c78-2407-4093-979f-beefb03445f0";
+	            // $rootScope.currentUser.id = "873e2c78-2407-4093-979f-beefb03445f0";
 	            var toast = $mdToast.simple().position('top right').hideDelay(3000);
 	            var duration = moment.duration('00:00');
 	            var oneSecond = moment.duration(1, 'seconds');
@@ -83,7 +83,8 @@
 
 	            vm.form = {registrationConfirmRequest: {}, registrationConfirm: {}};
 	            vm.showHints = true;
-	            vm.isSend = helpers.isPropertyNotEmpty($rootScope.currentUser,"id");
+	            vm.isSend = helpers.isPropertyNotEmpty(store.get("id"));
+                vm.isFailed = false;
 	            vm.timer = null;
 	            // vm.countdownTime = "#{duration.hours()}:#{duration.minutes()}:#{duration.seconds()}";
 
@@ -91,13 +92,12 @@
 	            vm.data={
 		            phone:null,
 		            code:null,
-		            id:$rootScope.currentUser.id,
+		            id: store.get("id"),
 		            type:'sms'
 	            };
 
                     // отправка запроса на регистрацию
                     function sendPhone(){
-                        console.log($scope);
                         if(vm.registrationConfirmRequest.$dirty){
                             if(vm.registrationConfirmRequest.$valid){
                                 dataResources.authRegisterConfirmRequest.post(vm.data).$promise.then(function(data){
@@ -118,6 +118,7 @@
                         if(vm.registrationConfirm.$dirty){
                             if(vm.registrationConfirm.$valid){
                                 dataResources.authRegisterConfirm.post(vm.data).$promise.then(function(data){
+                                    $interval.cancel(stopTime);
                                     vm.isSend = true;
                                     vm.showHints = true;
                                     // если код был принят, идем на страницу результата регистрации
@@ -133,9 +134,16 @@
                     }
 
                     function requestNew(){
-                        //TODO: отправка нового кода. Только после таймера.
-	                    console.log("выслан новый код")
-	                    resetCountdown();
+                        dataResources.authRegisterConfirmRequest.post(vm.data).$promise.then(function(data){
+                            vm.isSend = true;
+                            vm.isFailed = false;
+                            vm.showHints = true;
+                            console.log("выслан новый код");
+                            resetCountdown();
+                        }, function(error){
+                            vm.isSend = false;
+                            $mdToast.show(toast.textContent('Неудалось выслать код подттверждения\n'+ error.message).theme('error'));
+                        });
                     }
 
 	                function startCountdown(startTime){
@@ -144,20 +152,20 @@
 		                stopTime = $interval(function(){
 			                vm.timer = duration.subtract(oneSecond);
 			                if(duration.asSeconds() == 0){
-				                requestNew();
-
+                                $interval.cancel(stopTime);
+                                vm.isFailed = true;
 			                }
 		                }, 1000);
 	                }
 
 		            function resetCountdown(){
 			            $interval.cancel(stopTime);
-			            startCountdown(180 *1000);
+			            startCountdown(5*60*1000);
 		            }
 
 		            // стартуем таймер если был отправлен код
 	            if(vm.isSend){
-		            startCountdown(180 *1000);
+		            startCountdown(5*60*1000);
 	            }
 
             }])

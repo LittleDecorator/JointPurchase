@@ -6,13 +6,9 @@
     background: white;
 }
 
-.registration-confirm-card {
-	width: 45%!important;
-}
-
 @media only screen and (min-width : 1280px){
-    .registration-card {
-        width: 30%;
+    .registration-card, .registration-confirm-card {
+        width: 45%;
         margin-top: 15%;
     }
     .registration-card.send {
@@ -22,14 +18,14 @@
 }
 
 @media only screen and (max-width : 720px){
-    .registration-card {
+    .registration-card, .registration-confirm-card {
         width: 70%;
         margin-top: 40%;
     }
 }
 
 @media only screen and (max-width : 600px){
-    .registration-card {
+    .registration-card, .registration-confirm-card {
         /*width: 90%;*/
         width: 100%;
         margin: 10% auto auto;
@@ -38,7 +34,7 @@
 }
 
 @media only screen and (max-width : 360px){
-    .registration-card {
+    .registration-card, .registration-confirm-card {
         width: 100%;
         margin: 10% auto auto;
         background: white;

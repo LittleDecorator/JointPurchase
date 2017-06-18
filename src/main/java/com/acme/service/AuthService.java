@@ -27,5 +27,7 @@ public interface AuthService {
 
     String decryptPassword(String password);
 
-    boolean confirmBySms(String subjectId, String phone);
+    boolean confirmRequestBySms(String subjectId, String phone);
+
+    boolean confirmBySms(String subjectId, int code);
 }

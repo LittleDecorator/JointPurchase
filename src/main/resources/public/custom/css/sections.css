@@ -50,15 +50,15 @@ section::after {
 #thanks::after {
 	content: none;
 }
-#thanks div {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	z-index: 2;
-	-webkit-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
-	text-align: center;
-}
+/*#thanks div {*/
+	/*position: absolute;*/
+	/*top: 50%;*/
+	/*left: 50%;*/
+	/*z-index: 2;*/
+	/*-webkit-transform: translate(-50%, -50%);*/
+	/*transform: translate(-50%, -50%);*/
+	/*text-align: center;*/
+/*}*/
 #thanks h1 {
 	position: static;
 	-webkit-transform: translate(0, 0);

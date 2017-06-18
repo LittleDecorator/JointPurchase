@@ -20,6 +20,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,8 @@ import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
 	@Value("${app.home}")
 	String HOME;
@@ -199,12 +203,39 @@ public class AuthServiceImpl implements AuthService {
 	 * @return
 	 */
 	@Override
-	public boolean confirmBySms(String subjectId, String phone) {
+	public boolean confirmRequestBySms(String subjectId, String phone) {
 		Subject subject = subjectRepository.findByIdAndEnabledFalse(subjectId);
 		if (subject == null) {
 			throw new InvalidRequestException("Пользователь не запрашивал регистрацию или уже активирован", subjectId);
 		}
 		return !Boolean.FALSE.equals(smsService.sendSimple(phone, "Code: "+ confirmService.generateSmsCode(subjectId)));
+	}
+
+	/**
+	 * Валидация sms-пароля по запросу на регистрацию, и отправка уведомления если успех
+	 * @param subjectId
+	 * @param code
+     * @return
+     */
+	@Override
+	public boolean confirmBySms(String subjectId, int code) {
+		Subject subject = subjectRepository.findByIdAndEnabledFalse(subjectId);
+		if (subject == null) {
+			throw new InvalidRequestException("Пользователь не запрашивал регистрацию или уже активирован", subjectId);
+		}
+		boolean valid = !Boolean.FALSE.equals(confirmService.compareSmsCodes(subjectId, code));
+		if(valid){
+			try {
+				subject.setEnabled(true);
+				subjectRepository.save(subject);
+				// если регистрация прошла успешно, то отправим письмо о результате
+				emailService.sendRegistrationConfirm(subject.getEmail());
+			} catch (Exception ex){
+				logger.error("Неудалось отправить подтверждение регистрации!", ex);
+			}
+
+		}
+		return valid;
 	}
 
 	/**
