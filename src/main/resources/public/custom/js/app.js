@@ -13,8 +13,8 @@
         /**
          * Конфигуратор приложения
          */
-        .config(['$stateProvider', '$urlRouterProvider','$httpProvider','$locationProvider','$mdThemingProvider',
-            function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider, $mdThemingProvider) {
+        .config(['$stateProvider', '$urlRouterProvider','$httpProvider','$locationProvider','$mdThemingProvider','$mdIconProvider',
+            function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider, $mdThemingProvider, $mdIconProvider) {
 
                 // объявленем interceptor для каждого http запроса
                 $httpProvider.interceptors.push('authInterceptor');
@@ -38,10 +38,35 @@
                 $mdThemingProvider.theme('success','default').dark();
                 $mdThemingProvider.theme('error','default').dark();
                 $mdThemingProvider.theme('warn','default').dark();
+
+	            $mdIconProvider
+			            // .icon('share-arrow', 'img/icons/share-arrow.svg', 24)
+			            // .icon('upload', 'img/icons/upload.svg', 24)
+			            // .icon('copy', 'img/icons/copy.svg', 24)
+			            // .icon('print', 'img/icons/print.svg', 24)
+			            // .icon('hangout', 'img/icons/hangout.svg', 24)
+			            .icon('mail', 'custom/icons/email.svg', 24)
+			            .icon('message', 'custom/icons/message-text.svg', 24)
+			            .icon('vk', 'custom/icons/vk-box.svg', 24)
+			            .icon('facebook', 'custom/icons/facebook-box.svg', 24)
+			            // .icon('twitter', 'img/icons/twitter.svg', 24)
+			            .icon('instagram', 'custom/icons/instagram.svg', 24);
             }])
 
-        .run(['$state', '$rootScope', '$location','$timeout','ngDialog','$templateCache','$http', '$mdDialog',
-            function ($state, $rootScope, $location,$timeout,ngDialog , $templateCache, $http, $mdDialog) {
+        .run(['$state', '$rootScope', '$location','$timeout','ngDialog','$templateCache','$http', '$mdDialog','$templateRequest',
+            function ($state, $rootScope, $location,$timeout,ngDialog , $templateCache, $http, $mdDialog, $templateRequest) {
+
+	            var urls = [
+		            'custom/icons/instagram.svg',
+		            'custom/icons/email.svg',
+		            'custom/icons/message-text.svg',
+		            'custom/icons/vk-box.svg',
+		            'custom/icons/facebook-box.svg'
+	            ];
+
+	            angular.forEach(urls, function(url) {
+		            $templateRequest(url);
+	            });
 
                 /* попытка добавить страницу в cache */
                 // $http.get('pages/fragment/items/card/item-card-sm.html').then(function(response) {
