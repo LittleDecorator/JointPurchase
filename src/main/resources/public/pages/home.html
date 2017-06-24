@@ -1,48 +1,48 @@
-<div class="bootcards-container" id="main" ng-controller="homeController as vm" style="position: fixed; overflow: scroll; height: 100%;width: 100%">
+<div class="bootcards-container" id="main" ng-controller="homeController as vm" ng-form="vm.forms.homeForm"
+     style="position: fixed; overflow: scroll; height: 100%;width: 100%">
 
     <div class="slider fullscreen" style="position: relative;">
         <img src="data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
-        <div class="caption center-align" style="top:18%">
-            <h3 style="font-size: 3.92rem">Магазин деревянных игрушек</h3>
+        <div class="caption center-align">
+            <h3 >Магазин деревянных игрушек</h3>
             <h5 class="light grey-text text-lighten-3">только качественные и открытые игрушки</h5>
         </div>
 
-        <div class="caption center-align" style="top:50%">
-            <md-button ng-click="mvm.goto('catalog')" aria-label="dismiss cookie message" role="button" tabindex="0" class="cc-close" style="border: 2px solid; border-radius: 10px; margin: 0;font-size: 1.2rem;padding: 5px 15px">
+        <div class="caption center-align caption-action-container">
+            <md-button ng-click="mvm.goto('catalog')" aria-label="dismiss cookie message" role="button" tabindex="0" class="cc-close" >
                 Просмотреть каталог
             </md-button>
         </div>
 
-        <div class="caption center-align demo scroll-down" style="bottom:5%;top:initial">
+        <div class="center-align demo scroll-down" style="color: #fff; position: absolute; left: 15%; width: 70%; opacity: 1; transform: translateY(0px) translateX(0px);">
             <a href="#"><span></span></a>
         </div>
 
     </div>
 
-    <div id="nature" class="section demo" style="max-height: 780px;min-height: 780px">
-        <div layout="column" layout-align="center center">
-            <h2 style="font-size: 3rem;">GrimmStory - это только натуральные игрушки</h2>
-            <md-divider style="width: 60%"/>
-
-            <div layout="column" layout-align="center center" style="margin-top: 40px; width: 50%; text-align: center;">
+    <div id="nature" class="section demo">
+        <div layout="column" layout-align="center center" >
+            <h2> Только натуральные игрушки</h2>
+            <md-divider ></md-divider>
+            <div layout="column" layout-align="center center" class="main-content">
                 <p>We are producing natural and sustainable wooden toys. As a result, our toys always have unique markings since wood grain has changing structures and colours which serve as proof of its natural origins. The unique variations are proof of the toy’s quality and not a defect.</p>
-                <img src="../custom/img/nature.png" style="width: 120px;margin-top: 30px">
-                <md-button style="margin-top: 25px">More Information about Made by Nature</md-button>
-                <md-divider style="width: 55%; margin-top: 15px"/>
+                <img src="../custom/img/nature.png">
+                <md-button aria-label="show nature info">More Information about Made by Nature</md-button>
+                <md-divider ></md-divider>
             </div>
 
-            <div layout="column" layout-align="center center" style="margin-top: 40px; width: 75%; text-align: center;">
+            <div layout="column" layout-align="center center" class="sub-content">
 
-                <div layout="row" layout-align="center start">
-                    <div style="margin-top: 30px; margin-right: 50px" flex>
+                <div layout="row" layout-xs="column" layout-align="center start">
+                    <div flex>
                         <img src="../custom/img/farbabrieb.png">
-                        <p>An outstanding and unique characteristic of all our building blocks is the velvety surface which arises because we use colour glaze that penetrates into the wood, leaving a matte finish rather than a glossy one.
+                        <p class="short-xs">An outstanding and unique characteristic of all our building blocks is the velvety surface which arises because we use colour glaze that penetrates into the wood, leaving a matte finish rather than a glossy one.
                             It may sporadically happen with new products that initially some excess colour pigments will get released which results in colour transfer. We recommend wiping the transferred surface with a wet, lint-free cloth to remove colour pigments. Our colours are non-toxic, water based stains that are absolutely harmless and tested in-depth for colour fastness in contact with saliva.</p>
 
-                        <md-button>more information</md-button>
+                        <md-button aria-label="show material info">more information</md-button>
                     </div>
 
-                    <div style="margin-top: 30px; margin-left: 50px" flex>
+                    <div flex>
                         <img src="../custom/img/pflegehinweis.png">
                         <p>If you clean our products only use a damp cloth. Please do not submerge in water and do not use disinfectant or hot water.</p>
                     </div>
@@ -51,54 +51,67 @@
             </div>
 
         </div>
+        <!--<a href="#section02"><span></span>Scroll</a>-->
     </div>
 
-    <!--TODO: добавить сюда раздел инстаграма-->
+    <!--//TODO: добавить галлерею живых фото из instagram-->
     <!--<div id="section02" class="section demo">-->
         <!--<h1>Scroll Down Button #2</h1>-->
         <!--<a href="#section03"><span></span>Scroll</a>-->
     <!--</div>-->
 
-    <div id="thanks" class="section" style="max-height: 450px;min-height: 450px">
+    <div id="subscribe" class="section">
 
         <div layout="column" layout-align="center center">
-            <h2 style="font-size: 2.5rem;margin-bottom: 10px;">Подпишись на наши новости!</h2>
-            <md-divider style="width: 60%"/>
-            <span style="margin-top: 20px">Interested in announcements about coupons, sales, new arrivals, contests, and informative articles about parenting?</span>
+            <h2>Подпишись на наши новости!</h2>
+            <md-divider ></md-divider>
 
-            <div layout="row" layout-xs="column" layout-align="center start" style="margin-top: 25px;width: 100%;padding-top: 10px">
-                <md-input-container style="margin-top: 0;margin-right: 1%;width: 16%">
-                    <input name="email" placeholder="Email" ng-model="mvm.newsletter" ng-pattern="/^.+@.+\..+$/" >
-                    <div ng-messages="vm.forms.step2.email.$error" ng-if="!vm.showHints">
-                        <div ng-message-exp="['pattern']">Не корректный e-mail</div>
-                    </div>
-                </md-input-container>
-                <md-button class="waves-effect waves-green btn">Подписаться</md-button>
+            <div layout="column" layout-align="center start" class="main-content">
+
+                <span>Interested in announcements about coupons, sales, new arrivals, contests, and informative articles about parenting?</span>
+
+                <div id="action-container" layout="row" layout-xs="column" layout-align="center start" >
+                    <md-input-container md-no-float>
+                        <input name="email" placeholder="Email" ng-model="mvm.newsletter" ng-pattern="/^.+@.+\..+$/" >
+                        <div ng-messages="vm.forms.homeForm.email.$error" ng-if="!vm.showHints">
+                            <div ng-message-exp="['pattern']">Не корректный e-mail</div>
+                        </div>
+                    </md-input-container>
+                    <md-button class="waves-effect waves-green btn btn-100" ng-click="vm.subscribe()" aria-label="subscribe new one">Подписаться</md-button>
+                </div>
+
             </div>
 
-            <div>
+            <div id="link-group" style="margin-top: 15px">
                 <md-list flex layout="row" layout-align="center center">
                     <md-list-item ng-repeat="link in vm.links">
-                        <div style="min-width: 50px; width: 50px;height: 50px;">
-                            <md-button class="md-grid-item-content" ng-click="vm.linkClick($index)" style="width: 50px; min-width: 50px; margin: 0; padding: 0;height: 50px;">
+                        <div class="wrapper" style="">
+                            <md-button class="md-grid-item-content" ng-click="vm.linkClick($index)" aria-label="external transition">
                                 <md-icon md-svg-src="{{link.icon}}"></md-icon>
                             </md-button>
                         </div>
                     </md-list-item>
                 </md-list>
             </div>
-            <md-divider style="width: 70%"/>
-            <div>
-                <md-list flex layout="row" layout-align="center center">
-                    <md-list-item ng-repeat="menu in vm.menus">
-                        <div>
-                            <md-button class="md-grid-item-content" ng-click="vm.menuClick($index)">
-                                <div class="md-grid-text"> {{ menu.name }} </div>
-                            </md-button>
-                        </div>
-                    </md-list-item>
-                </md-list>
+
+            <md-divider style="margin-top: 30px"></md-divider>
+
+            <div layout="column" layout-align="center start" class="main-content" style="width: 80%; margin-top: 30px">
+
+                <div style="width: 100%">
+                    <md-list flex layout="row" layout-xs="column" layout-align="center center">
+                        <md-list-item ng-repeat="menu in vm.menus">
+                            <div>
+                                <md-button class="md-grid-item-content" ng-click="vm.menuClick($index)" aria-label="transition to page">
+                                    <div class="md-grid-text"> {{ menu.name }} </div>
+                                </md-button>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </div>
+
             </div>
+
         </div>
     </div>
 

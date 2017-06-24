@@ -199,7 +199,7 @@
 					 * @param idx
 					 */
 					//TODO: возможно стоит перенести в CartController
-					function removeFromCart(idx) {
+					function removeFromCart(idx){
 						var item_cou = mvm.cart.content[idx].cou;
 						mvm.cart.content.splice(idx, 1);
 						mvm.cart.cou = mvm.cart.cou - item_cou;
@@ -215,21 +215,9 @@
 					 */
 					//TODO: перевесить на слушателя события, а само событие генерить при попытке изменения URL
 					function goto(name) {
-						// если переходим на не "Каталог", то скрываем панель
-						if(name!="catalog"  && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
-							mvm.lockSideFilter = false;
-							$mdSidenav('left').close();
-						}
 						//закрываем панель меню
 						$mdSidenav('menu').close().then(function(){
-							// после того как перешли
-							$state.go(name).then(function() {
-								//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
-								var shouldLock = (name == 'catalog' && mvm.width > 1530);
-								if(shouldLock!=mvm.lockSideFilter){
-									mvm.lockSideFilter = shouldLock;
-								}
-							})
+							$state.go(name);
 						});
 					}
 
@@ -251,7 +239,6 @@
 					 * @param id
 					 */
 					function itemView(id) {
-						console.log("itemView");
 						$state.go("catalog.detail", {itemId: id});
 					}
 
@@ -267,7 +254,6 @@
 					 * нажатие кнопки поиск
 					 */
 					function searchItem (){
-						console.log("searchItem");
 						if(mvm.search.criteria){
 							// обновляем state т.к имя могло измениться
 							if($state.current == 'search'){
@@ -451,10 +437,21 @@
 								});
 					});
 
-					/* инициализация swipebox и отложеных компонентов */
-					// $timeout(function () {
-					// 	$('.swipebox').swipebox();
-					// }, 10);
+					$scope.$on('onSideHide', function () {
+
+						var isCatalog = eventService.data;
+						// если переходим на не "Каталог", то скрываем панель
+						if(!isCatalog  && ($mdSidenav('left').isOpen() || $mdSidenav('left').isLockedOpen)){
+							mvm.lockSideFilter = false;
+							$mdSidenav('left').close();
+						}
+						
+						//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
+						var shouldLock = (isCatalog && mvm.width > 1530);
+						if(shouldLock!=mvm.lockSideFilter){
+							mvm.lockSideFilter = shouldLock;
+						}
+					});
 
 					init();
 

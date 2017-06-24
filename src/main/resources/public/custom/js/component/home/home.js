@@ -12,6 +12,7 @@
 
 	        vm.linkClick = linkClick;
 	        vm.menuClick = menuClick;
+	        vm.subscribe = subscribe;
 
 	        vm.links = [
 		        { icon: 'mail' },
@@ -26,16 +27,22 @@
 		        { name: 'О нас'},
 		        { name: 'Контакты'},
 		        { name: 'Доставка'},
-		        { name: 'Акции'},
+		        { name: 'Акции'}
 	        ];
+			
+			vm.forms = {};
 
 	        function linkClick($index) {
-		        // var clickedLink = vm.links[$index];
+		        //TODO: add opened socials in new tab
 	        }
 
 	        function menuClick($index) {
-
+				//TODO: add transition to pages
 	        }
+			
+			function subscribe(){
+				//TODO: add subscribe logic
+			}
 
         }]);
 })();

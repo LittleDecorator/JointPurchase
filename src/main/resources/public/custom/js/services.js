@@ -360,7 +360,6 @@
                 },
                 onFilter: function(data){
                     this.data = data;
-                    console.log("in eventService");
                     $rootScope.$broadcast('onFilter');
                 },
                 onCategoryClssSelected: function(data){
@@ -373,6 +372,10 @@
                 },
                 onSearchHide: function(){
                     $rootScope.$broadcast('onSearchHide');
+                },
+                onSideHide: function(data){
+                    this.data = data;
+                    $rootScope.$broadcast('onSideHide');
                 }
             }
         }])

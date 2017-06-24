@@ -57,6 +57,10 @@ td > a > .material-icons{
     color: white;
 }
 
+.btn.btn-100 {
+    width: 100%;
+}
+
 /* CHIPS */
 
  .category-chips md-chip {

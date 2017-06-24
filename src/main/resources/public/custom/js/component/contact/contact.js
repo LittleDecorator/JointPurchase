@@ -77,7 +77,6 @@
                  */
                 function afterInclude(){
                     $timeout(function() {
-                        console.log($scope);
                         load();
                     }, 500);
                 }

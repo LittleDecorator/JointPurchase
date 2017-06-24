@@ -13,8 +13,8 @@
         /**
          * Конфигуратор приложения
          */
-        .config(['$stateProvider', '$urlRouterProvider','$httpProvider','$locationProvider','$mdThemingProvider','$mdIconProvider',
-            function ($stateProvider, $urlRouterProvider,$httpProvider,$locationProvider, $mdThemingProvider, $mdIconProvider) {
+        .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', '$mdIconProvider',
+            function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider, $mdIconProvider) {
 
                 // объявленем interceptor для каждого http запроса
                 $httpProvider.interceptors.push('authInterceptor');
@@ -40,11 +40,6 @@
                 $mdThemingProvider.theme('warn','default').dark();
 
 	            $mdIconProvider
-			            // .icon('share-arrow', 'img/icons/share-arrow.svg', 24)
-			            // .icon('upload', 'img/icons/upload.svg', 24)
-			            // .icon('copy', 'img/icons/copy.svg', 24)
-			            // .icon('print', 'img/icons/print.svg', 24)
-			            // .icon('hangout', 'img/icons/hangout.svg', 24)
 			            .icon('mail', 'custom/icons/email.svg', 24)
 			            .icon('message', 'custom/icons/message-text.svg', 24)
 			            .icon('vk', 'custom/icons/vk-box.svg', 24)
@@ -53,8 +48,8 @@
 			            .icon('instagram', 'custom/icons/instagram.svg', 24);
             }])
 
-        .run(['$state', '$rootScope', '$location','$timeout','ngDialog','$templateCache','$http', '$mdDialog','$templateRequest',
-            function ($state, $rootScope, $location,$timeout,ngDialog , $templateCache, $http, $mdDialog, $templateRequest) {
+        .run(['$state', '$rootScope', '$location', '$templateRequest', 'ngDialog','$mdDialog', 'eventService',
+            function ($state, $rootScope, $location, $templateRequest, ngDialog ,$mdDialog, eventService) {
 
 	            var urls = [
 		            'custom/icons/instagram.svg',
@@ -79,9 +74,10 @@
                 var dialog = null;
 
                 /**
-                 * Слушатель события успешного изменения адреса
+                 * Слушатель события успешного изменения URL
                  */
-                $rootScope.$on('$locationChangeSuccess', function (event, toState, toParams) {
+                $rootScope.$on('$locationChangeSuccess', function (event, toState, fromState, toParams, fromParams) {
+
                     //TODO: почистить метод. Возможное использование - spinner
                     //hide side menu filter
                     // var slider = $('.slide-outt');
@@ -95,6 +91,15 @@
 
                     $rootScope.actualLocation = $location.$$url;
 
+                    // проверим должна ли быть доступна боковая панель (игнорируются переходы НЕ с/на страницу каталога)
+                    var fromCatalog = fromState.indexOf("catalog") !== -1;
+                    var toCatalog = toState.indexOf("catalog") !== -1;
+                    if(fromCatalog){
+                        if(!toCatalog) eventService.onSideHide(false);
+                    } else {
+                        if(toCatalog) eventService.onSideHide(true);
+                    }
+
                     //$timeout(function() {
                     //    $("#spinner").fadeTo(800, 0, function(){ $(this).hide()});
                     //},10);
@@ -102,9 +107,11 @@
                 });
 
                 /**
-                 * Слушатель события попытки изменения адреса
+                 * Слушатель события попытки изменения URL
                  */
-                $rootScope.$on('$locationChangeStart', function(event){
+                $rootScope.$on('$locationChangeStart', function(event, toState, toParams, fromState, fromParams){
+
+                    /* Закрываем все диалоговые окна */
                     var isNgDialogOpen = ngDialog.getOpenDialogs().length > 0;
                     var isMdDialogOpen = angular.element(document.body).hasClass('md-dialog-is-showing');
 
@@ -118,10 +125,11 @@
                         $mdDialog.cancel();
                         event.preventDefault();
                     }
+
                 });
 
                 /**
-                 * Слушатель события начала изменения state.
+                 * Слушатель события начала изменения STATE.
                  *
                  * Если token просрочен или клиент не авторизован, тогда сбрасываем все данные и отправляем на главную страницу
                  */
@@ -147,6 +155,9 @@
                     }
                 });
 
+                /**
+                 * Наблюдатель возврата на предыдущую страницу
+                 */
                 $rootScope.$watch(
                     function () {
                         return $location.path()
@@ -154,7 +165,6 @@
                     function (newLocation, oldLocation) {
                         $rootScope.newLocation = newLocation;
                         $rootScope.oldLocation = oldLocation;
-                        //console.log("actual -> "+$rootScope.actualLocation);
                         if ($rootScope.actualLocation == newLocation) {
                             $rootScope.$broadcast('locBack', true);
                         }

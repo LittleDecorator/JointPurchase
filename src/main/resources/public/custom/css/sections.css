@@ -5,33 +5,7 @@
 html, body {
 	height: 100%;
 }
-.section {
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
-section::after {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	content: '';
-	width: 100%;
-	height: 80%;
-	background: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
-	background: linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 80%,rgba(0,0,0,.8) 100%);
-}
-.section h1 {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	z-index: 2;
-	-webkit-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
-	color: #fff;
-	font : normal 300 64px/1 'Josefin Sans', sans-serif;
-	text-align: center;
-	white-space: nowrap;
-}
+
 
 #section01 { background: url(http://www.nxworld.net/codepen/css-scroll-down-button/bg01.jpg) center center / cover no-repeat;}
 #section02 { background: url(http://www.nxworld.net/codepen/css-scroll-down-button/bg02.jpg) center center / cover no-repeat;}
@@ -44,40 +18,7 @@ section::after {
 #section09 { background: url(http://www.nxworld.net/codepen/css-scroll-down-button/bg09.jpg) center center / cover no-repeat;}
 #section10 { background: url(http://www.nxworld.net/codepen/css-scroll-down-button/bg10.jpg) center center / cover no-repeat;}
 
-#thanks {
-	background-color: #fff;
-}
-#thanks::after {
-	content: none;
-}
-/*#thanks div {*/
-	/*position: absolute;*/
-	/*top: 50%;*/
-	/*left: 50%;*/
-	/*z-index: 2;*/
-	/*-webkit-transform: translate(-50%, -50%);*/
-	/*transform: translate(-50%, -50%);*/
-	/*text-align: center;*/
-/*}*/
-#thanks h1 {
-	position: static;
-	-webkit-transform: translate(0, 0);
-	transform: translate(0, 0);
-	margin-bottom: 60px;
-	color: #333;
-}
-#thanks p {
-	color: #333;
-	font : normal 400 20px/1 'Josefin Sans', sans-serif;
-}
-#thanks p a {
-	color: #333;
-	text-decoration: none;
-	transition: color .3s;
-}
-#thanks p a:hover {
-	color: #888;
-}
+
 .demo a {
 	position: absolute;
 	bottom: 20px;
