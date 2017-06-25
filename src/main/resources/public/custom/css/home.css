@@ -77,11 +77,10 @@
 
 }
 
-.fullscreen > img {
+#base {
     height: 100%;
     width: 100%;
-    background: url(../img/IMG_3287.JPG) center;
-    background-size: cover;
+    background: url(../img/rainbow.png) center center / cover no-repeat;
 }
 
 /* Дополнительный секции */
@@ -202,7 +201,7 @@ section::after {
 
     /* Секция подписки */
     #subscribe.section {
-        min-height: 550px;
+        min-height: 600px;
         height: auto;
     }
 

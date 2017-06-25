@@ -4,7 +4,7 @@ USER="@deb.user.name@"
 NAME="@project.final.name@"
 PATH_TO_JAR="@deb.lib.path@/${NAME}.jar"
 
-PIDFILE="var/run/${NAME}.pid"
+PIDFILE="/run/${NAME}.pid"
 STATUS_CMD="pgrep -U ${USER} -fn ${PATH_TO_JAR}"
 
 VM_OPTIONS_CONFIG="@deb.config.path@/application.vmoptions"
@@ -39,8 +39,7 @@ case $1 in
         if [ ! -f ${PIDFILE} ]; then
             echo "Starting ${NAME} ..."
 #            nohup sudo -u ${USER} java ${JAVA_ARGS} -jar ${PATH_TO_JAR} 1>>${ERR_LOG} >> ${OUT_LOG} 2>&1 &
-            nohup sudo -u ${USER} java ${JAVA_ARGS} -jar ${PATH_TO_JAR} 1>>${OUT_LOG} 2>&1 &
-                        echo $! > ${PIDFILE}
+            nohup sudo -u ${USER} java ${JAVA_ARGS} -jar ${PATH_TO_JAR} 1>>${OUT_LOG} 2>&1 & echo $! > ${PIDFILE}
 
             sleep 1
             eval "${STATUS_CMD}" > ${PIDFILE}

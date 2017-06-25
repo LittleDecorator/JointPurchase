@@ -28,6 +28,10 @@ public class ElasticSearchConfig implements DisposableBean {
 
 //    @Autowired
 //    private ElasticsearchProperties properties;
+
+    @Value("${spring.data.elasticsearch.path.home}")
+    private String path;
+
     @Value("${spring.data.elasticsearch.clusterName}")
     private String nodeName;
 
@@ -50,7 +54,8 @@ public class ElasticSearchConfig implements DisposableBean {
                     .local(false)
             ;
             nodeBuilder.settings()
-                    .put("path.home", "target/elastic")
+//                    .put("path.home", "target/elastic")
+                    .put("path.home", path)
                     .put("http.enabled", true)
             ;
             this.client = (NodeClient)nodeBuilder.node().client();

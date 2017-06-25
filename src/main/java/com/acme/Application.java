@@ -80,43 +80,6 @@ public class Application extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Redirect HTTP to HTTPS
-     * @return
-     */
-    @Bean
-    @Profile("release")
-    public EmbeddedServletContainerFactory servletContainer() {
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
-            @Override
-            protected void postProcessContext(Context context) {
-                SecurityConstraint securityConstraint = new SecurityConstraint();
-                securityConstraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
-                securityConstraint.addCollection(collection);
-                context.addConstraint(securityConstraint);
-            }
-        };
-
-        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
-        return tomcat;
-    }
-
-    /**
-     * Инициализация коннестора и переадресация на secure port
-     * @return
-     */
-    private Connector initiateHttpConnector() {
-        System.out.println("MUST NOT ENTER IN DEVELOP");
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-        connector.setScheme("http");
-        connector.setPort(8080);
-        connector.setSecure(false);
-        connector.setRedirectPort(8443);
-        return connector;
-    }
-
-    /**
      * Так мы можем резолвить входящие параметры
      * @param argumentResolvers
      */
