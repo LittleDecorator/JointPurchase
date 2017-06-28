@@ -35,7 +35,7 @@ module.exports = function(grunt) {
 
         uglify: {
             options: {
-                //beautify: true,
+                // beautify: true,
                 //mangle: true
                 mangle: false
             }
