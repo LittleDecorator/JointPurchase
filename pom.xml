@@ -118,6 +118,16 @@
             <artifactId>sms-sender</artifactId>
             <version>0.1.1</version>
         </dependency>
+	    <dependency>
+		    <groupId>com.plivo</groupId>
+		    <artifactId>plivo-java</artifactId>
+		    <version>3.0.9</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.twilio.sdk</groupId>
+		    <artifactId>twilio</artifactId>
+		    <version>(7.11.0,7.12.0]</version>
+	    </dependency>
 
         <!-- JWT-->
         <dependency>
