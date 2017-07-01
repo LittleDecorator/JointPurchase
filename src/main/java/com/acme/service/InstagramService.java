@@ -1,15 +1,20 @@
 package com.acme.service;
 
-import com.acme.model.dto.instagram.UserInfo;
+import com.acme.model.dto.InstagramPostDto;
+import com.acme.model.InstagramUser;
+
+import java.util.List;
 
 /**
  * Created by nikolay on 26.06.17.
  */
 public interface InstagramService {
 
-    UserInfo getSelf(String accessToken);
+    InstagramUser getSelf(String accessToken);
 
-    UserInfo getUser(String userId, String accessToken);
+    InstagramUser getUser(String userId, String accessToken);
 
-    String getRecentMedia(String userId, String accessToken);
+    List<InstagramPostDto> getRecent(String userId, String accessToken);
+
+    List<InstagramPostDto> parseRecent(String input);
 }

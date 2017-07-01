@@ -25,6 +25,8 @@ public class ImageServiceImpl implements ImageService {
 
     private static final String BASE = "data:image/jpeg;base64,";
 
+    //TODO: добавить чтение по URL
+
     @Cacheable(value = "decode")
     public BufferedImage decodeToImage(String imageString) throws IOException {
         byte[] imageByte = Base64.decodeBase64(imageString);

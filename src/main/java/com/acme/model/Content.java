@@ -24,6 +24,12 @@ public class Content implements BaseModel{
     @Column(name = "is_default")
     private boolean isDefault;
 
+    @Column(name = "is_instagram")
+    private boolean isInstagram;
+
+    @Column(name = "is_profile")
+    private boolean isProfile;
+
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
 
@@ -93,5 +99,19 @@ public class Content implements BaseModel{
         isDefault = aDefault;
     }
 
+    public boolean isInstagram() {
+        return isInstagram;
+    }
 
+    public void setInstagram(boolean instagram) {
+        isInstagram = instagram;
+    }
+
+    public boolean isProfile() {
+        return isProfile;
+    }
+
+    public void setProfile(boolean profile) {
+        isProfile = profile;
+    }
 }
