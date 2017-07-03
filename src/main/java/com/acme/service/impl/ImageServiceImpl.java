@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -25,7 +26,13 @@ public class ImageServiceImpl implements ImageService {
 
     private static final String BASE = "data:image/jpeg;base64,";
 
-    //TODO: добавить чтение по URL
+    public byte[] downloadImage(String url, String type) throws IOException {
+        URL imageURL = new URL(url);
+        BufferedImage originalImage = ImageIO.read(imageURL);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(originalImage, type, baos);
+        return baos.toByteArray();
+    }
 
     @Cacheable(value = "decode")
     public BufferedImage decodeToImage(String imageString) throws IOException {

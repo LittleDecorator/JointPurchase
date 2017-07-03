@@ -1,5 +1,6 @@
 package com.acme.model;
 
+import com.google.common.collect.Lists;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class InstagramPost implements BaseModel {
     private String externalUrl;
 
     @Column(name = "create_time")
-    private Long createTime;
+    private Date createTime;
 
     @Column(name = "user_has_liked")
     private Boolean userHasLiked;
@@ -43,7 +44,7 @@ public class InstagramPost implements BaseModel {
     private Integer likesCount;
 
     @Column(name = "tags")
-    private List<String> tags;
+    private String tags;
 
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
@@ -89,12 +90,12 @@ public class InstagramPost implements BaseModel {
         this.externalUrl = externalUrl;
     }
 
-    public Long getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
+        this.createTime = new Date(createTime);
     }
 
     public Boolean getUserHasLiked() {
@@ -114,11 +115,11 @@ public class InstagramPost implements BaseModel {
     }
 
     public List<String> getTags() {
-        return tags;
+        return Lists.newArrayList(tags.split(";"));
     }
 
     public void setTags(List<String> tags) {
-        this.tags = tags;
+        this.tags = String.join(";",tags);
     }
 
     public Date getDateAdd() {

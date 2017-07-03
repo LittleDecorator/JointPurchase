@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/content")
@@ -123,6 +124,16 @@ public class ContentController{
             }
         }
         return result;
+    }
+
+    /**
+     * Возвращает ID изображений инстаграмма
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/instagram", method = RequestMethod.GET)
+    public List<String> getInstgaramImages() throws Exception {
+        return contentRepository.findAllByIsInstagramTrue().stream().map(Content::getId).collect(Collectors.toList()).subList(0,15);
     }
 
     /**

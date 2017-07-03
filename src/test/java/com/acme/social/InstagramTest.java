@@ -34,14 +34,14 @@ Client Status Sandbox Mode*/
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         InstagramTest test = new InstagramTest();
-//        test.self();
+        test.self();
 //        test.recent();
 //        test.parseResentTest();
-        test.downloadImage("/tmp/download.jpg","https://scontent.cdninstagram.com/t51.2885-15/e35/19379947_138472530061616_3467529966546059264_n.jpg");
+//        test.downloadImage("/tmp/download.jpg","https://scontent.cdninstagram.com/t51.2885-15/e35/19379947_138472530061616_3467529966546059264_n.jpg");
     }
 
     private void self(){
-        String accessToken = "1790249622.d721e87.e79398d1cdcc450492f7d8e115c999a6";
+        String accessToken = "1790249622.d721e87.87db8e7f779244edb7e47f52e65ec424";
         RestTemplate template = new RestTemplate();
         String selfUrl = "https://api.instagram.com/v1/users/self/?access_token=" + accessToken;
         try{
@@ -85,3 +85,18 @@ Client Status Sandbox Mode*/
     }
 
 }
+
+
+/*
+* {
+    "meta": {
+        "code": 400,
+        "error_type": "OAuthAccessTokenException",
+        "error_message": "The access_token provided is invalid."
+    }
+}*/
+
+
+
+/*curl -F 'client_id=d721e87b653045fc86c303af04703e06' -F 'client_secret=3adbd57d908445be9b241919e8df6166' -F 'grant_type=authorization_code' -F 'redirect_uri=https://grimmstory.ru' -F 'code=06d7a34c48a4460283683ba13ae29042' https://api.instagram.com/oauth/access_token
+*/

@@ -311,6 +311,11 @@
                             delete:{method:'DELETE',isArray:false}
                         }
                     )
+                },
+                instagram:{
+                    image: $resource('/content/instagram',{},{
+                        all:{method:"GET", isArray:true}
+                    }),
                 }
             }
         }])

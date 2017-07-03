@@ -6,13 +6,14 @@
     'use strict';
 
     angular.module('home')
-        .controller('homeController',['$scope', function ($scope) {
+        .controller('homeController',['$scope','dataResources', function ($scope, dataResources) {
 
 	        var vm = this;
 
 	        vm.linkClick = linkClick;
 	        vm.menuClick = menuClick;
 	        vm.subscribe = subscribe;
+	        vm.loadImages = loadImages;
 
 	        vm.links = [
 		        { icon: 'mail' },
@@ -31,6 +32,8 @@
 	        ];
 			
 			vm.forms = {};
+			
+			vm.images = [];
 
 	        function linkClick($index) {
 		        //TODO: add opened socials in new tab
@@ -43,6 +46,11 @@
 			function subscribe(){
 				//TODO: add subscribe logic
 			}
+			
+			function loadImages() {
+				vm.images = dataResources.instagram.image.all();
+			}
 
+			loadImages();
         }]);
 })();

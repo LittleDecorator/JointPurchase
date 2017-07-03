@@ -8,6 +8,8 @@ import java.io.OutputStream;
 
 public interface ImageService {
 
+    public byte[] downloadImage(String url, String type) throws IOException;
+
     BufferedImage decodeToImage(String imageString) throws IOException;
 
     BufferedImage getImage(byte[] binary) throws IOException;

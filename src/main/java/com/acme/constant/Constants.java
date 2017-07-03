@@ -1,7 +1,5 @@
 package com.acme.constant;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public interface Constants {
 
     String MIME_IMG = "image/jpeg";

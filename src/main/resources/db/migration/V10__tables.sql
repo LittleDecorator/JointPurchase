@@ -45,7 +45,7 @@ create table instagram_posts (
 	tags text,
 	date_add timestamp default current_timestamp,
 	primary key (id),
-	foreign key (user_id) references instagram_users,
+	foreign key (user_id) references instagram_users
 );
 
 -- таблица связи публикации с медиа
