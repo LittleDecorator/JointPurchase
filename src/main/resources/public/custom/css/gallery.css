@@ -1,4 +1,8 @@
 /* GALLERY */
+.gallery {
+    width: 80%;
+    margin: auto;
+}
 
 .title {
     position: absolute;
@@ -10,6 +14,32 @@
     justify-content: space-between;
     background: rgba(0, 0, 0, 0.4);
     padding: 5px 0;
+}
+
+.thumb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.thumb div.titleIconPanel > i, .thumb div.titleIconPanel > md-icon {
+    color: transparent;
+}
+
+.thumb:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.thumb:hover div.titleIconPanel > i, .thumb:hover div.titleIconPanel > md-icon {
+    color: white;
+    height: 48px;
+    width: 48px;
 }
 
 .title > div {
@@ -142,6 +172,16 @@ body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleB
     .box {
         width: 100%;
         padding-bottom: 100%;
+    }
+
+    .gallery.resized {
+        width: 90%;
+        margin: auto;
+    }
+
+    .gallery.resized .box {
+        width: 30%;
+        padding-bottom: 30%;
     }
 }
 @media only screen and (max-width : 600px) and (min-width : 361px) {

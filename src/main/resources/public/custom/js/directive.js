@@ -70,6 +70,16 @@
             }
         })
 
+        .directive('instagramView',function(){
+            return{
+                restrict: 'E',
+                templateUrl:'pages/template/instagramView.html',
+                link: function (scope, el, attrs) {
+                    el.replaceWith(el.children());
+                }
+            }
+        })
+
         .directive('includeCallback', function () {
             return {
                 restrict: 'A',

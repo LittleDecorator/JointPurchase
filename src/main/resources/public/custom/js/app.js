@@ -65,7 +65,7 @@
 			            .icon('message', 'custom/icons/message-text.svg', 24)
 			            .icon('vk', 'custom/icons/vk-box.svg', 24)
 			            .icon('facebook', 'custom/icons/facebook-box.svg', 24)
-			            // .icon('twitter', 'img/icons/twitter.svg', 24)
+			            .icon('bug', 'custom/icons/bug.svg', 24)
 			            .icon('instagram', 'custom/icons/instagram.svg', 24);
             }])
 
@@ -77,7 +77,8 @@
 		            'custom/icons/email.svg',
 		            'custom/icons/message-text.svg',
 		            'custom/icons/vk-box.svg',
-		            'custom/icons/facebook-box.svg'
+		            'custom/icons/facebook-box.svg',
+		            'custom/icons/bug.svg'
 	            ];
 
 	            angular.forEach(urls, function(url) {

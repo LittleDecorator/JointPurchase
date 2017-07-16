@@ -13,6 +13,7 @@
 
 					var templatePath = "pages/fragment/menu/";
 					var devNotionDialog = null;
+					var bugReportDialog = null;
 					var mvm = this;
 
 					mvm.initCart = initCart;
@@ -40,6 +41,7 @@
 					mvm.toggleSideFilter = toggleSideFilter;
 					mvm.openSearch = openSearch;
 					mvm.showDevNotion = showDevNotion;
+					mvm.showBugReport = showBugReport;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -336,16 +338,30 @@
 					/**
 					 * Открытие дилогового окна с информацией, что сайт в разработке
 					 */
-					function showDevNotion() {
+					function showDevNotion(wClass) {
 						devNotionDialog = modal({
-							templateUrl: "pages/modal/items-filter.html",
+							templateUrl: "pages/modal/develModal.html",
 							className: 'ngdialog-theme-default ' + wClass,
 							closeByEscape: true,
 							closeByDocument: true,
 							scope: $scope
 						});
 
-						filterDialog.closePromise.then(function (output) {
+						devNotionDialog.closePromise.then(function (output) {
+							if (output.value && output.value != '$escape') {}
+						});
+					}
+
+					function showBugReport(wClass) {
+						bugReportDialog = modal({
+							templateUrl: "pages/modal/bugReport.html",
+							className: 'ngdialog-theme-default ' + wClass,
+							closeByEscape: true,
+							closeByDocument: true,
+							scope: $scope
+						});
+
+						bugReportDialog.closePromise.then(function (output) {
 							if (output.value && output.value != '$escape') {}
 						});
 					}
@@ -427,6 +443,7 @@
 					 * Событие загрузки шаблона
 					 */
 					function afterMenuInclude() {}
+					
 					/* подтверждение аутентификации, получение token'а */
 					//TODO: перенести в login контроллер
 					$scope.$on('onLogin', function () {

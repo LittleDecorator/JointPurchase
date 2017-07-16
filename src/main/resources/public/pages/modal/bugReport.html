@@ -1,0 +1,25 @@
+<div layout="column" style="margin: 15px; height: 95%;">
+
+    <div class="card-panel" style="height: 100%">
+        <md-input-container flex class="md-block">
+            <label class="required">Заявитель</label>
+            <input name="email" ng-model="vm.person.email" ng-pattern="/^.+@.+\..+$/" required>
+            <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+            <div ng-messages="vm.personCard.email.$error" ng-if="!vm.showHints">
+                <div ng-message-exp="['pattern','required']">Не корректный e-mail</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Сообщение</label>
+            <textarea ng-model="vm.request.message" md-maxlength="250" md-select-on-focus></textarea>
+        </md-input-container>
+
+    </div>
+
+    <div style="justify-content: flex-end;display: flex;">
+        <md-button class="md-raised" md-no-ink aria-label="clear" ng-click="closeThisDialog()" style="margin: 2px 8px;">Закрыть</md-button>
+        <md-button md-no-ink class="md-raised btn" aria-label="send" ng-click="vm.send()">Отправить</md-button>
+    </div>
+
+</div>

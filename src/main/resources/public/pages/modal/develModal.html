@@ -1,24 +1,20 @@
-<div layout="column" style="margin: 15px; height: 95%">
+<div layout="column" style="margin: 15px; height: 95%;padding: 10px 0;">
 
     <div class="card-panel" style="height: 100%">
-        <md-input-container class="md-block ">
-            <label>Название</label>
-            <input ng-model="vm.filter.name" ng-keydown="vm.applyKeyPress($event)">
-        </md-input-container>
-
-        <md-input-container class="md-block ">
-            <label>Артикул</label>
-            <input ng-model="vm.filter.article" ng-keydown="vm.applyKeyPress($event)">
-        </md-input-container>
-
-        <md-input-container class="md-block ">
-            <label>Производитель</label>
-            <md-select ng-model="vm.filter.company" placeholder="Выберите компанию ..." ng-model-options="{trackBy: '$value.id'}"  ng-keydown="vm.applyKeyPress($event)">
-                <md-option ng-repeat="company in vm.companyNames" ng-value="company">{{::company.name}}</md-option>
-            </md-select>
-        </md-input-container>
+        <md-content flex layout-padding style="padding: 0; background-color: inherit;">
+            <h4 style="margin: 0">Тестовый режим</h4>
+            <p>
+                В данный момент сайт работает в тестовом режиме. Это означает что в процессе работы могут быть некоторые ошибки или замечания.
+                Мы будем рады всем Вашим замечаниям! Пожалуйста, не стесняйтесь сообщать нам о них, это очень просто сделать.
+            </p>
+            <p>
+                В правом нижнем углу вам всегда доступна кнопка "сообщить об ошибке" (<md-icon md-svg-src="bug"></md-icon>) при нажатии на которую бет доступно окно обратной связи.
+                В данном окне необходимо заполнить поле "Описание ошибки", приложить скриншот (это ОЧЕНЬ поможет идентификации ошибки) и указать свой почтовый адрес
+                (необходимо только для не авторизованных клиентов).
+            </p>
+        </md-content>
     </div>
 
-    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+    <md-button md-raised md-no-ink aria-label="clear" ng-click="closeThisDialog()" style="margin: 6px 0;">Закрыть</md-button>
 
 </div>

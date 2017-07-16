@@ -316,7 +316,7 @@ section::after {
         height: auto;
     }
 
-    #nature.section h2{
+    #nature.section h2, #section02.section h2{
         width: 80%;
         text-align: center;
         font-size: 2.56rem;

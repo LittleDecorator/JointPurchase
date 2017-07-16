@@ -1,8 +1,10 @@
 #arrowIcon {
 	/*color: #fff;*/
 	/*padding-top: .1rem !important;*/
-	/*font-size: 2.5rem !important*/
-	font-size: 1.8rem !important;
+	width: 45px;
+	font-size: 2rem;
+	height: 30px;
+	/*font-size: 1.8rem !important;*/
 }
 
 .md-fab.docs-scroll-fab.showBackToTop {
@@ -18,11 +20,11 @@
 .md-button.md-fab.md-fab-bottom-right {
 	position: fixed;
 	right:25px;
-	bottom: 75px;
+	bottom: 95px;
 	background-color: #ff5252;
 	transition: transform .2s, -webkit-transform .2s
 }
 
-.md-button.md-fab.md-fab-bottom-right:hover {
-	background-color: #d90000
-}
+/*.md-button.md-fab.md-fab-bottom-right:hover {*/
+	/*background-color: #d90000*/
+/*}*/

@@ -53,20 +53,18 @@
         <!--<a href="#section02"><span></span>Scroll</a>-->
     </div>
 
-    <!--//TODO: добавить галлерею живых фото из instagram-->
-    <div id="section02" class="section " style="min-height: 1100px;background-color: bisque;">
+    <div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto">
         <div layout="column" layout-align="center center">
             <h2>Играй с нами в #INSTAGRAM!</h2>
             <md-divider ></md-divider>
         </div>
-        <div class="gallery" style="width: 80%;margin: auto">
+        <!--<div class="gallery resized" style="width: 80%;margin: auto">-->
+        <div class="gallery resized">
             <div class="wrap">
                 <div class="box" ng-repeat="image in vm.images">
                     <div class="boxInner">
-                        <a class="item" ng-href="media/image/{{::image}}" title="Some Title">
-                            <img ng-src="media/image/gallery/{{::image}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
-                        </a>
-                        <img-title></img-title>
+                        <img ng-src="media/image/gallery/{{::image}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
+                        <instagram-view></instagram-view>
                     </div>
                 </div>
             </div>
