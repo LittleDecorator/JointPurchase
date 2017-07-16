@@ -128,7 +128,6 @@
 
                 /* модальное окно фильтрации */
                 function openFilter(wClass) {
-                    console.log("openFilter");
                     filterDialog = modal({
                         templateUrl: "pages/modal/items-filter.html",
                         className: 'ngdialog-theme-default ' + wClass,

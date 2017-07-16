@@ -1,0 +1,24 @@
+<div layout="column" style="margin: 15px; height: 95%">
+
+    <div class="card-panel" style="height: 100%">
+        <md-input-container class="md-block ">
+            <label>Название</label>
+            <input ng-model="vm.filter.name" ng-keydown="vm.applyKeyPress($event)">
+        </md-input-container>
+
+        <md-input-container class="md-block ">
+            <label>Артикул</label>
+            <input ng-model="vm.filter.article" ng-keydown="vm.applyKeyPress($event)">
+        </md-input-container>
+
+        <md-input-container class="md-block ">
+            <label>Производитель</label>
+            <md-select ng-model="vm.filter.company" placeholder="Выберите компанию ..." ng-model-options="{trackBy: '$value.id'}"  ng-keydown="vm.applyKeyPress($event)">
+                <md-option ng-repeat="company in vm.companyNames" ng-value="company">{{::company.name}}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+    <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+
+</div>

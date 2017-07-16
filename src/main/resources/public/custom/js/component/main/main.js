@@ -12,6 +12,7 @@
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
 					var templatePath = "pages/fragment/menu/";
+					var devNotionDialog = null;
 					var mvm = this;
 
 					mvm.initCart = initCart;
@@ -38,6 +39,7 @@
 					mvm.searchKeyPress = searchKeyPress;
 					mvm.toggleSideFilter = toggleSideFilter;
 					mvm.openSearch = openSearch;
+					mvm.showDevNotion = showDevNotion;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -58,6 +60,7 @@
 					mvm.selectedItem  = null;
 					mvm.searchText    = null;
 					mvm.lockSideFilter = false;
+
 
 					/**
 					 * Обработка нажатия Enter для поиска
@@ -330,6 +333,23 @@
 						});
 					}
 
+					/**
+					 * Открытие дилогового окна с информацией, что сайт в разработке
+					 */
+					function showDevNotion() {
+						devNotionDialog = modal({
+							templateUrl: "pages/modal/items-filter.html",
+							className: 'ngdialog-theme-default ' + wClass,
+							closeByEscape: true,
+							closeByDocument: true,
+							scope: $scope
+						});
+
+						filterDialog.closePromise.then(function (output) {
+							if (output.value && output.value != '$escape') {}
+						});
+					}
+
 					/*========================== INITIALIZATION ============================*/
 
 					/**
@@ -437,6 +457,9 @@
 								});
 					});
 
+					/**
+					 * Событие необходимости скрытия боковой панели
+					 */
 					$scope.$on('onSideHide', function () {
 
 						var isCatalog = eventService.data;

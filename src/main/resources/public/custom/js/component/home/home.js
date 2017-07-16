@@ -14,6 +14,7 @@
 	        vm.menuClick = menuClick;
 	        vm.subscribe = subscribe;
 	        vm.loadImages = loadImages;
+	        vm.scrollDown = scrollDown;
 
 	        vm.links = [
 		        { icon: 'mail' },
@@ -52,5 +53,13 @@
 			}
 
 			loadImages();
+
+	        /**
+	         * Скроллирование до следующей секции
+	         */
+			function scrollDown() {
+				$('#main').animate({ scrollTop: $('#nature').offset().top - 50}, 500, 'linear');
+			}
+	        
         }]);
 })();
