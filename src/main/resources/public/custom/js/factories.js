@@ -44,6 +44,7 @@
         }])
 
         .factory('dataResources',['$resource','$filter',function($resource,$filter){
+            var xlsxContentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
             return {
 
                 catalog: {
@@ -94,26 +95,20 @@
                     post:{method:'POST',isArray:false,
                         transformRequest:function(data, headers) {
                             var result = angular.copy(data);
-                            console.log(result);
                             result.price= result.price.replace(/[^0-9]/g,'');
-                            console.log(result);
                             return angular.toJson(result);
                         },
                         transformResponse:function(data, headers){
-                            console.log(data);
                             return {result:data}
                         }
                     },
                     put:{method:'PUT',isArray:false,
                         transformRequest:function(data, headers) {
-                            console.log(data);
                             var result = angular.copy(data);
                             result.price= result.price.replace(/[^0-9]/g,'');
-                            console.log(result);
                             return angular.toJson(result);
                         },
                         transformResponse:function(data, headers){
-                            console.log(data);
                             return {result:data}
                         }
                     }
@@ -315,6 +310,22 @@
                 instagram:{
                     image: $resource('/content/instagram',{},{
                         all:{method:"GET", isArray:true}
+                    }),
+                },
+                report: {
+                    items: $resource('/report/items/:fileName',{fileName:'@fileName'},{
+                        get:{
+                            method: 'GET',
+                            isArray:false,
+                            headers: { accept: xlsxContentType },
+                            responseType: 'arraybuffer',
+                            cache: false,
+                            transformResponse: function (data) {
+                                return {
+                                    response: new Blob([data], {type: xlsxContentType})
+                                };
+                            }
+                        }
                     }),
                 }
             }

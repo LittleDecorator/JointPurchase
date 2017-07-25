@@ -16,6 +16,7 @@
                 var filterDialog = null;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
+                var downloadableBlob = null;
 
                 vm.loadData = loadData;
                 vm.addItem = addItem;
@@ -29,6 +30,7 @@
                 vm.getTemplate = getTemplate;
                 vm.scrollTop = scrollTop;
                 vm.applyKeyPress = applyKeyPress;
+                vm.exportXls = exportXls;
 
                 vm.items = [];
                 vm.companyNames = companies;
@@ -124,6 +126,15 @@
                 /* изъятие\включение в продажу */
                 function forSaleToggle(item){
                     dataResources.notForSale.toggle({itemId:item.id,notForSale:item.notForSale});
+                }
+
+                /* выгрузка товаров в excel */
+                function exportXls(){
+                    var params = angular.extend({fileName: 'каталог.xls'},vm.confirmedFilter);
+                    console.log(params);
+                    dataResources.report.items.get(params).$promise.then(function (data) {
+                        saveAs(data.response, params.fileName);
+                    });
                 }
 
                 /* модальное окно фильтрации */

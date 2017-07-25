@@ -315,12 +315,18 @@
             <version>1.2.21</version>
         </dependency>
 
-
         <!-- PLUGIN -->
         <dependency>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <version>1.4</version>
+        </dependency>
+
+        <!-- REPORT -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.16</version>
         </dependency>
 
         <!-- TEST -->
