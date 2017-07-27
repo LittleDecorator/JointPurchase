@@ -8,15 +8,15 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil', 'ngDialog',
-            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil, ngDialog) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil', 'ngDialog', 'FileUploader',
+            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil, ngDialog, FileUploader) {
 
                 var busy = false;
                 var portion = 0;
                 var filterDialog = null;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
-                var downloadableBlob = null;
+                var uploader = $scope.uploader = new FileUploader();
 
                 vm.loadData = loadData;
                 vm.addItem = addItem;
@@ -31,6 +31,7 @@
                 vm.scrollTop = scrollTop;
                 vm.applyKeyPress = applyKeyPress;
                 vm.exportXls = exportXls;
+                vm.importXls = importXls;
 
                 vm.items = [];
                 vm.companyNames = companies;
@@ -134,6 +135,37 @@
                     console.log(params);
                     dataResources.report.items.get(params).$promise.then(function (data) {
                         saveAs(data.response, params.fileName);
+                    });
+                }
+                
+                /* загрузка товаров из excel */
+                function importXls(){
+                    $('#uploadBtn').click();
+                }
+
+                /**
+                 * callback on file select
+                 */
+                uploader.onAfterAddingAll = function () {
+                    upload();
+                };
+
+                /**
+                 * загрузка файлов
+                 */
+                function upload() {
+                    console.log(uploader);
+                    var items = uploader.getNotUploadedItems();
+                    var formData = new FormData();
+
+                    angular.forEach(items, function (item, idx) {
+                        formData.append("file" + idx, item._file);
+                    });
+                    
+                    dataResources.report.items.upload(formData, function(data){
+                        angular.forEach(data, function (image) {
+                            uploader.clearQueue();
+                        });
                     });
                 }
 

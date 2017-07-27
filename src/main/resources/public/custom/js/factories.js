@@ -325,6 +325,12 @@
                                     response: new Blob([data], {type: xlsxContentType})
                                 };
                             }
+                        },
+                        upload:{
+                            method:'POST',
+                            transformRequest: function(data) { return data; },
+                            headers : { 'Content-Type' : undefined },
+                            isArray : false
                         }
                     }),
                 }

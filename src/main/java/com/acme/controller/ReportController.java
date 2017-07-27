@@ -6,18 +6,24 @@ import com.acme.repository.ItemRepository;
 import com.acme.repository.specification.ItemSpecifications;
 import com.acme.service.ReportService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +64,48 @@ public class ReportController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
+    @RequestMapping(path = "/items", method = RequestMethod.POST)
+    public void uploadItemsReport(MultipartHttpServletRequest request) {
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+
+        for(MultipartFile file : fileMap.values()){
+            if (!file.isEmpty()) {
+                String fileName = file.getOriginalFilename();
+                String type = fileName.substring(fileName.indexOf(".") + 1);
+                try{
+                    Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(file.getBytes()));
+                    Sheet datatypeSheet = workbook.getSheetAt(0);
+                    Iterator<Row> iterator = datatypeSheet.iterator();
+                    // пропускаем первую строку
+                    iterator.next();
+                    // идем по строкам
+                    while (iterator.hasNext()) {
+
+                        Row currentRow = iterator.next();
+                        Iterator<Cell> cellIterator = currentRow.iterator();
+                        // идем по столбцам
+                        while (cellIterator.hasNext()) {
+
+                            Cell currentCell = cellIterator.next();
+                            //getCellTypeEnum shown as deprecated for version 3.15
+                            //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
+                            if (currentCell.getCellTypeEnum() == CellType.STRING) {
+                                System.out.print(currentCell.getStringCellValue() + "--");
+                            } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
+                                System.out.print(currentCell.getNumericCellValue() + "--");
+                            }
+
+                        }
+                        System.out.println();
+
+                    }
+                } catch (Exception ex){
+                    ex.printStackTrace(System.out);
+                }
+
+            }
+        }
+    }
 }
