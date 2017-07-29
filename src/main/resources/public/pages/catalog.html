@@ -12,7 +12,7 @@
                 <md-card-actions layout="column" layout-align="center center">
                     <span class="md-headline">{{::item.name}}</span>
                     <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
-                    <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                    <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                 </md-card-actions>
             </md-card>
         </div>

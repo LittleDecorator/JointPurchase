@@ -155,7 +155,7 @@ section::after {
     }
 
     .section md-divider{
-        width: 60%;
+        width: 100%;
     }
 
     /* Дополнительные секции */

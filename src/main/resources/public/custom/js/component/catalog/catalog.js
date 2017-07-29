@@ -21,6 +21,7 @@
                 vm.loadData = loadData;
                 vm.itemView = itemView;
                 vm.filterBySubcategory = filterBySubcategory;
+                vm.getSubcategoryUrl = getSubcategoryUrl;
                 vm.init = init;
 
                 // используется только под администратором
@@ -41,7 +42,7 @@
                         var categoryPromise = null;
                         // сохраненый фильтр
                         var stashedFilter = localStorage.getItem($state.current.name);
-
+                        console.log(stashedFilter);
                         if ($stateParams.type == 'category') {
                             // если выбранный узел относится к Категориям
                             vm.searchFilter.category = $stateParams.id;
@@ -54,35 +55,39 @@
                         }
 
                         if (stashedFilter && stashedFilter != "undefined") {
+                            console.log('stashed');
                             vm.confirmedFilter = angular.fromJson(localStorage.getItem($state.current.name));
                             vm.confirmedFilter.offset = 0;
-                            // если был выбран узел категории, и promise не пустой, то ...
-                            if (categoryPromise != null) {
-                                categoryPromise.$promise.then(function (data) {
-                                    data.forEach(function (category) {
-                                        category.isDefault = (category.id == $stateParams.id);
-                                        vm.categories.push(category);
-                                    });
-                                    // помечаем сатегорию из фильтра, как текущую
-                                    if (vm.categories.map(function (obj, index) {
-                                            return obj.id;
-                                        }).filter(function (obj) {
-                                            return obj == vm.confirmedFilter.category;
-                                        }).length > 0) {
-                                        vm.currentCategory = vm.confirmedFilter.category;
-                                    } else {
-                                        vm.confirmedFilter.category = vm.currentCategory;
-                                    }
-                                });
-                            }
                         } else {
                             vm.confirmedFilter = angular.copy(vm.searchFilter);
                             localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
+                        }
+
+                        // если был выбран узел категории, и promise не пустой, то ...
+                        if (categoryPromise != null) {
+                            categoryPromise.$promise.then(function (data) {
+                                data.forEach(function (category) {
+                                    category.isDefault = (category.id == $stateParams.id);
+                                    vm.categories.push(category);
+                                });
+                                // помечаем сатегорию из фильтра, как текущую
+                                if (vm.categories.map(function (obj, index) {
+                                        return obj.id;
+                                    }).filter(function (obj) {
+                                        return obj == vm.confirmedFilter.category;
+                                    }).length > 0) {
+                                    vm.currentCategory = vm.confirmedFilter.category;
+                                } else {
+                                    vm.confirmedFilter.category = vm.currentCategory;
+                                }
+                            });
                         }
                     } else {
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
                         localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
                     }
+
+                    console.log(vm.confirmedFilter);
 
                     // инициируем первый запрос если просмотр с мобильника
                     if (vm.showLoadMore) {
@@ -272,6 +277,21 @@
                     $state.go("catalog.detail", {itemId: id});
                 }
 
+                /* Получения шаблона страницы */
+                function getSubcategoryUrl() {
+                    console.log('getSubcategoryUrl');
+                    var templatePath = "pages/fragment/catalog/list/";
+                    if (mvm.width < 601) {
+                        return templatePath + "subcategory-sm.html";
+                    } else {
+                        return templatePath + "subcategory-lg.html";
+                    }
+                }
+
+                // callback загрузки шаблона страницы
+                function afterInclude() {
+                }
+
                 /**
                  * Слушатель события "onFilter"
                  */
@@ -405,6 +425,8 @@
                     }
                 }
 
+
+                
                 // callback загрузки шаблона страницы
                 function afterInclude() {
                 }

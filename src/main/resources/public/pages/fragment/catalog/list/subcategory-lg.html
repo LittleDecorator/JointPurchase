@@ -1,0 +1,3 @@
+<div class="repeated-item" ng-if="vm.currentNodeType == 'category'" flex>
+    <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+</div>

@@ -55,4 +55,8 @@
     </div>
 </div>
 
-<a class="btn btn-primary" ng-click="vm.toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>
+<div style="display: flex; justify-content: space-between">
+    <!--<a class="btn btn-primary" ng-click="vm.toOrderCreation()" style="margin-top: 15px;">Перейти к оформлению заказа</a>-->
+    <md-button md-no-ink class="md-raised btn primary" aria-label="to catalog" ng-click="vm.toOrderCreation()" style="margin-top: 15px;letter-spacing: .5px;padding: 0 1em;">Перейти к оформлению заказа</md-button>
+    <md-button md-no-ink class="md-raised" aria-label="to catalog" ng-click="mvm.goto('catalog')" style="margin-top: 15px;letter-spacing: .5px;padding: 0 1em;">Продолжить покупки</md-button>
+</div>

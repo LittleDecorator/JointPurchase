@@ -1,16 +1,6 @@
 <div id="catalog" class="section" ng-cloak>
 
-    <md-toolbar ng-if="vm.currentNodeType == 'category'" style="background-color: white!important;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12); min-height: 50px">
-        <div class="md-toolbar-tools horizontal-repeater" style="padding: 0; width: 100%; background-color: white!important;">
-            <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
-                <div md-virtual-repeat="group in vm.categories" class="repeated-item" flex>
-                    <md-button class="md-raised btn md" style="margin: 0" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
-                </div>
-            </md-virtual-repeat-container>
-        </div>
-    </md-toolbar>
-
-
+    <div ng-include="vm.getSubcategoryUrl()" include-callback="vm.afterInclude()"></div>
 
     <div class="row isotope" infinite-scroll="vm.loadData()" infinite-scroll-distance='2' infinite-scroll-disabled="vm.stopLoad" style="margin: 0">
 
@@ -32,7 +22,7 @@
                             <md-card-actions layout="column" layout-align="center center">
                                 <span class="md-headline">{{::item.name}}</span>
                                 <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
-                                <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                                <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                             </md-card-actions>
 
                         </md-card>
@@ -53,7 +43,7 @@
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
                             <md-button class="md-button btn yellow darken-2" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
-                            <md-button class="md-button btn" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                            <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                         </md-card-actions>
 
                     </md-card>

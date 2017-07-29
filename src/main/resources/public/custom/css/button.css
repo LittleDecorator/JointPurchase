@@ -8,9 +8,14 @@
 }
 
 .btn:not([disabled]), .btn-large:not([disabled]):not(.md-fab):not(.btn-price) {
-    background-color:#86A8A8!important;
-    color:white !important;
+    background-color:#86A8A8;
+    color:white;
 }
+
+.primary {
+    background-color:#86A8A8!important;
+}
+
 .btn:not([disabled]):hover,
 .btn:not(.btn-price):not([disabled]):hover,
 .btn-large:not(.btn-price):not([disabled]):hover {
