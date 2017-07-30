@@ -460,6 +460,8 @@
 										dataResources.customer.get({id: decodedToken.jti}, function (data) {
 											$rootScope.currentUser.name = data.firstName;
 											$rootScope.currentUser.role = decodedToken.role;
+											//todo: нужно сделать его больше размером
+											$mdToast.show($rootScope.toast.textContent('Добро пожаловать, '+ $rootScope.currentUser.name).theme('success'));
 										});
 
 										/* store expired token */

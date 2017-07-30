@@ -8,9 +8,10 @@
     angular.module('item')
         
         /* Контроллер товара */
-        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil', 'ngDialog', 'FileUploader',
-            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil, ngDialog, FileUploader) {
+        .controller('itemController',['$scope','$state','dataResources','$timeout','companies', 'modal', '$mdUtil', 'ngDialog', 'FileUploader','$mdToast',
+            function ($scope, $state, dataResources,$timeout, companies, modal, $mdUtil, ngDialog, FileUploader, $mdToast) {
 
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
                 var busy = false;
                 var portion = 0;
                 var filterDialog = null;
@@ -135,6 +136,8 @@
                     console.log(params);
                     dataResources.report.items.get(params).$promise.then(function (data) {
                         saveAs(data.response, params.fileName);
+                    }, function(error){
+                        $mdToast.show(toast.textContent('Неудалось выгрузить список\n'+ error.message).theme('error'));
                     });
                 }
                 
@@ -163,9 +166,12 @@
                     });
                     
                     dataResources.report.items.upload(formData, function(data){
-                        angular.forEach(data, function (image) {
+                        angular.forEach(data, function (element) {
                             uploader.clearQueue();
                         });
+                        $mdToast.show(toast.textContent('Список товара успешно импортирован').theme('success'));
+                    }, function(error){
+                        $mdToast.show(toast.textContent('Неудалось импортировать список\n'+ error.message).theme('error'));
                     });
                 }
 

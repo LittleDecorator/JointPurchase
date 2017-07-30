@@ -559,3 +559,7 @@ md-sidenav#filter.md-sidenav-left {
 
 
 .scrollable { margin:10px; padding:10px; width:200px; height:100px; background:yellow; overflow-x:hidden; overflow-y:scroll; }
+
+md-toast .md-toast-content {
+    font-size: 1.2em;
+}

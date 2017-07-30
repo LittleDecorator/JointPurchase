@@ -59,10 +59,10 @@
                 // $mdThemingProvider.generateThemesOnDemand(true);
                 // $mdThemingProvider.setDefaultTheme('altTheme');
                 // $mdThemingProvider.theme('default').dark();
-                $mdThemingProvider.theme('default');
-                // $mdThemingProvider.theme('success','default').dark();
-                // $mdThemingProvider.theme('error','default').dark();
-                // $mdThemingProvider.theme('warn','default').dark();
+                // $mdThemingProvider.theme('default');
+                $mdThemingProvider.theme('success','default').dark();
+                $mdThemingProvider.theme('error','default').dark();
+                $mdThemingProvider.theme('warn','default').dark();
 
 	            $mdIconProvider
 			            .icon('mail', 'custom/icons/email.svg', 24)

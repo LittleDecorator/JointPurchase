@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -72,8 +73,6 @@ public class ReportController {
 
         for(MultipartFile file : fileMap.values()){
             if (!file.isEmpty()) {
-                String fileName = file.getOriginalFilename();
-                String type = fileName.substring(fileName.indexOf(".") + 1);
                 try{
                     Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(file.getBytes()));
                     Sheet datatypeSheet = workbook.getSheetAt(0);
@@ -82,23 +81,16 @@ public class ReportController {
                     iterator.next();
                     // идем по строкам
                     while (iterator.hasNext()) {
-
                         Row currentRow = iterator.next();
-                        Iterator<Cell> cellIterator = currentRow.iterator();
                         // идем по столбцам
-                        while (cellIterator.hasNext()) {
-
-                            Cell currentCell = cellIterator.next();
-                            //getCellTypeEnum shown as deprecated for version 3.15
-                            //getCellTypeEnum ill be renamed to getCellType starting from version 4.0
-                            if (currentCell.getCellTypeEnum() == CellType.STRING) {
-                                System.out.print(currentCell.getStringCellValue() + "--");
-                            } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-                                System.out.print(currentCell.getNumericCellValue() + "--");
-                            }
-
-                        }
-                        System.out.println();
+                        Cell idCell = currentRow.getCell(1);
+                        Cell countCell = currentRow.getCell(5);
+                        Cell priceCell = currentRow.getCell(6);
+                        // обновляем кол-во
+                        Item current = itemRepository.findOne(idCell.getStringCellValue());
+                        current.setInStock(new BigDecimal(countCell.getNumericCellValue()).intValue());
+                        current.setPrice(new BigDecimal(priceCell.getNumericCellValue()).intValue());
+                        itemRepository.save(current);
 
                     }
                 } catch (Exception ex){

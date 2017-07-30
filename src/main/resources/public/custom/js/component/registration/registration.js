@@ -105,7 +105,7 @@
                                     vm.showHints = true;
                                 }, function(error){
                                     vm.isSend = false;
-                                    $mdToast.show(toast.textContent('Неудалось выслать код подттверждения\n'+ error.message).theme('error'));
+                                    $mdToast.show(toast.textContent('Неудалось выслать код подтверждения\n'+ error.message).theme('error'));
                                 });
                             } else {
                                 vm.showHints = false;
@@ -142,7 +142,7 @@
                             resetCountdown();
                         }, function(error){
                             vm.isSend = false;
-                            $mdToast.show(toast.textContent('Неудалось выслать код подттверждения\n'+ error.message).theme('error'));
+                            $mdToast.show(toast.textContent('Неудалось выслать код подтверждения\n'+ error.message).theme('error'));
                         });
                     }
 
