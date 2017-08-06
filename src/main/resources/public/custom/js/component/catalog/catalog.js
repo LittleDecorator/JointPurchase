@@ -25,7 +25,7 @@
                 vm.init = init;
 
                 // используется только под администратором
-                vm.searchFilter = {category: null, company: null, criteria: null, offset: 0, limit: limit};
+                vm.searchFilter = {category: null, subcategory: null,company: null, criteria: null, offset: 0, limit: limit};
                 vm.items = [];
                 vm.categories = [];
                 vm.showSideFilter = false;
@@ -38,30 +38,39 @@
                 function init() {
                     // выбранный узел бокового меню
                     if (node) {
+
                         // promise получение подкатегорий
                         var categoryPromise = null;
                         // сохраненый фильтр
                         var stashedFilter = localStorage.getItem($state.current.name);
-                        console.log(stashedFilter);
+
+                        if (stashedFilter && stashedFilter != "undefined") {
+                            vm.searchFilter = angular.fromJson(localStorage.getItem($state.current.name));
+                            vm.searchFilter.offset = 0;
+                        }
+
                         if ($stateParams.type == 'category') {
                             // если выбранный узел относится к Категориям
-                            vm.searchFilter.category = $stateParams.id;
-                            vm.currentCategory = $stateParams.id;
+                            if(vm.searchFilter.category != $stateParams.id){
+                                vm.searchFilter.category = $stateParams.id;
+                                vm.searchFilter.subcategory = null;
+                                vm.currentCategory = $stateParams.id;
+                            } else {
+                                if(vm.searchFilter.subcategory!=null){
+                                    vm.currentCategory = vm.searchFilter.subcategory;
+                                } else {
+                                    vm.currentCategory = vm.searchFilter.category;
+                                }
+                            }
                             // получим все категории
                             categoryPromise = dataResources.categoryChildrenMap.get({id: $stateParams.id});
                         } else {
                             // если выбранный узел относится к Производителям
                             vm.searchFilter.company = $stateParams.id;
                         }
-
-                        if (stashedFilter && stashedFilter != "undefined") {
-                            console.log('stashed');
-                            vm.confirmedFilter = angular.fromJson(localStorage.getItem($state.current.name));
-                            vm.confirmedFilter.offset = 0;
-                        } else {
-                            vm.confirmedFilter = angular.copy(vm.searchFilter);
-                            localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
-                        }
+                        localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
+                        vm.confirmedFilter = angular.copy(vm.searchFilter);
+                        vm.confirmedFilter.category = vm.currentCategory;
 
                         // если был выбран узел категории, и promise не пустой, то ...
                         if (categoryPromise != null) {
@@ -70,24 +79,13 @@
                                     category.isDefault = (category.id == $stateParams.id);
                                     vm.categories.push(category);
                                 });
-                                // помечаем сатегорию из фильтра, как текущую
-                                if (vm.categories.map(function (obj, index) {
-                                        return obj.id;
-                                    }).filter(function (obj) {
-                                        return obj == vm.confirmedFilter.category;
-                                    }).length > 0) {
-                                    vm.currentCategory = vm.confirmedFilter.category;
-                                } else {
-                                    vm.confirmedFilter.category = vm.currentCategory;
-                                }
                             });
                         }
+                        
                     } else {
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
                         localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
                     }
-
-                    console.log(vm.confirmedFilter);
 
                     // инициируем первый запрос если просмотр с мобильника
                     if (vm.showLoadMore) {
@@ -262,9 +260,11 @@
                  */
                 function filterBySubcategory(group) {
                     vm.currentCategory = group.id;
+                    vm.searchFilter.subcategory = group.id;
+                    vm.searchFilter.offset = 0;
+                    vm.confirmedFilter = angular.copy(vm.searchFilter);
                     vm.confirmedFilter.category = group.id;
-                    vm.confirmedFilter.offset = 0;
-                    localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
+                    localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
                     vm.stopLoad = false;
                     loadData(true, group.isDefault);
                 }
@@ -279,7 +279,6 @@
 
                 /* Получения шаблона страницы */
                 function getSubcategoryUrl() {
-                    console.log('getSubcategoryUrl');
                     var templatePath = "pages/fragment/catalog/list/";
                     if (mvm.width < 601) {
                         return templatePath + "subcategory-sm.html";

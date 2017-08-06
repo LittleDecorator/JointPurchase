@@ -413,7 +413,8 @@ nav .brand-logo-lpad {
     background-color: rgb(246, 244, 241);
     bottom: 0;
     overflow: auto;
-    margin-top: 50px;
+    /*margin-top: 50px;*/
+    padding-top: 50px;
 }
 
 .slider.fullscreen {
