@@ -44,9 +44,6 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    @Autowired
-    private EmailService emailService;
-
     /**
      * Авторизация клиента
      * @param subjectCredential

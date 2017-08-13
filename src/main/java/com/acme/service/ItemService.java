@@ -5,10 +5,19 @@ import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
+import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
 
 public interface ItemService {
+
+    List<Item> getAll(CatalogFilter filter);
+
+    List<Item> getAll();
+
+    List<Item> getAllByCategory(CatalogFilter filter);
+
+    Item getItem(String itemId);
 
     List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items);
 

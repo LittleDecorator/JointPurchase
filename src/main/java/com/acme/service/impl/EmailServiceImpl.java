@@ -43,6 +43,7 @@ import com.sun.mail.smtp.SMTPTransport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -64,6 +65,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -146,7 +149,7 @@ public class EmailServiceImpl implements EmailService {
                     .encoding(Charset.forName("UTF-8"))
                     .build();
 
-            /* Параметры */
+            /* Параметры для шаблона письма*/
             Map<String, Object> paramMap = Maps.newHashMap();
             paramMap.put("fullName",subjectFullName);
             paramMap.put("site", HOME);
@@ -158,7 +161,7 @@ public class EmailServiceImpl implements EmailService {
                     .build();
 
             /* отправляем */
-            //TODO: либо можо использовать JavaMailSender
+            //TODO: либо можно использовать JavaMailSender
 //            getTransport().sendMessage(message, message.getAllRecipients());
 
             /* сперва добаляем auth токен и сессию, затем отправляем */
@@ -340,6 +343,7 @@ public class EmailServiceImpl implements EmailService {
     public Boolean sendOrderStatus(Order order){
         Boolean result = Boolean.TRUE;
         try {
+            SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             EmailBuilder builder = EmailBuilder.getBuilder();
 
             /* получаем всю информацию по заказу */
@@ -367,7 +371,7 @@ public class EmailServiceImpl implements EmailService {
                     .put("isAuth", order.getSubjectId() != null)
                     .put("cabinet_link", Constants.CABINET_LINK)
 				    /* информация о заказе */
-                    .put("orderDate", order.getDateAdd() == null ? new Date() : order.getDateAdd())
+                    .put("orderDate", DATE_FORMAT.format(order.getDateAdd() == null ? new Date() : order.getDateAdd()))
                     .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
                     .put("orderPayment", order.getPayment()+ " руб")
 				    /* данные о товаре */

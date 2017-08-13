@@ -7,7 +7,7 @@
           "name":    { "type": "string", "analyzer": "title_default_analyzer" },
           "stemmed":  { "type": "string", "analyzer": "title_snowball_analyzer" },
           "shingles": { "type": "string", "analyzer": "title_shingle_analyzer" },
-          "ngrams":   { "type": "string", "index_analyzer": "title_ngram_analyzer", "search_analyzer": "title_search_analyzer" }
+          "ngrams":   { "type": "string", "analyzer": "title_ngram_analyzer", "search_analyzer": "title_search_analyzer" }
         }
       }
     }

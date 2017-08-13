@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.5.RELEASE</version>
+        <version>1.4.7.RELEASE</version>
     </parent>
 
     <dependencies>
@@ -28,6 +28,10 @@
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>1.5.1.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,8 +41,12 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-            <version>1.5.1.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -47,11 +55,10 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- JPA -->
+        <!-- JMS -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>1.4.0.RELEASE</version>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
         </dependency>
 
         <!-- CACHE -->
@@ -182,6 +189,11 @@
             <groupId>com.pushtorefresh</groupId>
             <artifactId>javac-warning-annotation</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.4.0</version>
         </dependency>
 
         <!-- LOGGING -->
@@ -356,20 +368,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <addResources>true</addResources>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -384,7 +383,34 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <addResources>true</addResources>
-                    <jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</jvmArguments>
+                    <jvmArguments>
+                        -Xdebug
+                        -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006
+                         -XX:+DisableExplicitGC
+                         -XX:+PrintGCDetails
+                         -XX:+PrintGCApplicationStoppedTime
+                         -XX:+PrintGCApplicationConcurrentTime
+                         -XX:+PrintGCDateStamps
+                        <!--Tenuring Distribution-->
+                        -XX:+PrintTenuringDistribution
+                        <!-- Log file options -->
+                         -Xloggc:/tmp/log/gclog.log
+                         -XX:+UseGCLogFileRotation
+                         -XX:NumberOfGCLogFiles=5
+                         -XX:GCLogFileSize=2000k
+                        <!-- to increase the initial size of Metaspaces (the default is 16M);-->
+                        -XX:MetaspaceSize=100M
+                        <!-- to increase the boot class loader Metaspace;-->
+                        -XX:InitialBootClassLoaderMetaspaceSize=32M
+                        <!-- to make Metaspaces grow more agressively;-->
+                        -XX:MinMetaspaceFreeRatio=50
+                        <!-- to reduce the chance of Metaspaces shrinking;-->
+                        -XX:MaxMetaspaceFreeRatio=80
+                        <!-- the minumum size by which a Metaspace is exanded-->
+                        -XX:MinMetaspaceExpansion=4M
+                        <!--the maximum size to expand a Metaspace by without Full GC-->
+                        -XX:MaxMetaspaceExpansion=16M
+                    </jvmArguments>
                 </configuration>
                 <executions>
                     <execution>
@@ -832,5 +858,7 @@
         <elastic.path>${deb.lib.path}/elastic</elastic.path>
         <spring.profile>release</spring.profile>
         <app.ip>92.63.109.24</app.ip>
+        <!--<tomcat.version>8.5.15</tomcat.version>-->
+        <tomcat.version>8.0.36</tomcat.version>
     </properties>
 </project>

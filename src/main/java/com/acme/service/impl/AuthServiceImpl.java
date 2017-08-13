@@ -8,11 +8,7 @@ import com.acme.model.Credential;
 import com.acme.model.Subject;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
-import com.acme.service.AuthService;
-import com.acme.service.ConfirmService;
-import com.acme.service.EmailService;
-import com.acme.service.SmsService;
-import com.acme.service.TokenService;
+import com.acme.service.*;
 import com.acme.util.PasswordHashing;
 import com.google.api.client.util.Maps;
 import com.google.common.base.Strings;
@@ -58,13 +54,13 @@ public class AuthServiceImpl implements AuthService {
 	TokenService tokenService;
 
 	@Autowired
-	EmailService emailService;
-
-	@Autowired
 	SmsService smsService;
 
 	@Autowired
 	ConfirmService confirmService;
+
+	@Autowired
+	JmsService jmsService;
 
 	/**
 	 * Получение пользователя по логину
@@ -120,6 +116,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public boolean isAdmin(String username) {
+		//TODO: Сделать человеческую проверку ролей по требованию
 		return false;
 	}
 
@@ -187,13 +184,13 @@ public class AuthServiceImpl implements AuthService {
 			credential = credentialRepository.save(credential);
 		}
 
+		// создадим token для подтверждения
+		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
+		// создадим внешнюю ссылку на наш ресурс
+		String tokenLink = HOST +"/public/auth/confirm?jwt=" + tmpToken;
+		// отправляем jms для отправки письма
+		jmsService.registrationRequest(subject, data.getMail(), tokenLink);
 		return subject.getId();
-
-//		// создадим token для подтверждения
-//		String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000));
-//		// создадим внешнюю ссылку на наш ресурс
-//		String tokenLink = HOST +"/public/auth/confirm?jwt=" + tmpToken;
-//		return !Boolean.FALSE.equals(emailService.sendRegistrationToken(data.getMail(), tokenLink));
 	}
 
 	/**
@@ -225,15 +222,10 @@ public class AuthServiceImpl implements AuthService {
 		}
 		boolean valid = !Boolean.FALSE.equals(confirmService.compareSmsCodes(subjectId, code));
 		if(valid){
-			try {
-				subject.setEnabled(true);
-				subjectRepository.save(subject);
-				// если регистрация прошла успешно, то отправим письмо о результате
-				emailService.sendRegistrationConfirm(subject.getEmail());
-			} catch (Exception ex){
-				logger.error("Неудалось отправить подтверждение регистрации!", ex);
-			}
-
+			subject.setEnabled(true);
+			subjectRepository.save(subject);
+			// если регистрация прошла успешно, то отправим письмо или смс о результате
+			jmsService.registrationConfirm(subject);
 		}
 		return valid;
 	}
@@ -261,7 +253,7 @@ public class AuthServiceImpl implements AuthService {
 			String tmpToken = tokenService.createExpToken(credential, (long) (24 * 60 * 60 * 1000), claims);
 			// создадим внешнюю ссылку на наш ресурс
 			String tokenLink = HOST+"/public/auth/restore?jwt=" + tmpToken;
-			emailService.sendPassChangeToken(subject.getEmail(), tokenLink);
+			jmsService.passwordChangeRequest(subject, tokenLink);
 		}
 	}
 }

@@ -18,14 +18,19 @@ public class Node implements Serializable {
     private List<Node> nodes;
     private boolean isCompany = Boolean.FALSE;
 
+    public Node() {}
+
+    public Node(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
     public Node(String id, String title, String parentId) {
         this.id = id;
         this.title = title;
         this.items = Lists.newArrayList();
         this.parentId = parentId;
     }
-
-    public Node() {}
 
     public boolean isCompany() {
         return isCompany;

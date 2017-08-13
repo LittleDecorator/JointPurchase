@@ -117,10 +117,13 @@
 						store.set("cart", mvm.cart);
 
 						// Показываем тост и добавляем действие
-						$mdToast.show(toast).then(function(response) {
-							if ( response == 'ok' ) {
+						$mdToast.show(toast).then(function(response){
+							if(response == 'ok'){
 								goto('cart');
 							}
+						}, function(error){
+							// гасим предыдущий вызов
+							error.deferred.reject();
 						});
 					}
 
@@ -129,8 +132,8 @@
 					 */
 					function clearCart() {
 						store.remove('cart');
-						$scope.cart = {cou: 0, content: []};
-						$scope.initCart();
+						mvm.cart = {cou: 0, content: []};
+						mvm.initCart();
 					}
 
 					/**

@@ -24,14 +24,14 @@
                 vm.submitCurrentStep = submitCurrentStep;
                 vm.confirmInfoStep = confirmInfoStep;
                 vm.switchUserInfo = switchUserInfo;
-                vm.cancel = cancel;
-                vm.toCatalog = toCatalog;
                 vm.getTemplateUrl = getTemplateUrl;
+                vm.afterInclude = afterInclude;
+                vm.cancel = cancel;
+                
 
                 vm.showHints = true;
                 vm.forms = {};
-                vm.data = {selectedStep: 0, stepProgress: 1, maxStep: 4, showBusyText: false, usePrivate: false, userInfoStash: null};
-                vm.fragmentUrl = getTemplateUrl();
+                vm.data = {selectedStep: 0, stepProgress: 1, maxStep: 3, showBusyText: false, usePrivate: false, userInfoStash: null};
 
                 /**
                  * Проверка наличия товара в корзине
@@ -67,11 +67,6 @@
                             }
                         },
                         { step: 3, completed: false, optional: false,
-                            data: {
-
-                            }
-                        },
-                        { step: 4, completed: false, optional: false,
                             data: {
 
                             }
@@ -128,6 +123,7 @@
                  * Переход к следующему шагу
                  */
                 function enableNextStep(){
+                    console.log("enableNextStep");
                     //do not exceed into max step
                     if (vm.data.selectedStep >= vm.data.maxStep) {
                         return;
@@ -137,11 +133,6 @@
                         vm.data.stepProgress = vm.data.stepProgress + 1;
                     }
                     vm.data.selectedStep = vm.data.selectedStep + 1;
-
-                    //дошли до последнего шага
-                    if(vm.data.maxStep === vm.data.stepProgress){
-                        mvm.clearCart();
-                    }
                 }
 
                 /**
@@ -150,7 +141,6 @@
                 function moveToPreviousStep() {
                     if (vm.data.selectedStep > 0) {
                         vm.data.selectedStep = vm.data.selectedStep - 1;
-                    // localStorage.setItem($state.current.name,angular.toJson($scope.data));
                     }
                 }
 
@@ -160,14 +150,12 @@
                  */
                 function submitCurrentStep(stepData) {
                     var deferred = $q.defer();
-                    if((vm.data.maxStep  - 1 == vm.data.stepProgress) &&  (vm.data.stepProgress == vm.data.selectedStep + 1)){
+                    if((vm.data.maxStep == vm.data.stepProgress) &&  (vm.data.stepProgress == vm.data.selectedStep + 1)){
                         //если достигли последнего шага
                         vm.data.showBusyText = true;
                         createOrder(deferred).then(function(data){
-                            vm.data.stepData[2].data = data;
-                            vm.data.showBusyText = false;
-                            stepData.completed = true;
-                            enableNextStep();
+                            mvm.clearCart();
+                            showConfirmResult(data.id)
                         }, function(error){
                             console.log(error);
                             //TODO: нужно наполнить даными о невозможности создать заказ и перейти на последний шаг
@@ -190,6 +178,12 @@
                     }
                 }
 
+
+                /* переход в карточку для редактирования */
+                function showConfirmResult(id) {
+                    $state.go("cart.confirm.done", {id: id});
+                }
+                
                 /**
                  * Использование персональных данных авторизованных клиентов
                  */
@@ -218,13 +212,6 @@
                 }
 
                 /**
-                 * Переход в каталог после оформления заказа
-                 */
-                function toCatalog(){
-                    $state.go("catalog");
-                }
-
-                /**
                  * Получения шаблона страницы
                  * @returns {string}
                  */
@@ -247,4 +234,22 @@
                 initStepData();
 
         }])
+    
+        .controller('confirmCompleteController',['$scope','$state','dataResources','order',
+            function($scope,$state,dataResources,order){
+                var mvm = $scope.$parent.mvm;
+                var vm = this;
+
+                vm.toCatalog = toCatalog;
+
+                vm.order = order ? order : {};
+
+                /**
+                 * Переход в каталог после оформления заказа
+                 */
+                function toCatalog(){
+                    $state.go("catalog");
+                }
+                
+            }])
 })();

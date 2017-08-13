@@ -1,8 +1,13 @@
 package com.acme.service;
 
 import com.acme.model.Order;
+import com.acme.model.OrderView;
+import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
+import com.acme.model.filter.OrderFilter;
+import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,6 +15,15 @@ import java.util.Map;
  */
 public interface OrderService {
 
+	List<OrderView> getAllOrders(OrderFilter filter);
+
+	List<OrderView> getHistory(OrderFilter filter);
+
+	List<OrderView> getCustomerOrders(String id);
+
+	Order getOrder(String orderId);
+
+	List<OrderItemsList> getOrderItems(String orderId);
 	/**
 	 * Получение информации о заказе
 	 * @param orderId

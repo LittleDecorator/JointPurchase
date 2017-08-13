@@ -57,6 +57,27 @@ var route = {
                     }
                 }
             },
+            {
+                name:'cart.confirm.done',
+                url:'/:id/status',
+                parent:'cart.confirm',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/orderComplete.html',
+                        controller: 'confirmCompleteController',
+                        controllerAs: 'vm'
+                    }
+                },
+                data: {
+                    displayName: "Результат",
+                    requireLogin: false
+                },
+                resolve: {
+                    order: function($stateParams, resolveService) {
+                        return resolveService.getOrder($stateParams.id);
+                    }
+                }
+            },
 
             /*=================================== О НАС * ====================================*/
             {
