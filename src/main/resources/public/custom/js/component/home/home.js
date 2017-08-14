@@ -6,7 +6,7 @@
     'use strict';
 
     angular.module('home')
-        .controller('homeController',['$scope','dataResources', function ($scope, dataResources) {
+        .controller('homeController',['$scope','dataResources','$state', function ($scope, dataResources, $state) {
 
 	        var vm = this;
 
@@ -25,11 +25,11 @@
 	        ];
 
 	        vm.menus = [
-		        { name: 'Каталог'},
-		        { name: 'О нас'},
-		        { name: 'Контакты'},
-		        { name: 'Доставка'},
-		        { name: 'Акции'}
+		        { name: 'Каталог', ref: 'catalog'},
+		        { name: 'О нас', ref:'about'},
+		        { name: 'Контакты', ref:'contact'},
+		        { name: 'Доставка', ref:'delivery'},
+		        { name: 'Акции' , ref:'stock'}
 	        ];
 			
 			vm.forms = {};
@@ -41,7 +41,7 @@
 	        }
 
 	        function menuClick($index) {
-				//TODO: add transition to pages
+		        $state.go(vm.menus[$index].ref);
 	        }
 			
 			function subscribe(){
@@ -49,7 +49,8 @@
 			}
 			
 			function loadImages() {
-				vm.images = dataResources.instagram.image.all();
+				// TODO: Выключим, пока не придумаем легкий запрос для получения instagram изображений
+				// vm.images = dataResources.instagram.image.all();
 			}
 
 			loadImages();

@@ -53,12 +53,11 @@
         <!--<a href="#section02"><span></span>Scroll</a>-->
     </div>
 
-    <div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto">
+    <div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto" ng-if="vm.images.size > 0">
         <div layout="column" layout-align="center center">
             <h2>Играй с нами в #INSTAGRAM!</h2>
             <md-divider ></md-divider>
         </div>
-        <!--<div class="gallery resized" style="width: 80%;margin: auto">-->
         <div class="gallery resized">
             <div class="wrap">
                 <div class="box" ng-repeat="image in vm.images">
