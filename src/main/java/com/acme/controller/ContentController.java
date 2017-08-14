@@ -133,6 +133,7 @@ public class ContentController{
      */
     @RequestMapping(value = "/instagram", method = RequestMethod.GET)
     public List<String> getInstgaramImages() throws Exception {
+		// TODO: Добавить проверки на существование записей
         return contentRepository.findAllByIsInstagramTrue().stream().map(Content::getId).collect(Collectors.toList()).subList(0,15);
     }
 

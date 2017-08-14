@@ -394,7 +394,7 @@
                         <!--Tenuring Distribution-->
                         -XX:+PrintTenuringDistribution
                         <!-- Log file options -->
-                         -Xloggc:/tmp/log/gclog.log
+                         -Xloggc:/tmp/log/gc.log
                          -XX:+UseGCLogFileRotation
                          -XX:NumberOfGCLogFiles=5
                          -XX:GCLogFileSize=2000k
@@ -410,6 +410,10 @@
                         -XX:MinMetaspaceExpansion=4M
                         <!--the maximum size to expand a Metaspace by without Full GC-->
                         -XX:MaxMetaspaceExpansion=16M
+	                    <!-- Enable memory dump on OutOfMemory-->
+	                    -XX:+HeapDumpOnOutOfMemoryError
+	                    <!-- path for dump log -->
+	                    -XX:HeapDumpPath:/tmp/log/dump.log
                     </jvmArguments>
                 </configuration>
                 <executions>
