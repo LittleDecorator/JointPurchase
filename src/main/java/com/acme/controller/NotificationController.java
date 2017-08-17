@@ -70,9 +70,7 @@ public class NotificationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Notification getNotification(@PathVariable("id") String id) {
-        Notification notification = notificationRepository.findOne(id);
-        notification.setViewedSubject(subjectRepository.findOne(notification.getViewedSubjectId()));
-        return notification;
+        return notificationRepository.findOne(id);
     }
 
     /**

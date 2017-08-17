@@ -3,8 +3,9 @@ package com.acme.controller;
 import com.acme.enums.ItemStatus;
 import com.acme.enums.OrderStatus;
 import com.acme.model.Delivery;
-import com.acme.repository.ClssRepository;
+import com.acme.repository.DeliveryRepository;
 import com.google.common.base.CaseFormat;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class ClssController {
 
     @Autowired
-    ClssRepository clssRepository;
+	DeliveryRepository deliveryRepository;
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/status/map")
     public Map<String,String> getOrderStatus(){
@@ -34,11 +35,11 @@ public class ClssController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/delivery")
     public List<Delivery> getDelivery(){
-        return clssRepository.getDelivery();
+        return Lists.newArrayList(deliveryRepository.findAll());
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/order/delivery/map")
     public Map<String,String> getDeliveryMap(){
-        return clssRepository.getDelivery().stream().collect(Collectors.toMap(Delivery::getId, Delivery::getName));
+        return Lists.newArrayList(deliveryRepository.findAll()).stream().collect(Collectors.toMap(Delivery::getId, Delivery::getName));
     }
 }

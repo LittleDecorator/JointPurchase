@@ -3,8 +3,7 @@
     <md-steppers md-dynamic-height md-stretch-steppers="always" md-selected="vm.data.selectedStep"
                  md-busy-text="'Processing...'" md-busy="vm.data.showBusyText" md-on-select="onTabSelect()">
 
-        <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed"
-                 ng-disabled="vm.data.maxStep == vm.data.stepProgress">
+        <md-step label="Способ доставки" md-complete="vm.data.stepData[0].completed" ng-disabled="vm.data.maxStep == vm.data.stepProgress">
             <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px; min-height: 480px">
                 <md-step-body>
 
@@ -16,12 +15,12 @@
                             <div layout="column">
 
                                 <md-input-container class="md-block" style="margin-left: 1%" flex="15">
-                                    <md-select ng-model="vm.data.stepData[0].data.delivery" ng-model-options="{trackBy: '$value.id'}" >
+                                    <md-select ng-model="vm.data.stepData[0].data.delivery" ng-model-options="{trackBy: '$value.id'}" style="font-size: 1.3em">
                                         <md-option ng-repeat="delivery in vm.data.stepData[0].data.deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
-                                <span style="margin: 0 5px;">{{vm.data.stepData[0].data.delivery.hint}}</span>
+                                <span style="margin: 0 5px;font-size: 13px">{{vm.data.stepData[0].data.delivery.hint}}</span>
                             </div>
                         </md-card>
 
@@ -37,8 +36,7 @@
 
         </md-step>
         <!--------------------------------------------------------------------------------------------------------------->
-        <md-step label="Информация о получателе" md-complete="vm.data.stepData[1].completed"
-                 ng-disabled="!vm.data.stepData[0].completed || (vm.data.maxStep == vm.data.stepProgress)">
+        <md-step label="Информация о получателе" md-complete="vm.data.stepData[1].completed" ng-disabled="!vm.data.stepData[0].completed || (vm.data.maxStep == vm.data.stepProgress)">
             <md-card class="md-padding" style="margin-left: 1px; margin-right: 1px;min-height: 480px">
                 <md-step-body>
                     <h5>Информация о получателе</h5>
@@ -100,11 +98,9 @@
                             </div>
 
 
-                            <md-input-container
-                                    ng-if="vm.data.stepData[0].data.delivery.id == '72fab541-593e-48ef-882e-e226775f0b6f'">
+                            <md-input-container ng-if="vm.data.stepData[0].data.delivery.id == '72fab541-593e-48ef-882e-e226775f0b6f'">
                                 <label class="required">Индекс</label>
-                                <input name="postAddress" ng-model="vm.data.stepData[1].data.postAddress" mask="999999"
-                                       mask-restrict="reject" required>
+                                <input name="postAddress" ng-model="vm.data.stepData[1].data.postAddress" mask="999999" mask-restrict="reject" required>
                                 <div ng-messages="vm.forms.step2.postAddress.$error" ng-if="!vm.showHints">
                                     <div ng-message="length">Указанный индекс не корректен</div>
                                 </div>
@@ -127,7 +123,7 @@
                         </md-card>
 
                         <div layout="column">
-                            <md-button ng-click="vm.confirmInfoStep()" class="btn">Оформить заказ</md-button>
+                            <md-button ng-click="vm.confirmInfoStep()" class="btn">Далее</md-button>
                             <md-button ng-click="vm.moveToPreviousStep()" class="md-accent md-raised btn">Назад</md-button>
                             <md-button ng-click="vm.cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить
                             </md-button>
@@ -141,6 +137,7 @@
         <md-step label="Информация о заказе" md-complete="vm.data.stepData[2].completed" ng-disabled="!vm.data.stepData[1].completed || vm.data.maxStep == vm.data.stepProgress">
             <md-card class="md-padding">
                 <md-step-body>
+                    <h5>Информация о заказе</h5>
                     <md-content ng-form="vm.forms.step3">
 
                         <md-card class="md-padding">
@@ -189,54 +186,91 @@
 
                                     <md-input-container flex="10" class="no-errors" ng-if="vm.data.stepData[0].data.delivery.id == '72fab541-593e-48ef-882e-e226775f0b6f'" style="margin-right: 1%">
                                         <label>Индекс</label>
-                                        <input ng-model="vm.data.stepData[2].data.postAddress" mask="999999" disabled>
+                                        <input ng-model="vm.data.stepData[1].data.postAddress" mask="999999" disabled>
                                     </md-input-container>
 
                                     <md-input-container flex>
                                         <label>Адрес</label>
-                                        <input ng-model="vm.data.stepData[2].data.recipientAddress" disabled>
+                                        <input ng-model="vm.data.stepData[1].data.recipientAddress" disabled>
                                     </md-input-container>
 
                                 </div>
 
                                 <md-input-container flex>
-                                    <input ng-model="vm.data.stepData[2].data.comment" placeholder="Комментарий" disabled>
+                                    <input ng-model="vm.data.stepData[1].data.comment" placeholder="Комментарий" disabled>
                                 </md-input-container>
                             </div>
                         </md-card>
 
-                        <div flex style="justify-content: flex-end" layout="row">
-                            <md-button ng-click="vm.moveToPreviousStep()" class="waves-effect btn md-plain md-raised">Назад</md-button>
-                            <md-button ng-click="vm.cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить</md-button>
-                            <div flex></div>
-                            <md-button ng-click="vm.submitCurrentStep(vm.data.stepData[2])" class="waves-effect waves-green btn">Оформить заказ</md-button>
+                        <div style="padding: 0 10px;">
+
+                            <md-list class="row" flex style="margin: 0;  padding: 0 0 8px;">
+
+                                <md-list-item class="md-3-line col s12 cart-item" ng-repeat="item in mvm.cart.content" style="padding: 0 5px;background-color: white; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12); margin: 5px 0;">
+
+
+                                    <div class="md-list-item-inner" style="width: 100%; margin: 5px;display: block">
+
+                                        <!-- Заголовок -->
+                                        <div layout="row" style="width:100%; margin: 5px 0; padding: 0 10px;">
+                                            <span style="font-size: 20px">{{::item.name}}</span>
+                                            <div flex></div>
+                                            <md-icon ng-click="mvm.removeFromCart($index)" style="color: darksalmon;line-height: 1;width: 25px ">clear</md-icon>
+                                        </div>
+                                        <md-divider></md-divider>
+
+                                        <div layout="row" style="padding-top: 10px;">
+                                            <div class="boxInner md-avatar" style="margin-right: 10px; margin-left: 5px;margin-top: 10px; margin-bottom: 10px;">
+                                                <img ng-src="{{::item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
+                                            </div>
+                                            <div class="md-list-item-text" layout="column" style="width:100%;margin: 5px;">
+
+                                                <div layout="row" style="margin: 3px 0;justify-content: flex-end;">
+                                                    <div>
+                                                        <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.decrementCou($index)">
+                                                            <md-icon style="display: block;width: 25px;font-size:25px;color: #fff;line-height: initial;">remove</md-icon>
+                                                        </a>
+                                                        <a class="btn-flat" style="padding: 0;width: 25px; line-height: 25px; height: 25px; border: 1px solid #ddd;text-align: center">
+                                                            <span style="margin: auto;font-size: 15px;line-height: 20px;">{{item.cou}}</span></a>
+                                                        <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.incrementCou($index)">
+                                                            <md-icon style="display: block;width: 25px;font-size:25px;color: #fff;line-height: initial;">add</md-icon>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div layout="row" style="margin: 3px 0;padding-top: 5px">
+                                                    <span style="font-size: 14px;">Цена:</span>
+                                                    <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
+                                                    <span>{{::item.price|number}} руб</span>
+                                                </div>
+
+                                                <div layout="row" style="margin: 3px 0;padding-top: 5px">
+                                                    <span style="font-size: 14px;">Сумма:</span>
+                                                    <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
+                                                    <span>{{(item.price * item.cou)| number}} руб</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </md-list-item>
+                            </md-list>
+
                         </div>
 
-                    </md-content>
-                </md-step-body>
-            </md-card>
-
-        </md-step>
-
-        <md-step label="Статус заказа" md-complete="vm.data.stepData[3].completed" ng-disabled="!vm.data.stepData[1].completed">
-            <md-card class="md-padding" style="min-height: 480px">
-                <md-step-body>
-                    <md-content>
                         <div layout="column">
-                            <h5 style="text-align: center; text-transform: uppercase; margin-bottom: 15px;">Ваш заказ
-                                <span style="text-decoration: underline;">#{{::vm.data.stepData[2].data.uid}}</span> успешно добавлен в обработку!</h5>
-                            <hr style="width: 100px; margin-bottom: 35px;">
-                            <span style="text-align: center;">На вашу почту была выслана информация о заказе!</span>
-                            <span style="text-align: center;" ng-if="mvm.auth.isAuth()">Состояние заказа вы можете отслеживать в <a ui-sref="cabinet">личном кабинете</a></span>
-                        </div>
-
-                        <div layout="row" layout-align="center center" style="padding-top: 35px">
-                            <md-button ng-click="vm.toCatalog()" class="waves-effect waves-green btn md">Продолжить покупки </md-button>
+                            <md-button ng-click="vm.submitCurrentStep(vm.data.stepData[2])" ng-disabled="mvm.cart.cou < 1" class="btn">Оформить заказ</md-button>
+                            <md-button ng-click="vm.moveToPreviousStep()" class="md-accent md-raised btn">Назад</md-button>
+                            <md-button ng-click="vm.cancel()" class="waves-effect btn-flat" style="margin: 2px;">Отменить
+                            </md-button>
                         </div>
 
                     </md-content>
                 </md-step-body>
             </md-card>
+
         </md-step>
+
     </md-steppers>
 </md-stepper-card-content>

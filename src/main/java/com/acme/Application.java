@@ -20,6 +20,7 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +32,7 @@ import ru.dezhik.sms.sender.SenderServiceConfiguration;
 import ru.dezhik.sms.sender.SenderServiceConfigurationBuilder;
 
 import javax.jms.ConnectionFactory;
+import javax.persistence.EntityManagerFactory;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -96,6 +98,7 @@ public class Application extends WebMvcConfigurerAdapter {
         // This provides all boot's default to this factory, including the message converter
         configurer.configure(factory, connectionFactory);
         // You could still override some of Boot's default if necessary.
+		factory.setConcurrency("1-1");
         return factory;
     }
 
@@ -111,6 +114,12 @@ public class Application extends WebMvcConfigurerAdapter {
         return converter;
     }
 
+	@Bean
+	public HibernateJpaSessionFactoryBean sessionFactory(EntityManagerFactory emf) {
+		HibernateJpaSessionFactoryBean factory = new HibernateJpaSessionFactoryBean();
+		factory.setEntityManagerFactory(emf);
+		return factory;
+	}
 
     /**
      * Так мы можем резолвить входящие параметры

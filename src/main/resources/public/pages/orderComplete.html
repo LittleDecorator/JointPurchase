@@ -1,16 +1,1 @@
-<md-card class="md-padding">
-    <md-content style="background-color: white">
-
-        <div layout="column">
-            <h5 style="text-align: center; text-transform: uppercase; margin-bottom: 15px;">Ваш заказ <span style="text-decoration: underline;">#{{::vm.order.uid}}</span> успешно добавлен в обработку!</h5>
-            <hr style="width: 100px; margin: 0 auto 35px;">
-            <span style="text-align: center;">На вашу почту была выслана информация о заказе!</span>
-            <span style="text-align: center;" ng-if="mvm.auth.isAuth()">Состояние заказа вы можете отслеживать в <a ui-sref="cabinet">личном кабинете</a></span>
-        </div>
-
-        <div layout="row" layout-align="center center" style="padding-top: 35px">
-            <md-button ng-click="vm.toCatalog()" class="waves-effect waves-green btn primary md" >Продолжить покупки</md-button>
-        </div>
-
-    </md-content>
-</md-card>
+<div id="orderConfirmComplete" ng-include="vm.getTemplateUrl()" include-callback="vm.afterInclude()"></div>

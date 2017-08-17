@@ -7,3 +7,7 @@
 md-checkbox.tree-label {
     margin-bottom: 0;
 }
+
+md-checkbox.md-checked .md-icon:after {
+	left: 5.66667px;!important;
+}

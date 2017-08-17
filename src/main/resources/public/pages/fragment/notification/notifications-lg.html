@@ -10,12 +10,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="notification in vm.notifications by notification.id" class="collection-item">
+        <tr ng-repeat="notification in vm.notifications track by notification.id" class="collection-item">
             <td class="center-align" style="width: 20%">{{::notification.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}</td>
             <td class="center-align" style="width: 10%">{{::notification.text}}</td>
-            <td class="center-align" style="width: 10%">{{::!notification.isViewed}}</td>
+            <td class="center-align" style="width: 10%">
+                <md-checkbox class="filled-in" aria-label="new notification" ng-model="notification.viewed" ng-true-value="false" ng-false-value="true" disabled style="vertical-align: -15px;"></md-checkbox>
+            </td>
             <td class="right-align" style="width: 60%">
-                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.showNotification(notification.id)"><md-icon>search</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.checkNotification(notification)"><md-icon>search</md-icon></a>
             </td>
         </tr>
         </tbody>

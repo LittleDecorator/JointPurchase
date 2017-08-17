@@ -206,30 +206,30 @@
                             </div>
                         </md-card>
 
-                        <span style="text-align: center;display: block;font-size: 2em;color: #846C63">Товар</span>
+                        <div style="padding: 10px; margin: 10px;">
 
-                        <div style="padding: 10px; margin: 15px;">
-
-                            <div ng-repeat="item in mvm.cart.content" class="row cart-item" ng-style="$last && {'border':'none'}" style="display: flex; align-items: center; margin-bottom: 10px; background-color: rgba(0,0,0,.03); box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);">
+                            <div ng-repeat="item in mvm.cart.content" class="row cart-item" ng-style="$last && {'border':'none'}" style="display: flex; align-items: center; margin-bottom: 10px; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);">
 
                                 <div class="col s2 non-float" style="text-align: center;padding: 5px 0;">
-                                    <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 80px!important; height: 80px!important; background-color: white;">
-                                        <a ng-href="{{::item.url}}" class="swipebox">
-                                            <img ng-src="{{::item.url}}" style="left: 50%; height: 100%;">
-                                        </a>
+                                    <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 70px!important; height: 70px!important; background-color: white;">
+                                        <img ng-src="{{::item.url}}" style="left: 50%; height: 100%;">
                                     </div>
                                 </div>
                                 <div class="col s6 non-float">
-                                    <span style="font-size: 1.5em;">{{::item.name}}</span>
+                                    <span style="font-size: 1.25em;">{{::item.name}}</span>
                                 </div>
                                 <div class="col s2 non-float" style="text-align: center;">
                                     <div>
-                                        <a class="btn" style="padding: 0;height: 32px;box-shadow: none;" ng-click="mvm.decrementCou($index)"><md-icon style="display: block;line-height: 32px;color: #fff;">remove</md-icon></a>
-                                        <a class="btn-flat" style="padding: 0;width: 32px; line-height: 32px; height: 32px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 20px;line-height: 32px;">{{item.cou}}</span></a>
-                                        <a class="btn" style="padding: 0;height: 32px;box-shadow: none;" ng-click="mvm.incrementCou($index)"><md-icon style="display: block;line-height: 32px;color: #fff;">add</md-icon></a>
+                                        <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.decrementCou($index)">
+                                            <md-icon style="display: block;line-height: 25px;color: #fff;width: 25px; font-size: 25px;">remove</md-icon>
+                                        </a>
+                                        <a class="btn-flat" style="padding: 0;width: 30px; line-height: 30px; height: 30px; border: 1px solid #ddd;text-align: center"><span style="margin: auto;font-size: 20px;line-height: 32px;">{{item.cou}}</span></a>
+                                        <a class="btn" style="padding: 0;height: 25px;box-shadow: none;" ng-click="mvm.incrementCou($index)">
+                                            <md-icon style="display: block;line-height: 25px;color: #fff;width: 25px; font-size: 25px;">add</md-icon>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="col s1 non-float" style="text-align: center; width: 12%;font-size: 1.2em">
+                                <div class="col s1 non-float" style="text-align: center; width: 12%;font-size: 1.25em">
                                     <span class="price">{{(item.price * item.cou)|number}} руб</span>
                                 </div>
                                 <div class="col s1 non-float" style="text-align: center">

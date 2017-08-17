@@ -384,10 +384,18 @@
                 <configuration>
                     <addResources>true</addResources>
                     <jvmArguments>
-	                    -Xms512M
-	                    -Xmx1024M
-                        -Xdebug
-                        -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006
+	                    <!-- Debug options -->
+	                    -Xdebug
+	                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006
+
+	                    -Xms750m
+	                    -Xmx750m
+
+	                    -XX:MinHeapFreeRatio=10
+	                    -XX:MaxHeapFreeRatio=70
+	                    -XX:CompressedClassSpaceSize=64m
+	                    -XX:ReservedCodeCacheSize=64m
+
 	                    -XX:+DisableExplicitGC
                         -XX:+PrintGCDetails
                         -XX:+PrintGCApplicationStoppedTime
@@ -400,19 +408,21 @@
                         -XX:+UseGCLogFileRotation
                         -XX:NumberOfGCLogFiles=5
                         -XX:GCLogFileSize=2000k
-                        <!-- to increase the initial size of Metaspaces (the default is 16M);-->
-                        -XX:MetaspaceSize=100M
+
+	                    <!-- to increase the initial size of Metaspaces (the default is 16M);-->
+                        -XX:MetaspaceSize=100m
                         <!-- to increase the boot class loader Metaspace;-->
-                        -XX:InitialBootClassLoaderMetaspaceSize=32M
+                        -XX:InitialBootClassLoaderMetaspaceSize=32m
                         <!-- to make Metaspaces grow more agressively;-->
                         -XX:MinMetaspaceFreeRatio=50
                         <!-- to reduce the chance of Metaspaces shrinking;-->
                         -XX:MaxMetaspaceFreeRatio=80
                         <!-- the minumum size by which a Metaspace is exanded-->
-                        -XX:MinMetaspaceExpansion=4M
+                        -XX:MinMetaspaceExpansion=4m
                         <!--the maximum size to expand a Metaspace by without Full GC-->
-                        -XX:MaxMetaspaceExpansion=16M
-	                    -XX:MaxMetaspaceSize=1024M
+                        -XX:MaxMetaspaceExpansion=16m
+	                    -XX:MaxMetaspaceSize=256m
+
 	                    <!-- Enable memory dump on OutOfMemory-->
 	                    -XX:+HeapDumpOnOutOfMemoryError
 	                    <!-- path for dump log -->

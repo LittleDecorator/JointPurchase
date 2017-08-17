@@ -10,8 +10,8 @@
     angular.module('confirm')
 
         /* Контроллер формирования заказа */
-        .controller('confirmController',['$scope','$state','authService','dataResources','deliveries','$q','$timeout','$rootScope',
-            function($scope,$state,authService,dataResources,deliveries,$q, $timeout, $rootScope){
+        .controller('confirmController',['$scope','$state','authService','dataResources','deliveries','$q','$timeout','$rootScope','$window',
+            function($scope,$state,authService,dataResources,deliveries,$q, $timeout, $rootScope,$window){
 
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
@@ -123,7 +123,6 @@
                  * Переход к следующему шагу
                  */
                 function enableNextStep(){
-                    console.log("enableNextStep");
                     //do not exceed into max step
                     if (vm.data.selectedStep >= vm.data.maxStep) {
                         return;
@@ -133,6 +132,7 @@
                         vm.data.stepProgress = vm.data.stepProgress + 1;
                     }
                     vm.data.selectedStep = vm.data.selectedStep + 1;
+	                $window.scrollTo(0, 0);
                 }
 
                 /**
@@ -150,7 +150,7 @@
                  */
                 function submitCurrentStep(stepData) {
                     var deferred = $q.defer();
-                    if((vm.data.maxStep == vm.data.stepProgress) &&  (vm.data.stepProgress == vm.data.selectedStep + 1)){
+                    if((vm.data.maxStep == vm.data.stepProgress) && (vm.data.stepProgress == vm.data.selectedStep + 1)){
                         //если достигли последнего шага
                         vm.data.showBusyText = true;
                         createOrder(deferred).then(function(data){
@@ -241,8 +241,28 @@
                 var vm = this;
 
                 vm.toCatalog = toCatalog;
+	            vm.getTemplateUrl = getTemplateUrl;
+	            vm.afterInclude = afterInclude;
 
                 vm.order = order ? order : {};
+
+	            /**
+	             * Получения шаблона страницы
+	             * @returns {string}
+	             */
+	            function getTemplateUrl(){
+		            var templatePath = "pages/fragment/confirm/complete/";
+		            if(mvm.width < 601){
+			            return templatePath + "complete-sm.html";
+		            } else {
+			            return templatePath + "complete-lg.html";
+		            }
+	            }
+
+	            /**
+	             * Вызовется после include
+	             */
+	            function afterInclude(){}
 
                 /**
                  * Переход в каталог после оформления заказа
