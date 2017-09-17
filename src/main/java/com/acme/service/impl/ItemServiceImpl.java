@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -141,7 +142,10 @@ public class ItemServiceImpl implements ItemService {
         } else {
             item.setItemContents(itemContents);
             System.out.println(item.getId());
-            item.setUrl(Constants.PREVIEW_URL + itemContents.stream().filter(ItemContent::isMain).findAny().get().getContentId());
+            Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findAny();
+            if(contentOptional.isPresent()){
+                item.setUrl(Constants.PREVIEW_URL + contentOptional.get().getContentId());
+            }
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
     }

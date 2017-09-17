@@ -19,8 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,35 +33,34 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
+	private AtomicInteger seq = new AtomicInteger(0);
+
 	@Autowired
 	OrderRepository orderRepository;
-
 	@Autowired
 	OrderViewRepository orderViewRepository;
-
 	@Autowired
 	OrderItemRepository orderItemRepository;
-
 	@Autowired
 	ItemRepository itemRepository;
-
 	@Autowired
 	ItemContentRepository itemContentRepository;
-
 	@Autowired
 	ContentRepository contentRepository;
-
 	@Autowired
 	private ItemService itemService;
-
 	@Autowired
 	private NotificationService notificationService;
-
 	@Autowired
 	JmsService jmsService;
-
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+
+	@Override
+	public long genOrderNum() {
+		LocalDate localDate = LocalDate.now();
+		return Long.valueOf(""+ localDate.getDayOfMonth() + String.format("%02d",localDate.getMonthValue()) + String.format("%03d", seq.incrementAndGet()));
+	}
 
 	@Override
 	public List<OrderView> getAllOrders(OrderFilter filter) {
@@ -83,7 +84,6 @@ public class OrderServiceImpl implements OrderService {
 	public Order getOrder(String orderId) {
 		return orderRepository.findOne(orderId);
 	}
-
 
 	@Override
 	public List<OrderItemsList> getOrderItems(String orderId) {
@@ -135,6 +135,10 @@ public class OrderServiceImpl implements OrderService {
 		try {
 			/* сохраним заказ из запроса. */
 			request.getOrder().setStatus(OrderStatus.NEW);
+			// TODO: fix temporary hook
+			request.getOrder().setRecipientAddress("Здесь должен быть адрес пункта самовывоза при типе доставки - САМОВЫВОЗ");
+			// TODO: override order uid
+			request.getOrder().setUid(genOrderNum());
 			Order order = orderRepository.save(request.getOrder());
 
 			/* добавим записи в таблицу связи заказ-товар */

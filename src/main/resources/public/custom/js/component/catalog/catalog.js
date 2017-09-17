@@ -345,7 +345,9 @@
 
                 vm.item = angular.extend({}, product);
                 vm.mainImage = vm.item.url;
-
+                
+                console.log(vm.item);
+                console.log(mvm);
                 /**
                  * Установка изображения активным на просмотр
                  * @param id - изображение которое нужно показать как main

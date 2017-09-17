@@ -108,7 +108,7 @@
                                         </div>
                                     </md-input-container>
 
-                                    <md-input-container flex>
+                                    <md-input-container flex ng-if="vm.data.stepData[0].data.delivery.id != '5e24b8ea-8a81-4984-ae92-fed630d5b859'">
                                         <label class="required">Адрес</label>
                                         <input name="address" ng-model="vm.data.stepData[1].data.recipientAddress" required>
                                         <div ng-messages="vm.forms.step2.address.$error" ng-if="!vm.showHints">
@@ -193,7 +193,7 @@
                                         <input ng-model="::vm.data.stepData[1].data.postAddress" mask="999999" disabled>
                                     </md-input-container>
 
-                                    <md-input-container flex flex class="no-errors">
+                                    <md-input-container flex flex class="no-errors" ng-if="vm.data.stepData[0].data.delivery.id != '5e24b8ea-8a81-4984-ae92-fed630d5b859'">
                                         <label>Адрес</label>
                                         <input ng-model="::vm.data.stepData[1].data.recipientAddress" disabled>
                                     </md-input-container>

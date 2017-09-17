@@ -1,6 +1,7 @@
 package com.acme.repository.specification;
 
 import com.acme.model.*;
+import com.acme.model.Company_;
 import com.acme.model.Item_;
 import com.acme.model.filter.ItemFilter;
 import org.springframework.data.jpa.domain.Specification;

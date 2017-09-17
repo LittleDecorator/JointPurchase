@@ -154,8 +154,11 @@
                         //если достигли последнего шага
                         vm.data.showBusyText = true;
                         createOrder(deferred).then(function(data){
-                            mvm.clearCart();
-                            showConfirmResult(data.id)
+                            console.log("data", data);
+                            if(data != null){
+                                mvm.clearCart();
+                                showConfirmResult(data.id);
+                            }
                         }, function(error){
                             console.log(error);
                             //TODO: нужно наполнить даными о невозможности создать заказ и перейти на последний шаг

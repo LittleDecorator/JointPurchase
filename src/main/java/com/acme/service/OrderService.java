@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public interface OrderService {
 
+	long genOrderNum();
+
 	List<OrderView> getAllOrders(OrderFilter filter);
 
 	List<OrderView> getHistory(OrderFilter filter);

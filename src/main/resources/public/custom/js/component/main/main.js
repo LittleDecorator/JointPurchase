@@ -91,6 +91,7 @@
 					 * @param item
 					 */
 					function addToCart(item) {
+						console.log("addToCart", item);
 						// подготовим тост
 						var toast = $mdToast.simple()
 								.textContent(item.name + ' добавлен в корзину')
@@ -403,9 +404,9 @@
 						});
 
 						// получим кол-во новых уведомлений
-						// resolveService.getNewNotifications().then(function(data){
-						// 	mvm.notifications = data.result;
-						// });
+						resolveService.getNewNotifications().then(function(data){
+							mvm.notifications = data.result;
+						});
 					}
 
 					/**

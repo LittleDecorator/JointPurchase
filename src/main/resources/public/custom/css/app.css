@@ -68,14 +68,29 @@ i.menu, a.btn-flat {
 
 div.flag {
     height: 0;
-    min-width: 120px;
+    min-width: 130px;
     width: 0;
     border: 15px solid #E4E4E4;
     border-left-color: transparent;
     display: inline-block;
     background-color: transparent;
     cursor: default;
+    font-size: 1.1em;
 }
+
+/*div.flag.unavailable {*/
+    /*border-right-color: #fbc02d!important;*/
+    /*border-top-color: #fbc02d!important;*/
+    /*border-bottom-color: #fbc02d!important;*/
+    /*color: white;*/
+/*}*/
+
+/*div.flag.available {*/
+    /*border-right-color: #689f38!important;*/
+    /*border-top-color: #689f38!important;*/
+    /*border-bottom-color: #689f38!important;*/
+    /*color: white;*/
+/*}*/
 
 div.table-container {
     width:auto;
@@ -116,6 +131,11 @@ md-card .btn-price {
     position: fixed;
     left: 15px;
     text-transform: capitalize;
+    width: 60px!important;
+    height: 60px!important;
+    font-size: 1.2em;
+    line-height: 60px;
+    background-color: #ea3838;
 }
 
 md-card .btn-price:hover {
