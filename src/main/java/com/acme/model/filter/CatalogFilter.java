@@ -7,6 +7,8 @@ public class CatalogFilter {
 
 	private String company;
 	private String category;
+	// необходим для проверки вхождения результирующих товаров в список желаемого
+	private String clientEmail;
 	private int limit;
 	private int offset;
 
@@ -42,13 +44,22 @@ public class CatalogFilter {
 		this.offset = offset;
 	}
 
+	public String getClientEmail() {
+		return clientEmail;
+	}
+
+	public void setClientEmail(String clientEmail) {
+		this.clientEmail = clientEmail;
+	}
+
 	@Override
 	public String toString() {
 		return "CatalogFilter{" +
-			   "company=" + company +
-			   ", category=" + category +
-			   ", limit=" + limit +
-			   ", offset=" + offset +
-			   '}';
+				"company='" + company + '\'' +
+				", category='" + category + '\'' +
+				", clientEmail='" + clientEmail + '\'' +
+				", limit=" + limit +
+				", offset=" + offset +
+				'}';
 	}
 }

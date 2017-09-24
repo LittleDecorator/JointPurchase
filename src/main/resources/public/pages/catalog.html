@@ -5,7 +5,7 @@
             <md-card>
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
                     <img ng-src="{{item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
-                    <a class="btn-price btn-floating btn-large light-green lighten-2">{{::item.price}}р</a>
+                    <a class="btn-price btn-floating btn-large">{{::item.price}}р</a>
                     <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
                 </div>
 
@@ -17,8 +17,8 @@
             </md-card>
         </div>
 
-        <div style="width: 100%; display: flex;">
-            <md-button class="btn md-plain md-raised" ng-if="vm.showLoadMore" ng-click="vm.loadData();" style="width: 88%; margin: 10px auto auto;">Показать ещё</md-button>
+        <div style="width: 100%; display: flex;" ng-if="vm.showLoadMore">
+            <md-button class="btn md-plain md-raised" ng-click="vm.loadData();" style="width: 88%; margin: 10px auto auto;">Показать ещё</md-button>
         </div>
 
     </div>

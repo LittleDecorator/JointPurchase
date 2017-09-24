@@ -110,6 +110,26 @@
             };
         }])
 
+        .service('preorderModal', ['ngDialog','$rootScope', function (ngDialog,$rootScope) {
+
+            return function(data) {
+                return ngDialog.open({
+                    templateUrl:'pages/modal/preorderModal.html',
+                    className: 'ngdialog-theme-default',
+                    controller: 'preorderController',
+                    showClose: true,
+                    closeByEscape: true,
+                    closeByDocument:false,
+                    resolve: {
+                        resolved: function getData() {
+                            return data
+                        }
+                    }
+                });
+            };
+
+        }])
+
         .service('store',['$window',function ($window) {
             return {
                 get: function (key) {
@@ -331,6 +351,22 @@
             this.getNewNotifications = function(){
                 var deferred = $q.defer();
                 dataResources.notification.newCount.get(function (data) {
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
+
+            this.getWishlistCount = function(){
+                var deferred = $q.defer();
+                dataResources.wishlist.count.get(function (data) {
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
+
+            this.getWishlist = function(email){
+                var deferred = $q.defer();
+                dataResources.wishlist.core.get({email: email},function (data) {
                     deferred.resolve(data);
                 });
                 return deferred.promise;

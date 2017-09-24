@@ -52,6 +52,9 @@ public class Item implements BaseModel{
     @Column(name = "in_order")
     private Integer inOrder;
 
+    @Transient
+    private boolean inWishlist = false;
+
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
@@ -186,5 +189,13 @@ public class Item implements BaseModel{
 
     public void setInOrder(Integer inOrder) {
         this.inOrder = inOrder;
+    }
+
+    public boolean isInWishlist() {
+        return inWishlist;
+    }
+
+    public void setInWishlist(boolean inWishlist) {
+        this.inWishlist = inWishlist;
     }
 }

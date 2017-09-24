@@ -1,8 +1,8 @@
 -- таблица подписчиков на рассылки
 create table subscribers (
   id varchar(128) not null,
-  email varchar(30),
-  subject_id varchar(128) not null,
+  email varchar(30) not null,
+  subject_id varchar(128),
   active boolean not null default false,
   date_add timestamp default current_timestamp,
   primary key (id),
@@ -58,4 +58,16 @@ create table instagram_post_content (
 	primary key (id),
 	foreign key (post_id) references instagram_posts,
 	foreign key (content_id) references content
+);
+
+-- таблица отложенных и заказанных товаров клиентов
+create table wish_lists (
+  id varchar(128) not null,
+  email varchar(30) not null,
+  subject_id varchar(128),
+  item_id varchar(128) not null,
+  date_add timestamp default current_timestamp,
+  primary key (id),
+  foreign key (subject_id) references subject,
+  foreign key (item_id) references item
 );

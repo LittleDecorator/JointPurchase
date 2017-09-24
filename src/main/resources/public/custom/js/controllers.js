@@ -26,6 +26,7 @@
                 'confirm',
                 'settings',
                 'crop',
-                'notification'
+                'notification',
+                'wishlist'
             ]);
 })();

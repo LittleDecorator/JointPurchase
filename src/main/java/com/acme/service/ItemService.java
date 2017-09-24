@@ -17,6 +17,8 @@ public interface ItemService {
 
     List<Item> getAllByCategory(CatalogFilter filter);
 
+    List<Item> getAllByIdList(List<String> ids);
+
     Item getItem(String itemId);
 
     List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items);

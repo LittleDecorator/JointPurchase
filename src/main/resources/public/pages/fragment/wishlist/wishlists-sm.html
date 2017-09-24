@@ -1,0 +1,16 @@
+<md-list flex id="notification-list">
+    <div class="card-panel" ng-repeat="notification in vm.notifications track by notification.id" ng-class="{'md-accent': notification.type.id == 'error'}" style="padding: 5px 10px">
+        <md-list-item class="md-2-line" style="padding: 0">
+
+            <div class="md-list-item-text" layout="column">
+                <p>{{::notification.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}} <md-icon class="md-avatar-icon yellow-text text-darken-2" ng-if="!notification.viewed" style="background-color: transparent;font-size: 16px;min-height: 16px;height: 16px;min-width: 16px;width: 16px;padding-top: 0;margin: 0 0 auto auto;padding-bottom: 5px;padding-right: 0;">star</md-icon></p>
+                <span style="font-size: 1.3rem; line-height: 24px;">{{::notification.title}}</span>
+            </div>
+
+
+            <md-button class="md-button btn" md-no-ink="true" ng-click="vm.checkNotification(notification)" style="margin: auto; min-height: 40px; min-width: 40px; width: 40px; padding: 0 5px 0 0;">
+                <md-icon style="font-size: 30px; color: white; height: 30px;">edit</md-icon>
+            </md-button>
+        </md-list-item>
+    </div>
+</md-list>

@@ -1,0 +1,32 @@
+<div layout="column" style="margin: 15px; height: 95%">
+
+    <div class="card-title" style="text-transform: none; padding-top: .5em;">
+        <span style="font-size: 1.8rem; line-height: 1">Отложить товар</span>
+    </div>
+
+    <div class="card-panel" style="height: 100%; padding: .8em; margin-bottom: .5em;padding-bottom: 0;" ng-form="vm.forms.wishList">
+
+        <div layout="column">
+
+            <md-content flex layout-padding style="padding: 0; background-color: inherit;">
+                Укажите свой адрес, чтобы мы могли связаться с вами, когда товар поступит в продажу.
+            </md-content>
+
+            <md-input-container md-no-float class="md-block">
+                <input name="email" placeholder="Укажите свой адрес" ng-model="vm.stashed.email" ng-pattern="/^.+@.+\..+$/" required>
+                <div class="hint" ng-if="vm.showHints">Пример: test@mail.com</div>
+                <div ng-messages="vm.forms.wishList.email.$error" ng-if="!vm.showHints">
+                    <div ng-message-exp="['pattern','required']">Не корректный e-mail</div>
+                </div>
+            </md-input-container>
+
+        </div>
+
+    </div>
+
+    <div style="justify-content: flex-end;display: flex; padding-bottom: .5em">
+        <md-button md-no-ink ng-class="md-raised" aria-label="clear" ng-click="closeThisDialog()" style="margin: 2px 8px;font-size: 1em;">Отмена</md-button>
+        <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.addToList();" style="font-size: 1em;" >Отложить</md-button>
+    </div>
+
+</div>

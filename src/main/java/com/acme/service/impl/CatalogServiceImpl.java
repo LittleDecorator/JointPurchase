@@ -11,6 +11,7 @@ import com.acme.repository.*;
 import com.acme.service.CatalogService;
 import com.acme.service.ElasticService;
 import com.acme.service.ItemService;
+import com.acme.service.WishlistService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.elasticsearch.common.unit.Fuzziness;
@@ -54,6 +55,9 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     ContentRepository contentRepository;
 
+    @Autowired
+    WishlistService wishlistService;
+
     @Override
     public List<Item> getCatalog(CatalogFilter filter) {
         // получение изображения используемого по-умолчанию
@@ -61,6 +65,17 @@ public class CatalogServiceImpl implements CatalogService {
 
         // если в фильтре отсутствует категория, то используем спецификацию
         List<Item> result = Strings.isNullOrEmpty(filter.getCategory()) ? itemService.getAll(filter) : itemService.getAllByCategory(filter);
+
+        if(!Strings.isNullOrEmpty(filter.getClientEmail())){
+            List<String> wishedItems = wishlistService.getWishedItems(filter.getClientEmail());
+            if(!wishedItems.isEmpty()){
+                result = result.stream().map(item -> {
+                    item.setInWishlist(wishedItems.contains(item.getId()));
+                    return item;
+                }).collect(Collectors.toList());
+            }
+        }
+
         for (Item item : result) {
             itemService.fillItem(item, defContent);
         }

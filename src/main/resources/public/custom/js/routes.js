@@ -34,6 +34,50 @@ var route = {
                     displayName: 'Корзина'
                 }
             },
+            
+            /*=================================== СПИСОК ЖЕЛАЕМОГО ====================================*/
+            {
+                name: 'wishlist',
+                url: '/wishlist',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/wishlist.html',
+                        controller: 'wishlistController',
+                        controllerAs: 'vm'
+                    }
+                },
+                resolve:{
+                    resolved: function(resolveService){
+                        return null;
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Список желаемого'
+                }
+            },
+
+            {
+                name: 'wishlist.detail',
+                url: '/:email',
+                parent:'wishlist',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/card/wishlistCard.html',
+                        controller: 'wishlistCardController',
+                        controllerAs: 'vm'
+                    }
+                },
+                resolve:{
+                    list: function($stateParams, resolveService) {
+                        return resolveService.getWishlist($stateParams.email);
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Клиент {{list.email}}'
+                }
+            },
 
             /*=================================== ОФОРМЛЕНИЕ ЗАКАЗА ====================================*/
             {

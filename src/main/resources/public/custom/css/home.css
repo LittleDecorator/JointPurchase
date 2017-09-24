@@ -84,6 +84,12 @@
     background: url(../img/main-opt.jpg) center center / cover no-repeat;
 }
 
+#nature {
+    /* будующий бэкграунд для секции натуральности игрушек */
+    /*background: url(../img/nature_back.png) center center / cover no-repeat;*/
+}
+
+
 /* Дополнительный секции */
 .section {
     position: relative;

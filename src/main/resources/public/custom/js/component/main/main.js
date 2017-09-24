@@ -17,6 +17,7 @@
 					var mvm = this;
 
 					mvm.initCart = initCart;
+					mvm.initWishList = initWishList;
 					mvm.initMenu = initMenu;
 					mvm.addToCart = addToCart;
 					mvm.clearCart = clearCart;
@@ -42,6 +43,11 @@
 					mvm.openSearch = openSearch;
 					mvm.showDevNotion = showDevNotion;
 					mvm.showBugReport = showBugReport;
+					mvm.showWishlistModal = showWishlistModal;
+					mvm.requestToList = requestToList;
+					mvm.preorderToList = preorderToList;
+					mvm.getAddToWishListButtonLabel = getAddToWishListButtonLabel;
+					
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -54,6 +60,8 @@
 					mvm.isCollapsed = false;
 					mvm.showContent = false;
 					mvm.cart = null;
+					mvm.wishListEmail = null;
+					mvm.wishlists = 0;
 					mvm.notifications = 0;
 					mvm.auth = authService;
 					// удаление всех promises для login из сервиса, отмена login'а
@@ -91,7 +99,6 @@
 					 * @param item
 					 */
 					function addToCart(item) {
-						console.log("addToCart", item);
 						// подготовим тост
 						var toast = $mdToast.simple()
 								.textContent(item.name + ' добавлен в корзину')
@@ -129,6 +136,20 @@
 					}
 
 					/**
+					 * Получение label'а кнопок.
+					 * @param item
+                     */
+					function getAddToWishListButtonLabel(item){
+						var label = "";
+						if (item.inWishlist){
+							label = item.status.id === 'preorder' ? 'Заказан' : 'Отложен';
+						} else {
+							label = item.status.id === 'preorder' ? 'Заказать' : 'Отложить';
+						}
+						return label;
+					}
+					
+					/**
 					 * Очистка корзины
 					 */
 					function clearCart() {
@@ -158,6 +179,7 @@
 					function logout() {
 						clearCookieInfo();
 						store.remove('cart');
+						store.remove('wishListEmail');
 						mvm.cart = {cou: 0, content: []};
 						$state.go('home');
 					}
@@ -223,10 +245,10 @@
 					 * @param name
 					 */
 					//TODO: перевесить на слушателя события, а само событие генерить при попытке изменения URL
-					function goto(name) {
+					function goto(name, params) {
 						//закрываем панель меню
 						$mdSidenav('menu').close().then(function(){
-							$state.go(name);
+							$state.go(name, params);
 						});
 					}
 
@@ -370,6 +392,85 @@
 						});
 					}
 
+					/**
+					 * Показ модального для "отложить"
+					 * @param item
+                     * @param wClass
+                     */
+					function preorderToList(item, wClass) {
+						var toast = $mdToast.simple().position('top right').hideDelay(3000);
+						if(item.inWishlist){
+							goto('wishlist', {id: item.id});
+						}
+						if(mvm.wishListEmail == null){
+							showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
+						} else {
+							var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
+							dataResources.wishlist.core.post(stashed).$promise.then(function(data){
+								$mdToast.show(toast.textContent('ТОвар ['+ item.name + '] отложен').theme('info'));
+								item.inWishlist = true;
+								mvm.getAddToWishListButtonLabel(item);
+							}, function(error){
+								$mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
+							});
+						}
+
+					}
+
+					/**
+					 * Показ модального для "заказать"
+					 * @param item
+                     * @param wClass
+                     */
+					function requestToList(item, wClass) {
+						var toast = $mdToast.simple().position('top right').hideDelay(3000);
+						if(item.inWishlist){
+							goto('wishlist', {id: item.id});
+						}
+						if(mvm.wishListEmail == null){
+							showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
+						} else {
+							var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
+							dataResources.wishlist.core.post(stashed).$promise.then(function(data){
+								$mdToast.show(toast.textContent('Заявка на заказ товара ['+ item.name + '] принята').theme('info'));
+								item.inWishlist = true;
+								mvm.getAddToWishListButtonLabel(item);
+							}, function(error){
+								$mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
+							});
+						}
+					}
+
+					/**
+					 * Добавление товара в список желаемого
+					 * @param item
+					 * @param templateUrl
+					 * @param className
+					 */
+					function showWishlistModal(item, templateUrl, className) {
+						//определим модальное окно
+						var wishListDialog = modal({
+							templateUrl: templateUrl,
+							className: className,
+							closeByEscape: true,
+							controller: "wishlistController as vm",
+							data: item
+						});
+
+						// Слушатель закрытия модального
+						wishListDialog.closePromise.then(function(output) {
+
+							// запомним stash client email
+							if(mvm.wishListEmail == null){
+								mvm.wishListEmail = output.value.email;
+								store.set("wishListEmail", mvm.wishListEmail);
+							}
+
+							item.inWishlist = true;
+							mvm.getAddToWishListButtonLabel(item);
+						});
+					}
+
 					/*========================== INITIALIZATION ============================*/
 
 					/**
@@ -380,6 +481,17 @@
 						var cart = store.get("cart");
 						if (!helpers.isArray(cart)) {
 							mvm.cart = cart;
+						}
+					}
+
+					/**
+					 * Инициализация списка желаемого
+					 */
+					function initWishList() {
+						var clientEmail = store.get("wishListEmail");
+						console.log(clientEmail);
+						if (!helpers.isArray(clientEmail)) {
+							mvm.wishListEmail = clientEmail;
 						}
 					}
 
@@ -407,6 +519,11 @@
 						resolveService.getNewNotifications().then(function(data){
 							mvm.notifications = data.result;
 						});
+
+						// получим кол-во новых уведомлений
+						resolveService.getWishlistCount().then(function(data){
+							mvm.wishlists = data.result;
+						});
 					}
 
 					/**
@@ -419,6 +536,7 @@
 						});
 
 						initCart();
+						initWishList();
 						initMenu();
 						initInfoPanel();
 

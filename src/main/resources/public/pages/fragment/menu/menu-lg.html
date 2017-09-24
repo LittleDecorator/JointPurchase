@@ -49,10 +49,15 @@
                     <span flex="" class="flex"></span>
                     <!-- отображаем имя только авторизованного -->
                     <!--<span ng-if="auth.isAuth()">Добро пожальвать, {{::currentUser.name}}</span>-->
+                    <!-- список желаемого -->
+                    <a ui-sref="wishlist" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">
+                        <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">book</md-icon>
+                        <span class="badge ng-binding" ng-show="mvm.wishlists > 0" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;" >{{mvm.wishlists}}</span>
+                    </a>
                     <!-- уведомления -->
                     <a ui-sref="notification" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;">
                         <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">notifications</md-icon>
-                        <span class="badge ng-binding" ng-if="mvm.notifications > 0" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;" >{{::mvm.notifications}}</span>
+                        <span class="badge ng-binding" ng-if="mvm.notifications > 0" style="font-size: 0.8rem; color: #fff!important; background-color: #26a69a; border-radius: 50%; position: absolute; top: 2rem; font-weight: 300; min-width: 18px; line-height: .5; padding: 6px;" >{{mvm.notifications}}</span>
                     </a>
                     <!-- меню -->
                     <md-menu>

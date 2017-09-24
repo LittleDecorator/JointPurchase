@@ -386,7 +386,7 @@
                     <jvmArguments>
 	                    <!-- Debug options -->
 	                    -Xdebug
-	                    -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006
+	                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006
 
 	                    -Xms750m
 	                    -Xmx750m

@@ -149,4 +149,9 @@ public class ItemServiceImpl implements ItemService {
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
     }
+
+    @Override
+    public List<Item> getAllByIdList(List<String> ids) {
+        return itemRepository.findByIdIn(ids);
+    }
 }

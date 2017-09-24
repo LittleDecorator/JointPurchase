@@ -80,6 +80,19 @@ var helpers = {
         return res;
     },
 
+    findInArrayByPropertyValue: function(array,property,value){
+        var res = {};
+        array.some(function(elem){
+            if(elem[property] == value){
+                res = elem;
+                return true;
+            } else {
+                return false;
+            }
+        });
+        return res;
+    },
+
     findIdxInArrayById: function(array,id){
         var res = null;
         array.some(function(elem, index){

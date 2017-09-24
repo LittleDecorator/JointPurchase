@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-content" layout="column">
+
+        <div layout="row">
+
+            <md-input-container class="no-errors" flex="25">
+                <label>Email</label>
+                <input ng-model="::vm.wishlist.email" disabled>
+            </md-input-container>
+
+            <md-input-container class="no-errors" flex="20" style="margin-left:2%">
+                <label>Клиент</label>
+                <input ng-model="::vm.wishlist.subjetcId" disabled>
+            </md-input-container>
+
+        </div>
+
+        <md-card class="md-padding" ng-show="vm.wishlist.items && vm.wishlist.items.length > 0">
+            <div>
+                <h5>Товары:</h5>
+                <div class="table-result" style="margin-top: 5px;overflow: auto; max-height: 400px;">
+                    <table class="bordered table-result">
+                        <tbody>
+                        <tr ng-repeat="item in vm.wishlist.items track by item.id" class="row" ng-class="{'no-bottom-border':$last}">
+                            <td class="col s3 non-float">{{::item.article}}</td>
+                            <td class="col non-float">{{::item.name}}</td>
+                            <td class="col s1 non-float" style="text-align: right">
+                                <div style="cursor: pointer" ng-click="vm.removeItem(item.id)">
+                                    <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </md-card>
+
+    </div>
+
+</div>

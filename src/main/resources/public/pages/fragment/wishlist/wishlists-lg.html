@@ -1,0 +1,23 @@
+<div class="table-result">
+
+    <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th style="width: 55%">Клиент</th>
+            <th>Кол-во отложенного</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="wishlist in vm.wishlists track by wishlist.email" class="collection-item">
+            <td class="center-align" style="width: 20%">{{::wishlist.email}}</td>
+            <td class="center-align">{{::wishlist.subjectId}}</td>
+            <td class="center-align" style="width: 30%">{{::wishlist.count}}</td>
+            <td class="right-align" style="width: 60%">
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.showClientWishlist(wishlist.email)"><md-icon>search</md-icon></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

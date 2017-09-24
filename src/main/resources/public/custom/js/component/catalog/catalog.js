@@ -68,12 +68,13 @@
                             // если выбранный узел относится к Производителям
                             vm.searchFilter.company = $stateParams.id;
                         }
+                        vm.searchFilter.clientEmail=mvm.wishListEmail;
                         localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
                         vm.confirmedFilter.category = vm.currentCategory;
 
                         // если был выбран узел категории, и promise не пустой, то ...
-                        if (categoryPromise != null) {
+                        if (categoryPromise != null){
                             categoryPromise.$promise.then(function (data) {
                                 data.forEach(function (category) {
                                     category.isDefault = (category.id == $stateParams.id);
@@ -83,6 +84,7 @@
                         }
                         
                     } else {
+                        vm.searchFilter.clientEmail=mvm.wishListEmail;
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
                         localStorage.setItem($state.current.name, angular.toJson(vm.confirmedFilter));
                     }

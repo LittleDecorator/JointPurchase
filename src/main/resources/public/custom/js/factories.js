@@ -333,7 +333,22 @@
                             isArray : false
                         }
                     }),
+                },
+                wishlist: {
+                    count: $resource('/wishlist/count',{},{
+                        get:{method:'GET',isArray:false, transformResponse:function(data, headers){
+                            return {result: data}
+                        }}
+                    }),
+                    core : $resource('/wishlist/:email/:id',{},{
+                        all:{method:'GET',isArray:true},
+                        get:{method:'GET',isArray:false},
+                        put:{method:'PUT',isArray:false},
+                        post:{method:'POST',isArray:false},
+                        delete:{method:'DELETE',isArray:false}
+                    })
                 }
+                
             }
         }])
 
