@@ -154,7 +154,6 @@
                         //если достигли последнего шага
                         vm.data.showBusyText = true;
                         createOrder(deferred).then(function(data){
-                            console.log("data", data);
                             if(data != null){
                                 mvm.clearCart();
                                 showConfirmResult(data.id);

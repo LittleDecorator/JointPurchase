@@ -43,10 +43,6 @@
 					mvm.openSearch = openSearch;
 					mvm.showDevNotion = showDevNotion;
 					mvm.showBugReport = showBugReport;
-					mvm.showWishlistModal = showWishlistModal;
-					mvm.requestToList = requestToList;
-					mvm.preorderToList = preorderToList;
-					mvm.getAddToWishListButtonLabel = getAddToWishListButtonLabel;
 					
 
 					mvm.THUMB_URL = "media/image/thumb/";
@@ -133,20 +129,6 @@
 							// гасим предыдущий вызов
 							error.deferred.reject();
 						});
-					}
-
-					/**
-					 * Получение label'а кнопок.
-					 * @param item
-                     */
-					function getAddToWishListButtonLabel(item){
-						var label = "";
-						if (item.inWishlist){
-							label = item.status.id === 'preorder' ? 'Заказан' : 'Отложен';
-						} else {
-							label = item.status.id === 'preorder' ? 'Заказать' : 'Отложить';
-						}
-						return label;
 					}
 					
 					/**
@@ -243,6 +225,7 @@
 					/**
 					 * Видимо переход из бокового меню
 					 * @param name
+					 * @param params
 					 */
 					//TODO: перевесить на слушателя события, а само событие генерить при попытке изменения URL
 					function goto(name, params) {
@@ -392,84 +375,7 @@
 						});
 					}
 
-					/**
-					 * Показ модального для "отложить"
-					 * @param item
-                     * @param wClass
-                     */
-					function preorderToList(item, wClass) {
-						var toast = $mdToast.simple().position('top right').hideDelay(3000);
-						if(item.inWishlist){
-							goto('wishlist', {id: item.id});
-						}
-						if(mvm.wishListEmail == null){
-							showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
-						} else {
-							var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
-							dataResources.wishlist.core.post(stashed).$promise.then(function(data){
-								$mdToast.show(toast.textContent('ТОвар ['+ item.name + '] отложен').theme('info'));
-								item.inWishlist = true;
-								mvm.getAddToWishListButtonLabel(item);
-							}, function(error){
-								$mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
-							});
-						}
-
-					}
-
-					/**
-					 * Показ модального для "заказать"
-					 * @param item
-                     * @param wClass
-                     */
-					function requestToList(item, wClass) {
-						var toast = $mdToast.simple().position('top right').hideDelay(3000);
-						if(item.inWishlist){
-							goto('wishlist', {id: item.id});
-						}
-						if(mvm.wishListEmail == null){
-							showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
-						} else {
-							var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
-							dataResources.wishlist.core.post(stashed).$promise.then(function(data){
-								$mdToast.show(toast.textContent('Заявка на заказ товара ['+ item.name + '] принята').theme('info'));
-								item.inWishlist = true;
-								mvm.getAddToWishListButtonLabel(item);
-							}, function(error){
-								$mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
-							});
-						}
-					}
-
-					/**
-					 * Добавление товара в список желаемого
-					 * @param item
-					 * @param templateUrl
-					 * @param className
-					 */
-					function showWishlistModal(item, templateUrl, className) {
-						//определим модальное окно
-						var wishListDialog = modal({
-							templateUrl: templateUrl,
-							className: className,
-							closeByEscape: true,
-							controller: "wishlistController as vm",
-							data: item
-						});
-
-						// Слушатель закрытия модального
-						wishListDialog.closePromise.then(function(output) {
-
-							// запомним stash client email
-							if(mvm.wishListEmail == null){
-								mvm.wishListEmail = output.value.email;
-								store.set("wishListEmail", mvm.wishListEmail);
-							}
-
-							item.inWishlist = true;
-							mvm.getAddToWishListButtonLabel(item);
-						});
-					}
+					
 
 					/*========================== INITIALIZATION ============================*/
 
@@ -489,7 +395,6 @@
 					 */
 					function initWishList() {
 						var clientEmail = store.get("wishListEmail");
-						console.log(clientEmail);
 						if (!helpers.isArray(clientEmail)) {
 							mvm.wishListEmail = clientEmail;
 						}

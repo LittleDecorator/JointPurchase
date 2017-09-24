@@ -8,7 +8,6 @@
     angular.module('address')
 
         .controller('addressController',['$scope','dataResources','$timeout',function($scope,dataResources,$timeout){
-            console.log("in addressController");
 
             $scope.$watch('isInited', function handleFooChange( newValue, oldValue ) {
                 if(newValue){
@@ -19,7 +18,6 @@
             }, true);
 
             $scope.load = function(){
-                console.log("in load");
                 var map;
 
                 DG.then(function () {

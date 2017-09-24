@@ -138,7 +138,6 @@
                             vm.isSend = true;
                             vm.isFailed = false;
                             vm.showHints = true;
-                            console.log("выслан новый код");
                             resetCountdown();
                         }, function(error){
                             vm.isSend = false;

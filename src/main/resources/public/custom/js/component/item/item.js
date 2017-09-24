@@ -133,7 +133,6 @@
                 /* выгрузка товаров в excel */
                 function exportXls(){
                     var params = angular.extend({fileName: 'каталог.xls'},vm.confirmedFilter);
-                    console.log(params);
                     dataResources.report.items.get(params).$promise.then(function (data) {
                         saveAs(data.response, params.fileName);
                     }, function(error){
@@ -157,7 +156,6 @@
                  * загрузка файлов
                  */
                 function upload() {
-                    console.log(uploader);
                     var items = uploader.getNotUploadedItems();
                     var formData = new FormData();
 

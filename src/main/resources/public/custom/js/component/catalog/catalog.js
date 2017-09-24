@@ -8,8 +8,8 @@
     angular.module('catalog')
 
         /* Основной контроллер работы со списком товара. */
-        .controller('catalogController', ['$scope', '$state', 'dataResources', '$timeout', 'eventService', '$stateParams', '$rootScope', 'node',
-            function ($scope, $state, dataResources, $timeout, eventService, $stateParams, $rootScope, node) {
+        .controller('catalogController', ['$scope', '$state', 'dataResources', '$timeout', 'eventService', '$stateParams', '$rootScope', 'node','modal','$mdToast','store',
+            function ($scope, $state, dataResources, $timeout, eventService, $stateParams, $rootScope, node, modal, $mdToast, store) {
 
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
@@ -22,6 +22,10 @@
                 vm.itemView = itemView;
                 vm.filterBySubcategory = filterBySubcategory;
                 vm.getSubcategoryUrl = getSubcategoryUrl;
+                vm.showWishlistModal = showWishlistModal;
+                vm.requestToList = requestToList;
+                vm.preorderToList = preorderToList;
+                vm.getAddToWishListButtonLabel = getAddToWishListButtonLabel;
                 vm.init = init;
 
                 // используется только под администратором
@@ -279,6 +283,87 @@
                     $state.go("catalog.detail", {itemId: id});
                 }
 
+                /**
+                 * Получение label'а кнопок.
+                 * @param item
+                 */
+                function getAddToWishListButtonLabel(item){
+                    var label = "";
+                    if (item.inWishlist){
+                        label = item.status.id === 'preorder' ? 'Заказан' : 'Отложен';
+                    } else {
+                        label = item.status.id === 'preorder' ? 'Заказать' : 'Отложить';
+                    }
+                    return label;
+                }
+
+                /**
+                 * Показ модального для "отложить"
+                 * @param item
+                 * @param wClass
+                 */
+                function preorderToList(item, wClass) {
+                    if(item.inWishlist){
+                        goto('wishlist', {id: item.id});
+                    }
+                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
+                }
+
+                /**
+                 * Показ модального для "заказать"
+                 * @param item
+                 * @param wClass
+                 */
+                function requestToList(item, wClass) {
+                    if(item.inWishlist){
+                        goto('wishlist', {id: item.id});
+                    }
+                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
+                }
+
+                /**
+                 * Добавление товара в список желаемого
+                 * @param item
+                 * @param templateUrl
+                 * @param className
+                 */
+                function showWishlistModal(item, templateUrl, className) {
+                    var toast = $mdToast.simple().position('top right').hideDelay(3000);
+                    if(mvm.wishListEmail == null){
+                        //определим модальное окно
+                        var wishListDialog = modal({
+                            templateUrl: templateUrl,
+                            className: className,
+                            closeByEscape: true,
+                            controller: "wishlistController as vm",
+                            data: item
+                        });
+
+                        // Слушатель закрытия модального
+                        wishListDialog.closePromise.then(function(output) {
+
+                            // запомним stash client email
+                            if(mvm.wishListEmail == null){
+                                mvm.wishListEmail = output.value.email;
+                                store.set("wishListEmail", mvm.wishListEmail);
+                            }
+
+                            item.inWishlist = true;
+                            vm.getAddToWishListButtonLabel(item);
+                            $mdToast.show(toast.textContent('Заявка на заказ товара ['+ item.name + '] принята').theme('info'));
+                        });
+                    } else {
+                        var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
+                        dataResources.wishlist.core.post(stashed).$promise.then(function(data){
+                            $mdToast.show(toast.textContent('Товар ['+ item.name + '] отложен').theme('info'));
+                            item.inWishlist = true;
+                            vm.getAddToWishListButtonLabel(item);
+                        }, function(error){
+                            $mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
+                        });
+                    }
+                }
+
                 /* Получения шаблона страницы */
                 function getSubcategoryUrl() {
                     var templatePath = "pages/fragment/catalog/list/";
@@ -348,8 +433,6 @@
                 vm.item = angular.extend({}, product);
                 vm.mainImage = vm.item.url;
                 
-                console.log(vm.item);
-                console.log(mvm);
                 /**
                  * Установка изображения активным на просмотр
                  * @param id - изображение которое нужно показать как main

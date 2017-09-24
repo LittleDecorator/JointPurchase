@@ -90,7 +90,6 @@
 
                 // удаление клиента
                 function deletePerson(id) {
-                    console.log("delete&")
                     dataResources.customer.delete({id: id});
                     var currPerson = helpers.findInArrayById(vm.customers, id);
                     var idx = vm.customers.indexOf(currPerson);

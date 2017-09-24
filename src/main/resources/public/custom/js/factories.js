@@ -168,7 +168,6 @@
                         method:'POST',
                         isArray:false,
                         transformResponse: function(data){
-                            console.log(data);
                             return {result:data}
                         }
                     }
@@ -178,7 +177,6 @@
                         method:'POST',
                         isArray:false,
                         transformResponse: function(data){
-                            console.log(data);
                             return {result:data}
                         }
                     }
@@ -188,7 +186,6 @@
                         method:'POST',
                         isArray:false,
                         transformResponse: function(data){
-                            console.log(data);
                             return {result:angular.fromJson(data)}
                         }
                     }

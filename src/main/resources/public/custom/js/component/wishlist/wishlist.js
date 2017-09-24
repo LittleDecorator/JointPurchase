@@ -87,10 +87,7 @@
                 function addToList(){
                     if(vm.forms.wishList.$dirty){
                         if(vm.forms.wishList.$valid){
-                            console.log(resolved);
-                            console.log($rootScope.currentUser)
                             vm.stashed.itemId = resolved.id;
-                            console.log(vm.stashed);
                             dataResources.wishlist.core.post(vm.stashed).$promise.then(function(data){
                                 $scope.closeThisDialog(data);
                             }, function(error){
