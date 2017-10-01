@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.enums.ItemStatus;
 import com.acme.model.Item;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.ItemRepository;
@@ -71,33 +72,38 @@ public class ReportController {
     public void uploadItemsReport(MultipartHttpServletRequest request) {
         Map<String, MultipartFile> fileMap = request.getFileMap();
 
-        for(MultipartFile file : fileMap.values()){
-            if (!file.isEmpty()) {
-                try{
-                    Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(file.getBytes()));
-                    Sheet datatypeSheet = workbook.getSheetAt(0);
-                    Iterator<Row> iterator = datatypeSheet.iterator();
-                    // пропускаем первую строку
-                    iterator.next();
-                    // идем по строкам
-                    while (iterator.hasNext()) {
-                        Row currentRow = iterator.next();
-                        // идем по столбцам
-                        Cell idCell = currentRow.getCell(1);
-                        Cell countCell = currentRow.getCell(5);
-                        Cell priceCell = currentRow.getCell(6);
-                        // обновляем кол-во
-                        Item current = itemRepository.findOne(idCell.getStringCellValue());
-                        current.setInStock(new BigDecimal(countCell.getNumericCellValue()).intValue());
-                        current.setPrice(new BigDecimal(priceCell.getNumericCellValue()).intValue());
-                        itemRepository.save(current);
-
+        // пропускаем первую строку
+        // идем по строкам
+        // идем по столбцам
+        // обновляем кол-во
+        fileMap.values().stream().filter(file -> !file.isEmpty()).forEach(file -> {
+            try {
+                Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(file.getBytes()));
+                Sheet datatypeSheet = workbook.getSheetAt(0);
+                Iterator<Row> iterator = datatypeSheet.iterator();
+                // пропускаем первую строку
+                iterator.next();
+                // идем по строкам
+                while (iterator.hasNext()) {
+                    Row currentRow = iterator.next();
+                    // идем по столбцам
+                    Cell idCell = currentRow.getCell(1);
+                    Cell countCell = currentRow.getCell(5);
+                    Cell priceCell = currentRow.getCell(6);
+                    // обновляем кол-во
+                    Item current = itemRepository.findOne(idCell.getStringCellValue());
+                    current.setInStock(new BigDecimal(countCell.getNumericCellValue()).intValue());
+                    if (current.getInStock() > 0 && !ItemStatus.AVAILABLE.equals(current.getStatus())) {
+                        current.setStatus(ItemStatus.AVAILABLE);
                     }
-                } catch (Exception ex){
-                    ex.printStackTrace(System.out);
-                }
+                    current.setPrice(new BigDecimal(priceCell.getNumericCellValue()).intValue());
+                    itemRepository.save(current);
 
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace(System.out);
             }
-        }
+
+        });
     }
 }

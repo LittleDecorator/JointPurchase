@@ -322,9 +322,9 @@ section::after {
         padding: 0 10px;
     }
 
-    .section md-divider{
-        width: 60%;
-    }
+    /*.section md-divider{*/
+        /*width: 60%;*/
+    /*}*/
 
     /* Секция натуральности */
     #nature.section {

@@ -42,6 +42,16 @@
     border-radius: 0;
 }
 
+.ngdialog.ngdialog-theme-default.w-80 .ngdialog-content{
+    width: 80%;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    top: 120px;
+    padding: 0;
+    border-radius: 0;
+}
+
 
 .ngdialog.ngdialog-theme-default.fullscreen {
     padding: 0;

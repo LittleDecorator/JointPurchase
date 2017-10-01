@@ -29,7 +29,7 @@
                 vm.init = init;
 
                 // используется только под администратором
-                vm.searchFilter = {category: null, subcategory: null,company: null, criteria: null, offset: 0, limit: limit};
+                vm.searchFilter = {category: null, subcategory: null, company: null, criteria: null, offset: 0, limit: limit};
                 vm.items = [];
                 vm.categories = [];
                 vm.showSideFilter = false;
@@ -37,6 +37,7 @@
                 vm.allDataLoaded = false;
                 vm.infiniteDistance = 2;
                 vm.currentCategory = null;
+                vm.selectedCategory = null;
                 vm.currentNodeType = $stateParams.type;
 
                 function init() {
@@ -78,11 +79,14 @@
                         vm.confirmedFilter.category = vm.currentCategory;
 
                         // если был выбран узел категории, и promise не пустой, то ...
-                        if (categoryPromise != null){
+                        if (categoryPromise !== null){
                             categoryPromise.$promise.then(function (data) {
                                 data.forEach(function (category) {
-                                    category.isDefault = (category.id == $stateParams.id);
+                                    category.isDefault = (category.id === $stateParams.id);
                                     vm.categories.push(category);
+                                    if(vm.currentCategory === category.id){
+                                        vm.selectedCategory = category;
+                                    }
                                 });
                             });
                         }
@@ -265,6 +269,10 @@
                  * @param group
                  */
                 function filterBySubcategory(group) {
+                    if(group === undefined){
+                        group = vm.selectedCategory;
+                    }
+                    console.log(group)
                     vm.currentCategory = group.id;
                     vm.searchFilter.subcategory = group.id;
                     vm.searchFilter.offset = 0;
@@ -302,11 +310,12 @@
                  * @param item
                  * @param wClass
                  */
-                function preorderToList(item, wClass) {
+                function preorderToList(item) {
                     if(item.inWishlist){
                         goto('wishlist', {id: item.id});
                     }
-                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
+                    var wClass = mvm.width < 601 ? 'w-80' : 'w-30';
+                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/preorderModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
                 }
 
                 /**
@@ -314,11 +323,12 @@
                  * @param item
                  * @param wClass
                  */
-                function requestToList(item, wClass) {
+                function requestToList(item) {
                     if(item.inWishlist){
                         goto('wishlist', {id: item.id});
                     }
-                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/itemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
+                    var wClass = mvm.width < 601 ? 'w-80' : 'w-30';
+                    vm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/requestItemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
                 }
 
                 /**

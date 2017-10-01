@@ -583,3 +583,25 @@ md-sidenav#filter.md-sidenav-left {
 md-toast .md-toast-content {
     font-size: 1.2em;
 }
+
+/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
+@media (max-width: 600px) {
+    /* убираем лишний отступ на мобильном */
+    .main.container {
+        padding: 0;
+    }
+
+    /* переопределяем кнопку возврата на верх для мобильного */
+    .md-fab.docs-scroll-fab.showBackToTop {
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 1.6rem;
+        opacity: .7;
+    }
+
+    .md-fab.docs-scroll-fab.showBackToTop md-icon {
+        height: 28px!important;
+        width: 28px!important;
+    }
+}

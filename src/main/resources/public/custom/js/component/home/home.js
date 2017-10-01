@@ -17,8 +17,8 @@
 	        vm.scrollDown = scrollDown;
 
 	        vm.links = [
-		        { icon: 'mail' },
-		        { icon: 'message' },
+		        // { icon: 'mail' },
+		        // { icon: 'message' },
 		        { icon: 'facebook' },
 		        { icon: 'vk' },
 		        { icon: 'instagram' },

@@ -98,11 +98,11 @@
 
                 function applyKeyPress(event) {
                     if (event.keyCode == 13) {
-                        if(ngDialog.isOpen(filterDialog.id)){
+                        if(filterDialog !=null && ngDialog.isOpen(filterDialog.id)){
                             filterDialog.close();
                             event.preventDefault();
                         }
-                        apply();
+                        vm.apply();
                     }
                 }
 

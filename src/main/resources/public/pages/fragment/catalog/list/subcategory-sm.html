@@ -1,9 +1,6 @@
-<md-toolbar ng-if="vm.currentNodeType == 'category'" style="background-color: white!important;box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12); min-height: 50px" layout-wrap layout-fill>
-    <div class="md-toolbar-tools horizontal-repeater" style="padding: 0; width: 100%; background-color: white!important;">
-        <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
-            <div md-virtual-repeat="group in vm.categories" class="repeated-item" flex>
-                <md-button class="md-raised btn md" style="margin: 0" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
-            </div>
-        </md-virtual-repeat-container>
-    </div>
-</md-toolbar>
+
+<md-input-container class="md-block categoryGroup" ng-if="vm.currentNodeType == 'category'">
+    <md-select ng-model="vm.selectedCategory" ng-model-options="{trackBy: '$value.id'}" style="font-size: 1.3em" ng-change="vm.filterBySubcategory()">
+        <md-option ng-repeat="group in vm.categories" ng-value="group">{{::group.name}}</md-option>
+    </md-select>
+</md-input-container>

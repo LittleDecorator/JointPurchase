@@ -269,4 +269,22 @@
         line-height: 2.3;
         position: relative;
     }
+
+
+
+    .categoryGroup {
+        background-color: white;
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+        margin-top: 0;
+    }
+
+    /*.categoryGroup md-select:not[disabled]:focus md-select-value, .categoryGroup md-select-value {*/
+    .categoryGroup md-select-value {
+        border-bottom: none!important;
+        padding-bottom: 3px!important;
+    }
+
+    .categoryGroup md-select-value span div {
+        padding-left: 5px;
+    }
 }
