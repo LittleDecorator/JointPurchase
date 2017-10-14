@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  */
 
 @RestController
-@RequestMapping(value = "/notification")
+@RequestMapping(value = "/api/notification")
 public class NotificationController {
 
     @Autowired

@@ -10,7 +10,6 @@
 			.controller('cropController',['$scope','dataResources','$timeout','$stateParams', function($scope,dataResources, $timeout, $stateParams) {
 
 				$scope.dataUrl = 'media/image/'+ $stateParams.imageId;
-				console.log($stateParams);
 
 				var image;
 				var options;
@@ -38,7 +37,6 @@
 				};
 
 				var rebuild = function(event){
-					console.log(event);
 					var e = event || window.event;
 					var target = e.target || e.srcElement;
 					var cropBoxData;
@@ -64,13 +62,11 @@
 							canvasData = cropper.getCanvasData();
 
 							options.ready = function () {
-								console.log('ready');
 								cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
 							};
 						} else {
 							options[target.name] = target.value;
 							options.ready = function () {
-								console.log('ready');
 							};
 						}
 
@@ -81,7 +77,6 @@
 				};
 
 				var initCropper = function(){
-					console.log(1);
 					var Cropper = window.Cropper;
 					var container = document.querySelector('.img-container');
 					image = container.getElementsByTagName('img').item(0);

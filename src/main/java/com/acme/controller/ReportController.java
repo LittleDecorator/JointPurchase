@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * Created by nikolay on 23.07.17.
  */
 @RestController
-@RequestMapping(value = "/report")
+@RequestMapping(value = "/api/report")
 public class ReportController {
 
     @Autowired
@@ -54,7 +54,7 @@ public class ReportController {
         try {
             ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
             workbook.write(outByteStream);
-            byte [] outArray = outByteStream.toByteArray();
+            byte[] outArray = outByteStream.toByteArray();
             response.setContentType("application/ms-excel");
             response.setContentLength(outArray.length);
             response.setHeader("Expires:", "0"); // eliminates browser caching

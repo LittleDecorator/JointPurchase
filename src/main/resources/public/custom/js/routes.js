@@ -14,7 +14,12 @@ var route = {
                     }
                 },
                 data: {
-                    requireLogin: false
+                    requireLogin: false,
+
+                },
+                seoData: {
+                    title: "Магазин детских игрушек",
+                    description: "Только качественные и открытые игрушки..."
                 }
             },
 
@@ -135,6 +140,10 @@ var route = {
                 },
                 data:{
                     requireLogin: false
+                },
+                seoData: {
+                    title: "О магазине",
+                    description: "Наша миссия заключается в том, чтобы у каждого ребенка были хорошие игрушки"
                 }
             },
             /*=================================== УВЕДОМЛЕНИЯ * ====================================*/
@@ -269,6 +278,10 @@ var route = {
                 data:{
                     requireLogin: false,
                     displayName: 'Доставка'
+                },
+                seoData: {
+                    title: "Доставка",
+                    description: "Осуществляем доставку по всей России"
                 }
             },
 
@@ -284,6 +297,10 @@ var route = {
                 },
                 data:{
                     requireLogin: false
+                },
+                seoData: {
+                    title: "Акции",
+                    description: "Распродажа игрушек, конкурсы и сезонные скидки"
                 }
             },
 
@@ -300,6 +317,10 @@ var route = {
                 },
                 data: {
                     requireLogin: false
+                },
+                seoData: {
+                    title: "Контакты",
+                    description: "Где нас найти? Где забрать заказ?"
                 }
             },
 
@@ -401,6 +422,10 @@ var route = {
                     node: function() {
                        return null;
                     }
+                },
+                seoData: {
+                    title: "Каталог",
+                    description: "Описание раздела каталог"
                 }
             },
             {

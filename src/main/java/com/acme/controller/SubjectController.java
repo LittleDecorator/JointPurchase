@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/customer")
+@RequestMapping(value = "/api/customer")
 public class SubjectController{
 
     @Autowired

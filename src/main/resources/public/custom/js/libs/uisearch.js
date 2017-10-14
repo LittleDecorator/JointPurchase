@@ -81,16 +81,13 @@
 
 	function UISearch( el, options ) {	
 		this.el = el;
-		console.log(this.el);
 		//this.inputEl = el.querySelector( 'form > input.sb-search-input' );
 		this.inputEl = el.querySelector( 'input.sb-search-input' );
-		console.log(this.inputEl);
 		this._initEvents();
 	}
 
 	UISearch.prototype = {
 		_initEvents : function() {
-			console.log("initEvents");
 			var self = this,
 				initSearchFn = function( ev ) {
 					ev.stopPropagation();

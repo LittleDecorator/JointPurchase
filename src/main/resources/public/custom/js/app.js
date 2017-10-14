@@ -34,8 +34,8 @@
         /**
          * Конфигуратор приложения
          */
-        .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', '$mdIconProvider',
-            function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider, $mdIconProvider) {
+        .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', '$mdIconProvider', '$locationProvider',
+            function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider, $mdIconProvider, $locationProvider) {
 
                 // объявленем interceptor для каждого http запроса
                 $httpProvider.interceptors.push('authInterceptor');
@@ -49,17 +49,13 @@
                 });
 
                 // включение режима красивого url
-                //$locationProvider.html5Mode({
-                //    enabled: true,
-                //    requireBase: false,
-                //    rewriteLinks: false
-                //});
+                $locationProvider.html5Mode({
+                   enabled: true,
+                   requireBase: false,
+                   rewriteLinks: false
+                });
 
                 // определим основные md* стили
-                // $mdThemingProvider.generateThemesOnDemand(true);
-                // $mdThemingProvider.setDefaultTheme('altTheme');
-                // $mdThemingProvider.theme('default').dark();
-                // $mdThemingProvider.theme('default');
                 $mdThemingProvider.theme('success','default').dark();
                 $mdThemingProvider.theme('error','default').dark();
                 $mdThemingProvider.theme('warn','default').dark();
@@ -76,6 +72,11 @@
 
         .run(['$state', '$rootScope', '$location', '$templateRequest', 'ngDialog','$mdDialog', 'eventService',
             function ($state, $rootScope, $location, $templateRequest, ngDialog ,$mdDialog, eventService) {
+
+                $rootScope.addSeoData = function(title, description){
+                    var value = title + "|" + "Grimmstory";
+                    $rootScope.seo = {title: value, description:description};
+                };
 
 	            var urls = [
 		            'custom/icons/instagram.svg',
@@ -183,6 +184,15 @@
                     }
                 });
 
+                $rootScope.$on('$stateChangeSuccess', function (event, toState, fromState, toParams, fromParams){
+                    var seoData = toState.seoData;
+                    if(seoData){
+                        $rootScope.addSeoData(seoData.title, seoData.description);
+                    } else {
+                        $rootScope.addSeoData("Магазин детских игрушек", "Только качественные и открытые игрушки...");
+                    }
+                });
+
                 /**
                  * Наблюдатель возврата на предыдущую страницу
                  */
@@ -198,5 +208,7 @@
                         }
                     }
                 );
+
+
         }])
 })();

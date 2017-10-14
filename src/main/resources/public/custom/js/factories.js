@@ -48,18 +48,18 @@
             return {
 
                 catalog: {
-                    list : $resource('/catalog',{},{
+                    list : $resource('/api/catalog',{},{
                         all:{method:'POST',isArray:true}
                     }),
-                    search : $resource('/catalog/search/',{},{
+                    search : $resource('/api/catalog/search/',{},{
                         get :{method:'GET',isArray:true}
                     }),
-                    itemDetail: $resource("/catalog/:id/detail",{},{
+                    itemDetail: $resource("/api/catalog/:id/detail",{},{
                         get:{method:'GET',isArray:false}
                     })
                 },
 
-                company: $resource("/company/:id",{},{
+                company: $resource("/api/company/:id",{},{
                     all: {method:'GET',isArray:true},
                     get: {method:'GET',isArray:false},
                     delete: {method:'DELETE',isArray:false},
@@ -68,11 +68,11 @@
                         return {result:data}
                     }}
                 }),
-                itemImage: $resource('/content/items/:id',{},{
+                itemImage: $resource('/api/content/items/:id',{},{
                     query :{method:'GET',isArray:true},
                     get:{method:'GET',isArray:true}
                 }),
-                itemContent: $resource('/content/upload/item',{},{
+                itemContent: $resource('/api/content/upload/item',{},{
                     upload:{
                         method:'POST',
                         transformRequest: function(data) { return data; },
@@ -80,7 +80,7 @@
                         isArray : true
                     }
                 }),
-                itemCrop: $resource('/content/upload/crop',{},{
+                itemCrop: $resource('/api/content/upload/crop',{},{
                     upload:{
                         method:'POST',
                         transformRequest: function(data) { return data; },
@@ -89,7 +89,7 @@
                     }
                 }),
 
-                item: $resource('/item/:id',{},{
+                item: $resource('/api/item/:id',{},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false,
@@ -114,45 +114,45 @@
                     }
                 }),
                 
-                filterByCompany:$resource('/item/filter/company',{},{
+                filterByCompany:$resource('/api/item/filter/company',{},{
                     filter:{method:'GET',isArray:true}
                 }),
-                filterByCategory:$resource('/item/filter/category',{},{
+                filterByCategory:$resource('/api/item/filter/category',{},{
                     filter:{method:'GET',isArray:true}
                 }),
 
-                inboxMail:$resource('/mail/inbox',{},{get:{method:'GET',isArray:true}}),
-                sendMail:$resource('/mail/send',{},{get:{method:'GET',isArray:true}}),
+                inboxMail:$resource('/api/mail/inbox',{},{get:{method:'GET',isArray:true}}),
+                sendMail:$resource('/api/mail/send',{},{get:{method:'GET',isArray:true}}),
 
-                categoryItems: $resource('/category/:id/items',{},{ get : {method:'GET',isArray:true}}),
+                categoryItems: $resource('/api/category/:id/items',{},{ get : {method:'GET',isArray:true}}),
 
-                companyMap: $resource('/company/map',{},{ get : { method: 'GET', isArray : true }}),
-                categoryMap: $resource('/category/map',{},{get : { method: 'GET', isArray : true }}),
-                typeMap:$resource('category/type/map',{},{
+                companyMap: $resource('/api/company/map',{},{ get : { method: 'GET', isArray : true }}),
+                categoryMap: $resource('/api/category/map',{},{get : { method: 'GET', isArray : true }}),
+                typeMap:$resource('/api/category/type/map',{},{
                     get:{method:'GET',isArray:true}
                 }),
-                categoryTree: $resource("/category/tree",{},{
+                categoryTree: $resource("/api/category/tree",{},{
                     get:{method:'GET',isArray:true},
                     post:{method:'POST',isArray:false}
                 }),
-                categoryTypes:$resource("/category/types/:id",{},{
+                categoryTypes:$resource("/api/category/types/:id",{},{
                     get:{method:'GET',isArray:true},
                     update:{method:'POST',isArray : false},
                     delete:{method:'DELETE',isArray:false}
                 }),
-                categoryMenu:$resource("/category/side/menu",{},{
+                categoryMenu:$resource("/api/category/side/menu",{},{
                     get:{method:'GET',isArray:true}
                 }),
-                categoryRootMap:$resource("/category/map/roots",{},{
+                categoryRootMap:$resource("/api/category/map/roots",{},{
                     get:{method:'GET',isArray:true}
                 }),
-                categoryChildrenMap:$resource("/category/:id/children",{},{
+                categoryChildrenMap:$resource("/api/category/:id/children",{},{
                     get:{method:'GET',isArray:true}
                 }),
-                categorySubList:$resource("/category/:id/sub",{},{
+                categorySubList:$resource("/api/category/:id/sub",{},{
                     get:{method:'GET',isArray:true}
                 }),
-                category:$resource("/category/:id",{},{
+                category:$resource("/api/category/:id",{},{
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false},
                     put:{method:'PUT',isArray:false},
@@ -161,9 +161,9 @@
                 
 
                 //itemFilter:$resource("/item/filter",{},{apply :{method:'POST',isArray:true}}),
-                itemDetail: $resource("/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
+                itemDetail: $resource("/api/item/:id/detail",{},{get:{method:'GET',isArray:false}}),
                 /* AUTH SECTION */
-                authRegister: $resource('/auth/register',{},{
+                authRegister: $resource('/api/auth/register',{},{
                     post:{
                         method:'POST',
                         isArray:false,
@@ -172,7 +172,7 @@
                         }
                     }
                 }),
-                authRegisterConfirmRequest: $resource('/auth/register/confirm/request/:type',{type:'@type'},{
+                authRegisterConfirmRequest: $resource('/api/auth/register/confirm/request/:type',{type:'@type'},{
                     post:{
                         method:'POST',
                         isArray:false,
@@ -181,7 +181,7 @@
                         }
                     }
                 }),
-                authRegisterConfirm: $resource('/auth/register/confirm',{},{
+                authRegisterConfirm: $resource('/api/auth/register/confirm',{},{
                     post:{
                         method:'POST',
                         isArray:false,
@@ -190,12 +190,12 @@
                         }
                     }
                 }),
-                authRestore: $resource('/auth/restore',{},{post:{method:'POST',isArray:false}}),
+                authRestore: $resource('/api/auth/restore',{},{post:{method:'POST',isArray:false}}),
 
-                authLogin: $resource('/auth/login',{},{
+                authLogin: $resource('/api/auth/login',{},{
                     post:{method:'POST'}
                 }),
-                authChange: $resource('/auth/change',{},{
+                authChange: $resource('/api/auth/change',{},{
                     post:{
                         method:'POST',
                         isArray:false,
@@ -205,14 +205,13 @@
                     }
                 }),
 
-                personMap: $resource('/customer/map',{},{get : { method:'GET',isArray: true}}),
-                itemMap: $resource('/item/map',{},{get:{method:'GET',isArray:true}}),
-                image: $resource('/content/remove/:id',{},{remove:{method:'DELETE'}}),
-                order:$resource('/order/:id',{},{
+                personMap: $resource('/api/customer/map',{},{get : { method:'GET',isArray: true}}),
+                itemMap: $resource('/api/item/map',{},{get:{method:'GET',isArray:true}}),
+                image: $resource('/api/content/remove/:id',{},{remove:{method:'DELETE'}}),
+                order:$resource('/api/order/:id',{},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false, transformRequest:function(data){
-                        console.log(data);
                         if(data.order.recipientPhone){
                             data.order.recipientPhone = data.order.recipientPhone.replace(/[^0-9]/g,'');
                         }
@@ -220,18 +219,18 @@
                     }},
                     delete:{method:'DELETE',isArray:false}
                 }),
-                orderHistory: $resource('/order/history',{},{all:{method:'GET',isArray:true}}),
-                orderPrivate:$resource('/order/personal',{},{post:{method:'POST',isArray:false}}),
-                orderItems: $resource('/order/:id/items',{},{get: {method:'GET',isArray:true}}),
-                orderByCustomerId: $resource('/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
-                orderedItem: $resource('/order/:orderId/item/:itemId',{},{
+                orderHistory: $resource('/api/order/history',{},{all:{method:'GET',isArray:true}}),
+                orderPrivate:$resource('/api/order/personal',{},{post:{method:'POST',isArray:false}}),
+                orderItems: $resource('/api/order/:id/items',{},{get: {method:'GET',isArray:true}}),
+                orderByCustomerId: $resource('/api/order/customer/:id',{},{get : { method: 'GET', isArray : true }}),
+                orderedItem: $resource('/api/order/:orderId/item/:itemId',{},{
                     delete: {method:'DELETE'},
                     update: {method:'POST'}
                 }),
-                contactCallback: $resource('/contact/callback/sms',{},{
+                contactCallback: $resource('/api/contact/callback/sms',{},{
                     post:{method:'POST',isArray:false}
                 }),
-                customer: $resource('/customer/:id',{},{
+                customer: $resource('/api/customer/:id',{},{
                         all:{method:'GET',isArray:true},
                         get:{method:'GET',isArray:false},
                         put:{method:'PUT',isArray:false},
@@ -239,24 +238,24 @@
                         delete:{method:'DELETE',isArray:false}
                     }
                 ),
-                customerPrivate: $resource('/customer/private',{},{
+                customerPrivate: $resource('/api/customer/private',{},{
                     get:{method:'GET',isArray:false},
                 }),
 
-                previewItems: $resource('/item/preview',{},{
+                previewItems: $resource('/api/item/preview',{},{
                     filter:{method:'POST',isArray:false}
                 }),
 
-                galleryShow: $resource('content/set/show',{},{
+                galleryShow: $resource('/api/content/set/show',{},{
                     toggle:{method:'PUT',isArray:false}
                 }),
-                galleryMain: $resource('content/set/main',{},{
+                galleryMain: $resource('/api/content/set/main',{},{
                     toggle:{method:'PUT',isArray:false}
                 }),
-                notForSale:$resource('item/set/sale',{},{
+                notForSale:$resource('/api/item/set/sale',{},{
                     toggle:{method:'POST',isArray:false}
                 }),
-                itemStatusMap:$resource('clss/item/status/map',{},{
+                itemStatusMap:$resource('/api/clss/item/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         var result = [];
                         angular.forEach(angular.fromJson(data), function(value, key){
@@ -266,10 +265,10 @@
                     }}
                 }),
                 // отмена заказа
-                orderCancel:$resource('order/:id/cancel',{id:'@id'}, {
+                orderCancel:$resource('/api/order/:id/cancel',{id:'@id'}, {
                     put: {method: 'PUT', isArray: false}
                 }),
-                orderStatusMap:$resource('clss/order/status/map',{},{
+                orderStatusMap:$resource('/api/clss/order/status/map',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         // var result = [{id:null,value:"Выберите статус заказа ..."}];
 	                    var result = [];
@@ -279,7 +278,7 @@
                         return result;
                     }}
                 }),
-                deliveryMap:$resource('clss/order/delivery',{},{
+                deliveryMap:$resource('/api/clss/order/delivery',{},{
                     get:{method:'GET',isArray:true,transformResponse: function(data){
                         // var result = [{id:null,value:"Выберите тип доставки ..."}];
 	                    var result = [];
@@ -290,12 +289,12 @@
                     }}
                 }),
                 notification:{
-                    newCount: $resource('/notification/new/count',{},{
+                    newCount: $resource('/api/notification/new/count',{},{
                         get:{method:'GET',isArray:false, transformResponse:function(data, headers){
                             return {result: data}
                         }}
                     }),
-                    core: $resource('/notification/:notificationId',{},{
+                    core: $resource('/api/notification/:notificationId',{},{
                             all:{method:'GET',isArray:true},
                             get:{method:'GET',isArray:false},
                             put:{method:'PUT',isArray:false},
@@ -305,12 +304,12 @@
                     )
                 },
                 instagram:{
-                    image: $resource('/content/instagram',{},{
+                    image: $resource('/api/content/instagram',{},{
                         all:{method:"GET", isArray:true}
                     }),
                 },
                 report: {
-                    items: $resource('/report/items/:fileName',{fileName:'@fileName'},{
+                    items: $resource('/api/report/items/:fileName',{fileName:'@fileName'},{
                         get:{
                             method: 'GET',
                             isArray:false,
@@ -332,12 +331,12 @@
                     }),
                 },
                 wishlist: {
-                    count: $resource('/wishlist/count',{},{
+                    count: $resource('/api/wishlist/count',{},{
                         get:{method:'GET',isArray:false, transformResponse:function(data, headers){
                             return {result: data}
                         }}
                     }),
-                    core : $resource('/wishlist/:email/:id',{},{
+                    core : $resource('/api/wishlist/:email/:id',{},{
                         all:{method:'GET',isArray:true},
                         get:{method:'GET',isArray:false},
                         put:{method:'PUT',isArray:false},
@@ -379,12 +378,10 @@
                             modalInstance = {
                                 params: options.params || {},
                                 close: function (result) {
-                                    console.log("in close modal");
                                     deferred.resolve(result);
                                     closeModal(modalBase, scope);
                                 },
                                 dismiss: function (reason) {
-                                    console.log("in dismiss modal");
                                     deferred.reject(reason);
                                     closeModal(modalBase, scope);
                                 }

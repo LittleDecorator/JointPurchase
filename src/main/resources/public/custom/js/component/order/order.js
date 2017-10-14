@@ -210,7 +210,6 @@
                 vm.deliveries = deliveryMap;
                 vm.showHints = true;
                 vm.order = order ? order: {};
-                console.log(vm.order)
 
                 /**
                  * Инициализация

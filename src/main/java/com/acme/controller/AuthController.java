@@ -8,18 +8,14 @@ import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
 import com.acme.repository.CredentialRepository;
 import com.acme.service.AuthService;
-import com.acme.service.EmailService;
 import com.acme.service.TokenService;
 import com.acme.util.PasswordHashing;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,7 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/api/auth")
 public class AuthController {
 
     @Autowired

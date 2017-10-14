@@ -21,7 +21,6 @@
                         var req = angular.extend({}, $scope.data);
                         req.password = cryptoService.encryptString(req.password);
                         dataResources.authRestore.post(req).$promise.then(function(data){
-                            console.log(data);
                             $scope.isSend = true;
                             $scope.showHints = true;
                         }, function(errors){

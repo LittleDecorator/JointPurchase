@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/catalog")
+@RequestMapping(value = "/api/catalog")
 public class CatalogController {
 
     @Autowired

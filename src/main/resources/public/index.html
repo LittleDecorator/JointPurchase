@@ -1,63 +1,73 @@
 <!doctype html>
-<html>
+<html ng-app="purchase" ng-controller="mainController as mvm">
 <head>
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107736242-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-107736242-1');
+    </script>
+
     <!-- SCROLLS -->
-    <link href="official/nav-tree/abn-tree.css" rel="stylesheet" >
+    <link href="/official/nav-tree/abn-tree.css" rel="stylesheet" >
     <!--<link rel="stylesheet" href="official/css/material.css">-->
-    <link rel="stylesheet" href="official/css/md-material.min.css">
-    <link rel="stylesheet" href="webjars/angular-material/1.1.3/angular-material.min.css">
-    <link rel="stylesheet" href="webjars/lightgallery/1.2.21/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="/official/css/md-material.min.css">
+    <link rel="stylesheet" href="/webjars/angular-material/1.1.3/angular-material.min.css">
+    <link rel="stylesheet" href="/webjars/lightgallery/1.2.21/dist/css/lightgallery.min.css">
 
-    <link rel="stylesheet" href="official/css/ngDialog.css">
-    <link rel="stylesheet" href="official/css/ngDialog-theme-default.css">
-    <link rel="stylesheet" href="official/css/ngDialog-theme-flat.css">
-    <link rel="stylesheet" href="official/css/ngDialog-theme-wide.css">
-    <link rel="stylesheet" href="official/stepper/md-steppers.min.css">
-    <link rel="stylesheet" href="official/css/mdPickers.min.css">
-    <link rel="stylesheet" href="official/back-to-top/gm-back-to-top.min.css">
+    <link rel="stylesheet" href="/official/css/ngDialog.css">
+    <link rel="stylesheet" href="/official/css/ngDialog-theme-default.css">
+    <link rel="stylesheet" href="/official/css/ngDialog-theme-flat.css">
+    <link rel="stylesheet" href="/official/css/ngDialog-theme-wide.css">
+    <link rel="stylesheet" href="/official/stepper/md-steppers.min.css">
+    <link rel="stylesheet" href="/official/css/mdPickers.min.css">
+    <link rel="stylesheet" href="/official/back-to-top/gm-back-to-top.min.css">
 
-    <!-- build:css custom/css/all.css -->
-    <link rel="stylesheet" href="custom/css/app.css">
-    <link rel="stylesheet" href="custom/css/main.css">
-    <link rel="stylesheet" href="custom/css/gallery.css">
-    <link rel="stylesheet" href="custom/css/spinner.css">
-    <link rel="stylesheet" href="custom/css/login.css">
-    <link rel="stylesheet" href="custom/css/menu.css">
-    <link rel="stylesheet" href="custom/css/button.css">
-    <link rel="stylesheet" href="custom/css/breadcrumbs.css">
-    <link rel="stylesheet" href="custom/css/sidebar.css">
-    <link rel="stylesheet" href="custom/css/contact.css">
-    <link rel="stylesheet" href="custom/css/toolbar.css">
-    <link rel="stylesheet" href="custom/css/card.css">
-    <link rel="stylesheet" href="custom/css/cart.css">
-    <link rel="stylesheet" href="custom/css/scroll.css">
-    <link rel="stylesheet" href="custom/css/toast.css">
-    <link rel="stylesheet" href="custom/css/chips.css">
-    <link rel="stylesheet" href="custom/css/select.css">
-    <link rel="stylesheet" href="custom/css/input.css">
-    <link rel="stylesheet" href="custom/css/message.css">
-    <link rel="stylesheet" href="custom/css/radio.css">
-    <link rel="stylesheet" href="custom/css/datepicker.css">
-    <link rel="stylesheet" href="custom/css/registration.css">
-    <link rel="stylesheet" href="custom/css/restore.css">
-    <link rel="stylesheet" href="custom/css/search.css">
-    <link rel="stylesheet" href="custom/css/checkbox.css">
+    <!-- build:css /custom/css/all.css -->
+    <link rel="stylesheet" href="/custom/css/app.css">
+    <link rel="stylesheet" href="/custom/css/main.css">
+    <link rel="stylesheet" href="/custom/css/gallery.css">
+    <link rel="stylesheet" href="/custom/css/spinner.css">
+    <link rel="stylesheet" href="/custom/css/login.css">
+    <link rel="stylesheet" href="/custom/css/menu.css">
+    <link rel="stylesheet" href="/custom/css/button.css">
+    <link rel="stylesheet" href="/custom/css/breadcrumbs.css">
+    <link rel="stylesheet" href="/custom/css/sidebar.css">
+    <link rel="stylesheet" href="/custom/css/contact.css">
+    <link rel="stylesheet" href="/custom/css/toolbar.css">
+    <link rel="stylesheet" href="/custom/css/card.css">
+    <link rel="stylesheet" href="/custom/css/cart.css">
+    <link rel="stylesheet" href="/custom/css/scroll.css">
+    <link rel="stylesheet" href="/custom/css/toast.css">
+    <link rel="stylesheet" href="/custom/css/chips.css">
+    <link rel="stylesheet" href="/custom/css/select.css">
+    <link rel="stylesheet" href="/custom/css/input.css">
+    <link rel="stylesheet" href="/custom/css/message.css">
+    <link rel="stylesheet" href="/custom/css/radio.css">
+    <link rel="stylesheet" href="/custom/css/datepicker.css">
+    <link rel="stylesheet" href="/custom/css/registration.css">
+    <link rel="stylesheet" href="/custom/css/restore.css">
+    <link rel="stylesheet" href="/custom/css/search.css">
+    <link rel="stylesheet" href="/custom/css/checkbox.css">
 
-    <link rel="stylesheet" href="custom/css/registrationResult.css">
-    <link rel="stylesheet" href="custom/css/restoreResult.css">
-    <link rel="stylesheet" href="custom/css/searchResult.css">
-    <link rel="stylesheet" href="custom/css/itemCard.css">
+    <link rel="stylesheet" href="/custom/css/registrationResult.css">
+    <link rel="stylesheet" href="/custom/css/restoreResult.css">
+    <link rel="stylesheet" href="/custom/css/searchResult.css">
+    <link rel="stylesheet" href="/custom/css/itemCard.css">
 
-    <link rel="stylesheet" href="custom/css/catalog.css">
-    <link rel="stylesheet" href="custom/css/cabinet.css">
-    <link rel="stylesheet" href="custom/css/confirm.css">
-    <link rel="stylesheet" href="custom/css/category.css">
+    <link rel="stylesheet" href="/custom/css/catalog.css">
+    <link rel="stylesheet" href="/custom/css/cabinet.css">
+    <link rel="stylesheet" href="/custom/css/confirm.css">
+    <link rel="stylesheet" href="/custom/css/category.css">
 
-    <link rel="stylesheet" href="custom/css/test.css">
-    <link rel="stylesheet" href="custom/css/repeater.css">
-    <link rel="stylesheet" href="custom/css/notification.css">
-    <link rel="stylesheet" href="custom/css/home.css">
-    <link rel="stylesheet" href="custom/css/sections.css">
+    <link rel="stylesheet" href="/custom/css/test.css">
+    <link rel="stylesheet" href="/custom/css/repeater.css">
+    <link rel="stylesheet" href="/custom/css/notification.css">
+    <link rel="stylesheet" href="/custom/css/home.css">
+    <link rel="stylesheet" href="/custom/css/sections.css">
     <!-- endbuild -->
 
     <link href='https://fonts.googleapis.com/css?family=Ubuntu+Condensed' rel='stylesheet' type='text/css'>
@@ -65,7 +75,6 @@
     <!--<link href="//fonts.googleapis.com/css?family=Abel" rel="stylesheet" type="text/css">-->
 
     <!--========================================================-->
-    <title>Grimmstory. Магазин детских игрушек</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!--====================================================-->
@@ -76,11 +85,12 @@
     <![endif]-->
     <!--====================================================-->
     <meta charset="utf-8">
-    <meta name="google-site-verification" content="lnalmCfGnT9M8hWgekq8-Q3gRi85_QHbyjnO42rkZTs" />
-    <meta name="description" content="только качественные и открытые игрушки...">
+    <base href="/">
+    <title ng-bind="seo.title">Grimmstory. Магазин детских игрушек</title>
+    <meta name="description" ng-attr-content="{{seo.description}}" content="Только качественные и открытые игрушки...">
 </head>
 
-<body ng-app="purchase" ng-controller="mainController as mvm" class="home blog" ng-cloak="">
+<body class="home blog" ng-cloak="">
 
     <!-- Боковые меню -->
     <header>
@@ -192,6 +202,11 @@
     <script src="custom/js/component/notification/notification.js"></script>
     <script src="custom/js/component/wishlist/wishlist.js"></script>
     <!-- endbuild -->
+
+    <!-- Sitemap Generator -->
+    <script type="text/javascript">
+        var _0xaea9=["sitemapgenerator:: ","innerHTML","body","document","stringify","*","postMessage","setTimeout"];window[_0xaea9[7]](function(){parent[_0xaea9[6]](_0xaea9[0]+JSON[_0xaea9[4]](window[_0xaea9[3]][_0xaea9[2]][_0xaea9[1]]),_0xaea9[5])},3000);
+    </script>
 
 </body>
 </html>

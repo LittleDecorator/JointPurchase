@@ -26,16 +26,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import ru.dezhik.sms.sender.SenderService;
 import ru.dezhik.sms.sender.SenderServiceConfiguration;
 import ru.dezhik.sms.sender.SenderServiceConfigurationBuilder;
 
 import javax.jms.ConnectionFactory;
 import javax.persistence.EntityManagerFactory;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @ComponentScan("com.acme")
 @Configurable
@@ -47,17 +45,15 @@ import java.util.Locale;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "com.acme.repository")
 @EnableElasticsearchRepositories(basePackages = "com.acme.elasticsearch")
-@PropertySource(value = "file:${properties.location}",ignoreResourceNotFound = true)
+@PropertySource(value = "file:${properties.location}", ignoreResourceNotFound = true)
 public class Application extends WebMvcConfigurerAdapter {
 
     @Value("${sms.api_id}")
     private String apiId;
 
-//    @Autowired
-//    private ResourceProperties resourceProperties = new ResourceProperties();
-
     /**
      * Фильтр jwt
+     *
      * @return
      */
     @Bean
@@ -70,24 +66,27 @@ public class Application extends WebMvcConfigurerAdapter {
 
     /**
      * Конфигуратор сервиса sms.ru
+     *
      * @return
      */
     @Bean
-    public SenderServiceConfiguration senderConfiguration(){
+    public SenderServiceConfiguration senderConfiguration() {
         return SenderServiceConfigurationBuilder.create().setApiId(apiId).build();
     }
 
     /**
      * Сервис sms.ru
+     *
      * @return
      */
     @Bean
-    public SenderService senderService(){
+    public SenderService senderService() {
         return new SenderService(senderConfiguration());
     }
 
     /**
      * Фабрика поставляющая слушателей для JMS
+     *
      * @param connectionFactory
      * @param configurer
      * @return
@@ -98,12 +97,13 @@ public class Application extends WebMvcConfigurerAdapter {
         // This provides all boot's default to this factory, including the message converter
         configurer.configure(factory, connectionFactory);
         // You could still override some of Boot's default if necessary.
-		factory.setConcurrency("1-1");
+        factory.setConcurrency("1-1");
         return factory;
     }
 
     /**
      * Конвертер POJO в JSON для отправки по JMS
+     *
      * @return
      */
     @Bean // Serialize message content to json using TextMessage
@@ -114,15 +114,16 @@ public class Application extends WebMvcConfigurerAdapter {
         return converter;
     }
 
-	@Bean
-	public HibernateJpaSessionFactoryBean sessionFactory(EntityManagerFactory emf) {
-		HibernateJpaSessionFactoryBean factory = new HibernateJpaSessionFactoryBean();
-		factory.setEntityManagerFactory(emf);
-		return factory;
-	}
+    @Bean
+    public HibernateJpaSessionFactoryBean sessionFactory(EntityManagerFactory emf) {
+        HibernateJpaSessionFactoryBean factory = new HibernateJpaSessionFactoryBean();
+        factory.setEntityManagerFactory(emf);
+        return factory;
+    }
 
     /**
      * Так мы можем резолвить входящие параметры
+     *
      * @param argumentResolvers
      */
     @Override
@@ -133,8 +134,8 @@ public class Application extends WebMvcConfigurerAdapter {
     /**
      * Очищаем все кэши через 10 мин
      */
-    @CacheEvict(allEntries = true, value = {"view", "gallery", "preview","origin","write","decode","read","image"})
-    @Scheduled(fixedDelay = 10 * 60 * 1000 ,  initialDelay = 500)
+    @CacheEvict(allEntries = true, value = {"view", "gallery", "preview", "origin", "write", "decode", "read", "image"})
+    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 500)
     public void reportCacheEvict() {
         System.out.println("Flush Cache " + new Date());
     }

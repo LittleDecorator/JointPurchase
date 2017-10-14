@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/order")
+@RequestMapping(value = "/api/order")
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);

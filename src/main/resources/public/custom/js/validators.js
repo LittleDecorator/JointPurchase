@@ -30,7 +30,6 @@
                 restrict:'A',
                 require: 'ngModel',
                 link: function (scope, elm, attrs, ctrl) {
-                    console.log(ctrl);
                     ctrl.$parsers.push(function(value) {
                         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
                         if (re.test(value)) {
@@ -39,8 +38,6 @@
                             ctrl.$setValidity('emailValidator', false);
 
                         }
-                        console.log(scope);
-
                         return value;
 
                     });
@@ -62,8 +59,6 @@
                             ctrl.$setValidity('phoneValidator', false);
 
                         }
-                        console.log(scope);
-
                         return value;
 
                     });
@@ -78,8 +73,6 @@
                 link: function (scope, elm, attrs, ctrl) {
 
                     ctrl.$parsers.push(function(value) {
-                        console.log(value);
-                        console.log(typeof value);
                         if (value){
                             if(typeof value == 'object' && !helpers.isEmpty(value)) {
                                 ctrl.$setValidity('emptyValidator', true);
@@ -90,10 +83,7 @@
                             }
                         } else {
                             ctrl.$setValidity('emptyValidator', false);
-
                         }
-                        console.log(scope);
-
                         return value;
 
                     });

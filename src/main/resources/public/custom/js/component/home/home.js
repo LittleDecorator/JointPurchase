@@ -19,9 +19,9 @@
 	        vm.links = [
 		        // { icon: 'mail' },
 		        // { icon: 'message' },
-		        { icon: 'facebook' },
-		        { icon: 'vk' },
-		        { icon: 'instagram' },
+		        { icon: 'facebook', url:''},
+		        { icon: 'vk', url: 'https://vk.com/club68247236'},
+		        { icon: 'instagram', url: ''}
 	        ];
 
 	        vm.menus = [

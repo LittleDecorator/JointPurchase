@@ -373,7 +373,6 @@
             };
 
             this.getNotification = function(id){
-                console.log(id);
                 var deferred = $q.defer();
                 dataResources.notification.core.get({notificationId: id},function(data){
                     deferred.resolve(data);

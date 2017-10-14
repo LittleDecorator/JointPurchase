@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/clss")
+@RequestMapping("/api/clss")
 public class ClssController {
 
     @Autowired

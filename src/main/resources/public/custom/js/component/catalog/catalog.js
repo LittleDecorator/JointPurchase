@@ -272,7 +272,6 @@
                     if(group === undefined){
                         group = vm.selectedCategory;
                     }
-                    console.log(group)
                     vm.currentCategory = group.id;
                     vm.searchFilter.subcategory = group.id;
                     vm.searchFilter.offset = 0;

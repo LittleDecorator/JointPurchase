@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/contact")
+@RequestMapping(value = "/api/contact")
 public class ContactController {
 
     @Autowired

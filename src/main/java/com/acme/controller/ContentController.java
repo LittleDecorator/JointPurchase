@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/content")
+@RequestMapping(value = "/api/content")
 public class ContentController{
 
     @Autowired

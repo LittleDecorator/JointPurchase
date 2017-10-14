@@ -12,7 +12,7 @@ import java.io.IOException;
  * Created by nikolay on 26.06.17.
  */
 @RestController
-@RequestMapping(value = "/instagram")
+@RequestMapping(value = "/api/instagram")
 public class InstagramController {
 
     @Autowired

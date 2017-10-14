@@ -31,7 +31,6 @@
                     if (!helper.isImage(params.file)) return;
 
                     var canvas = element.find('canvas');
-                    console.log(canvas);
                     var reader = new FileReader();
 
                     reader.onload = onLoadFile;
@@ -44,12 +43,9 @@
                     }
 
                     function onLoadImage() {
-                        console.log(this.width);
-                        console.log(this.height);
                         var width = this.width;
                         var height = this.height;
                         if(params.width && params.height){
-                            console.log('with params!');
                             width = params.width || this.width / this.height * params.height;
                             height = params.height || this.height / this.width * params.width;
                         }
