@@ -125,15 +125,13 @@
                     <td class="col s2 non-float" style="text-align: center">{{::item.price| number}}р.</td>
                     <td class="col s2 non-float" style="text-align: center">
                         <div>
-                            <i class="small mdi-hardware-keyboard-arrow-left" style="cursor: pointer;vertical-align: middle" ng-click="vm.decrementCou($index)" ng-class="{'disabled':vm.item.count<1}"></i>
+                            <md-icon ng-click="vm.decrementCou($index)" ng-class="{'disabled':vm.item.count<1}" style="cursor: pointer;font-size: 2em; height: 1em; line-height: 1em; width: 1em;">keyboard_arrow_left</md-icon>
                             <span>{{item.count}}</span>
-                            <i class="small mdi-hardware-keyboard-arrow-right" style="cursor: pointer;vertical-align: middle" ng-click="vm.incrementCou($index)"></i>
+                            <md-icon ng-click="vm.incrementCou($index)" style="cursor: pointer;font-size: 2em; height: 1em; line-height: 1em; width: 1em;">keyboard_arrow_right</md-icon>
                         </div>
                     </td>
                     <td class="col s1 non-float" style="text-align: center">
-                        <div style="cursor: pointer" ng-click="vm.remItemsFromOrder($index)">
-                            <i class="small mdi-content-clear" style="color: #ee6e73"></i>
-                        </div>
+                        <md-icon ng-click="vm.remItemsFromOrder($index)" style="color: darksalmon;cursor: pointer;font-size: 2em; height: 1em; line-height: 1em; width: 1em;">clear</md-icon>
                     </td>
                 </tr>
                 </tbody>
