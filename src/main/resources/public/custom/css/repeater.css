@@ -1,7 +1,11 @@
 .virtualRepeatdemoVerticalUsage #vertical-container {
     height: 400px;
     width: 100%;
-    /*max-width: 400px; */
+}
+
+#itemModalRepeater.virtualRepeatdemoVerticalUsage #vertical-container {
+    height: 315px;
+    width: 100%;
 }
 
 .virtualRepeatdemoVerticalUsage .repeated-item {

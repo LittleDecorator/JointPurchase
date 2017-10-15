@@ -1,6 +1,7 @@
 package com.acme;
 
 import com.acme.util.CustomResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -139,6 +140,12 @@ public class Application extends WebMvcConfigurerAdapter {
     public void reportCacheEvict() {
         System.out.println("Flush Cache " + new Date());
     }
+
+
+//    @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 60 * 1000)
+//    public void updateItemStatus(){
+//
+//    }
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

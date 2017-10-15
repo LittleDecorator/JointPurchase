@@ -9,6 +9,7 @@ import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
+import org.assertj.core.util.Strings;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -179,8 +180,8 @@ public class ItemController{
      * Получение мапы товара для списков
      **/
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<ItemMap> getItemMap() {
-        return itemRepository.findAllByOrderByDateAddAsc().stream().map(i -> new ItemMap(i.getId(), i.getName(), i.getPrice(), i.getArticle())).collect(Collectors.toList());
+    public List<ItemMap> getItemMap(@RequestParam(name = "name", required = false) String name, @RequestParam(value = "article", required = false) String article) {
+        return itemRepository.findAll(ItemSpecifications.modalFilter(name, article)).stream().map(i -> new ItemMap(i.getId(), i.getName(), i.getPrice(), i.getArticle())).collect(Collectors.toList());
     }
 
     /**

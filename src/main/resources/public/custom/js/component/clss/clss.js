@@ -110,14 +110,20 @@
             vm.init = init;
             vm.select = select;
             vm.findSelected = findSelected;
+            vm.apply = apply;
+            vm.clear = clear;
             
             vm.items = [];
+            vm.filter = {name:null, article:null};
 
             /**
              * получаем мапу товаров
              */
-            function init(){
-                dataResources.itemMap.get().$promise.then(function(result){
+            function init(clear){
+                dataResources.itemMap.get(vm.filter).$promise.then(function(result){
+                    if(clear){
+                        vm.items = [];
+                    }
                     angular.forEach(result, function (item) {
                         item.selected=false;
                         vm.items.push(item);
@@ -152,6 +158,15 @@
                         }
                     });
                 }
+            }
+            
+            function apply() {
+                init(true);
+            }
+            
+            function clear(){
+                vm.filter = {name:null, article:null};
+                init(true);
             }
             
             init();

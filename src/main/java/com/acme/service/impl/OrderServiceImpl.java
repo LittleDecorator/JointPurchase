@@ -11,6 +11,7 @@ import com.acme.service.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderServiceImpl implements OrderService {
 
-	private AtomicInteger seq = new AtomicInteger(0);
+	private AtomicInteger seq;
 
 	@Autowired
 	OrderRepository orderRepository;
@@ -136,7 +138,9 @@ public class OrderServiceImpl implements OrderService {
 			/* сохраним заказ из запроса. */
 			request.getOrder().setStatus(OrderStatus.NEW);
 			// TODO: fix temporary hook
-			request.getOrder().setRecipientAddress("Здесь должен быть адрес пункта самовывоза при типе доставки - САМОВЫВОЗ");
+			if(Strings.isNullOrEmpty(request.getOrder().getRecipientAddress())){
+				request.getOrder().setRecipientAddress("Здесь должен быть адрес пункта самовывоза при типе доставки - САМОВЫВОЗ");
+			}
 			// TODO: override order uid
 			request.getOrder().setUid(genOrderNum());
 			Order order = orderRepository.save(request.getOrder());
@@ -219,5 +223,12 @@ public class OrderServiceImpl implements OrderService {
 			log.error("Ошибка удаления заказа = {0}",order, ex);
 			transactionManager.rollback(status);
 		}
+	}
+
+	@PostConstruct
+	public void initSequence() {
+		String lastNumber = String.valueOf(orderRepository.getLastUid());
+		int value =  Integer.parseInt(lastNumber.substring(lastNumber.length() - 3));
+		seq = new AtomicInteger(value);
 	}
 }

@@ -5,6 +5,7 @@ import com.acme.model.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
     @Transactional(noRollbackFor = {Exception.class, EmptyResultDataAccessException.class})
     String deleteBySubjectId(String subjectId);
 
+    @Query("SELECT coalesce(max(o.uid), 0) FROM Order o")
+    Long getLastUid();
 }

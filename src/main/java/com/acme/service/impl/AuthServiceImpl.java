@@ -6,8 +6,10 @@ import com.acme.helper.RegistrationData;
 import com.acme.helper.SubjectCredential;
 import com.acme.model.Credential;
 import com.acme.model.Subject;
+import com.acme.model.Subscriber;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
+import com.acme.repository.SubscriberRepository;
 import com.acme.service.*;
 import com.acme.util.PasswordHashing;
 import com.google.api.client.util.Maps;
@@ -49,6 +51,9 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	CredentialRepository credentialRepository;
+
+	@Autowired
+	SubscriberRepository subscriberRepository;
 
 	@Autowired
 	TokenService tokenService;
@@ -160,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
 			if(subject.isEnabled()){
 				throw new InvalidRequestException("Пользователь с указанным адресом уже зарегистрирован", data.getMail());
 			}
-			// обовим существующую не активную запись при повторной регистрации
+			// обновим существующую не активную запись при повторной регистрации
 			subject.setFirstName(data.getFirstName());
 			subject.setLastName(data.getLastName());
 			subject = subjectRepository.save(subject);
@@ -175,6 +180,13 @@ public class AuthServiceImpl implements AuthService {
 			subject.setFirstName(data.getFirstName());
 			subject.setLastName(data.getLastName());
 			subject = subjectRepository.save(subject);
+
+			// свяжем с подписчиком, если такой есть
+			Subscriber subscriber = subscriberRepository.findOneByEmail(data.getMail());
+			if(subscriber!=null){
+				subscriber.setSubjectId(subject.getId());
+				subscriberRepository.save(subscriber);
+			}
 
 			// создадим для него credential
 			credential = new Credential();

@@ -2,7 +2,6 @@
     <div class="card-content" layout="column">
 
         <div layout="row">
-
             <md-input-container class="no-errors" flex="25">
                 <label>Дата создания</label>
                 <input ng-model="::vm.notification.dateAdd" disabled>
@@ -17,13 +16,15 @@
                 <label>Заголовок</label>
                 <input ng-model="::vm.notification.title" disabled>
             </md-input-container>
-
         </div>
 
-        <md-input-container style="margin-bottom: 0">
-            <label>Текст уведомления</label>
-            <textarea ng-model="::vm.notification.text" disabled></textarea>
-        </md-input-container>
+        <div layout="row" layout-wrap>
+            <md-input-container flex style="margin-bottom: 0;margin-right: 1%;">
+                <label>Текст уведомления</label>
+                <textarea ng-model="::vm.notification.text" disabled></textarea>
+            </md-input-container>
+            <md-button flex="nogrow" md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.showTarget()" style="margin-top: 20px; height: 20px;line-height: 20px;min-height: 30px;">Показать</md-button>
+        </div>
 
         <div layout="row" >
 

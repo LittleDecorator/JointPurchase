@@ -5,7 +5,6 @@ import com.acme.model.OrderView;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
 import com.acme.model.filter.OrderFilter;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Map;

@@ -7,6 +7,24 @@
                 </div>
             </div>
         </div>
+
+        <div layout="row" class="card-panel" style="height: 100%">
+            <md-input-container class="md-block no-errors" style="margin-bottom: 0;">
+                <label>Название</label>
+                <input ng-model="vm.filter.name" ng-keydown="vm.applyKeyPress($event)">
+            </md-input-container>
+
+            <md-input-container class="md-block no-errors" style="margin-bottom: 0;margin-left: 2%">
+                <label>Артикул</label>
+                <input ng-model="vm.filter.article" ng-keydown="vm.applyKeyPress($event)">
+            </md-input-container>
+
+            <div style="margin: auto 0 auto 25px; margin-top: 10px; margin-bottom: 0">
+                <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
+                <md-button md-no-ink class="md-accent md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
+            </div>
+        </div>
+
         <div class="card-panel virtualRepeatdemoVerticalUsage" style="padding: 0;">
 
             <md-virtual-repeat-container id="vertical-container">

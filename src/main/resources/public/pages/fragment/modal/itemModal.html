@@ -2,11 +2,23 @@
     <div class="card-title">
         <div class="row valign-wrapper" style="margin-bottom: 0">
             <div class="col s12">
-                <span style="font-size: 1.8rem; line-height: 55.5px;">Категории:</span>
+                <span style="font-size: 1.8rem; line-height: 55.5px;">Товар:</span>
             </div>
         </div>
     </div>
-    <div class="card-panel virtualRepeatdemoVerticalUsage" style="padding: 0;">
+
+    <div layout="column" class="card-panel" style="padding: 5px 10px;margin: 0;">
+        <md-input-container md-no-float class="md-block no-errors" style="margin-bottom: 0;margin-top: 5px;">
+            <input placeholder="Название" ng-model="vm.filter.name" ng-keydown="vm.applyKeyPress($event)">
+        </md-input-container>
+
+        <div style="margin-top: 10px; margin-bottom: 0">
+            <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()" style="height: 20px;line-height: 20px;min-height: 30px;">Найти</md-button>
+            <md-button md-no-ink class="md-accent md-raised btn" aria-label="clear" ng-click="vm.clear()" style="height: 20px;line-height: 20px;min-height: 30px;">Сбросить</md-button>
+        </div>
+    </div>
+
+    <div id="itemModalRepeater" class="card-panel virtualRepeatdemoVerticalUsage" style="padding: 0;">
         <md-virtual-repeat-container id="vertical-container">
             <div md-virtual-repeat="item in vm.items" class="repeated-item" flex>
                 <md-checkbox id="{{item.id}}" aria-label="{{item.name}}" ng-model="item.selected" style="margin-bottom: 0">{{item.name}}</md-checkbox>

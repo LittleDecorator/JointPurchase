@@ -411,7 +411,7 @@
                 onSideHide: function(data){
                     this.data = data;
                     $rootScope.$broadcast('onSideHide');
-                }
+                },
             }
         }])
 

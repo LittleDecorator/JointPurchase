@@ -40,4 +40,22 @@ public class ItemSpecifications {
         };
     }
 
+    public static Specification<Item> modalFilter(String name, String article) {
+
+        return (root, criteriaQuery, builder) -> {
+            Path<String> pName = root.get(Item_.name);
+            Path<String> pArticle = root.get(Item_.article);
+
+            final List<Predicate> predicates = new ArrayList<>();
+
+            if (article != null) {
+                predicates.add(builder.like(pArticle, "%" + article + "%"));
+            }
+
+            if (name != null) {
+                predicates.add(builder.like(builder.lower(pName), "%" + name.toLowerCase()+ "%"));
+            }
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+    }
 }

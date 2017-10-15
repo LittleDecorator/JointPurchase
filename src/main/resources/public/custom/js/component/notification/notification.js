@@ -135,6 +135,7 @@
                 vm.getTemplateUrl = getTemplateUrl;
                 vm.afterInclude = afterInclude;
                 vm.init = init;
+                vm.showTarget = showTarget;
                 
                 function init(){
                     vm.notification = notification ? notification : {};
@@ -152,6 +153,11 @@
                         }
                         return templatePath + "notification-card-lg.html"
                     }
+                }
+
+                function showTarget(){
+                    var name = vm.notification.targetResource.toLowerCase() + ".detail";
+                    mvm.goto(name, {id:vm.notification.targetId});
                 }
 
                 // callback загрузки шаблона страницы

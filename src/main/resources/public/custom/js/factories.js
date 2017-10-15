@@ -343,7 +343,14 @@
                         post:{method:'POST',isArray:false},
                         delete:{method:'DELETE',isArray:false}
                     })
-                }
+                },
+                subscriber: $resource('/api/subscriber/:id/:mail',{},{
+                    all:{method:'GET',isArray:true},
+                    get:{method:'GET',isArray:false},
+                    put:{method:'PUT',isArray:false},
+                    post:{method:'POST',isArray:false},
+                    delete:{method:'DELETE',isArray:false}
+                })
                 
             }
         }])
