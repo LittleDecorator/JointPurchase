@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface EmailService {
 
+	Boolean sendSimple(String mailTo, String subject, String content) throws IOException, TemplateException, MessagingException;
+
 	/**
 	 * Оповещение о смене статуса заказа
 	 * @param order - заказ клиента

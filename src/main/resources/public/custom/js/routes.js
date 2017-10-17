@@ -39,6 +39,27 @@ var route = {
                     displayName: 'Корзина'
                 }
             },
+            /*=================================== ПОЧТА ====================================*/
+            {
+                name: 'mail',
+                url: '/mail',
+                views: {
+                    'main@': {
+                        templateUrl: 'pages/email.html',
+                        controller: 'emailController',
+                        controllerAs: 'vm'
+                    }
+                },
+                resolve:{
+                    resolved: function(resolveService){
+                        return null;
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Почта'
+                }
+            },
             
             /*=================================== СПИСОК ЖЕЛАЕМОГО ====================================*/
             {

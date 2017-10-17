@@ -1,5 +1,7 @@
 package com.acme.controller;
 
+import com.acme.exception.TemplateException;
+import com.acme.model.dto.EmailDto;
 import com.acme.model.gmail.SimpleDraft;
 import com.acme.model.gmail.SimpleMessage;
 import com.acme.model.gmail.SimpleThread;
@@ -129,6 +131,12 @@ public class MailController {
 	public void send(@RequestBody SimpleMessage message) throws IOException, MessagingException {
 		System.out.println(message);
 		emailService.sendWithoutAttach(message);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/simple")
+	public void sendSimple(@RequestBody EmailDto dto) throws IOException, MessagingException, TemplateException {
+		System.out.println(dto);
+		emailService.sendSimple(dto.getTo(), dto.getSubject(), dto.getBody());
 	}
 
 	/**

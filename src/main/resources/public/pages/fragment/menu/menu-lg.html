@@ -117,7 +117,7 @@
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('company')"><md-icon>bookmark_border</md-icon><span>Поставщики</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('category')"><md-icon>bookmark_border</md-icon><span>Категории</span></md-button></md-menu-item>
-    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
+    <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('mail')"><md-icon>email</md-icon><span>Почта</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button><md-icon>settings</md-icon><span>Настройки</span></md-button></md-menu-item>
     <md-menu-item><md-button ng-click="mvm.showBugReport()"><md-icon md-svg-src="bug"></md-icon><span>Сообщить об ошибке</span></md-button></md-menu-item>
 </md-sidenav>

@@ -230,6 +230,9 @@
                 contactCallback: $resource('/api/contact/callback/sms',{},{
                     post:{method:'POST',isArray:false}
                 }),
+                email: $resource('/api/mail/simple',{},{
+                    post:{method:'POST',isArray:false}
+                }),
                 customer: $resource('/api/customer/:id',{},{
                         all:{method:'GET',isArray:true},
                         get:{method:'GET',isArray:false},

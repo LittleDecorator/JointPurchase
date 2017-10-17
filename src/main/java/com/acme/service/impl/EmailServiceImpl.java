@@ -43,7 +43,6 @@ import com.sun.mail.smtp.SMTPTransport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -66,7 +65,6 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -126,6 +124,51 @@ public class EmailServiceImpl implements EmailService {
 
         /* инициализация аутентификатора */
         initialize();
+    }
+
+    @Override
+    public Boolean sendSimple(String mailTo, String subject, String content) throws IOException, TemplateException, MessagingException{
+        Boolean result = Boolean.TRUE;
+        try {
+            EmailBuilder builder = EmailBuilder.getBuilder();
+        /* Получим объект сообщения */
+            Email email = EmailImpl.builder()
+                    .from(new InternetAddress(senderAddress, senderName))
+                    .to(Lists.newArrayList(new InternetAddress(mailTo)))
+                    .subject(subject)
+                    .sentAt(new Date())
+                    .body("")
+                    .encoding(Charset.forName("UTF-8"))
+                    .build();
+
+        /* Параметры */
+            Map<String, Object> paramMap = Maps.newHashMap();
+            paramMap.put("CONTENT", content);
+
+        /* Конвертим его в Message */
+            MimeMessage message = builder.setMessage(convert(email))
+                    .setEmailContent(templateService.mergeTemplateIntoString(Constants.SIMPLE_EMAIL, paramMap))
+                    .build();
+
+        /* отправляем */
+            //TODO: либо можо использовать JavaMailSender
+            //getTransport().sendMessage(message, message.getAllRecipients());
+
+        /* сперва добаляем auth токен и сессию, затем отправляем */
+            prepareOAuthSender().send(message);
+            //TODO: spring mail sender пока не используем. Нужен конкретный механизм отключения PLAIN LOGIN
+            //mailSender.send(message);
+            //TODO: если gmail научится работать с inlineImage, то полностью перейдем на его API
+            //SimpleMessage sended = SimpleMessage.valueOf(helper.sendMessage(message));
+            ///* добавим сообщение в общий список */
+            //messages.add(sended);
+            //TODO: добавить обновление ID истории
+        } catch (IOException | MessagingException | TemplateException ex){
+            result = Boolean.FALSE;
+            log.error("Ошибка отправки письма", ex);
+        }
+        //TODO: добавить обновление ID истории
+        return result;
     }
 
     @Override
