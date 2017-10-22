@@ -1,11 +1,15 @@
 package com.acme.service.impl;
 
+import com.acme.config.MustacheXmlLoader;
 import com.acme.exception.TemplateException;
 import com.acme.service.TemplateService;
+import com.samskivert.mustache.Mustache;
 import lombok.NonNull;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -41,12 +45,19 @@ public class TemplateServiceImpl implements TemplateService {
 				expectedTemplateExtension(), getFileExtension(templateReference));
 
 		try {
-			final Reader template = mustacheAutoConfiguration.mustacheTemplateLoader()
-					.getTemplate(normalizeTemplateReference(templateReference));
+			final Reader template = mustacheAutoConfiguration.mustacheTemplateLoader().getTemplate(normalizeTemplateReference(templateReference));
+			return mustacheAutoConfiguration.mustacheCompiler(mustacheAutoConfiguration.mustacheTemplateLoader()).compile(template).execute(model);
+		} catch (Throwable t) {
+			throw new TemplateException(t);
+		}
+	}
 
-			return mustacheAutoConfiguration.mustacheCompiler(mustacheAutoConfiguration.mustacheTemplateLoader())
-					.compile(template)
-					.execute(model);
+	@Override
+	public String mergeXmlTemplateIntoString(final @NonNull String templateReference, final @NonNull Map<String, Object> model) throws TemplateException {
+		try {
+			MustacheResourceTemplateLoader templateLoader = new MustacheXmlLoader().getXmlLoader();
+			final Reader template = templateLoader.getTemplate(normalizeTemplateReference(templateReference, ".xml"));
+			return Mustache.compiler().withLoader(templateLoader).compile(template).execute(model);
 		} catch (Throwable t) {
 			throw new TemplateException(t);
 		}
@@ -58,7 +69,11 @@ public class TemplateServiceImpl implements TemplateService {
 	}
 
 	private String normalizeTemplateReference(final String templateReference) {
-		final String expectedSuffix = ("." + mustacheSuffix).replace("..", ".");
+		return normalizeTemplateReference(templateReference, null);
+	}
+
+	private String normalizeTemplateReference(final String templateReference, String suffix) {
+		final String expectedSuffix = ("." + (Strings.isNullOrEmpty(suffix) ? mustacheSuffix : suffix)).replace("..", ".");
 		return templateReference.substring(0, templateReference.lastIndexOf(expectedSuffix));
 	}
 

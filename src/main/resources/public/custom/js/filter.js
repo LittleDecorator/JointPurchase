@@ -109,4 +109,10 @@
                 return (country + " (" + city + ") " + number).trim();
             };
         })
+
+        .filter('lines', function () {
+            return function(text) {
+                return text.replace(/(\\r)?\\n/g, '<br />');
+            }
+    });
 })();

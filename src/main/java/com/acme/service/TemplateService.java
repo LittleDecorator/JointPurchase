@@ -1,6 +1,7 @@
 package com.acme.service;
 
 import com.acme.exception.TemplateException;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.Map;
@@ -25,9 +26,9 @@ public interface TemplateService {
 	 * @throws IOException       thrown if the templateReference file is not found or cannot be accessed
 	 * @throws TemplateException if the templateReference cannot be processed with the given model object
 	 */
-	String mergeTemplateIntoString(String templateReference, Map<String, Object> model)
-			throws IOException, TemplateException;
+	String mergeTemplateIntoString(String templateReference, Map<String, Object> model) throws IOException, TemplateException;
 
+	String mergeXmlTemplateIntoString(final @NonNull String templateReference, final @NonNull Map<String, Object> model) throws TemplateException;
 
 	String expectedTemplateExtension();
 

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <site base_url="https://www.grimmstory.ru/" store_into="/tmp/sitemap.xml" verbose="1" >
+
+    <url
+            href="https://www.grimmstory.ru/about"
+            lastmod="2017-10-08T01:00:00-17:00"
+            changefreq="monthly"
+            priority="0.6"
+    />
+    <url
+            href="https://www.grimmstory.ru/delivery"
+            lastmod="2017-10-08T01:00:00-17:00"
+            changefreq="monthly"
+            priority="0.6"
+    />
+    <url
+            href="https://www.grimmstory.ru/stock"
+            lastmod="2017-10-08T01:00:00-17:00"
+            changefreq="monthly"
+            priority="0.6"
+    />
+    <url
+            href="https://www.grimmstory.ru/contact"
+            lastmod="2017-10-08T01:00:00-17:00"
+            changefreq="monthly"
+            priority="0.6"
+    />
+    <url
+            href="https://www.grimmstory.ru/catalog"
+            lastmod="2017-10-08T01:00:00-17:00"
+            changefreq="daily"
+            priority="0.9"
+    />
+
+    {{#route}}
+    <url
+            href="https://www.grimmstory.ru/{{URL}}"
+            lastmod="{{LAST_MOD_DATE}}"
+            changefreq="{{FREQUENCY}}"
+            priority="{{PRIORITY}}"
+    />
+    {{/route}}
+
+
+    <!-- ********************************************************
+            FILTERS
+
+    Filters specify wild-card patterns that the script compares
+    against all URLs it finds.  Filters can be used to exclude
+    certain URLs from your Sitemap, for instance if you have
+    hidden content that you hope the search engines don't find.
+
+    Filters can be either type="wildcard", which means standard
+    path wildcards (* and ?) are used to compare against URLs,
+    or type="regexp", which means regular expressions are used
+    to compare.
+
+    Filters are applied in the order specified in this file.
+
+    An action="drop" filter causes exclusion of matching URLs.
+    An action="pass" filter causes inclusion of matching URLs,
+    shortcutting any other later filters that might also match.
+    If no filter at all matches a URL, the URL will be included.
+    Together you can build up fairly complex rules.
+
+    The default action is "drop".
+    The default type is "wildcard".
+
+    You can MODIFY or DELETE these entries as appropriate for
+    your site.  However, unlike above, the example entries in
+    this section are not contrived and may be useful to you as
+    they are.
+    ********************************************************* -->
+
+    <!-- Exclude URLs that end with a '~'   (IE: emacs backup files)      -->
+    <filter action="drop" type="wildcard" pattern="*~"/>
+
+    <!-- Exclude URLs within UNIX-style hidden files or directories       -->
+    <filter action="drop" type="regexp" pattern="/\.[^/]*"/>
+
+    <!-- Exlude all image files -->
+    <filter action="drop" type="wildcard" pattern="*.jpg*"/>
+    <filter action="drop" type="wildcard" pattern="*.gif*"/>
+    <filter action="drop" type="wildcard" pattern="*.png*"/>
+
+    <!-- Exlude all js and css files -->
+    <filter action="drop" type="wildcard" pattern="*.css*"/>
+    <filter action="drop" type="wildcard" pattern="*.js*"/>
+
+    <!-- Exlude .ico and .txt files -->
+    <filter action="drop" type="wildcard" pattern="*.ico"/>
+    <filter action="drop" type="wildcard" pattern="*.txt"/>
+
+</site>

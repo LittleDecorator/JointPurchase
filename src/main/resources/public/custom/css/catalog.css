@@ -31,6 +31,13 @@
         font-size: 1.2rem;
         text-align: center;
         padding-bottom: 5px;
+
+        width: 75%;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: space-around;
     }
 
     div#catalog-card  div.box img {
@@ -112,6 +119,13 @@
         font-size: 1.2rem;
         text-align: center;
         padding-bottom: 5px;
+
+        width: 75%;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: space-around;
     }
 
     .horizontal-repeater #horizontal-container {
@@ -226,6 +240,13 @@
         font-size: 1.3rem;
         text-align: center;
         padding-bottom: 10px;
+
+        width: 75%;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: space-around;
     }
 
     md-card-actions button {

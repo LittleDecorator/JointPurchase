@@ -19,12 +19,13 @@
                         <md-card style="margin: 0; width: 100%">
                             <div class="card-image waves-effect waves-block waves-light md-card-image">
                                 <img ng-src="{{::item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
-                                <a class="btn-price btn-floating btn-large">{{::item.price}}р</a>
+                                <a class="btn-price btn-floating btn-large">{{::item.price|number}}р</a>
                                 <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
                             </div>
 
                             <md-card-actions layout="column" layout-align="center center">
-                                <span class="md-headline">{{::item.name}}</span>
+                                <!--<span class="md-headline">{{::item.name}}</span>-->
+                                <span class="md-headline" ng-bind-html="item.name | lines"></span>
                                 <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="vm.requestToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="vm.preorderToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
@@ -46,6 +47,7 @@
                         </div>
 
                         <md-card-actions layout="column" layout-align="center center">
+                            <!--<pre><span class="md-headline">{{::item.name}}</span></pre>-->
                             <span class="md-headline">{{::item.name}}</span>
                             <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
                             <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>

@@ -5,6 +5,7 @@
             'ngDialog',
             'ngMaterial', 
             'ngMessages',
+            'ngSanitize',
             'angularBootstrapNavTree', 
             'ngResource',
             'mdPickers',

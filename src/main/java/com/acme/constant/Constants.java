@@ -21,5 +21,6 @@ public interface Constants {
     String PASSWORD_CHANGE_REQUEST = "password_change_request_template.html";
     String PASSWORD_CHANGE_CONFIRM = "registration_confirm_template.html";
     String SIMPLE_EMAIL = "email_template.html";
+    String SITEMAP = "sitemap_template.xml";
 
 }
