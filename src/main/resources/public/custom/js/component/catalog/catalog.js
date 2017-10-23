@@ -142,9 +142,11 @@
                     }
 
                     // если загрузка разрешена и не заняты
+                    console.log(vm);
                     if ((!vm.stopLoad || mvm.width < 601) && !busy) {
                         busy = true;
                         dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
+                            console.log(data.length);
                             // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                             if (data.length < vm.confirmedFilter.limit) {
                                 vm.stopLoad = true;

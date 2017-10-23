@@ -13,7 +13,7 @@
                     <md-divider ></md-divider>
                 </div>
 
-                <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak >
+                <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;" ng-cloak >
                     <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in group.values track by item.id + $index"
                     style="box-shadow: none;padding: 0;margin: 8px;" >
                         <md-card style="margin: 0; width: 100%">
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak ng-if="vm.currentNodeType == 'company' && vm.items.length > 0">
+            <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;" ng-cloak ng-if="vm.currentNodeType == 'company' && vm.items.length > 0">
                 <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="35" flex-gt-md="30" layout layout-align="center center" ng-repeat="item in vm.items track by item.id"
                                style="box-shadow: none;padding: 0;margin: 8px;" >
                     <md-card style="margin: 0; width: 100%">
@@ -68,7 +68,11 @@
 
         </md-content>
 
-        </div>
+    </div>
+
+    <div style="width: 100%; display: flex;" ng-if="vm.showLoadMore">
+        <md-button class="btn md-plain md-raised" ng-click="vm.loadData();" style="width: 88%; margin: 5px auto 20px;">Показать ещё</md-button>
+    </div>
 
 </div>
 
