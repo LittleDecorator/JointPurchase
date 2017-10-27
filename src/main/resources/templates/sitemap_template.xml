@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-    <site base_url="https://www.grimmstory.ru/" store_into="/tmp/sitemap.xml" verbose="1" >
+    <site base_url="https://grimmstory.ru/" store_into="/tmp/sitemap.xml" verbose="1" >
 
     <url
-            href="https://www.grimmstory.ru/about"
+            href="https://grimmstory.ru/about"
             lastmod="2017-10-08T01:00:00-17:00"
             changefreq="monthly"
             priority="0.6"
     />
     <url
-            href="https://www.grimmstory.ru/delivery"
+            href="https://grimmstory.ru/delivery"
             lastmod="2017-10-08T01:00:00-17:00"
             changefreq="monthly"
             priority="0.6"
     />
     <url
-            href="https://www.grimmstory.ru/stock"
+            href="https://grimmstory.ru/stock"
             lastmod="2017-10-08T01:00:00-17:00"
             changefreq="monthly"
             priority="0.6"
     />
     <url
-            href="https://www.grimmstory.ru/contact"
+            href="https://grimmstory.ru/contact"
             lastmod="2017-10-08T01:00:00-17:00"
             changefreq="monthly"
             priority="0.6"
     />
     <url
-            href="https://www.grimmstory.ru/catalog"
+            href="https://grimmstory.ru/catalog"
             lastmod="2017-10-08T01:00:00-17:00"
             changefreq="daily"
             priority="0.9"
@@ -35,7 +35,7 @@
 
     {{#route}}
     <url
-            href="https://www.grimmstory.ru/{{URL}}"
+            href="https://grimmstory.ru/{{URL}}"
             lastmod="{{LAST_MOD_DATE}}"
             changefreq="{{FREQUENCY}}"
             priority="{{PRIORITY}}"

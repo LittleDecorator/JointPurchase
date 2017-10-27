@@ -75,7 +75,7 @@ public class RouteController {
                     routesMap.add(new ImmutableMap.Builder<String, String>()
                             .put("URL", "catalog/card/"+itemId)
                             .put("LAST_MOD_DATE", formattedString)
-                            .put("FREQUENCY", "weekly")
+                            .put("FREQUENCY", "daily")
                             .put("PRIORITY", "0.8")
                             .build());
                 });
