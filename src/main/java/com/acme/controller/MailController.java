@@ -129,13 +129,11 @@ public class MailController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public void send(@RequestBody SimpleMessage message) throws IOException, MessagingException {
-		System.out.println(message);
 		emailService.sendWithoutAttach(message);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/simple")
 	public void sendSimple(@RequestBody EmailDto dto) throws IOException, MessagingException, TemplateException {
-		System.out.println(dto);
 		emailService.sendSimple(dto.getTo(), dto.getSubject(), dto.getBody());
 	}
 
@@ -147,7 +145,6 @@ public class MailController {
 	 */
 	@RequestMapping(value = "/inbox", method = RequestMethod.POST)
 	public void insert(@RequestBody SimpleMessage message) throws IOException, MessagingException {
-		System.out.println(message);
 		emailService.insertToInbox(message);
 	}
 
@@ -159,7 +156,6 @@ public class MailController {
 	 */
 	@RequestMapping(value = "/draft", method = RequestMethod.POST)
 	public void save(@RequestBody SimpleDraft draft) throws IOException, MessagingException {
-		System.out.println(draft);
 		emailService.saveDraft(draft);
 	}
 

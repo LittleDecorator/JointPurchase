@@ -86,8 +86,15 @@
     <!--====================================================-->
     <meta charset="utf-8">
     <base href="/">
-    <title ng-bind="seo.title">Grimmstory. Магазин детских игрушек</title>
-    <meta name="description" ng-attr-content="{{seo.description}}" content="Только качественные и открытые игрушки...">
+    <!--<title ng-bind="seo.title">Grimmstory. Магазин детских игрушек</title>-->
+    <!--<meta name="description" ng-attr-content="{{seo.description}}" content="Только качественные и открытые игрушки...">-->
+    <title ng-bind="MetaTags.title">Default title</title>
+    <meta name="description" content="{{MetaTags.description}}">
+    <meta name="keywords" content="{{MetaTags.keywords}}">
+    <meta name="robots" content="{{MetaTags.robots}}">
+    <meta ng-repeat="(key, value) in MetaTags.properties" property="{{key}}" content="{{value}}">
+    <meta name="prerender-status-code" content="{{MetaTags.prerender.statusCode}}">
+    <meta name="prerender-header" ng-if="MetaTags.prerender.header" content="{{MetaTags.prerender.header}}">
 </head>
 
 <body class="home blog" ng-cloak="">
@@ -116,17 +123,6 @@
     <!-- Возврат на вверх -->
     <gm-back-to-top gmspeed="1000" gmstyle="red lighten-2 fixed-action-btn btn-x-small"> </gm-back-to-top>
 
-    <!--<md-button class="md-fab red lighten-2" ng-click="mvm.showBugReport()" style="bottom: 25px;right:25px;position: fixed"-->
-               <!--ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}" >-->
-        <!--<md-tooltip md-direction="left">Сообщить об ошибке</md-tooltip>-->
-        <!--<md-icon md-svg-src="bug"></md-icon>-->
-    <!--</md-button>-->
-
-    <!-- Перделка загрузки (пока выключена) -->
-    <div id="spinner" class="spinner-wrapper">
-        <div id="loader"></div>
-    </div>
-
     <!-- Панель уведомления, что сайт в тестовом режиме -->
     <div ng-include="'pages/fragment/informPanel.html'"></div>
 
@@ -154,6 +150,9 @@
     <script src="official/auth0/angular-jwt.min.js"></script>
     <!--<script async src="official/mask.js"></script>-->
     <script src="official/ngMask.min.js"></script>
+
+    <script src="official/ui-router-metatags.min.js"></script>
+    <!--<script src="official/ngMeta.min.js"></script>-->
     <script src="official/mdPickers.min.js"></script>
     <script src="official/back-to-top/gm-back-to-top.min.js"></script>
     <script src="official/fileSaver.min.js"></script>

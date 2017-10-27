@@ -6,7 +6,6 @@ import com.acme.model.Content;
 import com.acme.repository.ContentRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
-import com.google.common.io.BaseEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +54,9 @@ public class MediaController {
 	private void writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
 		long start = System.currentTimeMillis();
 		BufferedImage image;
-		System.out.println("Request: " + size.name());
+		//System.out.println("Request: " + size.name());
 		Content content = contentRepository.findOne(contentId);
-		System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
+		//System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
 		String type = asWebp ? "webp" : content.getType();
 		byte[] data = Base64BytesSerializer.deserialize(content.getContent());
 		switch (size) {
@@ -79,11 +78,11 @@ public class MediaController {
 			default:
 				image = imageService.getImage(data);
 		}
-		System.out.println("Size : w - " + image.getWidth() + " h - " + image.getHeight());
+		//System.out.println("Size : w - " + image.getWidth() + " h - " + image.getHeight());
 		byte[] result = imageService.toBytes(image, type);
-		System.out.println("After convert: " + (System.currentTimeMillis() - start) + "ms");
+		//System.out.println("After convert: " + (System.currentTimeMillis() - start) + "ms");
 		response.setContentType(type);
 		response.getOutputStream().write(result);
-		System.out.println("After write: " + (System.currentTimeMillis() - start) + "ms");
+		//System.out.println("After write: " + (System.currentTimeMillis() - start) + "ms");
 	}
 }

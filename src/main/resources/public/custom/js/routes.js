@@ -16,9 +16,13 @@ var route = {
                 data: {
                     requireLogin: false,
                 },
-                seoData: {
-                    title: "Магазин детских игрушек",
-                    description: "Только качественные и открытые игрушки..."
+                metaTags: {
+                    title: 'Магазин детских игрушек',
+                    description: 'Только качественные и открытые игрушки...',
+                    keywords: 'lots of interresting keywords',
+                    properties: {
+                        'og:title': 'Магазин детских игрушек'
+                    }
                 }
             },
 
@@ -161,9 +165,13 @@ var route = {
                 data:{
                     requireLogin: false
                 },
-                seoData: {
-                    title: "О магазине",
-                    description: "Наша миссия заключается в том, чтобы у каждого ребенка были хорошие игрушки"
+                metaTags: {
+                    title: 'О магазине',
+                    description: 'Наша миссия заключается в том, чтобы у каждого ребенка были хорошие игрушки',
+                    keywords: 'о магазине нас',
+                    properties: {
+                        'og:title': 'О магазине'
+                    }
                 }
             },
             /*=================================== УВЕДОМЛЕНИЯ * ====================================*/
@@ -299,9 +307,13 @@ var route = {
                     requireLogin: false,
                     displayName: 'Доставка'
                 },
-                seoData: {
-                    title: "Доставка",
-                    description: "Осуществляем доставку по всей России"
+                metaTags: {
+                    title: 'Доставка',
+                    description: 'Осуществляем доставку по всей России',
+                    keywords: 'доставка',
+                    properties: {
+                        'og:title': 'Доставка'
+                    }
                 }
             },
 
@@ -318,9 +330,13 @@ var route = {
                 data:{
                     requireLogin: false
                 },
-                seoData: {
-                    title: "Акции",
-                    description: "Распродажа игрушек, конкурсы и сезонные скидки"
+                metaTags: {
+                    title: 'Акции',
+                    description: 'Распродажа игрушек, конкурсы и сезонные скидки',
+                    keywords: 'акции',
+                    properties: {
+                        'og:title': 'Акции'
+                    }
                 }
             },
 
@@ -338,9 +354,13 @@ var route = {
                 data: {
                     requireLogin: false
                 },
-                seoData: {
-                    title: "Контакты",
-                    description: "Где нас найти? Где забрать заказ?"
+                metaTags: {
+                    title: 'Контакты',
+                    description: 'Где нас найти? Где забрать заказ?',
+                    keywords: 'контакты',
+                    properties: {
+                        'og:title': 'Контакты'
+                    }
                 }
             },
 
@@ -443,9 +463,13 @@ var route = {
                        return null;
                     }
                 },
-                seoData: {
-                    title: "Каталог",
-                    description: "Описание раздела каталог"
+                metaTags: {
+                    title: 'Каталог',
+                    description: 'Описание раздела каталог',
+                    keywords: 'каталог',
+                    properties: {
+                        'og:title': 'Каталог'
+                    }
                 }
             },
             {
@@ -465,12 +489,19 @@ var route = {
                 },
                 resolve: {
                     node: function($stateParams,resolveService) {
-                        if($stateParams.type == 'category'){
+                        if($stateParams.type === 'category'){
                             return resolveService.getCategory($stateParams.id);
                         } else {
                             return resolveService.getCompany($stateParams.id);
                         }
                     }
+                },
+                metaTags: {
+                    title: function(node) {
+                        return node.name;
+                    },
+                    keywords: '{{node.name}}',
+                    description: '{{node.description}}'
                 }
             },
             {
@@ -486,7 +517,14 @@ var route = {
                 },
                 data: {
                     displayName: '{{product.name}}',
-                    requireLogin: false,
+                    requireLogin: false
+                },
+                metaTags: {
+                    title: function(product) {
+                        return product.name;
+                    },
+                    keywords: '{{product.name}}',
+                    description: '{{product.description}}'
                 },
                 resolve: {
                     product: function($stateParams, resolveService) {

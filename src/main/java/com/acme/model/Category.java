@@ -17,6 +17,10 @@ public class Category implements BaseModel{
 
     private String name;
 
+    @Transient
+    //TODO: добавить поле в БД
+    private String description;
+
     @Column(name = "parent_id")
     private String parentId;
 
@@ -64,5 +68,13 @@ public class Category implements BaseModel{
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

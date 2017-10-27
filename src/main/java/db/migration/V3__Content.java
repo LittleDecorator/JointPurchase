@@ -23,7 +23,6 @@ public class V3__Content implements SpringJdbcMigration {
     private void insert_def_content(JdbcTemplate jdbcTemplate, Resource resource) throws IOException {
         String contentId = java.util.UUID.randomUUID().toString();
         String fileName = resource.getFilename();
-        System.out.println("fileName -> "+fileName);
         String type = fileName.substring(fileName.indexOf(".")+1);
         String mime = "image/"+type;
 

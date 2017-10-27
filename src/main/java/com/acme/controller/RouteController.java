@@ -59,7 +59,6 @@ public class RouteController {
             List<RouteDto> routes = routeService.getSimpleRoutes();
             // пока берем только item point'ы
             Map<String, RouteDto> map = Maps.uniqueIndex(routes.stream().filter(routeDto -> routeDto.getName().contains("catalog")).collect(Collectors.toList()), RouteDto::getName);
-            System.out.println(map.keySet());
 
             List<String> itemMap = itemService.getAll().stream().map(Item::getId).collect(Collectors.toList());
 
