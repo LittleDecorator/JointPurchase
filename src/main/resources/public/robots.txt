@@ -1,0 +1,5 @@
+# robots.txt for https://grimmstory.ru/
+
+User-agent: *
+Disallow: /cart
+Disallow /search/
