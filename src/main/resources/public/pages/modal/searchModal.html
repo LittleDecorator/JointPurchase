@@ -19,10 +19,10 @@
         <ul class="md-autocomplete-suggestions">
             <div md-virtual-repeat="item in filtered">
                 <li>
-                    <md-button type="button" ng-click="itemView(item.id);closeThisDialog()" style=" min-width: 30px; min-height: 30px;margin-left: 0">
+                    <md-button type="button" ng-click="itemView(item.transliteName);closeThisDialog()" style=" min-width: 30px; min-height: 30px;margin-left: 0">
                         <md-icon>search</md-icon>
                     </md-button>
-                    <span ng-click="itemView(item.id);closeThisDialog()" style=" font-size: 20px;">{{item.name}}</span>
+                    <span ng-click="itemView(item.transliteName);closeThisDialog()" style=" font-size: 20px;">{{item.name}}</span>
                 </li>
             </div>
             <li style="display: flex; padding: 0" ng-if="filtered.length > 5">

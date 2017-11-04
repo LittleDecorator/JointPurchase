@@ -2,9 +2,10 @@ package com.acme.controller;
 
 import com.acme.exception.PersistException;
 import com.acme.model.*;
-import com.acme.model.dto.CategoryMap;
 import com.acme.model.dto.CategoryTransfer;
+import com.acme.model.dto.MapDto;
 import com.acme.service.CategoryService;
+import com.acme.service.ItemService;
 import com.acme.service.TreeService;
 
 import com.google.common.base.Strings;
@@ -35,6 +36,9 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    ItemService itemService;
 
     /**
      * Добавление/Обновление новой категории
@@ -73,12 +77,12 @@ public class CategoryController {
     /**
      * Получение категории по ID
      *
-     * @param id
+     * @param name
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public Category getCategory(@PathVariable(value = "id") String id) {
-        return categoryService.getCategory(id);
+    @RequestMapping(method = RequestMethod.GET, value = "/{name}")
+    public Category getCategory(@PathVariable(value = "name") String name) {
+        return categoryService.getCategoryByName(name);
     }
 
     /**
@@ -87,9 +91,28 @@ public class CategoryController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/children")
-    public List<CategoryMap> getChildren(@PathVariable(value = "id") String id) {
-        List<CategoryMap> result = Lists.newArrayList(new CategoryMap(id, "Все"));
+    public List<MapDto> getChildren(@PathVariable(value = "id") String id) {
+        List<MapDto> result = Lists.newArrayList(new MapDto(id, "Все"));
         result.addAll(categoryService.getChildren(id));
+        return result;
+    }
+
+    /**
+     * Получение поставщиков для категорий
+     * @param id
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/children/company")
+    public List<MapDto> getChildrenCompanies(@PathVariable(value = "id") String id) {
+        List<MapDto> result = Lists.newArrayList(new MapDto(null, "Все"));
+        List<String> categoryIds = categoryService.getChildren(id).stream().map(MapDto::getId).collect(Collectors.toList());
+        List<Item> items = categoryService.getCategoryItems(categoryIds);
+        //List<Item> items = itemService.getAllByCategoryIdList(categoryIds);
+
+        result.addAll(items.stream().map(item -> {
+            Company company = item.getCompany();
+                return new MapDto(company.getId(), company.getName());
+        }).distinct().collect(Collectors.toList()));
         return result;
     }
 
@@ -99,9 +122,9 @@ public class CategoryController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/map")
-    public List<CategoryMap> getCategoryMap() {
-        List<CategoryMap> result = Lists.newArrayList();
-        result.addAll(categoryService.getAll().stream().map(category -> new CategoryMap(category.getId(), category.getName())).collect(Collectors.toList()));
+    public List<MapDto> getCategoryMap() {
+        List<MapDto> result = Lists.newArrayList();
+        result.addAll(categoryService.getAll().stream().map(category -> new MapDto(category.getId(), category.getName())).collect(Collectors.toList()));
         return result;
     }
 
@@ -111,9 +134,9 @@ public class CategoryController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/map/roots")
-    public List<CategoryMap> getCategoryRootMap() {
-        List<CategoryMap> result = Lists.newArrayList();
-        result.addAll(categoryService.getAll().stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> new CategoryMap(category.getId(), category.getName())).collect(Collectors.toList()));
+    public List<MapDto> getCategoryRootMap() {
+        List<MapDto> result = Lists.newArrayList();
+        result.addAll(categoryService.getAll().stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> new MapDto(category.getId(), category.getName())).collect(Collectors.toList()));
         return result;
     }
 
@@ -157,12 +180,18 @@ public class CategoryController {
     /**
      * Получение списка товара для категории
      *
-     * @param categoryId
+     * @param name
      * @return List<Item>
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/items")
-    public List<Item> getCategoryItems(@PathVariable("id") String categoryId) {
-        return categoryService.getCategoryItems(categoryId);
+    @RequestMapping(method = RequestMethod.GET, value = "/{name}/items")
+    public List<Item> getCategoryItems(@PathVariable("name") String name) {
+        return categoryService.getCategoryItemsByName(name);
+    }
+
+    @Transactional
+    @RequestMapping(method = RequestMethod.PATCH, value = "translite")
+    public void transliteItems(@RequestParam(name = "all", required = false, defaultValue = "true") Boolean all){
+        categoryService.transliteCategories(all);
     }
 
     /**

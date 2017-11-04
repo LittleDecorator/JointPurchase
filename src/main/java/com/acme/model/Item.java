@@ -27,6 +27,9 @@ public class Item implements BaseModel{
     @Column(name = "name")
     private String name;
 
+    @Column(name = "translite_name")
+    private String transliteName;
+
     @OneToOne
     @JoinColumn(name="company_id")
     private Company company;
@@ -51,6 +54,15 @@ public class Item implements BaseModel{
 
     @Column(name = "in_order")
     private Integer inOrder;
+
+    @Column(name = "age")
+    private String age;
+
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "material")
+    private String material;
 
     @Transient
     private boolean inWishlist = false;
@@ -197,5 +209,37 @@ public class Item implements BaseModel{
 
     public void setInWishlist(boolean inWishlist) {
         this.inWishlist = inWishlist;
+    }
+
+    public String getTransliteName() {
+        return transliteName;
+    }
+
+    public void setTransliteName(String transliteName) {
+        this.transliteName = transliteName;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
     }
 }

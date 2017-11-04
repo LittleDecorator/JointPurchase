@@ -48,7 +48,6 @@ public enum OrderStatus implements AttributeConverter<OrderStatus, String> {
     public static OrderStatus getByName(String text){
         for(OrderStatus status : values()){
             if(status.name().equalsIgnoreCase(text) || CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, status.name()).equalsIgnoreCase(text)){
-                System.out.println(status);
                 return status;
             }
         }

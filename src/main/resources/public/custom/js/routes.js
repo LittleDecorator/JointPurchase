@@ -474,7 +474,7 @@ var route = {
             },
             {
                 name: 'catalog.type',
-                url:'/:type?id',
+                url:'/:type?:name',
                 parent:'catalog',
                 views: {
                     'main@': {
@@ -490,9 +490,9 @@ var route = {
                 resolve: {
                     node: function($stateParams,resolveService) {
                         if($stateParams.type === 'category'){
-                            return resolveService.getCategory($stateParams.id);
+                            return resolveService.getCategory($stateParams.name);
                         } else {
-                            return resolveService.getCompany($stateParams.id);
+                            return resolveService.getCompanyByName($stateParams.name);
                         }
                     }
                 },
@@ -506,7 +506,7 @@ var route = {
             },
             {
                 name:'catalog.detail',
-                url:'/card/:itemId',
+                url:'/card/:itemName',
                 parent:'catalog',
                 views: {
                     'main@': {
@@ -516,7 +516,7 @@ var route = {
                     }
                 },
                 data: {
-                    displayName: '{{product.name}}',
+                    displayName: '{{product.company.name}}',
                     requireLogin: false
                 },
                 metaTags: {
@@ -528,7 +528,7 @@ var route = {
                 },
                 resolve: {
                     product: function($stateParams, resolveService) {
-                        return resolveService.getProduct($stateParams.itemId);
+                        return resolveService.getProduct($stateParams.itemName);
                     }
                 }
             },
@@ -710,6 +710,22 @@ var route = {
                     }
                 }
             },
+            {
+                name:'company.detail.gallery',
+                parent:'company.detail',
+                url:'/gallery',
+                views: {
+                    'main@': {
+                        templateUrl : 'pages/gallery.html',
+                        controller: 'galleryController',
+                        controllerAs: 'vm'
+                    }
+                },
+                data: {
+                    requireLogin: true,
+                    displayName: 'Изображения'
+                }
+            },
 
             /*=================================== ТОВАР ====================================*/
             {
@@ -817,7 +833,7 @@ var route = {
             },
             {
                 name: 'category.card',
-                url:'/:id',
+                url:'/:name',
                 parent:'category',
                 views: {
                     'main@': {
@@ -831,10 +847,10 @@ var route = {
                         return resolveService.getCategoryMap();
                     },
                     category: function($stateParams, resolveService){
-                        return resolveService.getCategory($stateParams.id);
+                        return resolveService.getCategory($stateParams.name);
                     },
                     categoryItems: function(resolveService,$stateParams){
-                        return resolveService.getCategoryItems($stateParams.id)
+                        return resolveService.getCategoryItems($stateParams.name)
                     }
                 },
                 data: {

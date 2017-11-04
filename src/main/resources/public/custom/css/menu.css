@@ -91,7 +91,7 @@ md-sidenav {
         line-height: 36px;
     }
 
-    md-sidenav#menu .md-button > md-icon{
+    md-sidenav#menu .md-button md-icon{
         font-size: 32px;
         height: 32px;
         width: 32px;

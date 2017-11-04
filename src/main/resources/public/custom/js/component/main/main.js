@@ -43,7 +43,10 @@
 					mvm.openSearch = openSearch;
 					mvm.showDevNotion = showDevNotion;
 					mvm.showBugReport = showBugReport;
-					
+					mvm.openSubPanel = openSubPanel;
+					mvm.closeSubPanel = closeSubPanel;
+					mvm.getSubMenu = getSubMenu;
+					mvm.toCatalog = toCatalog;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -172,6 +175,7 @@
 					 * @param node
 					 */
 					function filterProduct(node) {
+						console.log("filterProduct", node)
 						if($mdSidenav('left').isOpen() && mvm.width < 1530){
 							$mdSidenav('left').close();
 						}
@@ -231,9 +235,26 @@
 					function goto(name, params) {
 						//закрываем панель меню
 						$mdSidenav('menu').close().then(function(){
+              $('.subPanel').removeClass('isOpen');
 							$state.go(name, params);
 						});
 					}
+
+          /**
+					 *
+           * @param menu
+           */
+          function toCatalog(menu) {
+						var type;
+            // определяет тип выбранного узла
+            if (menu.company) {
+              type = 'company';
+            } else {
+              type = 'category';
+            }
+            // переходим на страницу результата фильтрации
+						goto('catalog.type',{name: menu.name, type: type});
+          }
 
 					/**
 					 * Проверка что требуемый state является текущим
@@ -308,8 +329,27 @@
 						$mdSidenav("menu").toggle().then(function(){
 							if($mdSidenav("left").isOpen()){
 								$mdSidenav("left").close();
+                $('.subPanel').removeClass('isOpen');
 							}
 						});
+					}
+
+          /**
+					 * Открываем подменю
+           * @param event
+           */
+					function openSubPanel(event){
+            var parent = $(event.currentTarget.closest('md-content'));
+            parent.next('.subPanel').toggleClass('isOpen');
+					}
+
+          /**
+					 * Закрываем подменю
+           * @param event
+           */
+					function closeSubPanel(event){
+            var current = $(event.currentTarget.closest('md-content'));
+            current.toggleClass('isOpen');
 					}
 
 					function toggleSideFilter(){
@@ -431,6 +471,14 @@
 						});
 					}
 
+          /**
+					 *
+           * @param node
+           */
+          function getSubMenu(node){
+						mvm.submenu = node.nodes
+          }
+
 					/**
 					 * Основная инициализация
 					 */
@@ -449,6 +497,8 @@
 						if($location.$$url.includes("catalog")){
 							mvm.lockSideFilter = (mvm.width > 1530);
 						}
+
+
 					}
 
 					/**
@@ -469,8 +519,11 @@
 					/**
 					 * Событие загрузки шаблона
 					 */
-					function afterMenuInclude() {}
-					
+					function afterMenuInclude() {
+						console.log("afterMenuInclude");
+
+					}
+
 					/* подтверждение аутентификации, получение token'а */
 					//TODO: перенести в login контроллер
 					$scope.$on('onLogin', function () {

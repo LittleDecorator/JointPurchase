@@ -39,6 +39,15 @@ public class CatalogController {
     }
 
     /**
+     *
+     * @param all
+     */
+    @RequestMapping(method = RequestMethod.PATCH, value = "translite")
+    public void transliteItems(@RequestParam(name = "all", required = false, defaultValue = "true") Boolean all){
+        catalogService.transliteItems(all);
+    }
+
+    /**
      * Полнотекстный поиск.
      * <p>
      * Сейчас осуществляет поиск только по полю NAME.
@@ -57,13 +66,13 @@ public class CatalogController {
     /**
      * Получение детальной информации по конкретному товару
      *
-     * @param itemId
+     * @param name
      * @return
      * @throws Exception
      */
-    @RequestMapping(method = RequestMethod.GET, value = "{id}/detail")
-    public Item getItemDetail(@PathVariable("id") String itemId) throws Exception {
-        return catalogService.getItemDetail(itemId);
+    @RequestMapping(method = RequestMethod.GET, value = "{name}/detail")
+    public Item getItemDetail(@PathVariable("name") String name) throws Exception {
+        return catalogService.getItemDetailByTransliteName(name);
     }
 
 }

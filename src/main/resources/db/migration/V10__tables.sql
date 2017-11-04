@@ -71,3 +71,20 @@ create table wish_lists (
   foreign key (subject_id) references subject,
   foreign key (item_id) references item
 );
+
+-- добавляем поле транслита в товар
+alter table item add column translite_name varchar(128);
+-- добавляем поле транслита, описания и ссылки на изображение в таблицу категорий
+alter table category add column translite_name varchar(128);
+--alter table category add column description varchar(2000);
+alter table category add column description text;
+alter table category add column content_id varchar(37);
+--alter table category alter column description type text
+-- добавляем ссылку на изображение в таблицу поставщиков
+alter table company add column content_id varchar(37);
+alter table company add column translite_name varchar(128);
+alter table company alter column description type text
+
+alter table item add column age varchar(5);
+alter table item add column size varchar(128);
+alter table item add column material varchar(60);

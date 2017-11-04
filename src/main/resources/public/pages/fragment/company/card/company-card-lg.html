@@ -34,15 +34,20 @@
 
         <md-input-container class="no-errors">
             <label>Описание</label>
-            <input ng-model="vm.company.description">
+            <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.company.description"></textarea>
         </md-input-container>
 
         <md-input-container class="no-errors">
             <label>Адрес</label>
-            <input ng-model="vm.company.address">
+            <input ng-model="vm.company.address" md-maxlength="255" maxlength="255">
         </md-input-container>
 
     </div>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-disabled="vm.forms.companyCard.$dirty" ng-click="vm.showGallery()" style="bottom: 90px; right: 25px;">
+        <md-tooltip md-direction="left">Перейти в галерею</md-tooltip>
+        <md-icon>photo</md-icon>
+    </md-button>
 
     <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.save()" ng-class="{'disabled':!vm.forms.companyCard.$dirty}">
         <md-icon>save</md-icon>

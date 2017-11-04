@@ -5,8 +5,8 @@ import com.acme.model.Category;
 import com.acme.model.CategoryItem;
 import com.acme.model.Item;
 import com.acme.model.Node;
-import com.acme.model.dto.CategoryMap;
 import com.acme.model.dto.CategoryTransfer;
+import com.acme.model.dto.MapDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -19,9 +19,19 @@ public interface CategoryService {
 
     List<Category> getAllByParentId(String parentId);
 
+    List<Category> getAllByIdIn(List<String> ids);
+
     Category getCategory(String categoryId);
 
+    Category getCategoryByName(String name);
+
     List<Item> getCategoryItems(String categoryId);
+
+    List<Item> getCategoryItems(List<String> categoryIds);
+
+    List<Item> getCategoryItemsByName(String name);
+
+    List<Category> getRootCategories(String companyId);
 
     void createCategory(CategoryTransfer transfer);
 
@@ -39,5 +49,7 @@ public interface CategoryService {
 
     List<Node> getCompanyNodes();
 
-    List<CategoryMap> getChildren(String categoryId);
+    List<MapDto> getChildren(String categoryId);
+
+    void transliteCategories(boolean all);
 }

@@ -119,7 +119,6 @@ public class AuthController {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         Credential credential = credentialRepository.findOne(authService.getClaims(servletRequest).getId());
-        System.out.println(credential);
         if(credential != null && PasswordHashing.validatePassword(oldPassword, credential.getPassword())){
             credential.setPassword(PasswordHashing.hashPassword(authService.decryptPassword(newPassword)));
             credentialRepository.save(credential);

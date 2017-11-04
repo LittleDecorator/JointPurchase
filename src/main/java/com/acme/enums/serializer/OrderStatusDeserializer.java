@@ -15,11 +15,7 @@ public class OrderStatusDeserializer extends JsonDeserializer<OrderStatus>{
     public OrderStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         ObjectCodec oc = jsonParser.getCodec();
         JsonNode node = oc.readTree(jsonParser);
-        System.out.println(node);
-        System.out.println(node.get("id"));
-        System.out.println(node.get("id").textValue());
         OrderStatus status = OrderStatus.getByName(node.get("id").textValue());
-        System.out.println(status);
         return status;
 //        return new User(null, node.get("username").getTextValue(), node.get("password").getTextValue());
     }

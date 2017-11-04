@@ -6,8 +6,8 @@
     'use strict';
 
     angular.module('category')
-        .controller('categoryController', ['$rootScope', '$scope', '$log','$state', 'categoryNodes', '$timeout', 'dataResources','itemClssModal', '$location', 'menu',
-            function ($rootScope, $scope, $log, $state, categoryNodes, $timeout, dataResources, itemClssModal, $location, menu) {
+        .controller('categoryController', ['$rootScope', '$scope', '$log','$state', 'categoryNodes', '$timeout', 'dataResources','itemClssModal', '$location', 'menu','transliteratorService',
+            function ($rootScope, $scope, $log, $state, categoryNodes, $timeout, dataResources, itemClssModal, $location, menu, transliteratorService) {
                 var templatePath = "pages/fragment/category/";
                 var newCategoryList = [],
                     editCategoryList = [],
@@ -58,9 +58,9 @@
                  * @param categoryId
                  * @returns {Array}
                  */
-                function getCategoryItems(categoryId) {
+                function getCategoryItems(categoryName) {
                     var items = [];
-                    dataResources.categoryItems.get({id: categoryId}, function (data) {
+                    dataResources.categoryItems.get({name: categoryName}, function (data) {
                         angular.forEach(data, function (rec) {
                             items.push(rec);
                         });
@@ -91,11 +91,12 @@
                  * получение выбранного узла
                  * @param branch
                  */
-                function treeHandler(branch) {                     
+                function treeHandler(branch) {
+                    console.log(branch)
                     vm.selected = branch;
                     vm.selectedCopy = angular.copy(branch);
                     if (!vm.selected.items || !vm.selected.items.length > 0) {
-                        vm.selected.items = vm.selectedCopy.items = getCategoryItems(vm.selectedCopy.id);
+                        vm.selected.items = vm.selectedCopy.items = getCategoryItems(vm.selectedCopy.name);
                     }
                     nodeTitleChange();
                     newNodeTitleChange();
@@ -202,6 +203,14 @@
                  * @param selected
                  */
                 function add(selected) {
+
+                    function addTranslite(node){
+                        if(!node.transliteName){
+                          node.transliteName = transliteratorService.urlRusLat(node.title)
+                        }
+                        return node;
+                    }
+
                     if (vm.selected && vm.currentNode.title !== "") {
                         var parent, id = helpers.guid();
                         if (!selected) {
@@ -214,7 +223,7 @@
                         // подготавливаем узел для добавления
                         var newNode = {id: id, title: vm.currentNode.title, nodes: [], parentId: parentId, types: []};
                         // добавляем новый узел
-                        if (parentId == null) {
+                        if (parentId === null) {
                             vm.tree.add_branch(null, newNode);
                         } else {
                             vm.tree.add_branch(parent, newNode);
@@ -223,6 +232,8 @@
                         if(!parent.noLeaf){
                             parent.noLeaf = true;
                         }
+                        // добавляем транслит
+                        newNode = addTranslite(newNode);
                         // помещаем узел в список новых
                         newCategoryList.push(newNode);
                         // очищаем поле

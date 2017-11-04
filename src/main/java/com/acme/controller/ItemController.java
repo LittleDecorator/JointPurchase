@@ -28,25 +28,25 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/item")
-public class ItemController{
+public class ItemController {
 
     @Autowired
-	ItemRepository itemRepository;
+    ItemRepository itemRepository;
 
     @Autowired
     private CatalogRepository catalogRepository;
 
     @Autowired
-	OrderItemRepository orderItemRepository;
+    OrderItemRepository orderItemRepository;
 
     @Autowired
     CompanyRepository companyRepository;
 
     @Autowired
-	ContentRepository contentRepository;
+    ContentRepository contentRepository;
 
     @Autowired
-	ItemContentRepository itemContentRepository;
+    ItemContentRepository itemContentRepository;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -72,7 +72,7 @@ public class ItemController{
     @RequestMapping(method = RequestMethod.GET)
     public List<Item> getItems(ItemFilter filter) {
         /* выставляем offset, limit и order by */
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd","name");
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd", "name");
         return Lists.newArrayList(itemRepository.findAll(ItemSpecifications.filter(filter), pageable).iterator());
     }
 
@@ -84,7 +84,7 @@ public class ItemController{
      * @throws ParseException
      * @throws IOException
      */
-    @RequestMapping(method = {RequestMethod.PUT,RequestMethod.POST})
+    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST})
     public String addItem(@RequestBody Item item) throws ParseException, IOException {
         String itemId = null;
         if (item != null) {
@@ -112,12 +112,13 @@ public class ItemController{
 
     /**
      * Удаление товара по ID
+     *
      * @param id
      */
-    @RequestMapping(method = RequestMethod.DELETE,value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteItem(@PathVariable("id") String id) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try{
+        try {
             /* удалим записи товара в заказе */
             orderItemRepository.deleteByItemId(id);
             /* удалим записи товара в изображениях */
@@ -127,7 +128,7 @@ public class ItemController{
             /* удалим товар */
             itemRepository.delete(id);
             transactionManager.commit(status);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(Arrays.toString(ex.getStackTrace()));
             transactionManager.rollback(status);
         }
@@ -139,7 +140,7 @@ public class ItemController{
      * @param id
      * @return Item info with Categories
      */
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Item getItemDetail(@PathVariable("id") String id) {
         Item item = itemRepository.findOne(id);
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
@@ -148,15 +149,16 @@ public class ItemController{
 
     /**
      * Получение списка товаров по ID заказа
+     *
      * @param orderId
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET,value = "/order/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/order/{id}")
     public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
         Order order = orderRepository.findOne(orderId);
         List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
         List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
-        for(Item item : items){
+        for (Item item : items) {
             item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         }
         return items;
@@ -164,13 +166,14 @@ public class ItemController{
 
     /**
      * Получение товара по компании
+     *
      * @param companyId
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET,value = "/company/{id}")
-    public List<Item> getAllByCompanyId(@PathVariable("id")String companyId) {
+    @RequestMapping(method = RequestMethod.GET, value = "/company/{id}")
+    public List<Item> getAllByCompanyId(@PathVariable("id") String companyId) {
         List<Item> items = itemRepository.findByCompanyId(companyId);
-        for(Item item : items){
+        for (Item item : items) {
             item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         }
         return items;
@@ -179,19 +182,20 @@ public class ItemController{
     /**
      * Получение мапы товара для списков
      **/
-    @RequestMapping(method = RequestMethod.GET,value = "/map")
+    @RequestMapping(method = RequestMethod.GET, value = "/map")
     public List<ItemMap> getItemMap(@RequestParam(name = "name", required = false) String name, @RequestParam(value = "article", required = false) String article) {
         return itemRepository.findAll(ItemSpecifications.modalFilter(name, article)).stream().map(i -> new ItemMap(i.getId(), i.getName(), i.getPrice(), i.getArticle())).collect(Collectors.toList());
     }
 
     /**
      * Зменение признака товара "выставить на продажу"
+     *
      * @param input
      * @throws ParseException
      */
-    @RequestMapping(method = RequestMethod.POST,value = "/set/sale")
+    @RequestMapping(method = RequestMethod.POST, value = "/set/sale")
     public void saleToggle(@RequestBody String input) throws ParseException {
-        JSONParser parser=new JSONParser();
+        JSONParser parser = new JSONParser();
         JSONObject main = (JSONObject) parser.parse(input);
 
         String itemId = main.get("itemId").toString();

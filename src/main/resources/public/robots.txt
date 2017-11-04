@@ -2,4 +2,4 @@
 
 User-agent: *
 Disallow: /cart
-Disallow /search/
+Disallow: /search/

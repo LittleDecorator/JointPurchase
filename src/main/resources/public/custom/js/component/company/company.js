@@ -78,6 +78,7 @@
                 
                 vm.getToastPosition = getToastPosition;
                 vm.save = save;
+                vm.showGallery = showGallery;
                 vm.getTemplateUrl = getTemplateUrl;
                 vm.afterInclude = afterInclude;
                 vm.showSimpleToast = showSimpleToast;
@@ -91,6 +92,12 @@
                     return Object.keys(vm.toastPosition).filter(function (pos) {
                         return vm.toastPosition[pos];
                     }).join(' ');
+                }
+
+                /* переход в галерею */
+                function showGallery() {
+                    console.log("showGallery")
+                    $state.go("company.detail.gallery", {id: vm.company.id});
                 }
 
                 function save() {

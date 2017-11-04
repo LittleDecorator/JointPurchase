@@ -122,6 +122,7 @@
 
                 /* переход в галерею */
                 function showGallery(id) {
+                    console.log("showGallery")
                     $state.go("item.detail.gallery", {id: id});
                 }
 
@@ -210,8 +211,8 @@
         }])
 
         /* Карточка товара */
-        .controller('itemDetailController',['$rootScope','$scope','$stateParams','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses',
-            function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses){
+        .controller('itemDetailController',['$rootScope','$scope','$stateParams','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses','transliteratorService',
+            function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses, transliteratorService){
 
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
@@ -304,9 +305,16 @@
                         });
                     }
 
+                    function addTranslite(item){
+                        if(!item.transliteName){
+                          item.transliteName = transliteratorService.urlRusLat(item.name)
+                        }
+                        return item;
+                    }
 
                     if(vm.itemCard.$dirty){
                         if(vm.itemCard.$valid){
+                            vm.item = addTranslite(vm.item);
                             if(vm.item.id){
                                 // если товар был на редактирование
                                 dataResources.item.put(vm.item).$promise.then(function(data){

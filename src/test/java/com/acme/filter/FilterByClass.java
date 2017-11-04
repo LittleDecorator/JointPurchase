@@ -16,11 +16,7 @@ public class FilterByClass {
 
 	public void check(){
 		List<SignItem> items = Arrays.asList(new SignItem("first"),new CryptoSignItem("secord"));
-		System.out.println(items.size());
-		System.out.println(items.toString());
 		List<CryptoSignItem> result = FluentIterable.from(items).filter(CryptoSignItem.class).toList();
-		System.out.println(result.size());
-		System.out.println(result.toString());
 	}
 
 	class SignItem {

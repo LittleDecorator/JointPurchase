@@ -10,6 +10,8 @@
         .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','$timeout','fileUploadModal','FileUploader',
             function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
 
+                console.log($stateParams)
+                console.log($location)
                 var uploader = $scope.uploader = new FileUploader();
                 var mCou=0;
 
@@ -26,6 +28,13 @@
                 vm.images = [];
                 vm.currentImage = {};
 
+                vm.isCompany = $location.$$path.indexOf('company') !== -1;
+                vm.isItem = $location.$$path.indexOf('item') !== -1;
+                vm.isCategory = $location.$$path.indexOf('category') !== -1;
+                console.log(vm.isCompany);
+                console.log(vm.isItem);
+                console.log(vm.isCategory);
+
                 /**
                  * загрузка файлов
                  */
@@ -38,15 +47,29 @@
                         formData.append("file" + idx, item._file);
                     });
 
-                    //formData.append("itemId", resolved.itemId);
-                    formData.append("itemId", $stateParams.id);
+                    if(vm.isItem){
+                        //formData.append("itemId", resolved.itemId);
+                        formData.append("itemId", $stateParams.id);
 
-                    dataResources.itemContent.upload(formData, function(data){
-                        angular.forEach(data, function (image) {
+                        dataResources.itemContent.upload(formData, function(data){
+                            angular.forEach(data, function (image) {
                             vm.images.push(image);
                             uploader.clearQueue();
+                            });
                         });
-                    });
+                    }
+                    if(vm.isCompany){
+                        formData.append("companyId", $stateParams.id);
+
+                        dataResources.companyContent.upload(formData, function(data){
+                            console.log(data)
+                            angular.forEach(data, function (image) {
+                                // vm.images.push(image);
+                                uploader.clearQueue();
+                            });
+                        });
+                    }
+
                 }
 
                 /**
@@ -75,7 +98,7 @@
                             });
 
                             $timeout(function(){
-                                if(vm.images.length > 0 && mCou==0){
+                                if(vm.images.length > 0 && mCou===0){
                                     vm.images[0].main = true;
                                     vm.images[0].show = true;
                                 }

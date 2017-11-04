@@ -54,7 +54,7 @@
                     search : $resource('/api/catalog/search/',{},{
                         get :{method:'GET',isArray:true}
                     }),
-                    itemDetail: $resource("/api/catalog/:id/detail",{},{
+                    itemDetail: $resource("/api/catalog/:name/detail",{},{
                         get:{method:'GET',isArray:false}
                     })
                 },
@@ -67,6 +67,18 @@
                     post:{method:'POST',isArray:false,transformResponse:function(data, headers){
                         return {result:data}
                     }}
+                }),
+
+                companyByName: $resource("/api/company/detail",{},{
+                    get: {method:'GET',isArray:false},
+                }),
+                companyContent: $resource('/api/content/upload/company',{},{
+                    upload:{
+                        method:'POST',
+                        transformRequest: function(data) { return data; },
+                        headers : { 'Content-Type' : undefined },
+                        isArray : false
+                    }
                 }),
                 itemImage: $resource('/api/content/items/:id',{},{
                     query :{method:'GET',isArray:true},
@@ -124,9 +136,10 @@
                 inboxMail:$resource('/api/mail/inbox',{},{get:{method:'GET',isArray:true}}),
                 sendMail:$resource('/api/mail/send',{},{get:{method:'GET',isArray:true}}),
 
-                categoryItems: $resource('/api/category/:id/items',{},{ get : {method:'GET',isArray:true}}),
+                categoryItems: $resource('/api/category/:name/items',{},{ get : {method:'GET',isArray:true}}),
 
                 companyMap: $resource('/api/company/map',{},{ get : { method: 'GET', isArray : true }}),
+                companyCategories: $resource('/api/company/:id/categories',{},{ get : { method: 'GET', isArray : true }}),
                 categoryMap: $resource('/api/category/map',{},{get : { method: 'GET', isArray : true }}),
                 typeMap:$resource('/api/category/type/map',{},{
                     get:{method:'GET',isArray:true}
@@ -149,10 +162,13 @@
                 categoryChildrenMap:$resource("/api/category/:id/children",{},{
                     get:{method:'GET',isArray:true}
                 }),
+                categoryChildrenCompanyMap:$resource("/api/category/:id/children/company",{},{
+                    get:{method:'GET',isArray:true}
+                }),
                 categorySubList:$resource("/api/category/:id/sub",{},{
                     get:{method:'GET',isArray:true}
                 }),
-                category:$resource("/api/category/:id",{},{
+                category:$resource("/api/category/:name",{},{
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false},
                     put:{method:'PUT',isArray:false},

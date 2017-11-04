@@ -17,9 +17,14 @@ public class Category implements BaseModel{
 
     private String name;
 
-    @Transient
-    //TODO: добавить поле в БД
+    @Column(name = "translite_name")
+    private String transliteName;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "content_id")
+    private String contentId;
 
     @Column(name = "parent_id")
     private String parentId;
@@ -76,5 +81,21 @@ public class Category implements BaseModel{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTransliteName() {
+        return transliteName;
+    }
+
+    public void setTransliteName(String transliteName) {
+        this.transliteName = transliteName;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 }

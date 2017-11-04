@@ -37,7 +37,7 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container flex="25">
+                <md-input-container flex="25" style="margin-left:1%">
                     <label class="required">Артикул</label>
                     <input name="article" ng-model="vm.item.article" required only-number>
                     <div ng-messages="vm.itemCard.article.$error" ng-if="!vm.showHints">
@@ -45,7 +45,7 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container flex="25">
+                <md-input-container flex="25" style="margin-left:1%">
                     <label class="required">Цена (руб)</label>
                     <input name="price" ng-model="vm.item.price" required currency-mask >
                     <div ng-messages="vm.itemCard.price.$error" ng-if="!vm.showHints">
@@ -53,12 +53,31 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container flex="25">
+                <md-input-container flex="25" style="margin-left:1%">
                     <label class="required">Кол-во в наличие</label>
                     <input name="inStock" ng-model="vm.item.inStock" only-number>
                     <div ng-messages="vm.itemCard.inStock.$error" ng-if="!vm.showHints">
                         <div ng-message-exp="['parse']">Поле не может быть пустым</div>
                     </div>
+                </md-input-container>
+            </div>
+        </md-content>
+
+        <md-content>
+            <div layout="row">
+                <md-input-container flex="25">
+                    <label>Размер</label>
+                    <input name="size" ng-model="vm.item.size">
+                </md-input-container>
+
+                <md-input-container flex="25" style="margin-left:1%">
+                    <label>Возраст</label>
+                    <input name="age" ng-model="vm.item.age" >
+                </md-input-container>
+
+                <md-input-container flex="50" style="margin-left:1%">
+                    <label>Материал</label>
+                    <input name="material" ng-model="vm.item.material">
                 </md-input-container>
             </div>
         </md-content>

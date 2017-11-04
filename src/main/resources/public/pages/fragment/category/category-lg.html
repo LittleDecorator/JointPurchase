@@ -27,7 +27,7 @@
             <md-card class="md-padding">
                 <md-input-container class="md-block no-errors">
                     <label>Новая категория</label>
-                    <input ng-model="vm.currentNode.title" ng-change="vm.newNodeTitleChange()" maxlength="25">
+                    <input ng-model="vm.currentNode.title" ng-change="vm.newNodeTitleChange()" md-maxlength="25" maxlength="25">
                 </md-input-container>
 
                 <div>
@@ -36,6 +36,13 @@
                     <md-button id="add_root" md-no-ink class="md-raised btn md disabled" aria-label="root" ng-click="vm.addAsRoot()">Как корневую</md-button>
                 </div>
 
+            </md-card>
+
+            <md-card class="md-padding">
+                <md-input-container class="no-errors">
+                    <label>Описание</label>
+                    <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.currentNode.description"></textarea>
+                </md-input-container>
             </md-card>
 
             <md-card class="md-padding" ng-show="vm.selected">

@@ -22,11 +22,18 @@ public interface ItemRepository extends JpaRepository<Item, String>, JpaSpecific
 
     List<Item> findByCompanyId(String companyId);
 
+    List<Item> findAllByCompanyId(String companyId);
+
     List<Item> findByIdIn(List<String> ids);
+
+    Item findOneByTransliteName(String name);
 
 //    List<Item> findByOrderItems(List<OrderItem> orderItems);
 
-    @Query(value = "select * from get_limited_category_items(:categoryId, :offset, :limit)", nativeQuery = true)
+    @Query(value = "select distinct t.* from get_limited_category_items(:categoryId, :offset, :limit) t", nativeQuery = true)
     List<Item> findAllByCategoryId(@Param("categoryId") String categoryId, @Param("offset") int offset, @Param("limit") int limit);
+
+    @Query(value = "select distinct t.* from get_limited_category_items(:categoryId, :companyId, :offset, :limit) t", nativeQuery = true)
+    List<Item> findAllByCategoryId(@Param("categoryId") String categoryId, @Param("companyId") String companyId, @Param("offset") int offset, @Param("limit") int limit);
 
 }

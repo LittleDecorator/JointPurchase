@@ -52,7 +52,6 @@ public class TreeServiceImpl implements TreeService {
                     }
                 }
             }
-//            System.out.println("Left in list -> "+ nodes.size());
         }
     }
 
@@ -78,6 +77,6 @@ public class TreeServiceImpl implements TreeService {
     }
 
     public Node category2Node(Category category){
-        return new Node(category.getId(),category.getName(),category.getParentId());
+        return new Node(category.getId(),category.getTransliteName(), category.getName(),category.getParentId(),category.getDescription());
     }
 }

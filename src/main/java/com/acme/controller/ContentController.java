@@ -1,8 +1,10 @@
 package com.acme.controller;
 
 import com.acme.handlers.Base64BytesSerializer;
+import com.acme.model.Company;
 import com.acme.model.Content;
 import com.acme.model.ItemContent;
+import com.acme.repository.CompanyRepository;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.constant.Constants;
@@ -15,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Transactional
 @RestController
 @RequestMapping(value = "/api/content")
 public class ContentController{
@@ -32,6 +36,9 @@ public class ContentController{
 
     @Autowired
     ContentRepository contentRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @Autowired
     ResizeService resizeService;
@@ -124,6 +131,33 @@ public class ContentController{
             }
         }
         return result;
+    }
+
+    @RequestMapping(value = "/upload/company", method = RequestMethod.POST)
+    public void companyImageUpload(MultipartHttpServletRequest request, @RequestParam(value = "companyId") String companyId) throws Exception {
+        //TODO: либо загружать одну, либо добавить таблицу связи
+        Content content;
+
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+
+        for(MultipartFile file : fileMap.values()){
+            if (!file.isEmpty()) {
+
+                String fileName = file.getOriginalFilename();
+                String type = fileName.substring(fileName.indexOf(".")+1);
+
+                content = new Content();
+                content.setFileName(file.getOriginalFilename());
+                content.setContent(Base64BytesSerializer.serialize(file.getBytes()));
+                content.setType(type);
+                content.setMime("image/" + type);
+                contentRepository.save(content);
+
+                Company company = companyRepository.findOne(companyId);
+                company.setContentId(content.getId());
+                companyRepository.save(company);
+            }
+        }
     }
 
     /**

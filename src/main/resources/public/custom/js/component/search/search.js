@@ -66,8 +66,9 @@
              * Переход на карточку товара из списка поиска
              * @param id
              */
-            $scope.itemView = function(id){
-                $state.go("catalog.detail", {itemId: id});
+            $scope.itemView = function(name){
+              console.log(name);
+                $state.go("catalog.detail", {itemName: name});
             };
 
             $scope.clear = function(){

@@ -9,6 +9,7 @@ import java.util.List;
 public class Node implements Serializable {
 
     private String id;
+    private String name;
     private int level;
     private String title;
     private boolean noLeaf = false;
@@ -17,19 +18,40 @@ public class Node implements Serializable {
     private List<Item> items;
     private List<Node> nodes;
     private boolean isCompany = Boolean.FALSE;
+    private String description;
 
     public Node() {}
 
-    public Node(String id, String title) {
+    public Node(String id, String name, String title) {
         this.id = id;
         this.title = title;
+        this.name = name;
     }
 
-    public Node(String id, String title, String parentId) {
-        this.id = id;
-        this.title = title;
+    public Node(String id, String name, String title, String parentId) {
+        this(id, name, title);
         this.items = Lists.newArrayList();
         this.parentId = parentId;
+    }
+
+    public Node(String id, String name, String title, String parentId, String description) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.parentId = parentId;
+        this.description = description;
+    }
+
+    public void setCompany(boolean company) {
+        isCompany = company;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isCompany() {
@@ -111,4 +133,11 @@ public class Node implements Serializable {
         this.patternUid = patternUid;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

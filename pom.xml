@@ -307,6 +307,13 @@
             <version>1.5.7</version>
         </dependency>
 
+        <!-- TRANSLIT -->
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>59.1</version>
+        </dependency>
+
         <!-- WEBP -->
         <dependency>
             <artifactId>webp-imageio</artifactId>

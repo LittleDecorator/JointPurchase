@@ -23,7 +23,7 @@
         </div>
     </md-toolbar>
 
-    <md-content layout-padding>
+    <md-content layout-padding class="panel isOpen">
         <md-menu-item style="width: 100%;">
             <md-button style="padding: 0" ng-if="mvm.auth.isAuth()" ng-click="mvm.goto('cabinet')">
                 <md-icon style="margin: 0 16px;">account_circle</md-icon>
@@ -50,9 +50,19 @@
             </md-button>
         </md-menu-item>
         <md-divider></md-divider>
-        <!--<md-menu-divider></md-menu-divider>-->
 
-        <md-menu-item><md-button ng-click="mvm.goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+
+        <md-menu-item>
+            <!--<md-button ng-click="mvm.goto('catalog')">-->
+            <md-button class="openSubPanel" ng-click="mvm.openSubPanel($event)">
+                <div flex="" layout="row">
+                    <md-icon>bookmark_border</md-icon><span>Каталог</span>
+                    <span flex></span>
+                    <md-icon>keyboard_arrow_right</md-icon>
+                </div>
+            </md-button>
+        </md-menu-item>
+
         <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
         <md-menu-item><md-button ng-click="mvm.goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
         <md-menu-item><md-button ng-click="mvm.goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
@@ -69,6 +79,50 @@
             <md-divider ></md-divider>
             <md-menu-item ><md-button ng-click="mvm.logout()"><md-icon>exit_to_app</md-icon><span>Выход</span></md-button></md-menu-item>
         </div>
+    </md-content>
+
+    <!-- Основные разделы каталога -->
+    <md-content layout-padding prevent-scroll class="subPanel">
+        <md-menu-item style="width: 100%;">
+            <md-button ng-click="mvm.goto('catalog')"><span>Все</span></md-button>
+        </md-menu-item>
+        <md-menu-item ng-repeat="menu in mvm.nodes track by menu.title">
+            <md-button class="openSubPanel" ng-click="mvm.getSubMenu(menu);mvm.openSubPanel($event)">
+                <div flex="" layout="row">
+                    <span style="color: #676565;">{{::menu.title}}</span>
+                    <span flex></span>
+                    <md-icon>keyboard_arrow_right</md-icon>
+                </div>
+            </md-button>
+        </md-menu-item>
+        <md-divider ></md-divider>
+        <md-menu-item style="width: 100%;">
+            <md-button style="padding: 0;" ng-click="mvm.closeSubPanel($event)">
+                <md-icon style="margin: 0 16px;">keyboard_arrow_left</md-icon>
+                <span>Назад</span>
+            </md-button>
+        </md-menu-item>
+    </md-content>
+
+    <!-- Подразделы каталога -->
+    <md-content layout-padding prevent-scroll class="subPanel">
+        <md-menu-item style="width: 100%;">
+            <md-button><span>Все</span></md-button>
+        </md-menu-item>
+        <md-menu-item ng-repeat="menu in mvm.submenu track by menu.title">
+            <md-button ng-click="mvm.toCatalog(menu)">
+                <div flex="" layout="row">
+                    <span style="color: #676565;">{{::menu.title}}</span>
+                </div>
+            </md-button>
+        </md-menu-item>
+        <md-divider ></md-divider>
+        <md-menu-item style="width: 100%;">
+            <md-button style="padding: 0;" ng-click="mvm.closeSubPanel($event)">
+                <md-icon style="margin: 0 16px;">keyboard_arrow_left</md-icon>
+                <span>Назад</span>
+            </md-button>
+        </md-menu-item>
     </md-content>
 
 </md-sidenav>

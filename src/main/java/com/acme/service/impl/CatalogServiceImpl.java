@@ -14,6 +14,8 @@ import com.acme.service.ItemService;
 import com.acme.service.WishlistService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.ibm.icu.text.Transliterator;
+import java.util.stream.Stream;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 @Service
 public class CatalogServiceImpl implements CatalogService {
+
+    private static String RUSSIAN_TO_LATIN_BGN = "Russian-Latin/BGN";
 
     @Autowired
     ElasticService elasticService;
@@ -88,6 +92,21 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
+    public void transliteItems(boolean all) {
+        Stream<Item> items = itemService.getAll().stream();
+        if(!all){
+            // фильтруем если нужно
+            items = items.filter(item -> Strings.isNullOrEmpty(item.getTransliteName()));
+
+        }
+        // обновляем
+        items.forEach(item -> {
+            item.setTransliteName(translite(item.getName()));
+            itemService.updateItem(item);
+        });
+    }
+
+    @Override
     public List<Item> searchItems(String criteria) {
         Content defContent = contentRepository.findOneByIsDefault(true);
 
@@ -99,7 +118,8 @@ public class CatalogServiceImpl implements CatalogService {
                         .field("name.shingles^2")
                         .field("name.ngrams")
                         .operator(MatchQueryBuilder.Operator.AND)
-                        .fuzziness(Fuzziness.ONE)
+                        //.fuzziness(Fuzziness.ONE)
+                        .fuzziness(Fuzziness.ZERO)
                 )
                 .build();
 
@@ -112,9 +132,23 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public Item getItemDetail(String itemId) {
-        Content defContent = contentRepository.findOneByIsDefault(true);
+    public Item getItemDetailById(String itemId) {
         Item item = itemService.getItem(itemId);
+        return fillItem(item);
+    }
+
+    @Override
+    public Item getItemDetailByTransliteName(String name) {
+        return fillItem(itemService.getItemByLatinName(name));
+    }
+
+    /**
+     *
+     * @param item
+     * @return
+     */
+    private Item fillItem(Item item){
+        Content defContent = contentRepository.findOneByIsDefault(true);
         List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
         if (itemContents.isEmpty()) {
             item.setUrl(Constants.VIEW_URL + defContent.getId());
@@ -129,5 +163,15 @@ public class CatalogServiceImpl implements CatalogService {
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
         return item;
+    }
+
+    /**
+     *
+     * @param input
+     * @return
+     */
+    private String translite(String input){
+        Transliterator russianToLatinNoAccentsTrans = Transliterator.getInstance(RUSSIAN_TO_LATIN_BGN);
+        return russianToLatinNoAccentsTrans.transliterate(input).replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "").replaceAll("\\*|\\s+","-").toLowerCase();
     }
 }

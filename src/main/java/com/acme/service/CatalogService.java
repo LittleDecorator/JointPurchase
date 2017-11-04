@@ -16,5 +16,9 @@ public interface CatalogService {
 
     void indexItems();
 
-    Item getItemDetail(String itemId);
+    void transliteItems(boolean all);
+
+    Item getItemDetailById(String itemId);
+
+    Item getItemDetailByTransliteName(String name);
 }

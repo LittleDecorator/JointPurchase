@@ -20,6 +20,9 @@ public class Company implements BaseModel{
 
     private String name;
 
+    @Column(name = "translite_name")
+    private String transliteName;
+
     private String description;
 
     private String address;
@@ -37,6 +40,9 @@ public class Company implements BaseModel{
     private String ks;
 
     private String rs;
+
+    @Column(name = "content_id")
+    private String contentId;
 
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
@@ -137,4 +143,19 @@ public class Company implements BaseModel{
         this.dateAdd = dateAdd;
     }
 
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
+
+    public String getTransliteName() {
+        return transliteName;
+    }
+
+    public void setTransliteName(String transliteName) {
+        this.transliteName = transliteName;
+    }
 }

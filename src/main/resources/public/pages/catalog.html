@@ -4,7 +4,7 @@
         <div class="col s12 m6 l4" ng-repeat="item in vm.items">
             <md-card>
                 <div class="card-image waves-effect waves-block waves-light md-card-image">
-                    <img ng-src="{{item.url}}" ng-click="vm.itemView(item.id)" class="responsive-img" style="padding-top: 20px;display: block;"/>
+                    <img ng-src="{{item.url}}" ng-click="vm.itemView(item.transliteName)" class="responsive-img" style="padding-top: 20px;display: block;"/>
                     <a class="btn-price btn-floating btn-large">{{::item.price|number}}р</a>
                     <div class="chip flag" style="position: fixed;top: 10px;right: 0;  line-height: 0;  border-radius: 0;">{{::item.status.name}}</div>
                 </div>
@@ -24,6 +24,6 @@
     </div>
 </div>
 
-<md-button ng-if="mvm.width < 1530" class="md-fab blue lighten-3 fixed-action-btn" ng-click="mvm.toggleSideFilter()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+<md-button ng-if="mvm.width < 1530 && mvm.width>600" class="md-fab blue lighten-3 fixed-action-btn" ng-click="mvm.toggleSideFilter()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
     <md-icon>more_vert</md-icon>
 </md-button>

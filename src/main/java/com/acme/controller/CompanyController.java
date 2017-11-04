@@ -1,11 +1,23 @@
 package com.acme.controller;
 
+import com.acme.model.CategoryItem;
 import com.acme.model.Company;
+import com.acme.model.Item;
+import com.acme.model.dto.MapDto;
+import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CompanyRepository;
+import com.acme.service.CategoryService;
+import com.acme.service.ItemService;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.ibm.icu.text.Transliterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +27,19 @@ import java.util.List;
 @RequestMapping(value = "/api/company")
 public class CompanyController {
 
+    private static String RUSSIAN_TO_LATIN_BGN = "Russian-Latin/BGN";
+
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    ItemService itemService;
+
+    @Autowired
+    CategoryItemRepository categoryItemRepository;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Autowired
     PlatformTransactionManager transactionManager;
@@ -30,6 +53,13 @@ public class CompanyController {
         return Lists.newArrayList(companyRepository.findAll());
     }
 
+    //TODO: ПЕРЕДЕЛАТЬ
+    @Transactional
+    @RequestMapping(method = RequestMethod.PATCH, value = "translite")
+    public void transliteItems(@RequestParam(name = "all", required = false, defaultValue = "true") Boolean all){
+        transliteCompanies(all);
+    }
+
     /**
      * Получение компании по её ID
      * @param id
@@ -38,6 +68,16 @@ public class CompanyController {
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
     public Company getCompany(@PathVariable(value = "id") String id) {
         return companyRepository.findOne(id);
+    }
+
+    /**
+     * Получение компании по её ID
+     * @param name
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    public Company getCompanyDetail(@RequestParam(value = "name") String name) {
+        return companyRepository.findOneByTransliteName(name);
     }
 
     /**
@@ -73,44 +113,47 @@ public class CompanyController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<CompanyMap> getCompanyMap() {
-        List<CompanyMap> list = Lists.newArrayList();
+    public List<MapDto> getCompanyMap() {
+        List<MapDto> list = Lists.newArrayList();
 
         for(Company company : companyRepository.findAll()){
-            list.add(new CompanyMap(company.getId(), company.getName()));
+            list.add(new MapDto(company.getId(), company.getName()));
         }
         return list;
     }
 
-    /*---------- NESTED ----------*/
+    /**
+     * Получение мапы компаний
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET,value = "/{id}/categories")
+    public List<MapDto> getCompanyCategories(@PathVariable("id") String id) {
+        List<MapDto> result = Lists.newArrayList(new MapDto(null, "Все"));
+        result.addAll(categoryService.getRootCategories(id).stream().map(category -> new MapDto(category.getId(), category.getName())).collect(Collectors.toList()));
+        return result;
+    }
+
+    private void transliteCompanies(boolean all) {
+        Stream<Company> companies = Lists.newArrayList(companyRepository.findAll()).stream();
+        if(!all){
+            // фильтруем если нужно
+            companies = companies.filter(company -> Strings.isNullOrEmpty(company.getTransliteName()));
+
+        }
+        // обновляем
+        companies.forEach(company -> {
+            company.setTransliteName(translite(company.getName()));
+            companyRepository.save(company);
+        });
+    }
 
     /**
-     * Класс предоставляющий данные для списка слиентов
+     *
+     * @param input
+     * @return
      */
-    private class CompanyMap {
-
-        String id;
-        String name;
-
-        CompanyMap(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+    private String translite(String input){
+        Transliterator russianToLatinNoAccentsTrans = Transliterator.getInstance(RUSSIAN_TO_LATIN_BGN);
+        return russianToLatinNoAccentsTrans.transliterate(input).replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "").replaceAll("\\*|\\s+","-").toLowerCase();
     }
 }

@@ -6,7 +6,7 @@
         <section>
             <md-list class="row" flex style="margin: 0">
                 <md-list-item class="md-2-line md-clickable col s12 m6 l4" ng-repeat="row in searchResult" style="background: transparent">
-                    <md-button class="card-panel md-no-style md-button md-ink-ripple" ng-click="itemView(row.id)">
+                    <md-button class="card-panel md-no-style md-button md-ink-ripple" ng-click="itemView(row.transliteName)">
                         <div class="md-list-item-inner">
                             <div class="boxInner md-avatar">
                                 <img ng-src="{{::row.url}}">

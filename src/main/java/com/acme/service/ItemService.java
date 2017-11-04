@@ -1,6 +1,7 @@
 package com.acme.service;
 
 
+import com.acme.model.Company;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.dto.ItemMediaTransfer;
@@ -17,9 +18,13 @@ public interface ItemService {
 
     List<Item> getAllByCategory(CatalogFilter filter);
 
+    List<Item> getAllByCompanyId(String companyId);
+
     List<Item> getAllByIdList(List<String> ids);
 
     Item getItem(String itemId);
+
+    Item getItemByLatinName(String name);
 
     List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items);
 
@@ -38,4 +43,6 @@ public interface ItemService {
     void increaseCountByOrder(String orderId);
 
     void fillItem(Item item, Content defContent);
+
+    void updateItem(Item item);
 }
