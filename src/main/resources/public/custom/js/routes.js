@@ -484,7 +484,7 @@ var route = {
               }
             },
             data: {
-              displayName: '{{product.company.name}}',
+              displayName: '{{product.name}}',
               requireLogin: false
             },
             metaTags: {
@@ -544,7 +544,7 @@ var route = {
               }
             },
             data: {
-              displayName: '{{product.company.name}}',
+              displayName: '{{product.name}}',
               requireLogin: false
             },
             metaTags: {
