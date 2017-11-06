@@ -12,6 +12,10 @@ md-input-container input[type=search]{
 	box-shadow: 0 0 0 0 transparent;
 }
 
+md-autocomplete[md-floating-label] .md-show-clear-button button {
+	top: 0;
+}
+
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
 @media (min-width: 601px) {
 

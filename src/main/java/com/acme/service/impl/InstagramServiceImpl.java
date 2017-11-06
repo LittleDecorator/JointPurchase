@@ -16,6 +16,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.util.Lists;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.brunocvcunha.instagram4j.Instagram4j;
+import org.brunocvcunha.instagram4j.requests.InstagramTagFeedRequest;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedItem;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,39 +56,6 @@ public class InstagramServiceImpl implements InstagramService {
     @Autowired
     ImageService imageService;
 
-    @Override
-    public InstagramUser getSelf(String accessToken) {
-        RestTemplate template = new RestTemplate();
-        String selfUrl = "https://api.instagram.com/v1/users/self/?access_token=" + accessToken;
-        //TODO: переделать парсинг пользователя
-//        return template.getForObject(selfUrl, InstagramUser.class);
-        ResponseEntity<String> response = template.getForEntity(selfUrl, String.class);
-        return parseUser(response.getBody());
-    }
-
-    @Override
-    public InstagramUser getUser(String userId, String accessToken) {
-        return null;
-    }
-
-    @Override
-    public List<InstagramPostDto> getRecent(String userId, String accessToken) {
-        RestTemplate template = new RestTemplate();
-        String recentUrl = "https://api.instagram.com/v1/users/"+userId+"/media/recent/?access_token="+accessToken;
-        ResponseEntity<String> response = template.getForEntity(recentUrl, String.class);
-        return parseRecent(response.getBody());
-    }
-
-    public void uploadSelf(String accessToken){
-        uploadUser("1790249622", accessToken);
-    }
-
-    public void uploadUser(String userId, String accessToken){
-        InstagramUser user = getSelf(accessToken);
-        userRepository.save(user);
-    }
-
-    @Override
     public void uploadRecent(String userId, String accessToken) throws IOException {
         InstagramUser user = userRepository.findOneByoriginId(userId);
         List<InstagramPostDto> posts = getRecent(userId, accessToken);
@@ -122,6 +97,103 @@ public class InstagramServiceImpl implements InstagramService {
                 postContentRepository.save(postContent);
             }
         }
+    }
+
+    @Override
+    public InstagramUser getSelf(String accessToken) {
+        RestTemplate template = new RestTemplate();
+        String selfUrl = "https://api.instagram.com/v1/users/self/?access_token=" + accessToken;
+        //TODO: переделать парсинг пользователя
+//        return template.getForObject(selfUrl, InstagramUser.class);
+        ResponseEntity<String> response = template.getForEntity(selfUrl, String.class);
+        return parseUser(response.getBody());
+    }
+
+    @Override
+    public InstagramUser getUser(String userId, String accessToken) {
+        return null;
+    }
+
+    @Override
+    public List<InstagramPostDto> getRecent(String userId, String accessToken) {
+        RestTemplate template = new RestTemplate();
+        String recentUrl = "https://api.instagram.com/v1/users/"+userId+"/media/recent/?access_token="+accessToken;
+        ResponseEntity<String> response = template.getForEntity(recentUrl, String.class);
+        return parseRecent(response.getBody());
+    }
+
+    public void uploadSelf(String accessToken){
+        uploadUser("1790249622", accessToken);
+    }
+
+    public void uploadUser(String userId, String accessToken){
+        InstagramUser user = getSelf(accessToken);
+        userRepository.save(user);
+    }
+
+    /**
+     * Используем другую библиотеку для получения изображений
+     * @param user
+     * @param password
+     * @param tag
+     * @throws IOException
+     */
+    @Override
+    public void getMostByTag(String user, String password, String tag) throws IOException {
+        Instagram4j instagram = Instagram4j.builder().username(user).password(password).build();
+        instagram.setup();
+        instagram.login();
+
+        /* получим изображения */
+        InstagramFeedResult tagFeed = instagram.sendRequest(new InstagramTagFeedRequest(tag));
+        List<InstagramFeedItem> items = tagFeed.getItems();
+        items.addAll(tagFeed.getRanked_items());
+        List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).limit(30).collect(Collectors.toList());
+
+        InstagramPost post;
+        Content content;
+        InstagramPostContent postContent;
+
+        // один ответ содержит только одно изображение (пока)
+        for (InstagramFeedItem dto : result) {
+            // создаем пост
+            post = new InstagramPost();
+            post.setOriginId(dto.getId());
+            post.setContent(String.valueOf(dto.getCaption().get("text")));
+            List<String> tags = com.google.common.collect.Lists.newArrayList(tag);
+            if(dto.getUsertags()!=null){
+                tags.addAll(dto.getUsertags().values().stream().map(String::valueOf).collect(Collectors.toList()));
+            }
+            post.setTags(tags);
+            post.setCreateTime(Long.parseLong(String.valueOf(dto.getCaption().get("created_at"))));
+            String rawUrl = String.valueOf(((Map)((ArrayList)dto.getImage_versions2().values().iterator().next()).get(0)).get("url"));
+            post.setExternalUrl(rawUrl.substring(0, rawUrl.indexOf('?')));
+            //post.setInstagramUserId(dto.getUser().getPk());
+            post.setLikesCount(dto.getLike_count());
+            post.setUserHasLiked(dto.isHas_liked());
+            post = postRepository.save(post);
+
+            // загружаем изображения
+            content = new Content();
+            content.setInstagram(true);
+            String type = post.getExternalUrl().substring(post.getExternalUrl().lastIndexOf('.')+1);
+            content.setType(type);
+            String mime = "image/"+type;
+            content.setMime(mime);
+            content.setDefault(false);
+            content.setProfile(false);
+            content.setFileName("unknown."+type);
+            content.setContent(Base64BytesSerializer.serialize(imageService.downloadImage(post.getExternalUrl(), type)));
+            content = contentRepository.save(content);
+
+                // добавим связь
+            postContent = new InstagramPostContent();
+            postContent.setPostId(post.getId());
+            postContent.setContentId(content.getId());
+            postContentRepository.save(postContent);
+
+        }
+
     }
 
     /**

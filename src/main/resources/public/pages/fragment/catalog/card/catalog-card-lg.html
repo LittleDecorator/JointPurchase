@@ -1,46 +1,37 @@
-<div id="catalog-card" class="section" style="padding-top: 0">
-    <div class="card-panel">
-        <div class="row" style="margin-bottom: 0;">
-            <div class="col l12">
-                <!-- название -->
-                <h3 style="margin-top: 0">{{::vm.item.name}}</h3>
+<div id="catalog-card" class="section card-panel">
 
-                <!-- изображения -->
-                <div class="col l8 s12" style="padding-left: 0">
-                    <div class="box" style="width: 100%; padding-bottom: 65%; background-color: rgba(253,253,253,.6);cursor: pointer" ng-click="vm.openSlider()">
+    <h3 style="margin-top: 0">{{::vm.item.name}}</h3>
+
+    <div layout="row" layout-xs="column" layout-sm="column" layout-gt-sm="row">
+        <div flex flex-gt-sm="66" layout="column" style="padding-right: 1%">
+                <div flex class="box" style="width: 100%; padding-bottom: 65%; background-color: rgba(253,253,253,.6);cursor: pointer" ng-click="vm.openSlider()">
+                    <div class="boxInner">
+                        <img ng-src="{{vm.mainImage}}" class="responsive-img"/>
+                    </div>
+                </div>
+                <div flex ng-if="vm.item.images.length > 1" style="min-height: 100px;">
+                    <div class="box" ng-repeat="img in vm.item.images" ng-click="vm.show(img.contentId)" style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
                         <div class="boxInner">
-                            <img ng-src="{{vm.mainImage}}" class="responsive-img"/>
-                        </div>
-                    </div>
-
-                    <div ng-if="vm.item.images.length > 1">
-                        <div class="box" ng-repeat="img in vm.item.images" ng-click="vm.show(img.contentId)" style="width: 14.2%; padding-bottom: 14.2%;cursor: pointer">
-                            <div class="boxInner">
-                                <img ng-src="{{::mvm.VIEW_URL+img.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
-                            </div>
+                            <img ng-src="{{::mvm.VIEW_URL+img.contentId}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
                         </div>
                     </div>
                 </div>
-
-                <!-- описание -->
-                <div id="description" class="col l4 s12 ">
-                    <div class="card-panel alcaramel" style="margin-top: 3px; background-color: rgba(253,253,253,.6);">
-                        <h6><b>Опиcание:</b></h6>
-                        <hr>
-                        <p style="margin: 0">{{::vm.item.description}}</p>
-                        <hr>
-                        <h6><b>Материал:</b> {{::vm.item.material}}</h6>
-                        <h6><b>Размер:</b> {{::vm.item.size}}</h6>
-                        <h6><b>Возраст:</b> {{::vm.item.age}}</h6>
-                        <h6><b>Артикул:</b> {{::vm.item.article}}</h6>
-                        <br/>
-                        <b>Цена: </b>{{::vm.item.price}} руб
-                        <!--<a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="mvm.addToCart(vm.item)">Купить</a>-->
-                    </div>
-                    <md-button class="md-button btn primary" md-no-ink="true" ng-click="mvm.addToCart(vm.item)">В корзину</md-button>
-                </div>
-
+        </div>
+        <div flex flex-gt-sm="33" id="description">
+            <div class="card-panel alcaramel" style="margin-top: 3px; background-color: rgba(253,253,253,.6);">
+                <h6><b>Опиcание:</b></h6>
+                <hr>
+                <p style="margin: 0">{{::vm.item.description}}</p>
+                <hr>
+                <h6><b>Материал:</b> {{::vm.item.material}}</h6>
+                <h6><b>Размер:</b> {{::vm.item.size}}</h6>
+                <h6><b>Возраст:</b> {{::vm.item.age}}</h6>
+                <h6><b>Артикул:</b> {{::vm.item.article}}</h6>
+                <br/>
+                <b>Цена: </b>{{::vm.item.price}} руб
+                <!--<a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="mvm.addToCart(vm.item)">Купить</a>-->
             </div>
+            <md-button class="md-button btn primary" md-no-ink="true" ng-click="mvm.addToCart(vm.item)">В корзину</md-button>
         </div>
     </div>
 </div>

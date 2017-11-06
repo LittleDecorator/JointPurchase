@@ -54,7 +54,7 @@
         <!--<a href="#section02"><span></span>Scroll</a>-->
     </div>
 
-    <!--<div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto" ng-if="vm.images.size > 0">-->
+    <!--<div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto">-->
         <!--<div layout="column" layout-align="center center">-->
             <!--<h2>Играй с нами в #INSTAGRAM!</h2>-->
             <!--<md-divider ></md-divider>-->
@@ -106,13 +106,13 @@
                     <span>Заинтересованны в акциях, распродажах, купонах, конкурсах, новых поступлениях и интересных статьях об игрушках?</span>
 
                     <div id="action-container" layout="row" layout-xs="column" layout-align="center start" ng-if="!vm.subscriber.id">
-                        <md-input-container md-no-float>
+                        <md-input-container flex-xs flex-gt-xs="60" md-no-float>
                             <input name="email" placeholder="Email" ng-model="vm.subscriber.email" ng-pattern="/^.+@.+\..+$/" >
                             <div ng-messages="vm.forms.homeForm.email.$error" ng-if="!vm.showHints">
                                 <div ng-message-exp="['pattern']">Не корректный e-mail</div>
                             </div>
                         </md-input-container>
-                        <md-button class="waves-effect waves-green btn btn-100" ng-click="vm.subscribe()" aria-label="subscribe new one">Подписаться</md-button>
+                        <md-button flex-sm="30" flex-gt-sm="30" class="waves-effect waves-green btn btn-100" ng-click="vm.subscribe()" aria-label="subscribe new one">Подписаться</md-button>
                     </div>
 
                     <div layout="row" layout-xs="column" layout-align="center start" ng-if="vm.subscriber.id" style="margin-top: 25px; width: 100%; padding-top: 10px;">
@@ -138,9 +138,9 @@
             </div>
 
 
-            <div layout="column" layout-align="center start" class="main-content" style="width: 100%; margin-top: 30px">
+            <div id="roadmap" layout="column" layout-align="center start" class="main-content" style="width: 100%; margin-top: 30px">
 
-                <div style="width: 100%">
+                <div style="margin: auto;">
                     <md-list flex layout="row" layout-xs="column" layout-align="center center">
                         <md-list-item ng-repeat="menu in vm.menus">
                             <div>

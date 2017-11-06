@@ -16,6 +16,7 @@
                 vm.addCompany = addCompany;
                 vm.edit = edit;
                 vm.deleteCompany = deleteCompany;
+                vm.showGallery = showGallery;
                 vm.getTemplateUrl = getTemplateUrl;
             
                 vm.companies = dataResources.company.query();
@@ -26,6 +27,13 @@
                 function addCompany() {
                     $state.transitionTo("company.detail");
                 }
+
+              /**
+               * Переход в галерею товара
+               */
+              function showGallery(id) {
+                $state.go("company.detail.gallery", {id: id});
+              }
 
                 /**
                 * Перейти в карточку
@@ -96,7 +104,6 @@
 
                 /* переход в галерею */
                 function showGallery() {
-                    console.log("showGallery")
                     $state.go("company.detail.gallery", {id: vm.company.id});
                 }
 

@@ -10,8 +10,8 @@
         .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','$timeout','fileUploadModal','FileUploader',
             function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
 
-                console.log($stateParams)
-                console.log($location)
+                // console.log($stateParams)
+                // console.log($location)
                 var uploader = $scope.uploader = new FileUploader();
                 var mCou=0;
 
@@ -31,9 +31,7 @@
                 vm.isCompany = $location.$$path.indexOf('company') !== -1;
                 vm.isItem = $location.$$path.indexOf('item') !== -1;
                 vm.isCategory = $location.$$path.indexOf('category') !== -1;
-                console.log(vm.isCompany);
-                console.log(vm.isItem);
-                console.log(vm.isCategory);
+                vm.onlyDelete = !vm.isItem;
 
                 /**
                  * загрузка файлов
@@ -76,6 +74,9 @@
                  * proxy добаление
                  */
                 function add(){
+                    if(vm.images.length > 0 && !vm.isItem){
+                      return;
+                    }
                     $('#uploadBtn').click();
                 }
 
@@ -83,11 +84,28 @@
                  * init section
                  */
                 function init(){
-                    if ($stateParams.id) {
-                        vm.images = dataResources.itemImage.get({itemId: $stateParams.id});
-                        vm.images.$promise.then(function (result) {
+                    var imageResource, param;
+                    if(vm.isCompany){
+                        imageResource = dataResources.companyImage;
+                        param = {id:$stateParams.id}
+                    } else if(vm.isItem){
+                        imageResource = dataResources.itemImage
+                        param = {itemId:$stateParams.id}
+                    } else {
+                        console.log("Add here category resource")
+                    }
 
-                            vm.images = result;
+                    if ($stateParams.id) {
+                        imageResource.get(param).$promise.then(function (result) {
+                            if(helpers.isArray(result)){
+                                vm.images = result;
+                            } else {
+                                if(helpers.isPropertyNotEmpty(result,"contentId")){
+                                  vm.images.push(result);
+                                } else {
+                                    return;
+                                }
+                            }
                             vm.images.some(function(elem){
                                 if(elem.main) {
                                     mCou++;
@@ -102,7 +120,7 @@
                                     vm.images[0].main = true;
                                     vm.images[0].show = true;
                                 }
-                                
+
                                 // настройки слайдера
                                 var options = {
                                     selector: '.item',
@@ -113,31 +131,39 @@
                                     options.controls=false;
                                     options.thumbnail=false;
                                 }
-                                
+
                                 // инициализируем галлерею
                                 $(".wrap").lightGallery(options);
                             },100);
                         });
                     } else {
-                        vm.images = dataResources.itemImage.get();
+                        console.log("get")
+                        vm.images = imageResource.get();
                     }
                 }
 
-                function deleteImage(id){
-                    var currImage = helpers.findInArrayById(vm.images, id);
-                    var idx = vm.images.indexOf(currImage);
-                    vm.images.splice(idx, 1);
-                    //remove from DB
-                    dataResources.image.remove({id:currImage.id});
-                    //find new main if delete one
-                    if(currImage.main && vm.images.length>0){
-                        currImage = vm.images[0];
-                        currImage.main = true;
-                        currImage.show = true;
-                        $('.hiden-option:first > i:first').addClass("main")
-                        var itemContent = {contentId:currImage.id,main:currImage.main,show:currImage.show,itemId:$stateParams.id};
-                        dataResources.galleryMain.toggle(itemContent);
+                function deleteImage(image){
+                    if(vm.isItem){
+                        var idx = vm.images.indexOf(image);
+                        vm.images.splice(idx, 1);
+                        //remove from DB
+                        dataResources.image.remove({id:image.id});
+                        //find new main if delete one
+                        if(image.main && vm.images.length>0){
+                            image = vm.images[0];
+                            image.main = true;
+                            image.show = true;
+                            $('.hiden-option:first > i:first').addClass("main")
+                            var itemContent = {contentId:image.id,main:image.main,show:image.show,itemId:$stateParams.id};
+                            dataResources.galleryMain.toggle(itemContent);
+                        }
+                    } else {
+                        vm.images = [];
+                        if(vm.isCompany){
+                            dataResources.companyImage.remove({id:$stateParams.id, contentId: image.contentId});
+                        }
                     }
+
                 }
 
                 function toggleMain(id){

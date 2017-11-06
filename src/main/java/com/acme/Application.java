@@ -1,6 +1,8 @@
 package com.acme;
 
+import com.acme.service.InstagramService;
 import com.acme.util.CustomResolver;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +53,9 @@ public class Application extends WebMvcConfigurerAdapter {
 
     @Value("${sms.api_id}")
     private String apiId;
+
+    @Autowired
+    InstagramService instagramService;
 
     /**
      * Фильтр jwt
@@ -142,10 +147,14 @@ public class Application extends WebMvcConfigurerAdapter {
     }
 
 
-//    @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 60 * 1000)
-//    public void updateItemStatus(){
-//
-//    }
+    //@Scheduled(cron = "0 0 * * 1 ?")
+    //public void grabInstagram(){
+    //    try {
+    //        instagramService.getMostByTag("grimmstory", "nina210313", "grimmstory");
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    }
+    //}
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

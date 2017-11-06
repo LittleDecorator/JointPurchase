@@ -63,7 +63,9 @@
                     all: {method:'GET',isArray:true},
                     get: {method:'GET',isArray:false},
                     delete: {method:'DELETE',isArray:false},
-                    put: {method:'PUT',isArray:false},
+                    put: {method:'PUT',isArray:false,transformResponse:function(data, headers){
+                        return {result:data}
+                    }},
                     post:{method:'POST',isArray:false,transformResponse:function(data, headers){
                         return {result:data}
                     }}
@@ -83,6 +85,10 @@
                 itemImage: $resource('/api/content/items/:id',{},{
                     query :{method:'GET',isArray:true},
                     get:{method:'GET',isArray:true}
+                }),
+                companyImage: $resource('/api/content/company/:id',{},{
+                    query : {method:'GET', isArray:false,},
+                    get:{method:'GET',isArray:false},
                 }),
                 itemContent: $resource('/api/content/upload/item',{},{
                     upload:{

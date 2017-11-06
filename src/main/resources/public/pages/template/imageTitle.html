@@ -1,11 +1,11 @@
-<div class="title">
+<div class="title" ng-class="{'only-delete':vm.onlyDelete}">
     <!--<div layout="column" flex="1">-->
         <!--<div class="titleHead">ItemName</div>-->
         <!--<div class="titleSubHead"><span>maybe date add</span></div>-->
     <!--</div>-->
     <div layout="row">
-        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'main':image.main}" ng-click="vm.toggleMain(image.id)">{{image.main?'star':'star_border'}}</i></div>
-        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-class="{'show':image.show}" ng-click="vm.toggleShow($event,image.id)">done</i></div>
-        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-click="vm.deleteImage(image.id)">clear</i></div>
+        <div class="hiden-option titleIconPanel" ng-hide="vm.onlyDelete"><i class="material-icons" ng-class="{'main':image.main}" ng-click="vm.toggleMain(image.id)">{{image.main?'star':'star_border'}}</i></div>
+        <div class="hiden-option titleIconPanel" ng-hide="vm.onlyDelete"><i class="material-icons" ng-class="{'show':image.show}" ng-click="vm.toggleShow($event,image.id)">done</i></div>
+        <div class="hiden-option titleIconPanel"><i class="material-icons" ng-click="vm.deleteImage(image)">clear</i></div>
     </div>
 </div>

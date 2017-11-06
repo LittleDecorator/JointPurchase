@@ -33,4 +33,9 @@ public class InstagramController {
         instagramService.uploadSelf(accessToken);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/most")
+    public void uploadMost() throws IOException {
+        instagramService.getMostByTag("grimmstory","nina210313", "grimmstory");
+    }
+
 }

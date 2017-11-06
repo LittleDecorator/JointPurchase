@@ -24,4 +24,6 @@ public interface InstagramService {
     public void uploadSelf(String accessToken);
 
     public void uploadUser(String userId, String accessToken);
+
+    void getMostByTag(String user, String password, String tag) throws IOException;
 }

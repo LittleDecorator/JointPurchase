@@ -4,14 +4,17 @@ import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Company;
 import com.acme.model.Content;
 import com.acme.model.ItemContent;
+import com.acme.model.dto.CompanyContentDto;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.constant.Constants;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.Collections;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -168,7 +171,11 @@ public class ContentController{
     @RequestMapping(value = "/instagram", method = RequestMethod.GET)
     public List<String> getInstgaramImages() throws Exception {
 		// TODO: Добавить проверки на существование записей
-        return contentRepository.findAllByIsInstagramTrue().stream().map(Content::getId).collect(Collectors.toList()).subList(0,15);
+        List<Content> photos = contentRepository.findAllByIsInstagramTrue();
+        if(photos.isEmpty()) return Collections.emptyList();
+
+        int limit = photos.size() > 15 ? 15 : photos.size();
+        return photos.stream().map(Content::getId).limit(limit).collect(Collectors.toList());
     }
 
     /**
@@ -185,6 +192,33 @@ public class ContentController{
             result.add(itemContent);
         }
         return result;
+    }
+
+    /**
+     * Получение списка изображений по конкретному производителю.
+     * @param companyId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/company/{id}", method = RequestMethod.GET)
+    public CompanyContentDto getCompanyPreviewImage(@PathVariable(value = "id") String companyId) throws Exception {
+        CompanyContentDto result = null;
+        Company company = companyRepository.findOne(companyId);
+        if(company!=null && !Strings.isNullOrEmpty(company.getContentId())){
+            result = new CompanyContentDto();
+            result.setContentId(company.getContentId());
+            result.setUrl(Constants.GALLERY_URL + company.getContentId());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/company/{id}", method = RequestMethod.DELETE)
+    public void deleteCompanyImage(@PathVariable(value = "id") String companyId, @RequestParam(value = "contentId") String contentId) throws Exception {
+        Company company = companyRepository.findOne(companyId);
+        company.setContentId(null);
+        companyRepository.save(company);
+
+        contentRepository.delete(contentId);
     }
 
     /**

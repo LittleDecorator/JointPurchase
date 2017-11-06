@@ -1,3 +1,22 @@
 <div class="repeated-item" ng-if="vm.currentNodeType == 'category'" flex>
-    <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+    <div>
+        <span style="font-size: 1.8em;">Подкатегории</span>
+        <hr style="margin-bottom: 10px;"/>
+        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+    </div>
+
+    <div style="margin-top: 20px">
+        <span style="font-size: 1.8em;">Бренды</span>
+        <hr style="margin-bottom: 10px;"/>
+        <md-button ng-repeat="company in vm.companies" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterByCompany(company)" ng-disabled="vm.currentCompany == company.id">{{::company.name}}</md-button>
+    </div>
+</div>
+
+<div class="repeated-item" ng-if="vm.currentNodeType == 'company'" flex style="margin: 20px 0">
+    <div>
+        <span style="font-size: 1.8em;">Подкатегории</span>
+        <hr style="margin-bottom: 10px;"/>
+        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+    </div>
+
 </div>

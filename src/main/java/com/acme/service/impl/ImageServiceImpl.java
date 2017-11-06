@@ -42,6 +42,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Cacheable(value = "image")
     public BufferedImage getImage(byte[] binary) throws IOException {
+        //TODO: переписать с учетом https://github.com/haraldk/TwelveMonkeys/issues/281
         ByteArrayInputStream bis = new ByteArrayInputStream(binary);
         BufferedImage image = ImageIO.read(bis);
         bis.close();

@@ -1,3 +1,9 @@
+
+.layout-padding, .layout-padding-gt-sm, .layout-padding-gt-sm>*, .layout-padding-md, .layout-padding-md>*, .layout-padding>*, .layout-padding>.flex, .layout-padding>.flex-gt-sm, .layout-padding>.flex-md {
+    padding: 0;
+}
+
+
 label.required:after,
 md-select.ng-required.ng-invalid:not(.md-no-asterisk) .md-select-value span:first-child:after, md-select[required].ng-invalid:not(.md-no-asterisk) .md-select-value span:first-child:after
 /*md-select[required] md-select-value span:first-child:before*/
@@ -175,7 +181,7 @@ img:focus, img:active{
 
 @media only screen and (min-width : 601px) {
     .container {
-        width: 85%; }
+        width: 90%; }
 }
 
 @media only screen and (min-width : 993px) {
@@ -546,7 +552,8 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
 @media (min-width: 601px) {
     md-sidenav#filter.md-sidenav-left {
-        top:49px;
+        top:0;
+        z-index: 1000;
     }
 }
 
@@ -593,15 +600,34 @@ md-toast .md-toast-content {
 
     /* переопределяем кнопку возврата на верх для мобильного */
     .md-fab.docs-scroll-fab.showBackToTop {
-        width: 45px;
-        height: 45px;
+        /*width: 45px;*/
+        /*height: 45px;*/
+        bottom: 25px;
         line-height: 45px;
         font-size: 1.6rem;
-        opacity: .7;
+        /*opacity: .7;*/
     }
 
     .md-fab.docs-scroll-fab.showBackToTop md-icon {
         height: 28px!important;
         width: 28px!important;
+    }
+}
+
+
+/* Additional sizes */
+@media (max-width: 959px) and (min-width: 600px) {
+    .flex-sm-47,
+    .layout-column>.flex-sm-47,
+    .layout-row>.flex-sm-47 {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1 1 100%;
+        flex: 1 1 100%;
+        box-sizing: border-box;
+    }
+
+    .flex-sm-47, .layout-row>.flex-sm-47 {
+        max-width: 47%;
+        max-height: 100%;
     }
 }

@@ -472,66 +472,95 @@ var route = {
                     }
                 }
             },
-            {
-                name: 'catalog.type',
-                url:'/:type?:name',
-                parent:'catalog',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/catalog-list.html',
-                        controller: 'catalogController',
-                        controllerAs: 'vm'
-                    }
-                },
-                data:{
-                    displayName: '{{node.name}}',
-                    requireLogin: false
-                },
-                resolve: {
-                    node: function($stateParams,resolveService) {
-                        if($stateParams.type === 'category'){
-                            return resolveService.getCategory($stateParams.name);
-                        } else {
-                            return resolveService.getCompanyByName($stateParams.name);
-                        }
-                    }
-                },
-                metaTags: {
-                    title: function(node) {
-                        return node.name;
-                    },
-                    keywords: '{{node.name}}',
-                    description: '{{node.description}}'
-                }
+          {
+            name:'catalog.detail',
+            url:'/card/:itemName',
+            parent:'catalog',
+            views: {
+              'main@': {
+                templateUrl : 'pages/card/catalogCard.html',
+                controller: 'catalogCardController',
+                controllerAs: 'vm'
+              }
             },
-            {
-                name:'catalog.detail',
-                url:'/card/:itemName',
-                parent:'catalog',
-                views: {
-                    'main@': {
-                        templateUrl : 'pages/card/catalogCard.html',
-                        controller: 'catalogCardController',
-                        controllerAs: 'vm'
-                    }
-                },
-                data: {
-                    displayName: '{{product.company.name}}',
-                    requireLogin: false
-                },
-                metaTags: {
-                    title: function(product) {
-                        return product.name;
-                    },
-                    keywords: '{{product.name}}',
-                    description: '{{product.description}}'
-                },
-                resolve: {
-                    product: function($stateParams, resolveService) {
-                        return resolveService.getProduct($stateParams.itemName);
-                    }
-                }
+            data: {
+              displayName: '{{product.company.name}}',
+              requireLogin: false
             },
+            metaTags: {
+              title: function(product) {
+                return product.name;
+              },
+              keywords: '{{product.name}}',
+              description: '{{product.description}}'
+            },
+            resolve: {
+              product: function($stateParams, resolveService) {
+                return resolveService.getProduct($stateParams.itemName);
+              }
+            }
+          },
+          {
+            name: 'catalog.type',
+            url:'/:type/:name',
+            parent:'catalog',
+            views: {
+              'main@': {
+                templateUrl : 'pages/catalog-list.html',
+                controller: 'catalogController',
+                controllerAs: 'vm'
+              }
+            },
+            data:{
+              displayName: '{{node.name}}',
+              requireLogin: false
+            },
+            resolve: {
+              node: function($stateParams,resolveService) {
+                if($stateParams.type === 'category'){
+                  return resolveService.getCategory($stateParams.name);
+                } else {
+                  return resolveService.getCompanyByName($stateParams.name);
+                }
+              }
+            },
+            metaTags: {
+              title: function(node) {
+                return node.name;
+              },
+              keywords: '{{node.name}}',
+              description: '{{node.description}}'
+            }
+          },
+          {
+            name:'catalog.type.detail',
+            url:'/card/:itemName',
+            parent:'catalog.type',
+            views: {
+              'main@': {
+                templateUrl : 'pages/card/catalogCard.html',
+                controller: 'catalogCardController',
+                controllerAs: 'vm'
+              }
+            },
+            data: {
+              displayName: '{{product.company.name}}',
+              requireLogin: false
+            },
+            metaTags: {
+              title: function(product) {
+                return product.name;
+              },
+              keywords: '{{product.name}}',
+              description: '{{product.description}}'
+            },
+            resolve: {
+              product: function($stateParams, resolveService) {
+                return resolveService.getProduct($stateParams.itemName);
+              }
+            }
+          },
+
 
             /*=================================== ПОИСК * ====================================*/
             {

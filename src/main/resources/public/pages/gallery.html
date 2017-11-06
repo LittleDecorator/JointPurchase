@@ -20,7 +20,7 @@
 
     <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple style="display: none"/>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.add()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-disabled="vm.images.length > 0 && !vm.isItem" ng-click="vm.add()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
         <md-icon>add</md-icon>
     </md-button>
 </div>

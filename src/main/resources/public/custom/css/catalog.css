@@ -13,7 +13,7 @@
     }
 
     div#catalog md-card._md > .card-image  > img{
-        max-height: 223px;
+        max-height: 190px;
         position: absolute;
         margin: auto;
         top: 0;
@@ -31,8 +31,7 @@
         font-size: 1.2rem;
         text-align: center;
         padding-bottom: 5px;
-
-        width: 75%;
+        width: 90%;
         min-height: 70px;
         display: flex;
         align-items: center;
@@ -116,7 +115,7 @@
     }
 
     md-card-actions span.md-headline {
-        font-size: 1.2rem;
+        font-size: 1rem;
         text-align: center;
         padding-bottom: 5px;
 

@@ -1,12 +1,27 @@
 package com.acme.social;
 
+import com.acme.handlers.Base64BytesSerializer;
+import com.acme.model.Content;
+import com.acme.model.InstagramPost;
+import com.acme.model.InstagramPostContent;
 import com.acme.model.dto.InstagramPostDto;
 import com.acme.model.InstagramUser;
 import com.acme.service.InstagramService;
 import com.acme.service.impl.InstagramServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
+import org.brunocvcunha.instagram4j.Instagram4j;
+import org.brunocvcunha.instagram4j.requests.InstagramPostRequest;
+import org.brunocvcunha.instagram4j.requests.InstagramTagFeedRequest;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedItem;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,7 +49,11 @@ Client Status Sandbox Mode*/
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         InstagramTest test = new InstagramTest();
-        test.self();
+
+        test.i4jTest();
+
+        //test.self();
+
 //        test.recent();
 //        test.parseResentTest();
 //        test.downloadImage("/tmp/download.jpg","https://scontent.cdninstagram.com/t51.2885-15/e35/19379947_138472530061616_3467529966546059264_n.jpg");
@@ -82,6 +101,65 @@ Client Status Sandbox Mode*/
         InstagramService service = new InstagramServiceImpl();
         List<InstagramPostDto> posts = service.parseRecent(data.toString());
         System.out.println(posts);
+    }
+
+    private void i4jTest() throws IOException {
+        // Login to instagram
+        Instagram4j instagram = Instagram4j.builder().username("grimmstory").password("nina210313").build();
+        instagram.setup();
+        instagram.login();
+
+        InstagramFeedResult tagFeed = instagram.sendRequest(new InstagramTagFeedRequest("grimmstory"));
+        List<InstagramFeedItem> items = tagFeed.getItems();
+        items.addAll(tagFeed.getRanked_items());
+        List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).limit(30).collect(Collectors.toList());
+
+        InstagramPost post;
+        Content content;
+        InstagramPostContent postContent;
+
+        for (InstagramFeedItem dto : result) {
+            // создаем пост
+            post = new InstagramPost();
+            post.setOriginId(dto.getId());
+            post.setContent(String.valueOf(dto.getCaption().get("text")));
+            List<String> tags = Lists.newArrayList("grimmstory");
+            if(dto.getUsertags()!=null){
+                tags.addAll(dto.getUsertags().values().stream().map(String::valueOf).collect(Collectors.toList()));
+            }
+            post.setTags(tags);
+            post.setCreateTime(Long.parseLong(String.valueOf(dto.getCaption().get("created_at"))));
+            String rawUrl = String.valueOf(((Map)((ArrayList)dto.getImage_versions2().values().iterator().next()).get(0)).get("url"));
+            post.setExternalUrl(rawUrl.substring(0, rawUrl.indexOf('?')));
+            //post.setInstagramUserId(dto.getUser().getPk());
+            post.setLikesCount(dto.getLike_count());
+            post.setUserHasLiked(dto.isHas_liked());
+            //post = postRepository.save(post);
+
+            // загружаем изображения
+            //for(String url : dto.getContentUrls()){
+                content = new Content();
+                content.setInstagram(true);
+                String type = post.getExternalUrl().substring(post.getExternalUrl().lastIndexOf('.')+1);
+                content.setType(type);
+                String mime = "image/"+type;
+                content.setMime(mime);
+                content.setDefault(false);
+                content.setProfile(false);
+                content.setFileName("unknown."+type);
+                //content.setContent(Base64BytesSerializer.serialize(imageService.downloadImage(post.getExternalUrl(), type)));
+                //content = contentRepository.save(content);
+            //
+            //    // добавим связь
+                postContent = new InstagramPostContent();
+                postContent.setPostId(post.getId());
+                postContent.setContentId(content.getId());
+                //postContentRepository.save(postContent);
+            //}
+            //System.out.println(feedResult.getUser().getUsername());
+
+
+        }
     }
 
 }

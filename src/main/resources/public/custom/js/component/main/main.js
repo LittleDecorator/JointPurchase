@@ -36,6 +36,7 @@
 					mvm.itemView = itemView;
 					mvm.toggleMenu = toggleMenu;
 					mvm.toggleSideFilter = toggleSideFilter;
+					mvm.clearSearch = clearSearch;
 					mvm.querySearch   = querySearch;
 					mvm.searchItem = searchItem;
 					mvm.searchKeyPress = searchKeyPress;
@@ -175,10 +176,14 @@
 					 * @param node
 					 */
 					function filterProduct(node) {
-						console.log("filterProduct", node)
 						if($mdSidenav('left').isOpen() && mvm.width < 1530){
 							$mdSidenav('left').close();
 						}
+
+						if($mdSidenav("menu").isOpen()){
+							$mdSidenav("menu").close();
+							$('.subPanel').removeClass('isOpen');
+            };
 						eventService.onFilter(node);
 					}
 
@@ -271,10 +276,13 @@
 
 					/**
 					 * Для перехода в карточку из корзины
-					 * @param id
+					 * @param name
 					 */
-					function itemView(id) {
-						$state.go("catalog.detail", {itemId: id});
+					function itemView(name) {
+						if(name){
+              clearSearch();
+              $state.go("catalog.detail", {itemName: name});
+						}
 					}
 
 					/**
@@ -300,6 +308,10 @@
 								$state.go('search', {criteria: mvm.search.criteria});
 							}
 						}
+					}
+
+					function clearSearch(){
+            mvm.search.criteria=null;
 					}
 
 					/**
@@ -521,7 +533,6 @@
 					 */
 					function afterMenuInclude() {
 						console.log("afterMenuInclude");
-
 					}
 
 					/* подтверждение аутентификации, получение token'а */

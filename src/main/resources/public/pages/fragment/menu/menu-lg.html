@@ -19,11 +19,14 @@
                         <md-autocomplete flex style="max-width: 80%"
                                          ng-keydown="mvm.searchKeyPress($event.keyCode)"
                                          md-input-minlength="3"
-                                         md-min-length="0"
+                                         md-min-length="3"
                                          md-input-maxlength="50"
                                          md-selected-item="selectedItem"
-                                         md-selected-item-change="itemView(item.id)"
+                                         md-selected-item-change="mvm.itemView(item.transliteName)"
                                          md-search-text="mvm.search.criteria"
+                                         md-clear-button="true"
+                                         md-no-cache="true"
+                                         md-autoselect="true"
                                          md-delay="500"
                                          md-items="item in mvm.querySearch(mvm.search.criteria)"
                                          md-item-text="item.name"
@@ -34,6 +37,9 @@
                             <md-item-template>
                                 <span md-highlight-text="mvm.search.criteria">{{item.name}}</span>
                             </md-item-template>
+                            <md-not-found>
+                                No matches found.
+                            </md-not-found>
 
                         </md-autocomplete>
 

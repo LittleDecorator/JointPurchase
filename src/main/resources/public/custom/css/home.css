@@ -133,8 +133,109 @@ section::after {
 }
 
 /********************************** OFFICIAL CHANGE (TABLET) ******************************/
-@media (min-width: 601px) {
+@media (min-width: 600px) {
 
+    /* Заголовок на домашней странице */
+    .caption {
+        color: #fff;
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        width: 70%;
+        opacity: 1;
+        transform: translateY(0px) translateX(0px);
+    }
+
+    .caption-action-container {
+        top:60%;
+    }
+
+    .caption-action-container button {
+        border: 2px solid;
+        border-radius: 10px;
+        margin: 0;
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    #nature.section {
+        min-height: 780px;
+        height: auto;
+    }
+
+    #nature.section .main-content img {
+        width: 120px;
+        margin-top: 30px;
+    }
+
+    #nature.section h2, #section02.section h2 {
+        width: 80%;
+        text-align: center;
+        font-size: 2.56rem;
+    }
+
+    #nature.section .main-content {
+        margin-top: 40px;
+        width: 80%;
+        text-align: center;
+    }
+
+    #nature.section .sub-content {
+        margin-top: 40px;
+        width: 75%;
+        text-align: center;
+    }
+    /* Секция подписывания на новости */
+    #subscribe.section {
+        min-height: 600px;
+        height: auto;
+    }
+
+    #subscribe {
+        background-color: rgb(250,250,250);
+    }
+
+    #subscribe.section h2 {
+        width: 80%;
+        text-align: center;
+        font-size: 2.56rem;
+    }
+
+    #subscribe.section .main-content {
+        width: 80%;
+        text-align: center;
+    }
+
+    #subscribe .main-content {
+        margin-top: 20px;
+    }
+
+    #subscribe #action-container {
+        margin-top: 25px;
+        width: 100%;
+        padding-top: 10px;
+    }
+
+    #subscribe #action-container > md-input-container {
+        padding-right: 2%;
+    }
+
+    #subscribe.section md-divider {
+        width: 60%;
+        margin-top: 10px;
+    }
+
+    #subscribe md-list-item.md-no-proxy,
+    #subscribe md-list-item .md-no-style {
+        padding: 0 8px;
+    }
+    md-list-item {
+        min-width: 30px;
+    }
+
+    #roadmap {
+        align-items: center;
+    }
 }
 
 

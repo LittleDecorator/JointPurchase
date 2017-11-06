@@ -13,9 +13,10 @@
             <tr ng-repeat="company in vm.companies track by company.id" id="{{::company.id}}" class="collection-item">
                 <td class="center-align">{{::company.name}}</td>
                 <td class="center-align">{{::company.description}}</td>
-                <td class="right-align">
+                <td class="right-align" style="min-width: 150px;">
                     <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.edit(company.id)"><md-icon>edit</md-icon></a>
                     <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.deleteCompany(company.id)"><md-icon>close</md-icon></a>
+                    <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.showGallery(company.id)"><md-icon>photo</md-icon></a>
                 </td>
             </tr>
             </tbody>

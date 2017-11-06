@@ -13,10 +13,6 @@
   /*overflow:hidden;*/
 }
 
-/*.panel, .subPanel {*/
-  /*display: none;*/
-/*}*/
-
 .panel{
   z-index:10;
   border-left:1px solid #F2F0E8;
@@ -45,4 +41,13 @@
 
 .closeSubPanel, .closePanel, .openSubPanel {
   cursor: pointer;
+}
+
+/********************************** OFFICIAL CHANGE (TABLET) ******************************/
+@media (min-width: 456px) {
+
+  .panel, .subPanel {
+    top: 50px;
+  }
+
 }

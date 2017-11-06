@@ -20,6 +20,7 @@
 
                 vm.loadData = loadData;
                 vm.itemView = itemView;
+                vm.catalogView = catalogView;
                 vm.filterBySubcategory = filterBySubcategory;
                 vm.filterByCompany = filterByCompany;
                 vm.getSubcategoryUrl = getSubcategoryUrl;
@@ -176,7 +177,6 @@
                     if ((!vm.stopLoad || mvm.width < 601) && !busy) {
                         busy = true;
                         dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
-                            console.log(data.length);
                             // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                             if (data.length < vm.confirmedFilter.limit) {
                                 vm.stopLoad = true;
@@ -344,6 +344,10 @@
                 function itemView(name) {
                     $state.go("catalog.detail", {itemName: name});
                 }
+
+              function catalogView(name) {
+                $state.go("catalog.type.detail", {itemName: name});
+              }
 
                 /**
                  * Получение label'а кнопок.
