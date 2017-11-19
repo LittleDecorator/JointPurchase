@@ -1,4 +1,5 @@
-<div class="filter-item" ng-cloak="">
+<div ng-show="!mvm.showDetail && !$state.includes('item.detail')" >
+<div class="filter-item" ng-cloak="" >
 
     <!-- переделать на модальное окно с кнопкой вызова -->
     <div layout="row" style="margin: 10px 0" ng-if="mvm.width > 992">
@@ -33,8 +34,8 @@
         <h4 class="example_head">Товары:</h4>
     </div>
 
-    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.stopLoad' infinite-scroll-distance='1'>
-        <div ng-include="vm.getTemplate()"></div>
+    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.stopLoad' infinite-scroll-distance='1' keep-scroll-pos>
+        <div ng-include="vm.getTemplate()" include-callback="vm.afterInclude()"></div>
     </div>
 
 </div>
@@ -70,4 +71,5 @@
         </md-fab-actions>
     </md-fab-speed-dial>
 
+</div>
 </div>

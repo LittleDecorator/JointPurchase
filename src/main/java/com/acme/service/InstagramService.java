@@ -26,4 +26,13 @@ public interface InstagramService {
     public void uploadUser(String userId, String accessToken);
 
     void getMostByTag(String user, String password, String tag) throws IOException;
+
+
+
+
+    List<InstagramPostDto> getPosts(boolean all);
+
+    void updatePost(List<InstagramPostDto> posts);
+
+    void deletePost(String id);
 }

@@ -1,4 +1,4 @@
-<div>
+<div ng-show="!mvm.showDetail && !$state.includes('company.detail')" >
 
     <div ng-if="vm.companies.length > 0">
         <div ng-include="vm.getTemplateUrl()"></div>

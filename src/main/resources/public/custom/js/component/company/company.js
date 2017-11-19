@@ -74,6 +74,16 @@
                         return templatePath + "company-lg.html"
                     }
                 }
+
+              /**
+               * Слушатель нажатия кнопки НАЗАД
+               */
+              $scope.$on('locBack', function () {
+                mvm.showDetail = false;
+              });
+
+              // выключаем view карточки
+              mvm.showDetail = false;
             }])
         
         .controller('companyDetailController',['$rootScope','$scope','$state','company','dataResources','$mdToast', 
@@ -82,6 +92,7 @@
                 var templatePath = "pages/fragment/company/card/";
                 var last = { bottom: false, top: true, left: false, right: true };
                 var mvm = $scope.$parent.mvm;
+                mvm.showDetail = true;
                 var vm = this;
                 
                 vm.getToastPosition = getToastPosition;

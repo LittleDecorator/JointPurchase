@@ -14,6 +14,8 @@ public interface InstagramPostContentRepository extends CrudRepository<Instagram
 
     List<InstagramPostContent> findAllByPostId(String postId);
 
+    List<InstagramPostContent> findAllByPostIdIn(List<String> postId);
+
     InstagramPostContent findByPostIdAndContentId(String postId, String contentId);
 
 }

@@ -236,6 +236,88 @@ section::after {
     #roadmap {
         align-items: center;
     }
+
+
+    #brand .brand_news {
+        position: absolute;
+        bottom: 67em;
+        top: 36.5em;
+        left: 31%;
+        right: 5%;
+        margin-left: -0.6em;
+        z-index: 2;
+    }
+
+    #brand .brand_news .news_inner {
+        position: absolute;
+        bottom: 15%;
+        left: 0;
+        right: 0;
+        padding: 16% 5%;
+        overflow: hidden;
+        text-shadow: 0 0 0 rgba(0,0,0,0.5);
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /*-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFW…9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);*/
+    }
+
+    #brand .brand_news .news_inner .news_fade {
+        display: block;
+        position: absolute;
+        top: 0em;
+        left: 0em;
+        right: 0em;
+        bottom: 0em;
+        background: rgba(255,255,255,0.5);
+        opacity: 1;
+        z-index: 2;
+        -webkit-transition: opacity .65s;
+        -moz-transition: opacity .65s;
+        -o-transition: opacity .65s;
+        transition: opacity .65s;
+    }
+
+    /**/
+    #categories.section .categoryBlock {
+        height: 100px;
+        max-width: 18%;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #categories.section .categoryBlock span {
+        font-size: 1em; color: white; text-align: center;padding: 0 5px;
+    }
+
+    #categories.section .category-wrapper{
+        padding-bottom: 32px;
+        width: 90%;
+        margin: auto;
+    }
+}
+
+@media (min-width: 900px) {
+
+    #categories.section .categoryBlock {
+        height: 140px;
+        max-width: 18%;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #categories.section .categoryBlock span {
+        font-size: 1.4em; color: white; text-align: center;padding: 0 10px;
+    }
+
+    #categories.section .category-wrapper{
+        padding-bottom: 32px;
+        width: 80%;
+        margin: auto;
+    }
 }
 
 
@@ -374,6 +456,97 @@ section::after {
         margin-top:50px;
         width: 100%
     }
+
+
+    #brand .brand_news {
+        position: absolute;
+        bottom: 67em;
+        top: 36.5em;
+        left: 31%;
+        right: 5%;
+        margin-left: -0.6em;
+        z-index: 2;
+    }
+
+    #brand .brand_news .news_inner {
+        position: absolute;
+        bottom: 15%;
+        left: 0;
+        right: 0;
+        padding: 16% 5%;
+        overflow: hidden;
+        text-shadow: 0 0 0 rgba(0,0,0,0.5);
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /*-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFW…9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);*/
+    }
+
+    #brand .brand_news .news_inner .news_fade {
+        display: block;
+        position: absolute;
+        top: 0em;
+        left: 0em;
+        right: 0em;
+        bottom: 0em;
+        background: rgba(255,255,255,0.5);
+        opacity: 1;
+        z-index: 2;
+        -webkit-transition: opacity .65s;
+        -moz-transition: opacity .65s;
+        -o-transition: opacity .65s;
+        transition: opacity .65s;
+    }
+
+    /**/
+    #categories.section .categoryBlock {
+        height: 180px;
+        max-width: 18%;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #categories.section .categoryBlock span {
+        font-size: 1.6em; color: white; text-align: center;padding: 0 10px;
+    }
+
+    #categories.section .category-wrapper{
+        padding-bottom: 32px;
+        width: 85%;
+        margin: auto;
+    }
+
+
+    #bestsalers.section {
+        background-color: white;
+        max-height: 600px;
+        min-height: 300px;
+        height: 500px;
+    }
+}
+
+/********************************** OFFICIAL CHANGE (WIDE DESKTOP) ******************************/
+@media (min-width: 1280px) {
+    /**/
+    #categories.section .categoryBlock {
+        height: 140px;
+        max-width: 11.5%;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #categories.section .categoryBlock span {
+        font-size: 1.4em; color: white; text-align: center;padding: 0 10px;
+    }
+
+    #categories.section .category-wrapper{
+        padding-bottom: 32px;
+        width: 90%;
+        margin: auto;
+    }
 }
 
 /********************************** OFFICIAL CHANGE (MOBILE) ******************************/
@@ -468,7 +641,7 @@ section::after {
 
     /* Секция подписки */
     #subscribe.section {
-        min-height: 900px;
+        max-height: 800px;
         height: auto;
     }
 
@@ -544,4 +717,110 @@ section::after {
         margin-top: 10px
     }
 
+    #bestsalers.section {
+        background-color: white;
+        height: auto;
+        max-height: 435px;
+        min-height: 280px;
+    }
+
+    #bestsalers.section h2 {
+        /*font-size: 3em;*/
+        /*margin: 5px 0;*/
+        font-size: 2.5rem;
+        margin: 1.46rem 0 1.168rem;
+    }
+
+    #bestsalers.section .carousel {
+        /*background-color: rgb(221, 221, 221);*/
+        min-height: 280px;
+        height: auto;
+    }
+
+    #bestsalers.section .carousel-item {
+        min-height: 280px;
+        height: auto;
+    }
+
+    #bestsalers.section .carousel-item md-card {
+        width: 240px!important;
+        height: 250px!important;
+        box-shadow: none;
+    }
+
+    #bestsalers.section .carousel-item .card-image {
+        min-height: 150px!important;
+    }
+
+    #bestsalers.section .carousel-item > div {
+        margin: auto;
+        height: 280px;
+        justify-content: center;
+        display: flex;
+    }
+
+    #bestsalers.section .carousel-item .card-image > img {
+        display: block;
+        height: 150px!important;
+        margin: 0 auto;
+    }
+
+    #bestsalers.section .carousel-item md-card-actions {
+        height: 100%;
+        margin-bottom: 0;
+    }
+
+    #bestsalers.section .carousel-item md-card-actions > button {
+        padding: 0 5px;
+        min-height: 25px;
+        height: 25px;
+        width: 100px;
+        font-size: 12px;
+        line-height: 13px;
+    }
+
+    /**/
+    #categories.section h2 {
+        /*font-size: 3em;*/
+        /*margin: 5px 0;*/
+        font-size: 2.5rem;
+        /*font-size: 2.92rem;*/
+        margin: 1.46rem 0 1.168rem;
+    }
+
+    #categories.section .categoryBlock {
+        height: 45px;
+        margin: 5px;
+    }
+
+    #categories.section .categoryBlock span {
+        font-size: 1.13em;
+        color: white;
+        text-align: center;
+        padding: 0 5px;
+    }
+
+    #categories.section .category-wrapper{
+        padding-bottom: 32px;
+        width: 90%;
+        margin: auto;
+    }
+
+    #brand.section {
+        min-height: 400px !important;
+    }
+
+
+    #brand.section .carousel {
+        min-height: 400px !important;
+        height: 400px;
+    }
+
+    #brand.section .carousel .carousel-item h2 {
+        top: 5%!important;
+    }
+
+    #brand.section .carousel .carousel-item p {
+        top: 25%!important;
+    }
 }

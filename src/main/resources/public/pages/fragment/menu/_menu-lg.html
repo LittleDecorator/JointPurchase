@@ -4,7 +4,7 @@
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
             <div layout="row" class="layout-row">
                 <div class="row-wrapper ">
-                    <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 56px; line-height: 56px;" ng-click="mvm.toggleMenu()" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">
+                    <md-button class="md-icon-button" style="width: 34px; height: 34px; min-width: 50px; min-height: 56px; line-height: 56px;" ng-click="mvm.toggleMenu()">
                         <md-icon style="font-size: 2.2rem; line-height: 34px; width: 34px; height: 34px;">menu</md-icon>
                     </md-button>
                     <!-- логотип -->
@@ -14,7 +14,6 @@
                         <md-icon>shopping_basket</md-icon>
                         <span class="badge ng-binding ng-hide" ng-show="mvm.cart.cou>0">{{mvm.cart.cou}}</span>
                     </a>
-
                     <!-- строка поиска -->
                     <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 40%; padding-left: 50px; display: flex; align-items: flex-end">
                         <md-autocomplete flex style="max-width: 80%"
@@ -54,13 +53,8 @@
 
                     <!-- заполнитель -->
                     <span flex="" class="flex"></span>
-
-                    <md-button ng-click="mvm.goto('catalog')"><span>Каталог</span></md-button>
-                    <md-button ng-click="mvm.goto('about')"><span>О нас</span></md-button>
-                    <md-button ng-click="mvm.goto('contact')"><span>Контакты</span></md-button>
-                    <md-button ng-click="mvm.goto('delivery')"><span>Доставка</span></md-button>
-                    <md-button ng-click="mvm.goto('stock')"><span>Акции</span></md-button>
-
+                    <!-- отображаем имя только авторизованного -->
+                    <!--<span ng-if="auth.isAuth()">Добро пожальвать, {{::currentUser.name}}</span>-->
                     <!-- список желаемого -->
                     <a ui-sref="wishlist" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">
                         <md-icon class="material-icons" style="font-size: 30px; flex-grow: 1; line-height: 0.6;">book</md-icon>
@@ -118,6 +112,12 @@
 </md-toolbar>
 
 <md-sidenav id="menu" class="md-sidenav-left" prevent-scroll md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto;  width: 260px; min-width: 0; top: 56px; padding-top: 15px">
+    <md-menu-item><md-button ng-click="mvm.goto('home')"><md-icon>store</md-icon><span>Главная</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('catalog')"><md-icon>bookmark_border</md-icon><span>Каталог</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
+    <md-menu-item><md-button ng-click="mvm.goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>

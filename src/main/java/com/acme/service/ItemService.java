@@ -1,7 +1,6 @@
 package com.acme.service;
 
 
-import com.acme.model.Company;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.dto.ItemMediaTransfer;
@@ -9,12 +8,17 @@ import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface ItemService {
 
     List<Item> getAll(CatalogFilter filter);
 
     List<Item> getAll();
+
+    List<Item> getPortion(int offset, int limit);
+
+    List<Item> getAllBySpec(Specification<Item> specification);
 
     List<Item> getAllByCategory(CatalogFilter filter);
 

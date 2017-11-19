@@ -1,4 +1,4 @@
-<div id="catalog" class="section" style="margin-top: 20px;" ng-cloak>
+<div id="catalog" class="section" style="margin-top: 20px;" ng-cloak ng-show="!mvm.showDetail && (!$state.includes('catalog.detail') || !$state.includes('catalog.type.detail'))">
 
     <div class="row isotope" infinite-scroll="vm.loadData()" infinite-scroll-distance='3' infinite-scroll-disabled="vm.stopLoad">
         <div>
@@ -28,8 +28,8 @@
 
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
-                            <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="vm.requestToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
-                            <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="vm.preorderToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
+                            <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                            <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                             <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                         </md-card-actions>
 

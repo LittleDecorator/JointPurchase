@@ -56,6 +56,9 @@
                     }),
                     itemDetail: $resource("/api/catalog/:name/detail",{},{
                         get:{method:'GET',isArray:false}
+                    }),
+                    best : $resource('/api/catalog/best',{},{
+                        all:{method:'GET',isArray:true}
                     })
                 },
 
@@ -331,6 +334,11 @@
                 instagram:{
                     image: $resource('/api/content/instagram',{},{
                         all:{method:"GET", isArray:true}
+                    }),
+                    posts: $resource('/api/instagram/:id',{},{
+                      all:{method:"GET", isArray:true},
+                      put:{method:'PUT',isArray:true},
+                      delete:{method:'DELETE',isArray:false}
                     }),
                 },
                 report: {

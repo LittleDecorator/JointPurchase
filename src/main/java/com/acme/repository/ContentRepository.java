@@ -15,4 +15,8 @@ public interface ContentRepository extends CrudRepository<Content, String> {
     Content findOneByIsDefault(boolean isDefault);
 
     List<Content> findAllByIsInstagramTrue();
+
+    List<Content> findAllByIdIn(List<String> ids);
+
+    void deleteAllByIdIn(List<String> ids);
 }

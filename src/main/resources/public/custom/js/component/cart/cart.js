@@ -16,7 +16,7 @@
             vm.toOrderCreation = toOrderCreation;
             vm.getTemplate = getTemplate;
 
-            if(mvm.cart && mvm.cart.cou==0){
+            if(mvm.cart && mvm.cart.cou === 0){
                 mvm.showContent = false;
             } else {
                 mvm.showContent = true;
@@ -25,7 +25,7 @@
             
             //TODO: here will be check of auth
             function toOrderCreation(){
-                $state.transitionTo("cart.confirm");
+                $state.go("cart.confirm");
             }
 
             function getTemplate(){

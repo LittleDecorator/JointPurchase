@@ -220,5 +220,8 @@
 
                 init();
 
+                // выключаем view карточки
+                mvm.showDetail = false;
+
             }])
 })();

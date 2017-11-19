@@ -553,7 +553,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus {
 @media (min-width: 601px) {
     md-sidenav#filter.md-sidenav-left {
         top:0;
-        z-index: 1000;
+        z-index: 10;
     }
 }
 

@@ -122,7 +122,7 @@
 
 
         function setupEvents() {
-          if (typeof window.ontouchstart !== 'undefined') {
+          if (typeof window.ontouchstart !== 'undefined' && options.draggable) {
             view.on('touchstart.carousel', tap);
             view.on('touchmove.carousel', drag);
             view.on('touchend.carousel', release);
@@ -363,6 +363,10 @@
 
         function tap(e) {
           // Fixes firefox draggable image bug
+          if($(e.target).is('md-icon') || $(e.target).hasClass('responsive-img')){
+            e.stopPropagation();
+            return;
+          }
           if (e.type === 'mousedown' && $(e.target).is('img')) {
             e.preventDefault();
           }
@@ -508,6 +512,7 @@
             timestamp = Date.now();
             requestAnimationFrame(autoScroll);
           }
+          e.preventDefault()
         });
 
         $(this).on('carouselSet', function(e, n, callback) {

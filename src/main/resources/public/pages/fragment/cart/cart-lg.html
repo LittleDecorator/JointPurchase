@@ -14,14 +14,13 @@
         <tr ng-repeat="item in mvm.cart.content" class="row cart-item" ng-style="$last && {'border':'none'}">
 
             <td class="col s2 non-float" style="text-align: center;padding: 5px 0;">
-                <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 120px!important; height: 120px!important;">
-                    <a ng-href="{{::item.url}}" class="swipebox">
+                <div class="boxInner md-avatar" style="margin: auto; border-radius: 50%; width: 120px!important; height: 120px!important;" ng-click="mvm.itemView(item.transliteName)">
+
                         <img ng-src="{{::item.url}}" style="transform: translateX(-50%); left: 50%; position: relative; height: 100%;">
-                    </a>
                 </div>
             </td>
             <td class="col s4 non-float">
-                <a ng-click="mvm.itemView(item.id)" style="cursor: pointer">
+                <a ng-click="mvm.itemView(item.transliteName)" style="cursor: pointer">
                     <span style="font-size: 20px;">{{::item.name}}</span>
                 </a>
             </td>

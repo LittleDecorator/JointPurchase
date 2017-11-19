@@ -46,6 +46,12 @@ public class InstagramPost implements BaseModel {
     @Column(name = "tags")
     private String tags;
 
+    @Column(name="wrong_post")
+    private boolean wrongPost;
+
+    @Column(name="show_on_main")
+    private boolean showOnMain;
+
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
 
@@ -128,6 +134,22 @@ public class InstagramPost implements BaseModel {
 
     public void setDateAdd(Date dateAdd) {
         this.dateAdd = dateAdd;
+    }
+
+    public boolean isWrongPost() {
+        return wrongPost;
+    }
+
+    public void setWrongPost(boolean wrongPost) {
+        this.wrongPost = wrongPost;
+    }
+
+    public boolean isShowOnMain() {
+        return showOnMain;
+    }
+
+    public void setShowOnMain(boolean showOnMain) {
+        this.showOnMain = showOnMain;
     }
 
     @Override

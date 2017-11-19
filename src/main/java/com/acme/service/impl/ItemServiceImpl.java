@@ -18,6 +18,7 @@ import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +54,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     PlatformTransactionManager transactionManager;
+
+    @Override
+    public List<Item> getPortion(int offset, int limit) {
+        Pageable portion = new OffsetBasePage(offset, limit);
+        return Lists.newArrayList(itemRepository.findAll(portion));
+    }
+
+    @Override
+    public List<Item> getAllBySpec(Specification<Item> specification) {
+        return Lists.newArrayList(itemRepository.findAll(specification));
+    }
 
     @Override
     public List<Item> getAll(CatalogFilter filter) {

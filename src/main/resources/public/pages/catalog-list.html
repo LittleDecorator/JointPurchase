@@ -1,13 +1,13 @@
+<div ng-show="!mvm.showDetail && (!$state.includes('catalog.detail') || !$state.includes('catalog.type.detail'))">
 <div id="catalog" ng-cloak class="section">
 
-    <div ng-if="vm.currentNode.contentId" >
-        <div layout="row">
-            <img ng-src="media/image/original/{{::vm.currentNode.contentId}}" class="responsive-img" style="min-width: 120px; width: 120px; height: 120px;
-            margin-right: 1em; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);"/>
-            <p>{{::vm.currentNode.description}}</p>
-        </div>
-    </div>
-
+    <!--<div ng-if="vm.currentNode.contentId" >-->
+        <!--<div layout="row">-->
+            <!--<img ng-src="media/image/original/{{::vm.currentNode.contentId}}" class="responsive-img" style="min-width: 120px; width: 120px; height: 120px;-->
+            <!--margin-right: 1em; box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);"/>-->
+            <!--<p>{{::vm.currentNode.description}}</p>-->
+        <!--</div>-->
+    <!--</div>-->
 
     <div ng-include="vm.getSubcategoryUrl()" include-callback="vm.afterInclude()"></div>
 
@@ -34,8 +34,8 @@
 
                             <md-card-actions layout="column" layout-align="center center">
                                 <span class="md-headline">{{::item.name}}</span>
-                                <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="vm.requestToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
-                                <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="vm.preorderToList(item)">{{vm.getAddToWishListButtonLabel(item)}}</md-button>
+                                <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                                <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                             </md-card-actions>
 
@@ -87,3 +87,5 @@
 <md-button ng-if="mvm.width < 1530 && mvm.width>600" class="md-fab blue lighten-2 fixed-action-btn" ng-click="mvm.toggleSideFilter()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
     <md-icon>more_vert</md-icon>
 </md-button>
+
+</div>

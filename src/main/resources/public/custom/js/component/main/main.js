@@ -6,8 +6,8 @@
 	'use strict';
 
 	angular.module('main')
-			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location','$q',
-				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav,$mdUtil, $log, modal, $mdToast, resolveService, $location, $q) {
+			.controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav','$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location','$q','$deepStateRedirect',
+				function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $mdUtil, $log, modal, $mdToast, resolveService, $location, $q, $deepStateRedirect) {
 
 					$rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
 
@@ -48,6 +48,10 @@
 					mvm.closeSubPanel = closeSubPanel;
 					mvm.getSubMenu = getSubMenu;
 					mvm.toCatalog = toCatalog;
+          mvm.requestToList = requestToList;
+          mvm.preorderToList = preorderToList;
+          mvm.getAddToWishListButtonLabel = getAddToWishListButtonLabel;
+          mvm.showWishlistModal = showWishlistModal;
 
 					mvm.THUMB_URL = "media/image/thumb/";
 					mvm.PREVIEW_URL = "media/image/preview/";
@@ -70,14 +74,101 @@
 					mvm.selectedItem  = null;
 					mvm.searchText    = null;
 					mvm.lockSideFilter = false;
+					// нужно ли отображать view карточки
+					mvm.showDetail = false;
 
+          /**
+           * Получение label'а кнопок.
+           * @param item
+           */
+          function getAddToWishListButtonLabel(item){
+            var label = "";
+            if (item.inWishlist){
+              label = item.status.id === 'preorder' ? 'Заказан' : 'Отложен';
+            } else {
+              label = item.status.id === 'preorder' ? 'Заказать' : 'Отложить';
+            }
+            return label;
+          }
+
+          /**
+           * Показ модального для "отложить"
+           * @param item
+           * @param wClass
+           */
+          function preorderToList(item) {
+            if(item.inWishlist){
+              goto('wishlist', {id: item.id});
+            }
+            var wClass = mvm.width < 601 ? 'w-80' : 'w-30';
+            mvm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/preorderModal.html" : "pages/modal/preorderModal.html", 'ngdialog-theme-default ' + wClass)
+          }
+
+          /**
+           * Добавление товара в список желаемого
+           * @param item
+           * @param templateUrl
+           * @param className
+           */
+          function showWishlistModal(item, templateUrl, className) {
+            var toast = $mdToast.simple().position('top right').hideDelay(3000);
+            if(!mvm.wishListEmail){
+              //определим модальное окно
+              var wishListDialog = modal({
+                templateUrl: templateUrl,
+                className: className,
+                closeByEscape: true,
+                controller: "wishlistController as vm",
+                data: item
+              });
+
+              // Слушатель закрытия модального
+              wishListDialog.closePromise.then(function(output) {
+
+                // запомним stash client email
+                if(!mvm.wishListEmail && output.value){
+                  mvm.wishListEmail = output.value.email;
+                  store.set("wishListEmail", mvm.wishListEmail);
+                } else {
+                	return;
+								}
+
+                item.inWishlist = true;
+                mvm.getAddToWishListButtonLabel(item);
+                $mdToast.show(toast.textContent('Заявка на заказ товара ['+ item.name + '] принята').theme('info'));
+              });
+            } else {
+              var stashed = {id: null, itemId: item.id, subjectId: null, email: mvm.wishListEmail};
+              dataResources.wishlist.core.post(stashed).$promise.then(function(data){
+                $mdToast.show(toast.textContent('Товар ['+ item.name + '] отложен').theme('info'));
+                item.inWishlist = true;
+                mvm.getAddToWishListButtonLabel(item);
+              }, function(error){
+                $mdToast.show(toast.textContent('Неудалось добавить товар в список желаемого').theme('error'));
+              });
+            }
+          }
+
+          /**
+           * Показ модального для "заказать"
+           * @param item
+           * @param wClass
+           */
+          function requestToList(item) {
+          	console.log(item)
+            if(item.inWishlist){
+              goto('wishlist', {id: item.id});
+            }
+            var wClass = mvm.width < 601 ? 'w-80' : 'w-30';
+            mvm.showWishlistModal(item, mvm.width < 601 ? "pages/fragment/modal/requestItemModal.html" : "pages/modal/requestItemModal.html", 'ngdialog-theme-default ' + wClass)
+          }
 
 					/**
 					 * Обработка нажатия Enter для поиска
 					 * @param keyCode
 					 */
 					function searchKeyPress(keyCode) {
-						if (keyCode == 13) {
+						if (keyCode === 13) {
 							searchItem();
 						}
 					}
@@ -110,7 +201,7 @@
 
 						// проверка что товар уже в корзине
 						var item_in = {};
-						if (mvm.cart == null) {
+						if (!mvm.cart) {
 							mvm.cart = {cou: 0, content: []};
 						}
 						if (mvm.cart.content.length > 0) {
@@ -126,7 +217,7 @@
 
 						// Показываем тост и добавляем действие
 						$mdToast.show(toast).then(function(response){
-							if(response == 'ok'){
+							if(response === 'ok'){
 								goto('cart');
 							}
 						}, function(error){
@@ -183,7 +274,7 @@
 						if($mdSidenav("menu").isOpen()){
 							$mdSidenav("menu").close();
 							$('.subPanel').removeClass('isOpen');
-            };
+            }
 						eventService.onFilter(node);
 					}
 
@@ -208,7 +299,7 @@
 						if (item.cou > 0) {
 							item.cou--;
 							mvm.cart.cou--;
-							if(item.cou == 0) {
+							if(item.cou === 0) {
 								removeFromCart(idx);
 							} else {
 								store.set("cart", mvm.cart);
@@ -226,7 +317,7 @@
 						mvm.cart.content.splice(idx, 1);
 						mvm.cart.cou = mvm.cart.cou - item_cou;
 						store.set("cart", mvm.cart);
-						if (mvm.cart && mvm.cart.cou == 0) {
+						if (mvm.cart && mvm.cart.cou === 0) {
 							mvm.showContent = false;
 						}
 					}
@@ -241,6 +332,7 @@
 						//закрываем панель меню
 						$mdSidenav('menu').close().then(function(){
               $('.subPanel').removeClass('isOpen');
+              $deepStateRedirect.reset();
 							$state.go(name, params);
 						});
 					}
@@ -258,6 +350,7 @@
               type = 'category';
             }
             // переходим на страницу результата фильтрации
+            $deepStateRedirect.reset();
 						goto('catalog.type',{name: menu.name, type: type});
           }
 
@@ -268,7 +361,7 @@
 					 */
 					function isCurrent(name) {
 						if(name){
-							return $state.current.name == name;
+							return $state.current.name === name;
 						} else {
 							return false;
 						}
@@ -299,7 +392,7 @@
 					function searchItem (){
 						if(mvm.search.criteria){
 							// обновляем state т.к имя могло измениться
-							if($state.current == 'search'){
+							if($state.current === 'search'){
 								$state.go('search', {criteria: mvm.search.criteria},{notify:false}).then(function(){
 									$stateParams.criteria = name.search.criteria;
 									$rootScope.$broadcast('$refreshBreadcrumbs',$state);
@@ -391,7 +484,7 @@
 						});
 
 						dialog.closePromise.then(function (output) {
-							if (output.value && output.value != '$escape') {
+							if (output.value && output.value !== '$escape') {
 							}
 						});
 					}
@@ -409,7 +502,7 @@
 						});
 
 						devNotionDialog.closePromise.then(function (output) {
-							if (output.value && output.value != '$escape') {}
+							if (output.value && output.value !== '$escape') {}
 						});
 					}
 
@@ -423,7 +516,7 @@
 						});
 
 						bugReportDialog.closePromise.then(function (output) {
-							if (output.value && output.value != '$escape') {}
+							if (output.value && output.value !== '$escape') {}
 						});
 					}
 
@@ -437,6 +530,7 @@
 					function initCart() {
 						mvm.cart = {cou: 0, content: []};
 						var cart = store.get("cart");
+						console.log(cart)
 						if (!helpers.isArray(cart)) {
 							mvm.cart = cart;
 						}
@@ -510,7 +604,6 @@
 							mvm.lockSideFilter = (mvm.width > 1530);
 						}
 
-
 					}
 
 					/**
@@ -581,7 +674,7 @@
 						
 						//после закрытия проверяем должена ли быть панель фильтрации фиксированна слева
 						var shouldLock = (isCatalog && mvm.width > 1530);
-						if(shouldLock!=mvm.lockSideFilter){
+						if(shouldLock !== mvm.lockSideFilter){
 							mvm.lockSideFilter = shouldLock;
 						}
 					});

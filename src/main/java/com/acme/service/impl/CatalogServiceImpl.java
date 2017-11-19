@@ -8,6 +8,7 @@ import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
+import com.acme.repository.specification.CatalogSpecifications;
 import com.acme.service.CatalogService;
 import com.acme.service.ElasticService;
 import com.acme.service.ItemService;
@@ -87,6 +88,18 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
+    public List<Item> getBestsellers() {
+        // получение изображения используемого по-умолчанию
+        Content defContent = contentRepository.findOneByIsDefault(true);
+
+        List<Item> result = itemService.getAllBySpec(CatalogSpecifications.filterPopular());
+        for (Item item : result) {
+            itemService.fillItem(item, defContent);
+        }
+        return result;
+    }
+
+    @Override
     public void indexItems() {
         elasticService.indexItems(itemService.getAll());
     }
@@ -97,11 +110,11 @@ public class CatalogServiceImpl implements CatalogService {
         if(!all){
             // фильтруем если нужно
             items = items.filter(item -> Strings.isNullOrEmpty(item.getTransliteName()));
-
         }
         // обновляем
         items.forEach(item -> {
-            item.setTransliteName(translite(item.getName()));
+            // транслит строиться по имени компании и названию товара
+            item.setTransliteName(translite(item.getCompany().getName() + " " + item.getName()));
             itemService.updateItem(item);
         });
     }
@@ -172,6 +185,9 @@ public class CatalogServiceImpl implements CatalogService {
      */
     private String translite(String input){
         Transliterator russianToLatinNoAccentsTrans = Transliterator.getInstance(RUSSIAN_TO_LATIN_BGN);
-        return russianToLatinNoAccentsTrans.transliterate(input).replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "").replaceAll("\\*|\\s+","-").toLowerCase();
+        return russianToLatinNoAccentsTrans.transliterate(input)
+            .replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "")
+            .replaceAll("\\*|\\s+","-")
+            .toLowerCase();
     }
 }

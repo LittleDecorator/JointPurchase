@@ -30,4 +30,16 @@ public class CatalogSpecifications {
 		};
 	}
 
+	public static Specification<Item> filterPopular() {
+
+		return (root, criteriaQuery, builder) -> {
+			Path<Boolean> bestseller = root.get(Item_.bestseller);
+
+			final List<Predicate> predicates = new ArrayList<>();
+
+			predicates.add(builder.isTrue(bestseller));
+			return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+		};
+	}
+
 }

@@ -1,7 +1,9 @@
 <div class="bootcards-container" id="main" ng-controller="homeController as vm" ng-form="vm.forms.homeForm"
      style="position: fixed; overflow: scroll; height: 100%;width: 100%">
 
-    <div id="base" class="slider fullscreen" style="position: relative;">
+    <!-- BASE -->
+    <!--<div id="base" class="slider fullscreen" style="position: relative;">-->
+    <div id="base" class="slider fullscreen" style="position: relative;max-height: 600px">
         <div class="layer">
         <div class="caption center-align">
             <h3 >Магазин детских игрушек</h3>
@@ -14,88 +16,228 @@
             </md-button>
         </div>
 
-        <div class="center-align demo scroll-down" style="color: #fff; position: absolute; left: 15%; width: 70%; opacity: 1; transform: translateY(0px) translateX(0px);">
+        <div ng-if="mvm.width < 601" class="center-align demo scroll-down" style="color: #fff; position: absolute; left: 15%; width: 70%; opacity: 1; transform: translateY(0px) translateX(0px);">
             <a href="#" ng-click="vm.scrollDown()"><span></span></a>
         </div>
         </div>
     </div>
 
-    <div id="nature" class="section demo">
-        <div layout="column" layout-align="center center" >
-            <h2> Только натуральные игрушки</h2>
-            <md-divider ></md-divider>
-            <div layout="column" layout-align="center center" class="main-content">
-                <p>Игрушки Grimms уникальны и неповторимы, так как сделаны из натуральной древесины. На каждой детали можно увидеть свой неповторимый узор. От игрушек приятно пахнет деревом. Многие игрушки представлены в двух вариациях – неокрашенные, обработанные лишь натуральным льняным маслом, и окрашенные цветным растительным воском.</p>
-                <img src="../custom/img/nature_opt.png">
-                <!--<md-button aria-label="show nature info">More Information about Made by Nature</md-button>-->
-                <md-divider ></md-divider>
-            </div>
-
-            <div layout="column" layout-align="center center" class="sub-content">
-
-                <div layout="row" layout-xs="column" layout-align="center start">
-                    <div flex>
-                        <img src="../custom/img/farbabrieb.png">
-                        <p class="short-xs">
-                            Уникальной особенностью строительных блоков Grimms является бархатная поверхность, которая возникает из-за того, что для их покраски используется цветная глазурь, которая проникает в древесину, оставляя матовую отделку, а не глянцевую. Это позволяет строить самые разнообразные постройки – за счет легкой шершавости детали не соскальзывают.
-                        </p>
-                        <!--<md-button aria-label="show material info">more information</md-button>-->
-                    </div>
-
-                    <div flex>
-                        <img src="../custom/img/pflegehinweis_opt.png">
-                        <p>If you clean our products only use a damp cloth. Please do not submerge in water and do not use disinfectant or hot water.</p>
-                    </div>
-                </div>
-
-            </div>
-
+    <!-- CATEGORIES -->
+    <div id="categories" class="section" style="height: auto; background-color: whitesmoke;">
+        <div layout="column" layout-align="center center">
+            <h2>Категории</h2>
+            <md-divider style="width: 25%; margin-bottom: 30px;" ></md-divider>
         </div>
-        <!--<a href="#section02"><span></span>Scroll</a>-->
+
+        <div ng-if="mvm.width > 600">
+            <div layout="row" class="category-wrapper" layout-padding layout-wrap layout-fill ng-cloak>
+                <md-whiteframe class="padded categoryBlock" md-whiteframe="{{height}}" flex-sm="20" flex-gt-sm="20" flex-gt-md="10" layout layout-align="center center"
+                               ng-init="height = -1" ng-mouseenter="height = 6" ng-mouseleave="height = -1"
+                               ng-repeat="category in vm.categories track by category.id" ng-click="vm.toCatalogByCategory(category)">
+                    <span>{{::category.title}}</span>
+                </md-whiteframe>
+            </div>
+        </div>
+
+        <div ng-if="mvm.width < 601">
+            <div layout="column" class="category-wrapper" layout-padding ng-cloak>
+                <md-whiteframe class="padded categoryBlock" md-whiteframe="md-whiteframe-1dp" flex-sm="45" layout layout-align="center center"
+                               ng-repeat="category in vm.categories track by category.id" ng-click="vm.toCatalogByCategory(category)">
+                    <span>{{::category.title}}</span>
+                </md-whiteframe>
+            </div>
+        </div>
     </div>
 
-    <!--<div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto">-->
-        <!--<div layout="column" layout-align="center center">-->
-            <!--<h2>Играй с нами в #INSTAGRAM!</h2>-->
-            <!--<md-divider ></md-divider>-->
-        <!--</div>-->
-        <!--<div class="gallery resized">-->
-            <!--<div class="wrap">-->
-                <!--<div class="box" ng-repeat="image in vm.images">-->
-                    <!--<div class="boxInner">-->
-                        <!--<img ng-src="media/image/gallery/{{::image}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">-->
-                        <!--<instagram-view></instagram-view>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+    <!-- Лидеры продаж -->
+    <div id="bestsalers" class="section horizontal-repeater" style="background-color: white;" layout-wrap layout-fill>
+        <div layout="column" layout-align="center center">
+            <h2>Лидеры продаж</h2>
+            <md-divider style="width: 25%; margin-bottom: 30px;" ></md-divider>
+        </div>
 
-    <!-- CAROUSEL -->
-    <!--<div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto">-->
-        <!--<div class="carousel carousel-slider center" data-indicators="true">-->
-            <!--<div class="carousel-fixed-item center">-->
-                <!--<a class="btn waves-effect white grey-text darken-text-2">button</a>-->
-            <!--</div>-->
-            <!--<div class="carousel-item red white-text" href="#one!">-->
-                <!--<h2>First Panel</h2>-->
-                <!--<p class="white-text">This is your first panel</p>-->
-            <!--</div>-->
-            <!--<div class="carousel-item amber white-text" href="#two!">-->
-                <!--<h2>Second Panel</h2>-->
-                <!--<p class="white-text">This is your second panel</p>-->
-            <!--</div>-->
-            <!--<div class="carousel-item green white-text" href="#three!">-->
-                <!--<h2>Third Panel</h2>-->
-                <!--<p class="white-text">This is your third panel</p>-->
-            <!--</div>-->
-            <!--<div class="carousel-item blue white-text" href="#four!">-->
-                <!--<h2>Fourth Panel</h2>-->
-                <!--<p class="white-text">This is your fourth panel</p>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+        <div style="padding-left: 6%; padding-right: 6%;" ng-if="mvm.width > 600">
+            <md-button style="position: absolute; left: 0; z-index: 5; bottom: 30%; line-height: 50px; min-height: 50px; min-width: 40px;background-color: rgba(255,255,255,.5);"
+                       ng-click="vm.scrollLeft()">
+                <md-icon style="font-size: 5em; line-height: 40px; height: 40px; min-width: 40px;justify-content: center; display: flex;">navigate_before</md-icon>
+            </md-button>
 
+            <md-button style="position: absolute; right: 0; z-index: 5; bottom: 30%; line-height: 50px; min-height: 50px; min-width: 40px;background-color: rgba(255,255,255,.5);"
+                       ng-click="vm.scrollRight()">
+                <md-icon style="font-size: 5em; line-height: 40px; height: 40px; min-width: 40px;justify-content: center; display: flex;">navigate_next</md-icon>
+            </md-button>
+            <md-virtual-repeat-container id="horizontal-container" md-auto-shrink-min="5" md-orient-horizontal style="height: 285px; max-width: 100%;">
+                <div md-virtual-repeat="item in vm.topSellers" md-item-size="5" class="repeated-item horizontal-scroll-wrapper" flex flex-xs="100" flex-sm="45" flex-gt-sm="30" style="max-width: 325px;">
+                    <!--<md-card style="margin: 0; width: 100%; max-width: 235px;">-->
+                    <md-card style="margin: 0; width: 100%; max-width: 260px; min-height: 280px; min-width: 260px; max-height: 280px;">
+                        <div class="card-image waves-effect waves-block waves-light md-card-image" style="min-height: 170px;">
+                            <img ng-src="{{item.url}}" ng-click="vm.toItemDetail(item.transliteName)" class="responsive-img" style="display: block; height: 180px;margin: 0 auto;"/>
+                        </div>
+
+                        <md-card-actions layout="column" layout-align="center center">
+                            <span class="md-headline" style="min-height: 0; width:100%; padding: 0">{{item.name}}</span>
+                            <span class="price">Цена: {{item.price|number}} руб</span>
+                            <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                            <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                            <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                        </md-card-actions>
+
+                    </md-card>
+                </div>
+            </md-virtual-repeat-container>
+        </div>
+
+        <div ng-if="mvm.width < 601" >
+            <div class="carousel carousel-slider center" style="min-height: 280px">
+                <md-button style="position: absolute; left: 0; z-index: 5; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 40px;background-color: rgba(255,255,255,.5);"
+                           ng-click="vm.prevSeller()">
+                    <md-icon style="font-size: 5em; line-height: 40px; height: 40px; min-width: 40px;justify-content: center; display: flex;">navigate_before</md-icon>
+                </md-button>
+
+                <md-button style="position: absolute; right: 0; z-index: 5; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 40px;background-color: rgba(255,255,255,.5);"
+                           ng-click="vm.nextSeller()">
+                    <md-icon style="font-size: 5em; line-height: 40px; height: 40px; min-width: 40px;justify-content: center; display: flex;">navigate_next</md-icon>
+                </md-button>
+
+                <div class="carousel-item" href="{{::item.idx}}" ng-repeat="item in vm.topSellers track by item.id">
+                    <div flex flex-xs="100" flex-sm="45" flex-gt-sm="30" layout-align="center center">
+                        <md-card style="margin: 0; width: 100%;">
+                            <div class="card-image waves-effect waves-block waves-light md-card-image" style="min-height: 170px;">
+                                <img ng-src="{{item.url}}" ng-click="vm.toItemDetail(item.transliteName)" class="responsive-img" style="display: block; height: 180px;margin: 0 auto;"/>
+                            </div>
+
+                            <md-card-actions layout="column" layout-align="center center">
+                                <span class="md-headline" style="min-height: 0; width:100%; padding: 0;white-space: nowrap;font-size: 1.2em">{{item.name}}</span>
+                                <span class="price" style="padding-bottom: 5px;">Цена: {{item.price|number}} руб</span>
+                                <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                                <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
+                                <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
+                            </md-card-actions>
+
+                        </md-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div id="section02" class="section" style="min-height: 600px;background-color: bisque;height: auto" ng-if="vm.images.length > 0">
+        <div layout="column" layout-align="center center">
+            <h2>Играй с нами в instagram с #GRIMMSTORY!</h2>
+            <md-divider ></md-divider>
+        </div>
+        <div class="gallery resized">
+            <div class="wrap">
+                <div class="box" ng-repeat="image in vm.images">
+                    <div class="boxInner">
+                        <img ng-src="media/image/gallery/{{::image}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
+                        <instagram-view></instagram-view>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BRANDS -->
+    <!--<div id="brand" class="section" style="min-height: 600px;background-color: whitesmoke;height: auto;padding: 0">-->
+    <div id="brand" class="section" style="background-color: whitesmoke;height: auto;padding: 0">
+        <!--<div class="carousel carousel-slider center" data-indicators="true" style="min-height: 600px!important">-->
+        <div class="carousel carousel-slider center" data-indicators="true">
+
+
+            <md-button style="position: absolute; left: 0; z-index: 1; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 50px;"
+                       ng-click="vm.prevBrand()">
+                <md-icon style="color: white; font-size: 5em; line-height: 50px; height: 50px; min-width: 65px;">navigate_before</md-icon>
+            </md-button>
+
+            <md-button style="position: absolute; right: 0; z-index: 1; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 50px;"
+                       ng-click="vm.nextBrand()">
+                <md-icon style="color: white; font-size: 5em; line-height: 50px; height: 50px; min-width: 65px;">navigate_next</md-icon>
+            </md-button>
+
+            <div class="carousel-fixed-item center">
+                <a class="btn white" style="color: inherit" ng-click="vm.toCatalogByCompany()">Показать товары</a>
+            </div>
+
+            <div id="grimms" class="carousel-item white-text" href="#one!">
+                <img src="../custom/img/grimms_colors.jpg">
+                <div style="background: rgba(0,0,0,0.2); height: 100%; position: absolute; top: 0; width: 100%;">
+                    <h2 style="position: absolute; top: 5%; left: 15%; width: 70%;font-size: 3em;">Grimms</h2>
+                    <!--<p class="white-text" style="position: absolute; top: 21%; left: 15%; width: 70%;">This is your first panel</p>-->
+
+                    <!--<div class="brand_news">
+                        <div class="news_inner">
+                            <div class="news_fade">
+                                <div layout="column">
+                                    <div layout="row" layout-xs="column" layout-align="center center" style="padding: 8px 0; min-height: 105px;">
+                                        <div flex="10" style="margin: auto;">
+                                            <img src="../custom/img/nature_opt.png" style="width: 70px; height: 70px;">
+                                        </div>
+                                        <div flex>
+                                    <span style="color: #333; font-size: 1em;">
+                                        Игрушки Grimms уникальны и неповторимы, так как сделаны из натуральной древесины. На каждой детали можно увидеть свой неповторимый узор. От игрушек приятно пахнет деревом. Многие игрушки представлены в двух вариациях – неокрашенные, обработанные лишь натуральным льняным маслом, и окрашенные цветным растительным воском.
+                                    </span>
+                                        </div>
+                                    </div>
+                                    <md-divider style="margin: auto; width: 80%;"></md-divider>
+                                    <div layout="row" layout-xs="column" layout-align="center center" style="padding: 8px 0; min-height: 105px;">
+                                        <div flex="10" style="margin: auto;">
+                                            <img src="../custom/img/farbabrieb.png" style="width: 70px; height: 70px;">
+                                        </div>
+                                        <div flex>
+                                    <span style="color: #333; font-size: 1em;">
+                                        Уникальной особенностью строительных блоков Grimms является бархатная поверхность, которая возникает из-за того, что для их покраски используется цветная глазурь, которая проникает в древесину, оставляя матовую отделку, а не глянцевую. Это позволяет строить самые разнообразные постройки – за счет легкой шершавости детали не соскальзывают.
+                                    </span>
+                                        </div>
+                                    </div>
+                                    <md-divider style="margin: auto; width: 80%;"></md-divider>
+                                    <div layout="row" layout-xs="column" layout-align="center center" style="padding: 8px 0; min-height: 105px;">
+                                        <div flex="10" style="margin: auto;">
+                                            <img src="../custom/img/pflegehinweis_opt.png" style="width: 70px; height: 70px;">
+                                        </div>
+                                        <div flex>
+                                    <span style="color: #333; font-size: 1em;">
+                                        Если вы чистите наши продукты, используйте только влажную ткань. Пожалуйста, не погружайтесь в воду и не используйте дезинфицирующее средство или горячую воду.
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+
+            <div id="sarahssilks" class="carousel-item white-text" href="#two!">
+                <img src="../custom/img/sara_silk.jpg">
+                <div style="background: rgba(0,0,0,0.2); height: 100%; position: absolute; top: 0; width: 100%;">
+                    <h2 style="position: absolute; top: 5%; left: 15%; width: 70%;font-size: 3em;">Sara'h Silks</h2>
+                    <!--<p class="white-text" style="position: absolute; top: 21%; left: 15%; width: 70%;">This is your first panel</p>-->
+                </div>
+            </div>
+            <div id="holztiger" class="carousel-item white-text" href="#three!">
+                <img src="../custom/img/holztiger.jpg">
+                <div style="background: rgba(0,0,0,0.2); height: 100%; position: absolute; top: 0; width: 100%;">
+                    <h2 style="position: absolute; top: 5%; left: 15%; width: 70%;font-size: 3em;">Hozltiger</h2>
+                    <!--<p class="white-text" style="position: absolute; top: 21%; left: 15%; width: 70%;">This is your first panel</p>-->
+                </div>
+            </div>
+            <div id="schleich" class="carousel-item white-text" href="#four!">
+                <img src="../custom/img/schleich_3.png">
+                <div style="background: rgba(0,0,0,0.2); height: 100%; position: absolute; top: 0; width: 100%;">
+                    <h2 style="position: absolute; top: 5%; left: 15%; width: 70%;font-size: 3em;">Schleich</h2>
+                    <!--<p class="white-text" style="position: absolute; top: 21%; left: 15%; width: 70%;">This is your first panel</p>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- SUBSCRIBE -->
     <div id="subscribe" class="section">
         <div layout="column" layout-align="center center">
                 <h2>Подпишись на наши новости!</h2>

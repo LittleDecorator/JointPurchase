@@ -3,10 +3,14 @@ package com.acme.controller;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Company;
 import com.acme.model.Content;
+import com.acme.model.InstagramPost;
+import com.acme.model.InstagramPostContent;
 import com.acme.model.ItemContent;
 import com.acme.model.dto.CompanyContentDto;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ContentRepository;
+import com.acme.repository.InstagramPostContentRepository;
+import com.acme.repository.InstagramPostRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.constant.Constants;
 import com.acme.service.ImageService;
@@ -48,6 +52,12 @@ public class ContentController{
 
     @Autowired
     ImageService imageService;
+
+    @Autowired
+    InstagramPostRepository postRepository;
+
+    @Autowired
+    InstagramPostContentRepository postContentRepository;
 
 //    /**
 //     * Кропирование уже загруженного изображения
@@ -170,8 +180,10 @@ public class ContentController{
      */
     @RequestMapping(value = "/instagram", method = RequestMethod.GET)
     public List<String> getInstgaramImages() throws Exception {
+        List<String> postIds = postRepository.findAllByWrongPostFalse().stream().filter(InstagramPost::isShowOnMain).map(InstagramPost::getId).collect(Collectors.toList());
+        List<String> contentIds = postContentRepository.findAllByPostIdIn(postIds).stream().map(InstagramPostContent::getContentId).collect(Collectors.toList());
 		// TODO: Добавить проверки на существование записей
-        List<Content> photos = contentRepository.findAllByIsInstagramTrue();
+        List<Content> photos = contentRepository.findAllByIdIn(contentIds);
         if(photos.isEmpty()) return Collections.emptyList();
 
         int limit = photos.size() > 15 ? 15 : photos.size();

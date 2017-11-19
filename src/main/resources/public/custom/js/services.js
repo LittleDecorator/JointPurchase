@@ -328,6 +328,7 @@
             };
 
             this.getCategory = function(name){
+                console.log(name);
                 if(name){
                     var deferred = $q.defer();
                     dataResources.category.get({name:name},function(res){

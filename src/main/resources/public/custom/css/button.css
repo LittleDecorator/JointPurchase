@@ -146,10 +146,11 @@ md-chips[readonly=false] div.md-chip-input-container {
 
 /* ICONS IN CATALOG CARD TITLE */
 md-card md-icon.material-icons{
-    height: 25px;
+    /*height: 25px;*/
+    height: 32px;
     width: 32px;
     font-size: 30px;
-    line-height:inherit;
+    /*line-height:inherit;*/
 }
 
 md-icon.md-small.material-icons {

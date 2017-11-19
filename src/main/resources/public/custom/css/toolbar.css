@@ -1,8 +1,11 @@
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar){
+    /*background-color: rgba(248, 248, 248, 0)!important;*/
     background-color: #86A8A8!important;
 }
 
 .md-toolbar-tools {
+    /*background-color: rgba(248, 248, 248, 0)!important;*/
+
     background-color: #86A8A8!important;
      /*padding: 0 30px; */
     /*width: 90%;*/

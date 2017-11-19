@@ -12,6 +12,8 @@ public interface CatalogService {
 
     List<Item> getCatalog(CatalogFilter filter);
 
+    List<Item> getBestsellers();
+
     List<Item> searchItems(String criteria);
 
     void indexItems();

@@ -18,3 +18,7 @@ nav > .container-fluid {
     border-radius: 2px;
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+#bestsalers ::-webkit-scrollbar {
+    display: none;
+}

@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class InstagramPostDto {
 
+    private String id;
     private String originId;
     /* автор */
     private String userId;
@@ -27,6 +28,9 @@ public class InstagramPostDto {
     /* список изображений */
     private List<String> contentUrls;
 
+    private boolean showOnMain = false;
+    private boolean wrongPost = false;
+
     public InstagramPostDto() {
     }
 
@@ -41,6 +45,14 @@ public class InstagramPostDto {
         this.likesCount = likesCount;
         this.tags = tags;
         this.contentUrls = contentUrls;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUserId() {
@@ -113,6 +125,22 @@ public class InstagramPostDto {
 
     public void setOriginId(String originId) {
         this.originId = originId;
+    }
+
+    public boolean isShowOnMain() {
+        return showOnMain;
+    }
+
+    public void setShowOnMain(boolean showOnMain) {
+        this.showOnMain = showOnMain;
+    }
+
+    public boolean isWrongPost() {
+        return wrongPost;
+    }
+
+    public void setWrongPost(boolean wrongPost) {
+        this.wrongPost = wrongPost;
     }
 
     @Override

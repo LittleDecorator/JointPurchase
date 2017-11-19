@@ -33,18 +33,21 @@
                 vm.applyKeyPress = applyKeyPress;
                 vm.exportXls = exportXls;
                 vm.importXls = importXls;
+                vm.afterInclude = afterInclude;
 
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
+                vm.filter = {name:null, article:null, company:null, limit:60, offset:0};
                 vm.confirmedFilter = angular.copy(vm.filter);
                 vm.stopLoad=false;
+                vm.detailLock=false;
                 vm.allDataLoaded = false;
                 vm.infiniteDistance = 1;
-                
+
                 /* получение данных с сервера */
                 function loadData(isClean){
-                    if(!vm.stopLoad && !busy){
+                    console.log("load")
+                    if(!vm.stopLoad && !vm.detailLock && !busy){
                         busy = true;
 
                         dataResources.item.all(vm.confirmedFilter).$promise.then(function(data){
@@ -69,11 +72,13 @@
 
                 /* переход в карточку для создания нового товара */
                 function addItem () {
+                    vm.detailLock=true;
                     $state.transitionTo("item.detail");
                 }
 
                 /* переход в карточку для редактирования */
                 function editItem (id) {
+                    vm.detailLock=true;
                     $state.go("item.detail", {id: id});
                 }
 
@@ -102,7 +107,7 @@
                             filterDialog.close();
                             event.preventDefault();
                         }
-                        vm.apply();
+                        apply();
                     }
                 }
 
@@ -208,6 +213,22 @@
                     $mdUtil.animateScrollTo(P, 0, 200)
                 }
 
+                // помечаем scope как чистый
+                function afterInclude(){
+                    console.log("afterInclude")
+                }
+
+                /**
+                * Слушатель нажатия кнопки НАЗАД
+                */
+                $scope.$on('locBack', function () {
+                    console.log('list lock back')
+                    mvm.showDetail = false;
+                    vm.detailLock = false;
+                });
+
+                // выключаем view карточки
+                mvm.showDetail = false;
         }])
 
         /* Карточка товара */
@@ -215,6 +236,7 @@
             function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses, transliteratorService){
 
                 var mvm = $scope.$parent.mvm;
+                mvm.showDetail = true;
                 var vm = this;
 
                 vm.validate = validate;
@@ -364,6 +386,10 @@
                     },50);
                 }
 
+                $scope.$on('locBack', function () {
+                    console.log('card lock back')
+                    mvm.showDetail = true;
+                });
         }])
 
 })();

@@ -1,0 +1,49 @@
+<div id="instaPosts" ng-form="vm.postsCard">
+
+
+<md-content class="md-padding" layout-xs="column" layout="row" layout-wrap>
+  <div flex-xs flex-gt-sm="33" flex-sm="50" layout="column" ng-repeat="post in vm.posts track by post.originId">
+    <md-card>
+      <!--<div class="box" style="width: auto; height: 400px;">-->
+      <div class="box" style="width: auto;">
+        <div class="boxInner">
+          <img ng-src="{{post.contentUrls[0]}}" class="md-card-image" alt="Washed Out" style="width: 100%">
+        </div>
+      </div>
+      <div>
+        <md-card-content style="min-height: 165px">
+          <p>
+            {{::post.caption}}
+          </p>
+        </md-card-content>
+        <md-card-actions layout="column">
+          <div layout="row" layout-align="end center">
+            <md-button>
+              <md-icon style="font-size: x-large;">thumb_up</md-icon>
+              <span style="font-size: 1.4em">{{post.likesCount}}</span>
+            </md-button>
+          </div>
+          <md-divider/>
+          <div layout="row" layout-align="end center">
+            <md-checkbox ng-model="post.showOnMain" aria-label="show on main" ng-change="vm.countShown(post)" ng-disabled="vm.toMainIsLocked && !post.showOnMain" style="margin-bottom: 0;">
+              на главную
+            </md-checkbox>
+            <md-checkbox ng-model="post.wrongPost" aria-label="load by error" style="margin-bottom: 0;">
+              ошибка
+            </md-checkbox>
+            <md-button class="md-icon-button" aria-label="Ignore" ng-click="vm.remove(post.id)">
+              <md-icon>clear</md-icon>
+            </md-button>
+          </div>
+        </md-card-actions>
+      </div>
+
+    </md-card>
+  </div>
+</md-content>
+</div>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" ng-class="{'disabled':!vm.postsCard.$dirty}" style="bottom: 25px; right: 25px;">
+  <md-tooltip md-direction="left">Сохранить</md-tooltip>
+  <md-icon>save</md-icon>
+</md-button>

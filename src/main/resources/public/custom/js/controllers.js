@@ -27,6 +27,7 @@
                 'settings',
                 'crop',
                 'notification',
-                'wishlist'
+                'wishlist',
+                'instagram'
             ]);
 })();

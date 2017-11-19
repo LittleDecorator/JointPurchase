@@ -75,4 +75,8 @@ public class CatalogController {
         return catalogService.getItemDetailByTransliteName(name);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "best")
+    public List<Item> getBestSellers() throws Exception {
+        return catalogService.getBestsellers();
+    }
 }

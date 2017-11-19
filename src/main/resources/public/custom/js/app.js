@@ -1,5 +1,5 @@
 (function () {
-  angular.module('purchase', ['ui.router', 'ngDialog', 'ngMaterial', 'ngMessages', 'ngSanitize', 'angularBootstrapNavTree', 'ngResource', 'mdPickers', 'ngMask','ui.router.metatags', 'angularFileUpload', 'angular-jwt', 'md-steppers', 'backToTop', 'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators']);
+  angular.module('purchase', ['ui.router', 'ngDialog', 'ngMaterial', 'ngMessages', 'ngSanitize', 'angularBootstrapNavTree', 'ngResource', 'mdPickers', 'ngMask','ui.router.metatags', 'angularFileUpload', 'angular-jwt', 'md-steppers', 'backToTop', 'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators','ct.ui.router.extras']);
 })();
 
 (function () {
@@ -7,7 +7,8 @@
   /**
    * Конфигуратор приложения
    */
-      .config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', '$mdIconProvider', '$locationProvider','UIRouterMetatagsProvider', function ($stateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider, $mdIconProvider, $locationProvider,UIRouterMetatagsProvider) {
+      .config(['$stateProvider','$stickyStateProvider', '$urlRouterProvider', '$httpProvider', '$mdThemingProvider', '$mdIconProvider', '$locationProvider','UIRouterMetatagsProvider',
+        function ($stateProvider, $stickyStateProvider, $urlRouterProvider, $httpProvider, $mdThemingProvider, $mdIconProvider, $locationProvider,UIRouterMetatagsProvider) {
 
         // объявленем interceptor для каждого http запроса
         $httpProvider.interceptors.push('authInterceptor');
@@ -33,6 +34,7 @@
           $stateProvider.state(route);
         });
 
+          // $stickyStateProvider.enableDebug(true);
         // включение режима красивого url
         $locationProvider.html5Mode({
           enabled: true, requireBase: false, rewriteLinks: false
@@ -139,15 +141,17 @@
         /**
          * Наблюдатель возврата на предыдущую страницу
          */
-        $rootScope.$watch(function () {
-          return $location.path()
-        }, function (newLocation, oldLocation) {
-          $rootScope.newLocation = newLocation;
-          $rootScope.oldLocation = oldLocation;
-          if ($rootScope.actualLocation === newLocation) {
-            $rootScope.$broadcast('locBack', true);
-          }
-        });
+          $rootScope.$watch(
+            function () {
+              return $location.path()
+            },
+            function (newLocation, oldLocation) {
+              $rootScope.newLocation = newLocation;
+              $rootScope.oldLocation = oldLocation;
+              if ($rootScope.actualLocation === newLocation) {
+                $rootScope.$broadcast('locBack', true);
+              }
+            });
 
-      }])
+        }])
 })();

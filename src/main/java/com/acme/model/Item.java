@@ -64,6 +64,8 @@ public class Item implements BaseModel{
     @Column(name = "material")
     private String material;
 
+    private boolean bestseller;
+
     @Transient
     private boolean inWishlist = false;
 
@@ -241,5 +243,13 @@ public class Item implements BaseModel{
 
     public void setMaterial(String material) {
         this.material = material;
+    }
+
+    public boolean isBestseller() {
+        return bestseller;
+    }
+
+    public void setBestseller(boolean bestseller) {
+        this.bestseller = bestseller;
     }
 }

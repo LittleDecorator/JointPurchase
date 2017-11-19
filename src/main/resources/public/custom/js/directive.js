@@ -191,6 +191,38 @@
                     }, 0);
                 }
             };
-        });
+        })
+
+      //   .directive('keepScrollPos', function ($route, $window, $timeout, $location, $anchorScroll, $state) {
+      //
+      //       // cache scroll position of each route's templateUrl
+      //       var scrollPosCache = {};
+      //
+      //       // compile function
+      //       var directive = function (scope, element, attrs) {
+      //
+      //         scope.$on('$stateChangeStart', function () {
+      //           // store scroll position for the current view
+      //           if ($state.$current) {
+      //             scrollPosCache[$state.current.templateUrl] = [$window.pageXOffset, $window.pageYOffset];
+      //           }
+      //         });
+      //
+      //         scope.$on('$stateChangeSuccess', function () {
+      //           // if hash is specified explicitly, it trumps previously stored scroll position
+      //           if ($location.hash()) {
+      //             $anchorScroll();
+      //
+      //             // else get previous scroll position; if none, scroll to the top of the page
+      //           } else {
+      //             var prevScrollPos = scrollPosCache[$state.current.templateUrl] || [0, 0];
+      //             $timeout(function () {
+      //               $window.scrollTo(prevScrollPos[0], prevScrollPos[1]);
+      //             }, 0);
+      //           }
+      //         });
+      //       };
+      //       return directive();
+      // });
 
 })();
