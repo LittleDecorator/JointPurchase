@@ -1,10 +1,9 @@
 package com.acme.social;
 
-import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Content;
 import com.acme.model.InstagramPost;
 import com.acme.model.InstagramPostContent;
-import com.acme.model.dto.InstagramPostDto;
+import com.acme.model.dto.instagram.InstagramPostDto;
 import com.acme.model.InstagramUser;
 import com.acme.service.InstagramService;
 import com.acme.service.impl.InstagramServiceImpl;
@@ -13,12 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.brunocvcunha.instagram4j.Instagram4j;
-import org.brunocvcunha.instagram4j.requests.InstagramPostRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramTagFeedRequest;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedItem;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
@@ -99,8 +96,8 @@ Client Status Sandbox Mode*/
         lines.close();
 
         InstagramService service = new InstagramServiceImpl();
-        List<InstagramPostDto> posts = service.parseRecent(data.toString());
-        System.out.println(posts);
+        //List<InstagramPostDto> posts = service.parseRecent(data.toString());
+        //System.out.println(posts);
     }
 
     private void i4jTest() throws IOException {

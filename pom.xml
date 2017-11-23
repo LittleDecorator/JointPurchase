@@ -411,8 +411,8 @@
 	                    -Xdebug
 	                    -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006
 
-	                    -Xms750m
-	                    -Xmx750m
+	                    -Xms1200m
+	                    -Xmx1200m
 
 	                    -XX:MinHeapFreeRatio=10
 	                    -XX:MaxHeapFreeRatio=70

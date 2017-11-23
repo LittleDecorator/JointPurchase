@@ -6,8 +6,8 @@
   'use strict';
 
   angular.module('home')
-      .controller('homeController', ['$scope', 'dataResources', '$state', '$timeout', '$mdToast', '$rootScope', 'store','$window',
-        function ($scope, dataResources, $state, $timeout, $mdToast, $rootScope, store, $window) {
+      .controller('homeController', ['$scope', 'dataResources', '$state', '$timeout', '$mdToast','$mdDialog', '$rootScope', 'store','$window',
+        function ($scope, dataResources, $state, $timeout, $mdToast, $mdDialog,$rootScope, store, $window) {
 
           var mvm = $scope.$parent.mvm;
           var vm = this;
@@ -38,6 +38,7 @@
           vm.loadTopSellers = loadTopSellers;
           vm.scrollLeft = scrollLeft;
           vm.scrollRight = scrollRight;
+          vm.showPost = showPost;
 
           vm.links = [// { icon: 'mail' },
             // { icon: 'message' },
@@ -47,7 +48,7 @@
           vm.subscriber = {id: null, email: null, subjectId: null, active: true, dateAdd: null};
           vm.forms = {};
           vm.images = [];
-          vm.categories = mvm.nodes[0].nodes;
+          vm.categories = [];
           vm.topSellers = [];
 
           /**
@@ -214,6 +215,12 @@
             sideScroll(container,'left',500);
           }
 
+          /**
+           *
+           * @param element
+           * @param direction
+           * @param distance
+           */
           function sideScroll(element, direction, distance){
               if(direction === 'left'){
                 element.animate({scrollLeft: element.scrollLeft() - distance}, "slow");
@@ -222,11 +229,49 @@
               }
           }
 
+          /**
+           *
+           */
+          function showPost(event){
+            $mdDialog.show({
+              controller: DialogController,
+              templateUrl: 'pages/modal/instagramModal.html',
+              parent: angular.element(document.body),
+              targetEvent: event,
+              clickOutsideToClose:true,
+              fullscreen: true, // Only for -xs, -sm breakpoints.
+              locals: { employee: $scope.userName }
+            })
+                .then(function(answer) {
+                  console.log('You said the information was "' + answer + '".');
+                }, function() {
+                  console.log('You cancelled the dialog.');
+                });
+
+            function DialogController($scope, $mdDialog) {
+
+              console.log($mdDialog)
+
+              $scope.hide = function() {
+                $mdDialog.hide();
+              };
+
+              $scope.cancel = function() {
+                $mdDialog.cancel();
+              };
+
+              $scope.answer = function(answer) {
+                $mdDialog.hide(answer);
+              };
+            }
+          }
+
           /*============= INITIALIZATION ============*/
           loadImages();
           isSubscribed();
           loadTopSellers();
 
+          vm.categories = mvm.nodes[0].nodes;
 
           $timeout(function() {
             // инициализация карусели производителя

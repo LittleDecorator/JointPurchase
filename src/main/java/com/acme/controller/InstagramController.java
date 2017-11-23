@@ -1,10 +1,10 @@
 package com.acme.controller;
 
-import com.acme.model.dto.InstagramPostDto;
+import com.acme.model.dto.instagram.InstagramPostDto;
 import com.acme.service.InstagramService;
 import java.util.Arrays;
 import java.util.List;
-import org.assertj.core.util.Lists;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,27 +23,12 @@ import java.io.IOException;
 public class InstagramController {
 
     @Autowired
-    InstagramService instagramService;
+    private InstagramService instagramService;
 
-    ///**
-    // * загрузка последних своих публикаций
-    // */
-    //@RequestMapping(method = RequestMethod.POST, value = "/recent/self")
-    //public void uploadRecentSelf() throws IOException {
-    //    String accessToken = "1790249622.d721e87.87db8e7f779244edb7e47f52e65ec424";
-    //    instagramService.uploadRecent("1790249622", accessToken);
-    //}
-    //
-    //@RequestMapping(method = RequestMethod.POST, value = "/self")
-    //public void uploadSelf() throws IOException {
-    //    String accessToken = "1790249622.d721e87.87db8e7f779244edb7e47f52e65ec424";
-    //    instagramService.uploadSelf(accessToken);
-    //}
-    //
-    //@RequestMapping(method = RequestMethod.POST, value = "/most")
-    //public void uploadMost() throws IOException {
-    //    instagramService.getMostByTag("grimmstory","nina210313", "grimmstory");
-    //}
+    @RequestMapping(method = RequestMethod.POST, value = "/most")
+    public void uploadMost() throws IOException {
+        instagramService.fetchByTag("grimmstory","nina210313", "grimmstory");
+    }
 
     /**
      * Получаем список постов
@@ -53,6 +38,16 @@ public class InstagramController {
     @RequestMapping(method = RequestMethod.GET)
     public List<InstagramPostDto> getPosts(@RequestParam(value = "all", required = false, defaultValue = "false") boolean all) throws IOException {
         return instagramService.getPosts(all);
+    }
+
+    /**
+     *
+     * @param contentId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/post")
+    public Map<String, Object> getPostByContentId(@RequestParam("contentId") String contentId){
+        return instagramService.getPostByContentId(contentId);
     }
 
     /**

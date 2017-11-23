@@ -1,4 +1,4 @@
-package com.acme.model.dto;
+package com.acme.model.dto.instagram;
 
 import java.util.List;
 

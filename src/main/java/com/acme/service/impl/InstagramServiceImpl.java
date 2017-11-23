@@ -4,18 +4,17 @@ import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Content;
 import com.acme.model.InstagramPost;
 import com.acme.model.InstagramPostContent;
-import com.acme.model.dto.InstagramPostDto;
+import com.acme.model.dto.instagram.InstagramPostDto;
 import com.acme.model.InstagramUser;
+import com.acme.model.dto.converter.InstagramConverter;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.InstagramPostContentRepository;
 import com.acme.repository.InstagramPostRepository;
 import com.acme.repository.InstagramUserRepository;
 import com.acme.service.ImageService;
 import com.acme.service.InstagramService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.util.Lists;
+import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,12 +29,9 @@ import org.brunocvcunha.instagram4j.requests.InstagramTagFeedRequest;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedItem;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramFeedResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,85 +58,6 @@ public class InstagramServiceImpl implements InstagramService {
     ImageService imageService;
 
 
-    @Deprecated
-    public void uploadRecent(String userId, String accessToken) throws IOException {
-        InstagramUser user = userRepository.findOneByoriginId(userId);
-        List<InstagramPostDto> posts = getRecent(userId, accessToken);
-        InstagramPost post;
-        Content content;
-        InstagramPostContent postContent;
-
-        for(InstagramPostDto dto : posts){
-            // создаем пост
-            post = new InstagramPost();
-            post.setOriginId(dto.getOriginId());
-            post.setContent(dto.getCaption());
-            post.setTags(dto.getTags());
-            post.setCreateTime(dto.getCreatedTime());
-            post.setExternalUrl(dto.getExternalUrl());
-            post.setInstagramUserId(user.getId());
-            post.setLikesCount(dto.getLikesCount());
-            post.setUserHasLiked(dto.isUserHasLiked());
-            post = postRepository.save(post);
-
-            // загружаем изображения
-            for(String url : dto.getContentUrls()){
-                content = new Content();
-                content.setInstagram(true);
-                String type = url.substring(url.lastIndexOf('.')+1);
-                content.setType(type);
-                String mime = "image/"+type;
-                content.setMime(mime);
-                content.setDefault(false);
-                content.setProfile(false);
-                content.setFileName("unknown."+type);
-                content.setContent(Base64BytesSerializer.serialize(imageService.downloadImage(url,type)));
-                content = contentRepository.save(content);
-
-                // добавим связь
-                postContent = new InstagramPostContent();
-                postContent.setPostId(post.getId());
-                postContent.setContentId(content.getId());
-                postContentRepository.save(postContent);
-            }
-        }
-    }
-
-    @Deprecated
-    @Override
-    public InstagramUser getSelf(String accessToken) {
-        RestTemplate template = new RestTemplate();
-        String selfUrl = "https://api.instagram.com/v1/users/self/?access_token=" + accessToken;
-        //TODO: переделать парсинг пользователя
-//        return template.getForObject(selfUrl, InstagramUser.class);
-        ResponseEntity<String> response = template.getForEntity(selfUrl, String.class);
-        return parseUser(response.getBody());
-    }
-
-    @Override
-    public InstagramUser getUser(String userId, String accessToken) {
-        return null;
-    }
-
-    @Override
-    public List<InstagramPostDto> getRecent(String userId, String accessToken) {
-        RestTemplate template = new RestTemplate();
-        String recentUrl = "https://api.instagram.com/v1/users/"+userId+"/media/recent/?access_token="+accessToken;
-        ResponseEntity<String> response = template.getForEntity(recentUrl, String.class);
-        return parseRecent(response.getBody());
-    }
-
-    @Deprecated
-    public void uploadSelf(String accessToken){
-        uploadUser("1790249622", accessToken);
-    }
-
-    @Deprecated
-    public void uploadUser(String userId, String accessToken){
-        InstagramUser user = getSelf(accessToken);
-        userRepository.save(user);
-    }
-
     /**
      * Используем другую библиотеку для получения изображений
      * @param user
@@ -149,19 +66,24 @@ public class InstagramServiceImpl implements InstagramService {
      * @throws IOException
      */
     @Override
-    public void getMostByTag(String user, String password, String tag) throws IOException {
+    public void fetchByTag(String user, String password, String tag) throws IOException {
         Instagram4j instagram = Instagram4j.builder().username(user).password(password).build();
         instagram.setup();
         instagram.login();
 
-        /* получим изображения */
+        // получим ответы от робота
         InstagramFeedResult tagFeed = instagram.sendRequest(new InstagramTagFeedRequest(tag));
         List<InstagramFeedItem> items = tagFeed.getItems();
         items.addAll(tagFeed.getRanked_items());
+
+        // отсортируем по популярности и возьмем первые 30
         List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).limit(30).collect(Collectors.toList());
 
         // получим мапу уже выгруженых постов
         Map<String, InstagramPost> map = postRepository.findAll().stream().collect(Collectors.toMap(InstagramPost::getOriginId, Function.identity()));
+
+        // получим мапу существующих пользователей
+        Map<String, InstagramUser> userMap = userRepository.findAll().stream().collect(Collectors.toMap(InstagramUser::getOriginId, Function.identity()));
 
         InstagramPost post;
         Content content;
@@ -169,7 +91,7 @@ public class InstagramServiceImpl implements InstagramService {
 
         // один ответ содержит только одно изображение (пока)
         for (InstagramFeedItem dto : result) {
-            // проверяем если у нас такой пост
+            // проверяем есть ли у нас такой пост
             post = map.get(dto.getId());
 
             boolean isNewPost = post == null;
@@ -179,6 +101,7 @@ public class InstagramServiceImpl implements InstagramService {
 
             // если новый, то создадим и наполним
             if(isNewPost){
+
                 // создаем пост
                 post = new InstagramPost();
                 post.setOriginId(dto.getId());
@@ -198,16 +121,25 @@ public class InstagramServiceImpl implements InstagramService {
                 // внешние ссылки на изображения
                 String rawUrl = String.valueOf(((Map)((ArrayList)dto.getImage_versions2().values().iterator().next()).get(0)).get("url"));
                 post.setExternalUrl(rawUrl.substring(0, rawUrl.indexOf('?')));
+
+            }
+
+            // заполним информацию о владальце поста, только если его небыло раньше
+            if(Strings.isNullOrEmpty(post.getInstagramUserId()) && userMap.get(String.valueOf(dto.getUser().getPk())) == null){
+                String userId = parseUser(dto.getUser());
+                post.setInstagramUserId(userId);
             }
 
             // кол-во отметок нравиться
             post.setLikesCount(dto.getLike_count());
             // признак того что пост нравиться
             post.setUserHasLiked(dto.isHas_liked());
+
             // сохраняем
             post = postRepository.save(post);
 
             if(isNewPost){
+
                 // загружаем изображения
                 content = new Content();
                 content.setInstagram(true);
@@ -237,23 +169,24 @@ public class InstagramServiceImpl implements InstagramService {
         return posts.stream()
             .map(post -> {
                 List<InstagramPostContent> postContents = postContentRepository.findAllByPostId(post.getId());
-                InstagramPostDto dto = new InstagramPostDto();
-                dto.setId(post.getId());
-                dto.setTags(post.getTags());
-                dto.setOriginId(post.getOriginId());
-                String content = clearTags(post.getContent());
-                String newContent = content.length() > 200 ? content.substring(0, 200) + " ..." : content;
-                dto.setCaption(newContent);
-                dto.setLikesCount(post.getLikesCount());
-                dto.setCreatedTime(post.getCreateTime().getTime());
-                dto.setExternalUrl(post.getExternalUrl());
-                dto.setWrongPost(post.isWrongPost());
-                dto.setShowOnMain(post.isShowOnMain());
-                List<String> urls = postContents.stream().map(link -> "media/image/gallery/" + link.getContentId()).collect(Collectors.toList());
-                dto.setContentUrls(urls);
-                return dto;
+                return InstagramConverter.postToDto(post, postContents);
             })
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getPostByContentId(String contentId) {
+        Map<String, Object> result = Maps.newHashMap();
+        // получим связь поста с изображением
+        InstagramPostContent postContent = postContentRepository.findOne(contentId);
+        // получим пост
+        InstagramPost post = postRepository.findOne(postContent.getPostId());
+        // получим пользователя
+        InstagramUser user = userRepository.findOne(post.getInstagramUserId());
+
+        result.put("post", post);
+        result.put("user", user);
+        return result;
     }
 
     @Override
@@ -276,96 +209,38 @@ public class InstagramServiceImpl implements InstagramService {
     }
 
     /**
-     * Парсинг последних публикаций
-     * @param input
+     *
+     * @param dtoUser
      * @return
+     * @throws IOException
      */
-    @Deprecated
-    public List<InstagramPostDto> parseRecent(String input){
-        List<InstagramPostDto> result = Lists.newArrayList();
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            JsonNode data = mapper.readTree(input).get("data");
-            if (data.isArray()) {
-                for (final JsonNode node : data) {
-                    result.add(parsePost(node));
-                }
-            }
-            result.removeAll(Collections.singleton(null));
-        } catch (Exception ex){
-            System.out.println("Не удалось разобрать ответ!");
-            ex.printStackTrace();
-        }
-        return result;
-    }
+    private String parseUser(org.brunocvcunha.instagram4j.requests.payload.InstagramUser dtoUser) throws IOException {
+        InstagramUser instagramUser;
 
-    /**
-     * Парсинг публикации
-     * @param data
-     * @return
-     */
-    @Deprecated
-    private InstagramPostDto parsePost(JsonNode data){
-        InstagramPostDto result = new InstagramPostDto();
-        List<String> images = Lists.newArrayList();
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            String type = data.at("/type").asText();
-            if(type.contentEquals("video")) return null;
-            // получим оригинальный id
-            result.setOriginId(data.at("/id").asText());
-            result.setExternalUrl(data.at("/link").asText());
-            result.setCreatedTime(data.at("/created_time").asLong());
-            result.setCaption(data.at("/caption/text").asText());
-            result.setUserHasLiked(data.at("/user_has_liked").asBoolean());
-            result.setLikesCount(data.at("/likes/count").asInt());
-            result.setTags(mapper.readerFor(new TypeReference<List<String>>(){}).readValue(data.at("/tags")));
-            switch(type) {
-                case "carousel" : {
-                    for(JsonNode imageInfo : data.at("/carousel_media").findValues("standard_resolution")){
-                        images.add(imageInfo.at("/url").asText());
-                    }
-                    break;
-                }
-                case "image" : {
-                    images.add(data.at("/images").findValue("standard_resolution").at("/url").asText());
-                    break;
-                }
-            }
-            result.setContentUrls(images);
-        } catch (Exception ex){
-            System.out.println("Не удалось разобрать узел ответа!");
-            ex.printStackTrace();
-        }
-        return result;
-    }
+        // сохраним фото профиля
+        Content instagramUserProfileImage = new Content();
+        instagramUserProfileImage.setInstagram(true);
+        String type = dtoUser.getProfile_pic_url().substring(dtoUser.getProfile_pic_url().lastIndexOf('.')+1);
+        instagramUserProfileImage.setType(type);
+        String mime = "image/"+type;
+        instagramUserProfileImage.setMime(mime);
+        instagramUserProfileImage.setDefault(false);
+        instagramUserProfileImage.setProfile(true);
+        instagramUserProfileImage.setFileName("unknown_profile."+type);
+        instagramUserProfileImage.setContent(Base64BytesSerializer.serialize(imageService.downloadImage(dtoUser.getProfile_pic_url(), type)));
+        instagramUserProfileImage = contentRepository.save(instagramUserProfileImage);
 
-    /**
-     * Парсинг пользователя
-     * @param input
-     * @return
-     */
-    @Deprecated
-    private InstagramUser parseUser(String input){
-        InstagramUser result = new InstagramUser();
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            JsonNode data = mapper.readTree(input).get("data");
-            String type = data.at("/type").asText();
-            if(type.contentEquals("video")) return null;
-            // получим оригинальный id
-            result.setOriginId(data.at("/id").asText());
-            result.setUsername(data.at("/username").asText());
-            result.setFullName(data.at("/full_name").asText());
-            result.setBio(data.at("/bio").asText());
-            result.setWebsite(data.at("/website").asText());
-            result.setFollows(data.at("/counts/follows").asInt());
-            result.setFollowedBy(data.at("/counts/followed_by").asInt());
-        } catch (Exception ex){
-            System.out.println("Failed");
-            ex.printStackTrace();
-        }
-        return result;
+        // создадим пользователя
+        instagramUser = new InstagramUser();
+        instagramUser.setOriginId(String.valueOf(dtoUser.getPk()));
+        instagramUser.setUsername(dtoUser.getUsername());
+        instagramUser.setFullName(dtoUser.getFull_name());
+        instagramUser.setBio(dtoUser.getBiography());
+        instagramUser.setProfilePictureId(instagramUserProfileImage.getId());
+        instagramUser.setFollowedBy(dtoUser.getFollowing_count());
+        instagramUser.setFollows(dtoUser.getFollower_count());
+
+        return userRepository.save(instagramUser).getId();
     }
 
     /**
@@ -388,7 +263,7 @@ public class InstagramServiceImpl implements InstagramService {
      * @param text
      * @return
      */
-    private String clearTags(String text){
+    private static String clearTags(String text){
         String[] arr = text.split("\\s+|#\\w+");
         for(int i=1;i<arr.length ; i++){
             if(Strings.isNullOrEmpty(arr[i]) || arr[i].startsWith("#")){
@@ -407,4 +282,6 @@ public class InstagramServiceImpl implements InstagramService {
 
         return String.join(" ", arr);
     }
+
+
 }
