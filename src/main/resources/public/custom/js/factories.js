@@ -340,6 +340,9 @@
                       put:{method:'PUT',isArray:true},
                       delete:{method:'DELETE',isArray:false}
                     }),
+                    fullPosts: $resource('/api/instagram/visible',{},{
+                      all:{method:"GET", isArray:true}
+                    })
                 },
                 report: {
                     items: $resource('/api/report/items/:fileName',{fileName:'@fileName'},{

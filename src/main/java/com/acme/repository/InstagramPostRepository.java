@@ -12,4 +12,6 @@ public interface InstagramPostRepository extends JpaRepository<InstagramPost, St
 
     List<InstagramPost> findAllByWrongPostFalse();
 
+    List<InstagramPost> findAllByShowOnMainIsTrue();
+
 }

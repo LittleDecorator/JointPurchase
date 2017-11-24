@@ -35,19 +35,14 @@ public class InstagramController {
      * @return
      * @throws IOException
      */
+    @RequestMapping(method = RequestMethod.GET, value = "/visible")
+    public List<Map<String, Object>> getFullPosts() throws IOException {
+        return instagramService.getFullPosts();
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<InstagramPostDto> getPosts(@RequestParam(value = "all", required = false, defaultValue = "false") boolean all) throws IOException {
         return instagramService.getPosts(all);
-    }
-
-    /**
-     *
-     * @param contentId
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/post")
-    public Map<String, Object> getPostByContentId(@RequestParam("contentId") String contentId){
-        return instagramService.getPostByContentId(contentId);
     }
 
     /**

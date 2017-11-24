@@ -23,7 +23,7 @@
           vm.linkClick = linkClick;
           vm.menuClick = menuClick;
           vm.subscribe = subscribe;
-          vm.loadImages = loadImages;
+          vm.loadPosts = loadPosts;
           vm.scrollDown = scrollDown;
           vm.isSubscribed = isSubscribed;
           vm.unsubscribe = unsubscribe;
@@ -47,7 +47,7 @@
           vm.menus = [{name: 'Каталог', ref: 'catalog'}, {name: 'О нас', ref: 'about'}, {name: 'Контакты', ref: 'contact'}, {name: 'Доставка', ref: 'delivery'}, {name: 'Акции', ref: 'stock'}];
           vm.subscriber = {id: null, email: null, subjectId: null, active: true, dateAdd: null};
           vm.forms = {};
-          vm.images = [];
+          vm.posts = [];
           vm.categories = [];
           vm.topSellers = [];
 
@@ -140,9 +140,9 @@
           /**
            *
            */
-          function loadImages() {
+          function loadPosts() {
             // TODO: Выключим, пока не придумаем легкий запрос для получения instagram изображений
-            vm.images = dataResources.instagram.image.all();
+            vm.posts = dataResources.instagram.fullPosts.all();
           }
 
           /**
@@ -232,42 +232,77 @@
           /**
            *
            */
-          function showPost(event){
+          function showPost(post, event, idx){
             $mdDialog.show({
               controller: DialogController,
               templateUrl: 'pages/modal/instagramModal.html',
               parent: angular.element(document.body),
               targetEvent: event,
               clickOutsideToClose:true,
+              onComplete: afterShowAnimation,
+              onRemoving: beforeCloseAnimation,
               fullscreen: true, // Only for -xs, -sm breakpoints.
-              locals: { employee: $scope.userName }
+              locals: {
+                post: post,
+                posts: vm.posts,
+                index: idx
+              }
             })
                 .then(function(answer) {
-                  console.log('You said the information was "' + answer + '".');
+                  // console.log('You said the information was "' + answer + '".');
                 }, function() {
-                  console.log('You cancelled the dialog.');
+                  // console.log('You cancelled the dialog.');
                 });
 
-            function DialogController($scope, $mdDialog) {
+            function afterShowAnimation(scope, element, options) {
+              element.find('.dialog-controls').show();
+            }
 
-              console.log($mdDialog)
+            function beforeCloseAnimation(element, removePromise) {
+              element.find('.dialog-controls').hide();
+            }
+
+            function DialogController($scope, $mdDialog, post, posts, index) {
+              $scope.post = post;
+              $scope.modalProceed = true;
+              var currentIdx = index;
 
               $scope.hide = function() {
                 $mdDialog.hide();
               };
 
-              $scope.cancel = function() {
-                $mdDialog.cancel();
+              $scope.next = function() {
+                if(currentIdx === posts.length - 1){
+                  currentIdx = 0;
+                } else {
+                  currentIdx++;
+                }
+                $scope.post = posts[currentIdx];
+                setPhoto();
               };
 
-              $scope.answer = function(answer) {
-                $mdDialog.hide(answer);
+              $scope.priv = function() {
+                if(currentIdx === 0){
+                  currentIdx = posts.length - 1;
+                } else {
+                  currentIdx--;
+                }
+                $scope.post = posts[currentIdx];
+                setPhoto();
               };
+
+              function setPhoto(){
+                var url = $scope.post.post.contentUrls[0];
+                $scope.photoUrl = 'media/image/view/' + url.substr(url.lastIndexOf("/")+1);
+              }
+
+              setPhoto();
+
             }
           }
 
           /*============= INITIALIZATION ============*/
-          loadImages();
+          loadPosts();
           isSubscribed();
           loadTopSellers();
 

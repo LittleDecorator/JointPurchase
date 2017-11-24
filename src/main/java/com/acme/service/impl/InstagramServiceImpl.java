@@ -124,10 +124,14 @@ public class InstagramServiceImpl implements InstagramService {
 
             }
 
+            //найдем пользователя и создадим, если его нет у нас
+            InstagramUser instagramUser = userMap.get(String.valueOf(dto.getUser().getPk()));
+            String instagramUserId = instagramUser == null ? parseUser(dto.getUser()) : instagramUser.getId();
+
+
             // заполним информацию о владальце поста, только если его небыло раньше
-            if(Strings.isNullOrEmpty(post.getInstagramUserId()) && userMap.get(String.valueOf(dto.getUser().getPk())) == null){
-                String userId = parseUser(dto.getUser());
-                post.setInstagramUserId(userId);
+            if(Strings.isNullOrEmpty(post.getInstagramUserId())){
+                post.setInstagramUserId(instagramUserId);
             }
 
             // кол-во отметок нравиться
@@ -164,6 +168,22 @@ public class InstagramServiceImpl implements InstagramService {
     }
 
     @Override
+    public List<Map<String, Object>> getFullPosts() {
+        List<InstagramPost> posts = postRepository.findAllByShowOnMainIsTrue();
+        Map<String, InstagramUser> users = Maps.uniqueIndex(userRepository.findAll(), InstagramUser::getId);
+        return posts.stream()
+            .map(post -> {
+                List<InstagramPostContent> postContents = postContentRepository.findAllByPostId(post.getId());
+                InstagramPostDto postDto = InstagramConverter.postToDto(post, postContents);
+                Map<String, Object> result = Maps.newHashMap();
+                result.put("post", postDto);
+                result.put("user", InstagramConverter.userToDto(users.get(post.getInstagramUserId())));
+                return result;
+            })
+            .collect(Collectors.toList());
+    }
+
+    @Override
     public List<InstagramPostDto> getPosts(boolean all) {
         List<InstagramPost> posts = all ? postRepository.findAll() : postRepository.findAllByWrongPostFalse();
         return posts.stream()
@@ -174,20 +194,6 @@ public class InstagramServiceImpl implements InstagramService {
             .collect(Collectors.toList());
     }
 
-    @Override
-    public Map<String, Object> getPostByContentId(String contentId) {
-        Map<String, Object> result = Maps.newHashMap();
-        // получим связь поста с изображением
-        InstagramPostContent postContent = postContentRepository.findOne(contentId);
-        // получим пост
-        InstagramPost post = postRepository.findOne(postContent.getPostId());
-        // получим пользователя
-        InstagramUser user = userRepository.findOne(post.getInstagramUserId());
-
-        result.put("post", post);
-        result.put("user", user);
-        return result;
-    }
 
     @Override
     public void deletePost(String id) {

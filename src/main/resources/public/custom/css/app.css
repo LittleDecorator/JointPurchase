@@ -631,3 +631,7 @@ md-toast .md-toast-content {
         max-height: 100%;
     }
 }
+
+md-backdrop.md-opaque {
+    opacity: 0.9!important;
+}

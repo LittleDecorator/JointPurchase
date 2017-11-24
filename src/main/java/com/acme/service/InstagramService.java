@@ -27,9 +27,9 @@ public interface InstagramService {
 
     void fetchByTag(String user, String password, String tag) throws IOException;
 
-    List<InstagramPostDto> getPosts(boolean all);
+    List<Map<String, Object>> getFullPosts();
 
-    Map<String, Object> getPostByContentId(String contentId);
+    List<InstagramPostDto> getPosts(boolean all);
 
     void updatePost(List<InstagramPostDto> posts);
 

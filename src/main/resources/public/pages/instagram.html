@@ -13,7 +13,7 @@
       <div>
         <md-card-content style="min-height: 165px">
           <p>
-            {{::post.caption}}
+            {{::post.caption | cut:true:200:' ...'}}
           </p>
         </md-card-content>
         <md-card-actions layout="column">

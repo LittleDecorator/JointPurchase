@@ -22,8 +22,8 @@ public class InstagramConverter {
         dto.setTags(post.getTags());
         dto.setOriginId(post.getOriginId());
         String content = post.getContent();
-        String newContent = content.length() > 200 ? content.substring(0, 200) + " ..." : content;
-        dto.setCaption(newContent);
+        //String newContent = content.length() > 200 ? content.substring(0, 200) + " ..." : content;
+        dto.setCaption(content);
         dto.setLikesCount(post.getLikesCount());
         dto.setCreatedTime(post.getCreateTime().getTime());
         dto.setExternalUrl(post.getExternalUrl());
