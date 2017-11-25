@@ -7,6 +7,7 @@ public class CatalogFilter {
 
 	private String company;
 	private String category;
+	private String subcategory;
 	// необходим для проверки вхождения результирующих товаров в список желаемого
 	private String clientEmail;
 	private int limit;
@@ -50,6 +51,14 @@ public class CatalogFilter {
 
 	public void setClientEmail(String clientEmail) {
 		this.clientEmail = clientEmail;
+	}
+
+	public String getSubcategory() {
+		return subcategory;
+	}
+
+	public void setSubcategory(String subcategory) {
+		this.subcategory = subcategory;
 	}
 
 	@Override

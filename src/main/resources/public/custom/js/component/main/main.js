@@ -254,6 +254,15 @@
 					 * явный logout через меню
 					 */
 					function logout() {
+
+						if($mdSidenav('left').isOpen() && mvm.width < 1530){
+              $mdSidenav('left').close();
+            }
+            if($mdSidenav("menu").isOpen()){
+              $mdSidenav("menu").close();
+              $('.subPanel').removeClass('isOpen');
+            }
+
 						clearCookieInfo();
 						store.remove('cart');
 						store.remove('wishListEmail');
@@ -647,7 +656,6 @@
 											//todo: нужно сделать его больше размером
 											$mdToast.show($rootScope.toast.textContent('Добро пожаловать, '+ $rootScope.currentUser.name).theme('success'));
 										});
-
 										/* store expired token */
 										localStorage.setItem('token', token);
 										//set current user promises

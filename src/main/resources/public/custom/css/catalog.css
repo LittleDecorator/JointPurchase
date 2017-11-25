@@ -30,9 +30,9 @@
     md-card-actions span.md-headline {
         font-size: 1.2rem;
         text-align: center;
-        padding-bottom: 5px;
+        /*padding-bottom: 5px;*/
         width: 90%;
-        min-height: 70px;
+        /*min-height: 70px;*/
         display: flex;
         align-items: center;
         align-content: center;
@@ -103,6 +103,7 @@
         left: 0;
         right: 0;
         bottom: 0;
+        max-width: 280px;
     }
 
     div#catalog md-card._md > div.card-image {
@@ -117,10 +118,10 @@
     md-card-actions span.md-headline {
         font-size: 1rem;
         text-align: center;
-        padding-bottom: 5px;
+        /*padding-bottom: 5px;*/
 
-        width: 75%;
-        min-height: 70px;
+        width: 95%;
+        /*min-height: 70px;*/
         display: flex;
         align-items: center;
         align-content: center;

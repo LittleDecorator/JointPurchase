@@ -48,10 +48,10 @@
                 function init() {
                     // выбранный узел бокового меню
                     if (node) {
-                        console.log(node)
                         // promise получение подкатегорий
                         var categoryPromise = null;
                         var companyPromise = null;
+
                         // сохраненый фильтр
                         var stashedFilter = localStorage.getItem($state.current.name);
                         if (stashedFilter && stashedFilter !== "undefined") {
@@ -78,7 +78,6 @@
                             // получить всех производителей для подкатегорий
                             companyPromise = dataResources.categoryChildrenCompanyMap.get({id: node.id});
                         } else {
-                            console.log("Производитель");
                             // если выбранный узел относится к Производителям
                             vm.searchFilter.company = node.id;
                             // получим все категории для данного производителя
@@ -141,7 +140,7 @@
                             if (rect.right > docWidth) {
                                 $('.md-virtual-repeat-scroller').animate({scrollLeft: $(target).offset().left}, 900);
                             }
-                        }, 100)
+                        }, 200)
                     }
                 }
 
@@ -187,75 +186,76 @@
                                 vm.items = [];
                             }
                             if ($stateParams.type === 'category') {
-                                var commonGroups = [];
-                                var tmpItems = [];
-                                var commonGroup = null;
+                                // var commonGroups = [];
+                                // var tmpItems = [];
+                                // var commonGroup = null;
                                 if (data.length === 1) {
                                     addItem(data[0], helpers.findInArrayById(vm.categories, vm.confirmedFilter.category));
                                 } else {
                                     data.forEach(function (e, i) {
-                                        if (typeof(isGrouping) !== "undefined" && !isGrouping) {
+                                        // if (typeof(isGrouping) !== "undefined" && !isGrouping) {
                                             var category = helpers.findInArrayById(vm.categories, vm.confirmedFilter.category);
                                             addItem(e, category);
-                                        } else {
-                                            // если общая группа уже определена, то...
-                                            if (commonGroup) {
-                                                // проверим совпадают ли группы нового товара с общими
-                                                var matched = e.categories.filter(function (obj) {
-                                                    return obj.id === commonGroup.id;
-                                                });
-                                                // если совпадают, то просто добавим товар
-                                                if (matched.length > 0) {
-                                                    addItem(e, commonGroup);
-                                                } else {
-                                                    // если не совпал, то...
-                                                    // иначе новый товар
-                                                    tmpItems = [];
-                                                    tmpItems.push(e);
-                                                    commonGroups = e.categories;
-                                                    commonGroup = null;
-                                                }
-                                            } else {
-                                                // если общая группа не определена
-                                                // добавим товар во временную коллекцию
-                                                tmpItems.push(e);
-                                                // если товар уже выбирался раньше, то...
-                                                if (commonGroups.length > 0) {
-                                                    // если определилась одна общая группа, то...
-                                                    if (commonGroups.length === 1 && i > 0) {
-                                                        commonGroup = commonGroups[0];
-                                                        // из временной коллекции добавим товары
-                                                        tmpItems.forEach(function (tmp) {
-                                                            addItem(tmp, commonGroup)
-                                                        });
-                                                        // очистим временное
-                                                        tmpItems = [];
-                                                        commonGroups = [];
-                                                    } else {
-                                                        // если общей группы пока нет, то пытаемся его найти через новые группы
-                                                        commonGroups = commonGroups.filter(function (obj) {
-                                                            return e.categories.some(function (o2) {
-                                                                return obj.id === o2.id;
-                                                            });
-                                                        });
-                                                        // если нет общих групп, значит новая
-                                                        // если группа единична, то добавим
-                                                        if (commonGroups.length === 0) {
-                                                            if (e.categories.length === 1) {
-                                                                // проверим может у нас единичный товар
-                                                                addItem(tmpItems[0], e.categories[0])
-                                                            } else {
-                                                                // удалим из списка
-                                                                tmpItems = [];
-                                                            }
-                                                        }
-                                                    }
-                                                } else {
-                                                    // инициализация при первом товаре
-                                                    commonGroups = e.categories;
-                                                }
-                                            }
-                                        }
+                                        // } else {
+                                        //     console.log(commonGroup)
+                                        //     // если общая группа уже определена, то...
+                                        //     if (commonGroup) {
+                                        //         // проверим совпадают ли группы нового товара с общими
+                                        //         var matched = e.categories.filter(function (obj) {
+                                        //             return obj.id === commonGroup.id;
+                                        //         });
+                                        //         // если совпадают, то просто добавим товар
+                                        //         if (matched.length > 0) {
+                                        //             addItem(e, commonGroup);
+                                        //         } else {
+                                        //             // если не совпал, то...
+                                        //             // иначе новый товар
+                                        //             tmpItems = [];
+                                        //             tmpItems.push(e);
+                                        //             commonGroups = e.categories;
+                                        //             commonGroup = null;
+                                        //         }
+                                        //     } else {
+                                        //         // если общая группа не определена
+                                        //         // добавим товар во временную коллекцию
+                                        //         tmpItems.push(e);
+                                        //         // если товар уже выбирался раньше, то...
+                                        //         if (commonGroups.length > 0) {
+                                        //             // если определилась одна общая группа, то...
+                                        //             if (commonGroups.length === 1 && i > 0) {
+                                        //                 commonGroup = commonGroups[0];
+                                        //                 // из временной коллекции добавим товары
+                                        //                 tmpItems.forEach(function (tmp) {
+                                        //                     addItem(tmp, commonGroup)
+                                        //                 });
+                                        //                 // очистим временное
+                                        //                 tmpItems = [];
+                                        //                 commonGroups = [];
+                                        //             } else {
+                                        //                 // если общей группы пока нет, то пытаемся его найти через новые группы
+                                        //                 commonGroups = commonGroups.filter(function (obj) {
+                                        //                     return e.categories.some(function (o2) {
+                                        //                         return obj.id === o2.id;
+                                        //                     });
+                                        //                 });
+                                        //                 // если нет общих групп, значит новая
+                                        //                 // если группа единична, то добавим
+                                        //                 if (commonGroups.length === 0) {
+                                        //                     if (e.categories.length === 1) {
+                                        //                         // проверим может у нас единичный товар
+                                        //                         addItem(tmpItems[0], e.categories[0])
+                                        //                     } else {
+                                        //                         // удалим из списка
+                                        //                         tmpItems = [];
+                                        //                     }
+                                        //                 }
+                                        //             }
+                                        //         } else {
+                                        //             // инициализация при первом товаре
+                                        //             commonGroups = e.categories;
+                                        //         }
+                                        //     }
+                                        // }
                                     });
 
                                     // пройдем по выбранным группам, если первый товар в группе не в наличие, то передвинем группу ниже в списке
@@ -307,7 +307,7 @@
                     vm.searchFilter.subcategory = group.id;
                     vm.searchFilter.offset = 0;
                     vm.confirmedFilter = angular.copy(vm.searchFilter);
-                    vm.confirmedFilter.category = group.id;
+                    // vm.confirmedFilter.category = group.id;
                     localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
                     vm.stopLoad = false;
                     loadData(true, group.isDefault);
@@ -399,7 +399,6 @@
                 * Слушатель нажатия кнопки НАЗАД
                */
               $scope.$on('locBack', function () {
-                  console.log('on back in catalog');
                 mvm.showDetail = false;
                 vm.detailLock = false;
               });
@@ -478,7 +477,6 @@
                 }
 
                 $scope.$on('onFilter', function () {
-                    console.log('onfilter',eventService.data)
                     var node = eventService.data;
                     var type;
                     // определяет тип выбранного узла

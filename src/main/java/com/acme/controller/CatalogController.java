@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.model.Catalog;
 import com.acme.model.Item;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.service.CatalogService;
@@ -26,7 +27,7 @@ public class CatalogController {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST)
-    public List<Item> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
+    public List<Catalog> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
         return catalogService.getCatalog(filter);
     }
 

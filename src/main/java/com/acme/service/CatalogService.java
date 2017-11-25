@@ -1,5 +1,6 @@
 package com.acme.service;
 
+import com.acme.model.Catalog;
 import com.acme.model.Item;
 import com.acme.model.filter.CatalogFilter;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface CatalogService {
 
-    List<Item> getCatalog(CatalogFilter filter);
+    List<Catalog> getCatalog(CatalogFilter filter);
 
     List<Item> getBestsellers();
 

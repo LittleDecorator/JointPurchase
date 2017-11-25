@@ -9,6 +9,7 @@ import com.acme.repository.SubscriberRepository;
 import com.acme.repository.specification.SubscriberSpecification;
 import com.acme.service.SubscriberService;
 import com.google.common.collect.Lists;
+import java.util.Date;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,9 @@ public class SubscriberServiceImpl implements SubscriberService {
             Subject subject = subjectRepository.findByEmail(subscriber.getEmail());
             if(subject!=null){
                 subscriber.setSubjectId(subject.getId());
+            }
+            if(subscriber.getDateAdd() == null){
+                subscriber.setDateAdd(new Date());
             }
             result = subscriberRepository.save(subscriber);
         }

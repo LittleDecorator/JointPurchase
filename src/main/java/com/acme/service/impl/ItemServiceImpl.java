@@ -1,11 +1,12 @@
 package com.acme.service.impl;
 
+import com.acme.model.Catalog;
 import com.acme.model.CategoryItem;
-import com.acme.model.Company;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.OrderItem;
+import com.acme.model.Product;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.CatalogFilter;
@@ -44,6 +45,9 @@ public class ItemServiceImpl implements ItemService {
     ItemRepository itemRepository;
 
     @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
     OrderItemRepository orderItemRepository;
 
     @Autowired
@@ -68,8 +72,29 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getAll(CatalogFilter filter) {
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.ASC, "status", "name");
+        Sort sort = new Sort(
+            new Sort.Order(Sort.Direction.ASC, "status"),
+            new Sort.Order(Sort.Direction.DESC, "bestseller"),
+            new Sort.Order(Sort.Direction.ASC, "id")
+        );
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), sort);
         return Lists.newArrayList(itemRepository.findAll(CatalogSpecifications.filter(filter), pageable));
+    }
+
+    @Override
+    public List<Catalog> getAllCatalog(CatalogFilter filter) {
+        Sort sort = new Sort(
+            new Sort.Order(Sort.Direction.ASC, "status"),
+            new Sort.Order(Sort.Direction.DESC, "bestseller"),
+            new Sort.Order(Sort.Direction.ASC, "id")
+        );
+        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), sort);
+        return Lists.newArrayList(productRepository.findAll(CatalogSpecifications.filterCatalog(filter), pageable));
+    }
+
+    @Override
+    public List<Item> getAllNative(CatalogFilter filter) {
+        return null;
     }
 
     @Override
@@ -169,16 +194,14 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public void fillItem(Item item, Content defContent) {
+    public void fillItem(Product item, Content defContent) {
         List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
         if (itemContents.isEmpty()) {
             item.setUrl(Constants.PREVIEW_URL + defContent.getId());
         } else {
             item.setItemContents(itemContents);
             Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findAny();
-            if(contentOptional.isPresent()){
-                item.setUrl(Constants.PREVIEW_URL + contentOptional.get().getContentId());
-            }
+            contentOptional.ifPresent(itemContent -> item.setUrl(Constants.PREVIEW_URL + itemContent.getContentId()));
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
     }

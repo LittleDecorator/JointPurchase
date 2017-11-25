@@ -60,7 +60,6 @@
                         formData.append("companyId", $stateParams.id);
 
                         dataResources.companyContent.upload(formData, function(data){
-                            console.log(data)
                             angular.forEach(data, function (image) {
                                 // vm.images.push(image);
                                 uploader.clearQueue();
@@ -137,7 +136,6 @@
                             },100);
                         });
                     } else {
-                        console.log("get")
                         vm.images = imageResource.get();
                     }
                 }

@@ -49,7 +49,7 @@
                                     displayName: displayName,
                                     route: workingState.name
                                 };
-                                if(workingState.data.options){
+                                if(workingState.data !== undefined && workingState.data.options){
                                     bread.options = workingState.data.options();
                                 }
                                 breadcrumbs.push(bread);

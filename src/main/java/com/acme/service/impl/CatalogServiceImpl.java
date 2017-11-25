@@ -2,10 +2,13 @@ package com.acme.service.impl;
 
 import com.acme.constant.Constants;
 import com.acme.elasticsearch.repository.CatalogRepository;
+import com.acme.model.Catalog;
 import com.acme.model.CategoryItem;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
+import com.acme.model.Product;
+import com.acme.model.dto.converter.ItemConverter;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
 import com.acme.repository.specification.CatalogSpecifications;
@@ -64,24 +67,26 @@ public class CatalogServiceImpl implements CatalogService {
     WishlistService wishlistService;
 
     @Override
-    public List<Item> getCatalog(CatalogFilter filter) {
+    public List<Catalog> getCatalog(CatalogFilter filter) {
         // получение изображения используемого по-умолчанию
         Content defContent = contentRepository.findOneByIsDefault(true);
 
         // если в фильтре отсутствует категория, то используем спецификацию
-        List<Item> result = Strings.isNullOrEmpty(filter.getCategory()) ? itemService.getAll(filter) : itemService.getAllByCategory(filter);
+        List<Catalog> result;
+        if(Strings.isNullOrEmpty(filter.getCategory())){
+            result = itemService.getAll(filter).stream().map(ItemConverter::itemToCatalog).collect(Collectors.toList());
+        } else {
+            result = itemService.getAllCatalog(filter);
+        }
 
         if(!Strings.isNullOrEmpty(filter.getClientEmail())){
             List<String> wishedItems = wishlistService.getWishedItems(filter.getClientEmail());
             if(!wishedItems.isEmpty()){
-                result = result.stream().map(item -> {
-                    item.setInWishlist(wishedItems.contains(item.getId()));
-                    return item;
-                }).collect(Collectors.toList());
+                result = result.stream().peek(item -> item.setInWishlist(wishedItems.contains(item.getId()))).collect(Collectors.toList());
             }
         }
 
-        for (Item item : result) {
+        for (Product item : result) {
             itemService.fillItem(item, defContent);
         }
         return result;

@@ -67,7 +67,6 @@
              * @param id
              */
             $scope.itemView = function(name){
-              console.log(name);
                 $state.go("catalog.detail", {itemName: name});
             };
 

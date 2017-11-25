@@ -76,8 +76,8 @@ public class InstagramServiceImpl implements InstagramService {
         List<InstagramFeedItem> items = tagFeed.getItems();
         items.addAll(tagFeed.getRanked_items());
 
-        // отсортируем по популярности и возьмем первые 30
-        List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).limit(30).collect(Collectors.toList());
+        // отсортируем по популярности
+        List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).collect(Collectors.toList());
 
         // получим мапу уже выгруженых постов
         Map<String, InstagramPost> map = postRepository.findAll().stream().collect(Collectors.toMap(InstagramPost::getOriginId, Function.identity()));
@@ -126,7 +126,11 @@ public class InstagramServiceImpl implements InstagramService {
 
             //найдем пользователя и создадим, если его нет у нас
             InstagramUser instagramUser = userMap.get(String.valueOf(dto.getUser().getPk()));
-            String instagramUserId = instagramUser == null ? parseUser(dto.getUser()) : instagramUser.getId();
+            if(instagramUser == null){
+                instagramUser = parseUser(dto.getUser());
+                userMap.put(instagramUser.getOriginId(), instagramUser);
+            }
+            String instagramUserId = instagramUser.getId();
 
 
             // заполним информацию о владальце поста, только если его небыло раньше
@@ -220,7 +224,7 @@ public class InstagramServiceImpl implements InstagramService {
      * @return
      * @throws IOException
      */
-    private String parseUser(org.brunocvcunha.instagram4j.requests.payload.InstagramUser dtoUser) throws IOException {
+    private InstagramUser parseUser(org.brunocvcunha.instagram4j.requests.payload.InstagramUser dtoUser) throws IOException {
         InstagramUser instagramUser;
 
         // сохраним фото профиля
@@ -246,7 +250,7 @@ public class InstagramServiceImpl implements InstagramService {
         instagramUser.setFollowedBy(dtoUser.getFollowing_count());
         instagramUser.setFollows(dtoUser.getFollower_count());
 
-        return userRepository.save(instagramUser).getId();
+        return userRepository.save(instagramUser);
     }
 
     /**

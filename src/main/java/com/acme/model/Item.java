@@ -17,7 +17,7 @@ import java.util.List;
 @Document(indexName = "item-index",type = "item-type")
 @Setting(settingPath = "/elastic/item/settings.json")
 @Mapping(mappingPath = "/elastic/item/mappings.json")
-public class Item implements BaseModel{
+public class Item implements Product{
 
     @Id
     @GeneratedValue(generator = "system-uuid")

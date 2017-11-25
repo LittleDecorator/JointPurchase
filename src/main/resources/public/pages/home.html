@@ -147,6 +147,7 @@
 
 
             <md-button style="position: absolute; left: 0; z-index: 1; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 50px;"
+
                        ng-click="vm.prevBrand()">
                 <md-icon style="color: white; font-size: 5em; line-height: 50px; height: 50px; min-width: 65px;">navigate_before</md-icon>
             </md-button>
@@ -161,7 +162,7 @@
             </div>
 
             <div id="grimms" class="carousel-item white-text" href="#one!">
-                <img src="../custom/img/grimms_colors.jpg">
+                <img src="../custom/img/grimms_blocks.jpg">
                 <div style="background: rgba(0,0,0,0.2); height: 100%; position: absolute; top: 0; width: 100%;">
                     <h2 style="position: absolute; top: 5%; left: 15%; width: 70%;font-size: 3em;">Grimms</h2>
                     <!--<p class="white-text" style="position: absolute; top: 21%; left: 15%; width: 70%;">This is your first panel</p>-->
@@ -241,14 +242,14 @@
     <div id="subscribe" class="section">
         <div layout="column" layout-align="center center">
                 <h2>Подпишись на наши новости!</h2>
-                <md-divider ></md-divider>
+                <md-divider></md-divider>
 
-                <div layout="column" layout-align="center start" class="main-content">
+                <div layout="column" layout-align="center start" class="main-content" style="display: block">
 
                     <span>Заинтересованны в акциях, распродажах, купонах, конкурсах, новых поступлениях и интересных статьях об игрушках?</span>
 
                     <div id="action-container" layout="row" layout-xs="column" layout-align="center start" ng-if="!vm.subscriber.id">
-                        <md-input-container flex-xs flex-gt-xs="60" md-no-float>
+                        <md-input-container flex-xs flex-gt-xs="40" md-no-float style="text-align: start;">
                             <input name="email" placeholder="Email" ng-model="vm.subscriber.email" ng-pattern="/^.+@.+\..+$/" >
                             <div ng-messages="vm.forms.homeForm.email.$error" ng-if="!vm.showHints">
                                 <div ng-message-exp="['pattern']">Не корректный e-mail</div>
@@ -257,9 +258,9 @@
                         <md-button flex-sm="30" flex-gt-sm="30" class="waves-effect waves-green btn btn-100" ng-click="vm.subscribe()" aria-label="subscribe new one">Подписаться</md-button>
                     </div>
 
-                    <div layout="row" layout-xs="column" layout-align="center start" ng-if="vm.subscriber.id" style="margin-top: 25px; width: 100%; padding-top: 10px;">
-                        <span style="text-align: center; width: 100%; margin-bottom: 15px; font-size: 1.1em;">Вы уже подписанны на наши новости!</span>
-                        <md-button class="md-accent waves-effect waves-green btn btn-100" ng-click="vm.unsubscribe()" aria-label="subscribe new one">Отписаться</md-button>
+                    <div id="unsubscribe" layout="row" layout-xs="column" layout-align="center start" ng-if="vm.subscriber.id" style="margin-top: 25px; padding-top: 10px; align-items: baseline;">
+                        <span flex-xs flex-gt-xs="30" style="text-align: center;  margin-bottom: 15px; font-size: 1.1em;">Вы уже подписанны на наши новости!</span>
+                        <md-button flex-sm="30" flex-gt-sm="30" class="md-accent waves-effect waves-green btn btn-100" ng-click="vm.unsubscribe()" aria-label="subscribe new one">Отписаться</md-button>
                     </div>
 
                 </div>
@@ -268,8 +269,8 @@
                     <md-list flex layout="row" layout-align="center center">
                         <md-list-item ng-repeat="link in vm.links">
                             <div class="wrapper" style="">
-                                <md-button class="md-grid-item-content" ng-click="vm.linkClick($index)" aria-label="external transition">
-                                    <md-icon md-svg-src="{{link.icon}}"></md-icon>
+                                <md-button class="md-grid-item-content" ng-click="vm.linkClick($index)" aria-label="external transition" href="{{::link.url}}" target="_blank">
+                                    <md-icon md-svg-src="{{link.icon}}" style="width: 40px; height: 40px"></md-icon>
                                 </md-button>
                             </div>
                         </md-list-item>

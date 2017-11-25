@@ -42,7 +42,7 @@
 
           vm.links = [// { icon: 'mail' },
             // { icon: 'message' },
-            {icon: 'facebook', url: ''}, {icon: 'vk', url: 'https://vk.com/club68247236'}, {icon: 'instagram', url: ''}];
+            {icon: 'facebook', url: ''}, {icon: 'vk', url: 'https://vk.com/club68247236'}, {icon: 'instagram', url: 'http://www.instagram.com/grimmstory'}];
 
           vm.menus = [{name: 'Каталог', ref: 'catalog'}, {name: 'О нас', ref: 'about'}, {name: 'Контакты', ref: 'contact'}, {name: 'Доставка', ref: 'delivery'}, {name: 'Акции', ref: 'stock'}];
           vm.subscriber = {id: null, email: null, subjectId: null, active: true, dateAdd: null};
@@ -235,7 +235,7 @@
           function showPost(post, event, idx){
             $mdDialog.show({
               controller: DialogController,
-              templateUrl: 'pages/modal/instagramModal.html',
+              templateUrl: mvm.width > 600 ? 'pages/modal/instagramModal.html' : 'pages/modal/instagram-modal-sm.html',
               parent: angular.element(document.body),
               targetEvent: event,
               clickOutsideToClose:true,
@@ -306,7 +306,10 @@
           isSubscribed();
           loadTopSellers();
 
-          vm.categories = mvm.nodes[0].nodes;
+
+          $timeout(function(){
+            vm.categories = mvm.nodes[0].nodes;
+          }, 150);
 
           $timeout(function() {
             // инициализация карусели производителя

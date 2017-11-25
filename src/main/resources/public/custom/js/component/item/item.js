@@ -46,7 +46,6 @@
 
                 /* получение данных с сервера */
                 function loadData(isClean){
-                    console.log("load")
                     if(!vm.stopLoad && !vm.detailLock && !busy){
                         busy = true;
 
@@ -127,7 +126,6 @@
 
                 /* переход в галерею */
                 function showGallery(id) {
-                    console.log("showGallery")
                     $state.go("item.detail.gallery", {id: id});
                 }
 
@@ -215,14 +213,12 @@
 
                 // помечаем scope как чистый
                 function afterInclude(){
-                    console.log("afterInclude")
                 }
 
                 /**
                 * Слушатель нажатия кнопки НАЗАД
                 */
                 $scope.$on('locBack', function () {
-                    console.log('list lock back')
                     mvm.showDetail = false;
                     vm.detailLock = false;
                 });
@@ -387,7 +383,6 @@
                 }
 
                 $scope.$on('locBack', function () {
-                    console.log('card lock back')
                     mvm.showDetail = true;
                 });
         }])

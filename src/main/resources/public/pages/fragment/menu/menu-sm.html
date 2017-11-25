@@ -66,7 +66,7 @@
         <md-menu-item><md-button ng-click="mvm.goto('about')"><md-icon>bookmark_border</md-icon><span>О нас</span></md-button></md-menu-item>
         <md-menu-item><md-button ng-click="mvm.goto('contact')"><md-icon>bookmark_border</md-icon><span>Контакты</span></md-button></md-menu-item>
         <md-menu-item><md-button ng-click="mvm.goto('delivery')"><md-icon>bookmark_border</md-icon><span>Доставка</span></md-button></md-menu-item>
-        <md-menu-item><md-button ng-click="mvm.goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>
+        <!--<md-menu-item><md-button ng-click="mvm.goto('stock')"><md-icon>bookmark_border</md-icon><span>Акции</span></md-button></md-menu-item>-->
         <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
         <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
         <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>

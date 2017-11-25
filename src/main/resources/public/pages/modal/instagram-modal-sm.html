@@ -1,0 +1,47 @@
+<md-dialog aria-label="Instagram" style="max-height: 100%px; max-width: 65%;">
+  <form ng-cloak>
+
+    <md-dialog-content >
+      <div flex layout="column">
+        <div style="position: relative">
+          <md-button ng-click="priv()" style="position: absolute; left: 0; z-index: 1; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 50px;">
+            <md-icon style="color: white; font-size: 4.5em; line-height: 50px; height: 50px; min-width: 65px;">navigate_before</md-icon>
+          </md-button>
+
+          <md-button ng-click="next()" style="position: absolute; right: 0; z-index: 1; bottom: 45%; line-height: 50px; min-height: 50px; min-width: 50px;">
+            <md-icon style="color: white; font-size: 4.5em; line-height: 50px; height: 50px; min-width: 65px;">navigate_next</md-icon>
+          </md-button>
+          <img ng-src="{{photoUrl}}" style="max-width: 100%;">
+        </div>
+
+        <div flex layout="column" style="padding: 30px">
+          <div layout="row">
+            <a href="http://www.instagram.com/{{post.user.name}}" target="_blank">
+              <img ng-src="{{post.user.profilePictureUrl}}" style="height: 70px!important; border-radius: 50%;width: 70px!important;">
+            </a>
+
+            <div flex style="align-self: center; padding-left: 5%;">
+              <a href="http://www.instagram.com/{{post.user.name}}" target="_blank" style=" font-size: 1.3em; font-weight: bold;
+                    color: #266abe; white-space: nowrap; max-width: 200px; overflow: hidden; text-overflow: ellipsis;
+                    display: block; text-transform: none;">{{post.user.name}}</a>
+              <span>{{post.user.fullName}}</span>
+            </div>
+          </div>
+          <md-divider style="margin: 20px 0;"></md-divider>
+          <div style="font-size: 1.15em;">
+            <div style="max-height: 445px;">
+              {{post.post.caption}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-dialog-content>
+
+  </form>
+</md-dialog>
+
+<div class="dialog-controls">
+  <md-button ng-click="hide()" style="position: absolute; right: 0; z-index: 1; top: 0; line-height: 50px; min-height: 50px; min-width: 50px;">
+    <md-icon style="color: white; font-size: 2.8em; line-height: 50px; height: 50px; min-width: 50px;">clear</md-icon>
+  </md-button>
+</div>

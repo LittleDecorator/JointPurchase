@@ -3,7 +3,7 @@
         <div layout="row">
             <md-input-container flex="25">
                 <label class="required">Название</label>
-                <input name="name" ng-model="vm.company.name" required >
+                <input name="name" ng-model="vm.company.name" required md-maxlength="50" maxlength="50">
                 <div ng-messages="vm.forms.companyCard.name.$error" ng-if="!vm.showHints">
                     <div ng-message="required">Поле не может быть пустым</div>
                 </div>

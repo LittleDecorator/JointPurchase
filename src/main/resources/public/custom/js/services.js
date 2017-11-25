@@ -136,7 +136,6 @@
                     if ($window.localStorage [key]) {
                         //var cart = angular.fromJson($window.localStorage [key]);
                         var value = $window.localStorage [key];
-                        //console.log(cart);
                         return JSON.parse(value);
                         //return cart
                     }
@@ -328,7 +327,6 @@
             };
 
             this.getCategory = function(name){
-                console.log(name);
                 if(name){
                     var deferred = $q.defer();
                     dataResources.category.get({name:name},function(res){
@@ -404,7 +402,7 @@
                 onComplete: function(){
                     $rootScope.$broadcast('onComplete');
                     //перейдем на страницу откуда быва вызвана авторизация
-                    $state.transitionTo(helpers.findRouteByUrl($rootScope.oldLocation.substring(1)));
+                    $state.go(helpers.findRouteByUrl($rootScope.oldLocation.substring(1)));
                 },
                 onFilter: function(data){
                     this.data = data;

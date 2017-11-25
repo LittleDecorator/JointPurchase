@@ -18,6 +18,7 @@ public class Subscriber implements BaseModel {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
+    @Column(name = "email", nullable = false, updatable = false)
     private String email;
 
     @Column(name = "subject_id")

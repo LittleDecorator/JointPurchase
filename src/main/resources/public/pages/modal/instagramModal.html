@@ -9,7 +9,9 @@
 
         <div flex layout="column" style="padding: 30px">
           <div layout="row">
-            <img ng-src="{{post.user.profilePictureUrl}}" style="height: 70px!important; border-radius: 50%;width: 70px!important;">
+            <a href="http://www.instagram.com/{{post.user.name}}" target="_blank">
+              <img ng-src="{{post.user.profilePictureUrl}}" style="height: 70px!important; border-radius: 50%;width: 70px!important;">
+            </a>
             <div flex style="align-self: center; padding-left: 5%;">
               <a href="http://www.instagram.com/{{post.user.name}}" target="_blank" style="
     font-size: 1.3em;

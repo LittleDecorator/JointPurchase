@@ -16,7 +16,7 @@
                     </a>
 
                     <!-- строка поиска -->
-                    <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 40%; padding-left: 50px; display: flex; align-items: flex-end">
+                    <div id="search" class="input-field row" style="margin: auto 15px; line-height: 30px; width: 30%; padding-left: 50px; display: flex; align-items: flex-end">
                         <md-autocomplete flex style="max-width: 80%"
                                          ng-keydown="mvm.searchKeyPress($event.keyCode)"
                                          md-input-minlength="3"
@@ -59,7 +59,7 @@
                     <md-button ng-click="mvm.goto('about')"><span>О нас</span></md-button>
                     <md-button ng-click="mvm.goto('contact')"><span>Контакты</span></md-button>
                     <md-button ng-click="mvm.goto('delivery')"><span>Доставка</span></md-button>
-                    <md-button ng-click="mvm.goto('stock')"><span>Акции</span></md-button>
+                    <!--<md-button ng-click="mvm.goto('stock')"><span>Акции</span></md-button>-->
 
                     <!-- список желаемого -->
                     <a ui-sref="wishlist" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">

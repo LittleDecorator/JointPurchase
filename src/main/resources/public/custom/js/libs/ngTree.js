@@ -49,7 +49,6 @@
             };
 
             $scope.findProduct = function(){
-                console.log("bla");
                 $scope.filterByCategory($scope.$modelValue.id);
             }
 

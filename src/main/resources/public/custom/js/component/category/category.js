@@ -40,6 +40,7 @@
                 vm.afterInclude = afterInclude;
                 vm.init = init;
 
+                vm.forms = {};
                 vm.categories = categoryNodes;
                 vm.tree = {};
                 vm.selected = null;
@@ -48,6 +49,7 @@
                 vm.autoFocusContent = false;
                 vm.menu = menu;
                 vm.isReady = false;
+                vm.showHints = true;
                 vm.status = {
                     isFirstOpen: false,
                     isFirstDisabled: false
@@ -136,25 +138,27 @@
                  * изменение имени узла
                  */
                 function edit() {
-                    if(vm.selectedCopy.title !== ""){
-                        vm.selected.title = vm.selectedCopy.title;
+                  if(vm.forms.categoryForm.$valid) {
+                    if (vm.selectedCopy.title !== "") {
+                      vm.selected.title = vm.selectedCopy.title;
 
-                        // проверяем узел в списке новых
-                        var b = helpers.findInArrayById(newCategoryList, vm.selectedCopy.id);
-                        // если не нашли, меняем имя в сохраненом
-                        if (!helpers.isEmptyObject(b)) {
-                            b.title = vm.selected.title;
+                      // проверяем узел в списке новых
+                      var b = helpers.findInArrayById(newCategoryList, vm.selectedCopy.id);
+                      // если не нашли, меняем имя в сохраненом
+                      if (!helpers.isEmptyObject(b)) {
+                        b.title = vm.selected.title;
+                      } else {
+                        // проверяем узел в списке измененных
+                        var e = helpers.findInArrayById(editCategoryList, vm.selectedCopy.id);
+                        // если нашли меняем имя
+                        if (!helpers.isEmptyObject(e)) {
+                          e.title = vm.selected.title;
                         } else {
-                            // проверяем узел в списке измененных
-                            var e = helpers.findInArrayById(editCategoryList, vm.selectedCopy.id);
-                            // если нашли меняем имя
-                            if (!helpers.isEmptyObject(e)) {
-                                e.title = vm.selected.title;
-                            } else {
-                                editCategoryList.push(vm.selected);
-                            }
+                          editCategoryList.push(vm.selected);
                         }
+                      }
                     }
+                  }
                 }
 
                 /**
@@ -205,40 +209,42 @@
                 function add(selected) {
 
                     function addTranslite(node){
-                        if(!node.transliteName){
-                          node.transliteName = transliteratorService.urlRusLat(node.title)
+                        if(!node.name){
+                          node.name = transliteratorService.urlRusLat(node.title)
                         }
                         return node;
                     }
 
+                  if(vm.forms.categoryForm.$valid) {
                     if (vm.selected && vm.currentNode.title !== "") {
-                        var parent, id = helpers.guid();
-                        if (!selected) {
-                            parent = vm.tree.get_selected_branch();
-                        } else {
-                            parent = selected;
-                        }
-                        // проверяем что родитель есть и он не пустой
-                        var parentId = (parent && !$.isEmptyObject(parent)) ? parent.id : null;
-                        // подготавливаем узел для добавления
-                        var newNode = {id: id, title: vm.currentNode.title, nodes: [], parentId: parentId, types: []};
-                        // добавляем новый узел
-                        if (parentId === null) {
-                            vm.tree.add_branch(null, newNode);
-                        } else {
-                            vm.tree.add_branch(parent, newNode);
-                        }
-                        // если родитель был листовым, то меняем свойство
-                        if(!parent.noLeaf){
-                            parent.noLeaf = true;
-                        }
-                        // добавляем транслит
-                        newNode = addTranslite(newNode);
-                        // помещаем узел в список новых
-                        newCategoryList.push(newNode);
-                        // очищаем поле
-                        clearNewNodeField();
+                      var parent, id = helpers.guid();
+                      if (!selected) {
+                        parent = vm.tree.get_selected_branch();
+                      } else {
+                        parent = selected;
+                      }
+                      // проверяем что родитель есть и он не пустой
+                      var parentId = (parent && !$.isEmptyObject(parent)) ? parent.id : null;
+                      // подготавливаем узел для добавления
+                      var newNode = {id: id, title: vm.currentNode.title, nodes: [], parentId: parentId, types: []};
+                      // добавляем новый узел
+                      if (parentId === null) {
+                        vm.tree.add_branch(null, newNode);
+                      } else {
+                        vm.tree.add_branch(parent, newNode);
+                      }
+                      // если родитель был листовым, то меняем свойство
+                      if (!parent.noLeaf) {
+                        parent.noLeaf = true;
+                      }
+                      // добавляем транслит
+                      newNode = addTranslite(newNode);
+                      // помещаем узел в список новых
+                      newCategoryList.push(newNode);
+                      // очищаем поле
+                      clearNewNodeField();
                     }
+                  }
                 }
 
                 /**

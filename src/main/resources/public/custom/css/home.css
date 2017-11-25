@@ -434,7 +434,7 @@ section::after {
     }
 
     #subscribe .main-content {
-        margin-top: 50px;
+        margin-top: 30px;
     }
 
     #subscribe md-input-container {
@@ -444,8 +444,8 @@ section::after {
     }
 
     #subscribe.section #action-container {
-        margin-top: 30px;
-        width: 100%;
+        margin: 30px auto 0 auto;
+        width: 70%;
     }
 
     #subscribe.section #action-container button {
@@ -657,6 +657,10 @@ section::after {
         text-align: center;
     }
 
+    #subscribe.section .main-content #unsubscribe span {
+        width: 100%;
+    }
+
     #subscribe h1 {
         position: static;
         -webkit-transform: translate(0, 0);
@@ -700,8 +704,12 @@ section::after {
 
     #subscribe #link-group .wrapper {
         min-width: 50px;
-        width: 50px;
+        width: 65px;
         height: 50px;
+    }
+
+    #subscribe #link-group .wrapper > .md-button {
+        min-width: 50px;
     }
 
     #subscribe #link-group button{

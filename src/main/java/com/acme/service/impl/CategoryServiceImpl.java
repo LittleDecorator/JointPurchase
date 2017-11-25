@@ -118,6 +118,8 @@ public class CategoryServiceImpl implements CategoryService {
         category.setId(node.getId());
         category.setParentId(node.getParentId());
         category.setDescription(node.getDescription());
+        category.setTransliteName(node.getName());
+        category.setDateAdd(new Date());
         categoryRepository.save(category);
         return category;
     }
