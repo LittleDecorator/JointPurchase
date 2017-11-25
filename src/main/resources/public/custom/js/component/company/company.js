@@ -25,7 +25,7 @@
                 * Создать новую компанию
                 */
                 function addCompany() {
-                    $state.transitionTo("company.detail");
+                    $state.go("company.detail");
                 }
 
               /**

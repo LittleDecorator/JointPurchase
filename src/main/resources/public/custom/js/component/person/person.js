@@ -85,7 +85,7 @@
 
                 // редактирование клиента
                 function editPerson(id) {
-                    $state.transitionTo("person.detail", {id:id});
+                    $state.go("person.detail", {id:id});
                 }
 
                 // удаление клиента
@@ -98,12 +98,12 @@
 
                 // Добавление клиента
                 function addPerson() {
-                    $state.transitionTo("person.detail");
+                    $state.go("person.detail");
                 }
 
                 // перейти на страницу с заказами выбранного клиента
                 function showOrders(id) {
-                    $state.transitionTo("order", {customerId: id});
+                    $state.go("order", {customerId: id});
                 }
 
                 function applyKeyPress(keyCode) {

@@ -122,7 +122,7 @@
                                     vm.isSend = true;
                                     vm.showHints = true;
                                     // если код был принят, идем на страницу результата регистрации
-                                    $state.transitionTo("registrationResult", { confirmed: true });
+                                    $state.go("registrationResult", { confirmed: true });
                                 }, function(error){
                                     vm.isSend = false;
                                     $mdToast.show(toast.textContent('Введен не верный код').theme('error'));

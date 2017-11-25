@@ -43,7 +43,7 @@
                  */
                 function init(){
                     /* если в фильтре должен участвовать клиент */
-                    if($stateParams.customerId != null){
+                    if($stateParams.customerId !== null){
                         vm.filter.subjectId = $stateParams.customerId;
                         dataResources.customer.get({id:$stateParams.customerId}).$promise.then(function(data){
                             vm.filter.subject = data.fullName;
@@ -53,7 +53,7 @@
                 }
 
                 function applyKeyPress(event) {
-                    if (event.keyCode == 13) {
+                    if (event.keyCode === 13) {
                         apply();
                     }
                 }
@@ -94,7 +94,7 @@
                     vm.filterInUse = false;
                     vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0 };
                     /* если в фильтре должен участвовать клиент */
-                    if($stateParams.customerId != null){
+                    if($stateParams.customerId !== null){
                         vm.filter.subjectId = $stateParams.customerId;
                     }
                     confirmedFilter = angular.copy(vm.filter);
@@ -126,7 +126,7 @@
                  * @param id
                  */
                 function editOrder(id) {
-                    $state.transitionTo("order.detail", {id:id});
+                    $state.go("order.detail", {id:id});
                 }
                 
                 /**
@@ -144,7 +144,7 @@
                  * Создание заказа 
                  */
                 function addOrder() {
-                    $state.transitionTo("order.detail");
+                    $state.go("order.detail");
                 }
                 
                 /**

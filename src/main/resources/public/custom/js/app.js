@@ -129,7 +129,7 @@
             $rootScope.menus = [];
             if (toState.data.requireLogin) {
               event.preventDefault();
-              $state.transitionTo('login');
+              $state.go('login');
             }
           } else {
             if (fromState.name !== toState.parent) {

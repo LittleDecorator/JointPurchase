@@ -72,7 +72,7 @@
                 /* переход в карточку для создания нового товара */
                 function addItem () {
                     vm.detailLock=true;
-                    $state.transitionTo("item.detail");
+                    $state.go("item.detail");
                 }
 
                 /* переход в карточку для редактирования */

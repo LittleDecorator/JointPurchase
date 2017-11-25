@@ -92,7 +92,7 @@
                     });
 
                     dialog.closePromise.then(function (output) {
-                        if (output.value && output.value != '$escape') {}
+                        if (output.value && output.value !== '$escape') {}
                     });
                 }
 
@@ -110,7 +110,7 @@
                 }
 
                 function showNotification(id){
-                    $state.transitionTo("notification.detail", {id:id});
+                    $state.go("notification.detail", {id:id});
                 }
 
                 function checkNotification(notification){
