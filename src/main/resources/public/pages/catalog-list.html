@@ -17,11 +17,6 @@
 
             <!-- По категории -->
             <div ng-repeat="group in vm.items track by group.id" ng-if="vm.currentNodeType == 'category' && vm.items.length > 0">
-
-                <div ng-if="(mvm.width > 600 || vm.searchFilter.category === vm.searchFilter.subcategory) && vm.categories.length > 1">
-                    <md-subheader style="font-size: 4rem; background-color: transparent;">{{::group.name}}</md-subheader>
-                    <md-divider ></md-divider>
-                </div>
                 <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;margin-bottom: 35px;" ng-cloak >
                     <md-whiteframe class="md-whiteframe-1dp" flex flex-xs="100" flex-sm="45" flex-gt-sm="30" layout layout-align="center center" ng-repeat="item in group.values track by item.id + $index"
                     style="box-shadow: none;padding: 0;margin: 8px;" >

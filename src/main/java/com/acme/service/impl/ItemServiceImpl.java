@@ -84,6 +84,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Catalog> getAllCatalog(CatalogFilter filter) {
         Sort sort = new Sort(
+            new Sort.Order(Sort.Direction.ASC, "category_id"),
             new Sort.Order(Sort.Direction.ASC, "status"),
             new Sort.Order(Sort.Direction.DESC, "bestseller"),
             new Sort.Order(Sort.Direction.ASC, "id")

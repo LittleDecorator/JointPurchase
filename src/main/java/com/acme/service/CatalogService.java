@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface CatalogService {
 
+    /**
+     * Получение товара по фльтру
+     * @param filter
+     * @return
+     */
     List<Catalog> getCatalog(CatalogFilter filter);
 
     List<Item> getBestsellers();

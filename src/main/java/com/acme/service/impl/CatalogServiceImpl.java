@@ -76,6 +76,7 @@ public class CatalogServiceImpl implements CatalogService {
         if(Strings.isNullOrEmpty(filter.getCategory())){
             result = itemService.getAll(filter).stream().map(ItemConverter::itemToCatalog).collect(Collectors.toList());
         } else {
+            // если категория задана, то нужно использовать view
             result = itemService.getAllCatalog(filter);
         }
 

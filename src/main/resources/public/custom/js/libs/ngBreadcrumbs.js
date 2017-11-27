@@ -71,7 +71,14 @@
                 function getWorkingState(currentState) {
                     var proxyStateName;
                     var workingState = currentState;
-                    if (currentState.abstract === true) {
+                    // если state  абстрактный или транзитный
+                    if (currentState.abstract === true || currentState.self.deepStateRedirect) {
+
+                        if(currentState.self.deepStateRedirect){
+                          workingState = $state.get(currentState.self.deepStateRedirect.default);
+                          return workingState;
+                        }
+
                         if (typeof scope.abstractProxyProperty !== 'undefined') {
                             proxyStateName = getObjectValue(scope.abstractProxyProperty, currentState);
                             if (proxyStateName) {

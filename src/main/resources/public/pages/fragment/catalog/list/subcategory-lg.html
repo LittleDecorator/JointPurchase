@@ -2,13 +2,13 @@
     <div ng-show="vm.categories.length > 1">
         <span style="font-size: 1.8em;">Подкатегории</span>
         <hr style="margin-bottom: 10px;"/>
-        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.searchFilter.category == group.id">{{::group.name}}</md-button>
     </div>
 
     <div style="margin-top: 20px" ng-show="vm.companies.length > 1">
         <span style="font-size: 1.8em;">Бренды</span>
         <hr style="margin-bottom: 10px;"/>
-        <md-button ng-repeat="company in vm.companies" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterByCompany(company)" ng-disabled="vm.currentCompany == company.id">{{::company.name}}</md-button>
+        <md-button ng-repeat="company in vm.companies" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterByCompany(company)" ng-disabled="vm.searchFilter.company == company.id">{{::company.name}}</md-button>
     </div>
 </div>
 
@@ -16,7 +16,7 @@
     <div ng-show="vm.categories.length > 1">
         <span style="font-size: 1.8em;">Подкатегории</span>
         <hr style="margin-bottom: 10px;"/>
-        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.currentCategory == group.id">{{::group.name}}</md-button>
+        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterByCategory(group)" ng-disabled="vm.searchFilter.category == group.id">{{::group.name}}</md-button>
     </div>
 
 </div>

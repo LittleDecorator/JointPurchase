@@ -291,13 +291,6 @@ var route = {
         url: '/catalog', // при переходе на этот state переадресовываем его сразу на списочную страницу
         deepStateRedirect: {
           default: "catalog.list"
-        },
-        data: {
-          displayName: 'Каталог',
-          requireLogin: false,
-          options: function () {
-            return {reload: true}
-          }
         }
       },
 

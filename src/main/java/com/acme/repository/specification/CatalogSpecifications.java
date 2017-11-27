@@ -36,11 +36,19 @@ public class CatalogSpecifications {
 		};
 	}
 
+	/**
+	 * Спецификация для выборки из view
+	 * @param filter
+	 * @return
+	 */
 	public static Specification<Catalog> filterCatalog(CatalogFilter filter) {
-
 		return (root, criteriaQuery, builder) -> {
+
+			// путь до производителя
 			Path<Company> company = root.get(Catalog_.company);
+			// путь до подкатегории
 			Path<Category> category = root.get(Catalog_.category);
+			// путь до категории
 			Path<Category> parentCategory = root.get(Catalog_.parentCategory);
 
 			final List<Predicate> predicates = new ArrayList<>();
@@ -51,17 +59,20 @@ public class CatalogSpecifications {
 			}
 
 			//  фильтр по категории и подкатегории
-			if(filter.getCategory() !=null){
-
-				if(filter.getSubcategory()!=null){
-					predicates.add(builder.equal(category.get(Category_.id), filter.getSubcategory()));
+			if(filter.getCategory() !=null) {
+				Predicate parent = builder.equal(parentCategory.get(Category_.id), filter.getCategory());
+				if(filter.getSubcategory()==null){
+					predicates.add(builder.or(parent, builder.equal(category.get(Category_.id), filter.getCategory())));
 				} else {
-					Predicate child = builder.equal(category.get(Category_.id), filter.getCategory());
-					Predicate parent = builder.equal(parentCategory.get(Category_.id), filter.getCategory());
-					if(predicates.isEmpty()) return builder.or(child, parent);
-					predicates.add(builder.or(child, parent));
+					predicates.add(parent);
 				}
 			}
+
+			// если выбрана подкатегория
+			if(filter.getSubcategory()!=null){
+					predicates.add(builder.equal(category.get(Category_.id), filter.getSubcategory()));
+			}
+
 			return builder.and(predicates.toArray(new Predicate[predicates.size()]));
 		};
 	}

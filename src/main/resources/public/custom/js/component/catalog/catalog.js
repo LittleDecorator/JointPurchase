@@ -11,18 +11,18 @@
         .controller('catalogController', ['$scope', '$state', 'dataResources', '$timeout', 'eventService', '$stateParams', '$rootScope', 'node','modal','$mdToast','store',
             function ($scope, $state, dataResources, $timeout, eventService, $stateParams, $rootScope, node, modal, $mdToast, store) {
 
-                console.log('enter controller');
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
 
-                var busy = false;
-                var portion = 0;
-                var limit = mvm.width < 601 ? 15 : 30;
+                var busy = false;   // маркертого, что происходит подгрузка данных
+                var portion = 0;    // номер порции данных
+                var limit = mvm.width < 601 ? 15 : 30;      // устанавливаем кол-во получаемых данных. Зависит от устройства.
 
                 vm.loadData = loadData;
                 vm.itemView = itemView;
                 vm.catalogView = catalogView;
                 vm.filterBySubcategory = filterBySubcategory;
+                vm.filterByCategory = filterByCategory;
                 vm.filterByCompany = filterByCompany;
                 vm.getSubcategoryUrl = getSubcategoryUrl;
 
@@ -35,43 +35,38 @@
                 vm.companies = [];
                 vm.showSideFilter = false;
                 vm.showLoadMore = vm.stopLoad = mvm.width < 601;
-                vm.detailLock=false;
-                vm.allDataLoaded = false;
+                vm.detailLock=false;        // флаг ограничения автоматической подгрузки данных, при нахождении в карточке
+                vm.allDataLoaded = false;   // флаг того, что загружать больше нечего
                 vm.infiniteDistance = 2;
-                vm.currentCategory = null;
-                vm.currentCompany = null;
-                vm.selectedCategory = null;
-                vm.selectedCompany = null;
+                vm.selectedCategory = null;     // выбранная категория
+                vm.selectedCompany = null;      // выбранный производитель
                 vm.currentNodeType = $stateParams.type;
                 vm.currentNode = node;
 
-                function init() {
+              /**
+               * Инициализация страницы
+               */
+              function init() {
                     // выбранный узел бокового меню
                     if (node) {
                         // promise получение подкатегорий
                         var categoryPromise = null;
                         var companyPromise = null;
 
-                        // сохраненый фильтр
+                        // сохраненый фильтр (достанем фильтр из памяти)
                         var stashedFilter = localStorage.getItem($state.current.name);
                         if (stashedFilter && stashedFilter !== "undefined") {
                             vm.searchFilter = angular.fromJson(stashedFilter);
                             vm.searchFilter.offset = 0;
                         }
 
+                        // если пришли через категорию
                         if ($stateParams.type === 'category') {
                             // если выбранный узел относится к Категориям
                             if(vm.searchFilter.category !== node.id){
+                                // если категория отличается от предыдущей
                                 vm.searchFilter.category = node.id;
                                 vm.searchFilter.subcategory = null;
-                                vm.currentCategory = node.id;
-                            } else {
-                                if(vm.searchFilter.subcategory!==null){
-                                    vm.currentCategory = vm.searchFilter.subcategory;
-                                } else {
-                                    vm.currentCategory = vm.searchFilter.category;
-                                }
-                                vm.currentCompany = vm.searchFilter.company;
                             }
                             // получим все категории
                             categoryPromise = dataResources.categoryChildrenMap.get({id: node.id});
@@ -82,40 +77,42 @@
                             vm.searchFilter.company = node.id;
                             // получим все категории для данного производителя
                             categoryPromise = dataResources.companyCategories.get({id: node.id});
-                            // для компаний будет заполнена только подкатегория
-                            vm.searchFilter.category = vm.searchFilter.subcategory;
-                            vm.currentCategory = vm.searchFilter.category;
                         }
 
                         vm.searchFilter.clientEmail=mvm.wishListEmail;
                         localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
                         vm.confirmedFilter = angular.copy(vm.searchFilter);
-                        vm.confirmedFilter.category = vm.currentCategory;
 
-                        // если был выбран узел категории, и promise не пустой, то ...
+                        // обработка promise Категории
                         if (categoryPromise !== null) {
                             categoryPromise.$promise.then(function (data) {
                                 data.forEach(function (category) {
+                                    // если выбранная есть в доступных, то отметим её как по-умолчанию
                                     category.isDefault = (category.id === node.id);
                                     vm.categories.push(category);
-                                    if (vm.currentCategory === category.id || vm.searchFilter.subcategory === category.id) {
+                                    if (vm.searchFilter.category === category.id || vm.searchFilter.subcategory === category.id) {
+                                        // мы выбрали категорию для UI
                                         vm.selectedCategory = category;
                                     }
                                 });
+                                // наверно можно будет убрать, ведь обобщающая возвращается вместе с остальными
                                 if(!vm.selectedCategory){
                                     vm.selectedCategory = vm.categories[0];
                                 }
                             });
                         }
+
+                        // обработка promise Производителей
                         if(companyPromise !== null){
                             companyPromise.$promise.then(function (data) {
                                 vm.selectedCompany = null;
                                 data.forEach(function (company) {
                                     vm.companies.push(company);
-                                    if(vm.currentCompany === company.id){
+                                    if(vm.searchFilter.company === company.id){
                                         vm.selectedCompany = company;
                                     }
                                 });
+
                                 if(!vm.selectedCompany){
                                   vm.selectedCompany = vm.companies[0];
                                 }
@@ -154,7 +151,6 @@
                     function addItem(item, category) {
                         var categoryId = category.id;
                         var newElem = {id: categoryId, name: category.name, values: []};
-
                         if (vm.items.length > 0) {
                             var result = vm.items.filter(function (e) {
                                 return e.id === categoryId
@@ -174,6 +170,7 @@
                     // если загрузка разрешена и не заняты
                     if (!vm.detailLock && (!vm.stopLoad || mvm.width < 601) && !busy) {
                         busy = true;
+
                         dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
                             // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
                             if (data.length < vm.confirmedFilter.limit) {
@@ -186,101 +183,13 @@
                                 vm.items = [];
                             }
                             if ($stateParams.type === 'category') {
-                                // var commonGroups = [];
-                                // var tmpItems = [];
-                                // var commonGroup = null;
                                 if (data.length === 1) {
                                     addItem(data[0], helpers.findInArrayById(vm.categories, vm.confirmedFilter.category));
                                 } else {
                                     data.forEach(function (e, i) {
-                                        // if (typeof(isGrouping) !== "undefined" && !isGrouping) {
-                                            var category = helpers.findInArrayById(vm.categories, vm.confirmedFilter.category);
-                                            addItem(e, category);
-                                        // } else {
-                                        //     console.log(commonGroup)
-                                        //     // если общая группа уже определена, то...
-                                        //     if (commonGroup) {
-                                        //         // проверим совпадают ли группы нового товара с общими
-                                        //         var matched = e.categories.filter(function (obj) {
-                                        //             return obj.id === commonGroup.id;
-                                        //         });
-                                        //         // если совпадают, то просто добавим товар
-                                        //         if (matched.length > 0) {
-                                        //             addItem(e, commonGroup);
-                                        //         } else {
-                                        //             // если не совпал, то...
-                                        //             // иначе новый товар
-                                        //             tmpItems = [];
-                                        //             tmpItems.push(e);
-                                        //             commonGroups = e.categories;
-                                        //             commonGroup = null;
-                                        //         }
-                                        //     } else {
-                                        //         // если общая группа не определена
-                                        //         // добавим товар во временную коллекцию
-                                        //         tmpItems.push(e);
-                                        //         // если товар уже выбирался раньше, то...
-                                        //         if (commonGroups.length > 0) {
-                                        //             // если определилась одна общая группа, то...
-                                        //             if (commonGroups.length === 1 && i > 0) {
-                                        //                 commonGroup = commonGroups[0];
-                                        //                 // из временной коллекции добавим товары
-                                        //                 tmpItems.forEach(function (tmp) {
-                                        //                     addItem(tmp, commonGroup)
-                                        //                 });
-                                        //                 // очистим временное
-                                        //                 tmpItems = [];
-                                        //                 commonGroups = [];
-                                        //             } else {
-                                        //                 // если общей группы пока нет, то пытаемся его найти через новые группы
-                                        //                 commonGroups = commonGroups.filter(function (obj) {
-                                        //                     return e.categories.some(function (o2) {
-                                        //                         return obj.id === o2.id;
-                                        //                     });
-                                        //                 });
-                                        //                 // если нет общих групп, значит новая
-                                        //                 // если группа единична, то добавим
-                                        //                 if (commonGroups.length === 0) {
-                                        //                     if (e.categories.length === 1) {
-                                        //                         // проверим может у нас единичный товар
-                                        //                         addItem(tmpItems[0], e.categories[0])
-                                        //                     } else {
-                                        //                         // удалим из списка
-                                        //                         tmpItems = [];
-                                        //                     }
-                                        //                 }
-                                        //             }
-                                        //         } else {
-                                        //             // инициализация при первом товаре
-                                        //             commonGroups = e.categories;
-                                        //         }
-                                        //     }
-                                        // }
+                                      var category = helpers.findInArrayById(vm.categories, vm.confirmedFilter.category);
+                                      addItem(e, category);
                                     });
-
-                                    // пройдем по выбранным группам, если первый товар в группе не в наличие, то передвинем группу ниже в списке
-                                    // выполняется только на первой загрузке
-                                    if (portion === 0) {
-                                        var itemsCopy = angular.copy(vm.items);
-                                        for (var i = 0; i < itemsCopy.length - 1; i++) {
-                                            if (itemsCopy[i].values[0].status.id === "preorder") {
-                                                // данный вариант вернет первый подходящий
-                                                // var index = itemsCopy.findIndex(x => x.values[0].status.id != "preorder");
-                                                // данный вариант вернет все подходящие
-                                                var indexes = itemsCopy.map(function (obj, index) {
-                                                    if (obj.values[0].status.id !== "preorder") {
-                                                        return index;
-                                                    }
-                                                }).filter(function (idx) {
-                                                    return idx > i;
-                                                });
-                                                if (indexes[0] !== -1) {
-                                                    vm.items.move(i, indexes[0]);
-                                                }
-                                                break;
-                                            }
-                                        }
-                                    }
                                 }
                             } else {
                                 vm.items = vm.items.concat(data);
@@ -307,11 +216,27 @@
                     vm.searchFilter.subcategory = group.id;
                     vm.searchFilter.offset = 0;
                     vm.confirmedFilter = angular.copy(vm.searchFilter);
-                    // vm.confirmedFilter.category = group.id;
                     localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
                     vm.stopLoad = false;
                     loadData(true, group.isDefault);
                 }
+
+              /**
+               * Новая загрузка после смены подкатегории
+               * @param group
+               */
+              function filterByCategory(group) {
+                if(group === undefined){
+                  group = vm.selectedCategory;
+                }
+                vm.searchFilter.category = group.id;
+                vm.searchFilter.subcategory = null;
+                vm.searchFilter.offset = 0;
+                vm.confirmedFilter = angular.copy(vm.searchFilter);
+                localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
+                vm.stopLoad = false;
+                loadData(true, group.isDefault);
+              }
 
               /**
                * Новая загрузка после смены производителя
@@ -442,7 +367,7 @@
                             return null
                         }
                     }).filter(function (idx) {
-                        return idx != null;
+                        return idx !== null;
                     })[0];
                     vm.mainImage = (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL) + id;
                 }
