@@ -441,6 +441,7 @@
 					 */
 					function toggleMenu(){
 						$mdSidenav("menu").toggle().then(function(){
+							// отключаем скролирование страницы
 							if($mdSidenav("left").isOpen()){
 								$mdSidenav("left").close();
                 $('.subPanel').removeClass('isOpen');
@@ -467,7 +468,8 @@
 					}
 
 					function toggleSideFilter(){
-						$mdSidenav("left").toggle()
+						$mdSidenav("left").toggle().then(function(){
+            });
 					}
 					/**
 					 * Отложенное выполнение

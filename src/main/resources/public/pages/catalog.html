@@ -17,7 +17,7 @@
                 <!--</md-card-actions>-->
             <!--</md-card>-->
 
-            <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;margin-bottom: 35px;justify-content: center;">
+            <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 5px;margin-bottom: 10px;justify-content: center;">
                 <md-whiteframe class="md-whiteframe-1dp" flex-xs="100" flex-sm="45" flex-gt-sm="30" layout layout-align="center center" ng-repeat="item in vm.items" style="box-shadow: none;padding: 0;margin: 8px;" >
                     <md-card style="margin: 0; width: 100%">
                         <div class="card-image waves-effect waves-block waves-light md-card-image">
@@ -28,7 +28,7 @@
 
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
-                            <span style="padding-bottom: 5px;"><b>Цена: </b>{{::item.price|number}}руб</span>
+                            <span style="padding-bottom: 10px;font-size: 1.13em"><b>Цена: </b>{{::item.price|number}}руб</span>
                             <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                             <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                             <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
@@ -41,7 +41,7 @@
         </div>
 
         <div style="width: 100%; display: flex;" ng-if="vm.showLoadMore">
-            <md-button class="btn md-plain md-raised" ng-click="vm.loadData();" style="width: 88%; margin: 10px auto auto;">Показать ещё</md-button>
+            <md-button class="btn md-plain md-raised" ng-click="vm.loadData();" style="width: 91%; margin: 10px auto auto; margin-top:0; line-height: 45px; height: 45px">Показать ещё</md-button>
         </div>
 
     </div>

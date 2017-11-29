@@ -239,10 +239,10 @@
     md-card-actions span.md-headline {
         font-size: 1.3rem;
         text-align: center;
-        padding-bottom: 10px;
+        padding-bottom: 5px;
 
-        width: 75%;
-        min-height: 70px;
+        width: 95%;
+        min-height: 40px;
         display: flex;
         align-items: center;
         align-content: center;
@@ -255,6 +255,7 @@
 
     div#catalog md-card md-card-actions.layout-column > .md-button.btn {
         margin-bottom: 10px;
+        width: 50%;
     }
 
 

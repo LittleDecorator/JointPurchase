@@ -1,4 +1,4 @@
-<md-toolbar class="menu-lg">
+<md-toolbar class="menu-lg" style="z-index: 60;">
 
     <div class="md-toolbar-tools">
         <div layout-nowrap="column" class="layout-nowrap" style="width: 100%; line-height: 56px;">
@@ -117,7 +117,7 @@
 
 </md-toolbar>
 
-<md-sidenav id="menu" class="md-sidenav-left" prevent-scroll md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto;  width: 260px; min-width: 0; top: 56px; padding-top: 15px">
+<md-sidenav id="menu" class="md-sidenav-left" md-component-id="menu" md-disable-backdrop md-whiteframe="4" style="z-index:100;overflow: auto; overflow-x: hidden; width: 260px; min-width: 0; top: 56px; padding-top: 15px">
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('order')"><md-icon>bookmark_border</md-icon><span>Заказы</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('person')"><md-icon>accessibility</md-icon><span>Клиенты</span></md-button></md-menu-item>
     <md-menu-item ng-if="mvm.auth.isAuth()"><md-button ng-click="mvm.goto('item')"><md-icon>bookmark_border</md-icon><span>Товар</span></md-button></md-menu-item>
