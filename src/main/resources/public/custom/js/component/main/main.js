@@ -8,7 +8,7 @@
    angular.module('main')
        .controller('mainController', ['$scope', '$rootScope', '$window', '$state', '$stateParams', 'authService', 'dataResources', 'jwtHelper', 'store', 'eventService', '$timeout', '$mdSidenav', '$mdUtil', '$log', 'modal', '$mdToast', 'resolveService', '$location', '$q', '$deepStateRedirect', function ($scope, $rootScope, $window, $state, $stateParams, authService, dataResources, jwtHelper, store, eventService, $timeout, $mdSidenav, $mdUtil, $log, modal, $mdToast, resolveService, $location, $q, $deepStateRedirect) {
 
-          $rootScope.toast = $mdToast.simple().position('top right').hideDelay(5000);
+          $rootScope.toast = $mdToast.simple().position('top right').hideDelay(3500);
 
           var templatePath = "pages/fragment/menu/";
           var devNotionDialog = null;

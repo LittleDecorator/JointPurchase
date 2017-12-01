@@ -8,40 +8,40 @@
             <div layout="column">
                 <md-input-container flex class="no-errors">
                     <label>Номер заказа</label>
-                    <input value="{{::order.uid}}" disabled>
+                    <input value="{{::vm.order.uid}}" disabled>
                 </md-input-container>
 
                 <md-input-container flex class="no-errors">
-                    <input value="{{::order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания" disabled>
+                    <input value="{{::vm.order.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата создания" disabled>
                 </md-input-container>
 
                 <md-input-container flex class="no-errors">
-                    <input value="{{::order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата закрытия" disabled>
+                    <input value="{{::vm.order.closeOrderDate| date:'dd.MM.yyyy HH:mm:ss'}}" placeholder="Дата закрытия" disabled>
                 </md-input-container>
 
                 <md-input-container flex class="no-errors">
-                    <input value="{{order.payment | number}}" placeholder="Сумма к оплате" disabled>
+                    <input value="{{vm.order.payment | number}}" placeholder="Сумма к оплате" disabled>
                 </md-input-container>
             </div>
 
             <div layout="column">
 
                 <md-input-container>
-                    <input value="{{order.status.name}}" placeholder="Статус заказа" disabled>
+                    <input value="{{vm.order.status.name}}" placeholder="Статус заказа" disabled>
                 </md-input-container>
 
                 <md-input-container>
-                    <input value="{{::order.delivery.value}}" placeholder="Тип доставки" disabled>
+                    <input value="{{::vm.order.delivery.value}}" placeholder="Тип доставки" disabled>
                 </md-input-container>
 
             </div>
 
             <md-input-container>
-                <input name="address" value="{{::order.recipientAddress}}" placeholder="Адрес" disabled>
+                <input name="address" value="{{::vm.order.recipientAddress}}" placeholder="Адрес" disabled>
             </md-input-container>
 
             <md-input-container class="no-errors">
-                <input name="comment" value="{{::order.comment}}" placeholder="Комментарий" disabled>
+                <input name="comment" value="{{::vm.order.comment}}" placeholder="Комментарий" disabled>
             </md-input-container>
 
         </div>
@@ -53,26 +53,26 @@
         <div layout="column" class="card-content">
 
             <md-input-container >
-                <input name="firstName" value="{{::order.recipientFname}}" placeholder="Имя" disabled>
+                <input name="firstName" value="{{::vm.order.recipientFname}}" placeholder="Имя" disabled>
             </md-input-container>
 
             <md-input-container >
                 <label>Фамилия</label>
-                <input name="lastName" value="{{::order.recipientLname}}" disabled>
+                <input name="lastName" value="{{::vm.order.recipientLname}}" disabled>
             </md-input-container>
 
             <md-input-container  class="no-errors" >
-                <input value="{{::order.recipientMname}}" placeholder="Отчество" disabled>
+                <input value="{{::vm.order.recipientMname}}" placeholder="Отчество" disabled>
             </md-input-container>
 
             <md-input-container >
                 <label>Email</label>
-                <input name="email" value="{{::order.recipientEmail}}" ng-pattern="/^.+@.+\..+$/" disabled>
+                <input name="email" value="{{::vm.order.recipientEmail}}" ng-pattern="/^.+@.+\..+$/" disabled>
             </md-input-container>
 
             <md-input-container >
                 <label>Телефон</label>
-                <input value="{{::order.recipientPhone}}" mask="(999) 999-99-99" mask-restrict="reject" disabled>
+                <input value="{{::vm.order.recipientPhone}}" mask="(999) 999-99-99" mask-restrict="reject" disabled>
             </md-input-container>
         </div>
     </div>
@@ -90,7 +90,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="item in items" id="{{::item.id}}" class="row" ng-class="{'no-bottom-border':$last}" style="line-height: 40px;">
+                <tr ng-repeat="item in vm.items" id="{{::item.id}}" class="row" ng-class="{'no-bottom-border':$last}" style="line-height: 40px;">
                     <td class="col s6 non-float" style="text-align: center">{{::item.name}}</td>
                     <td class="col s1 non-float" style="text-align: center">{{::item.article}}</td>
                     <td class="col s2 non-float" style="text-align: center">{{::item.price| number}}р.</td>
@@ -100,7 +100,7 @@
             </table>
         </md-card>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="cancelOrder(order.id)" ng-class="{'disabled':order.status.id=='canceled'||order.status.id=='done', 'btn-large':width>600, 'btn-x-small': width < 601}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.cancelOrder()" ng-class="{'disabled':vm.order.status.id=='canceled'||vm.order.status.id=='done', 'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
         <md-tooltip md-direction="left">Отменить заказ</md-tooltip>
         <md-icon>close</md-icon>
     </md-button>

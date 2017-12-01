@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
+//@WebAppConfiguration
 @TestPropertySource(locations="classpath:application.properties")
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmailTest {
@@ -306,7 +306,8 @@ public class EmailTest {
     public void sendOrderStatus() throws MessagingException {
         try{
             Order order = orderRepository.findOne("ff8081815be46325015be463a0a40000");
-            order.setRecipientEmail("kobzeff.inc@mail.ru");
+            //order.setRecipientEmail("kobzeff.inc@mail.ru");
+            order.setRecipientEmail("knpdeveloper@gmail.com");
             emailService.sendOrderStatus(order);
         } catch (Exception e) {
             e.printStackTrace();

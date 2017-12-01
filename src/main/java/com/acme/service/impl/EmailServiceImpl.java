@@ -12,7 +12,11 @@ import com.acme.enums.GmailLabels;
 import com.acme.exception.EmailConversionException;
 import com.acme.exception.TemplateException;
 import com.acme.handlers.Base64BytesSerializer;
-import com.acme.model.*;
+import com.acme.model.Content;
+import com.acme.model.Item;
+import com.acme.model.Order;
+import com.acme.model.OrderItem;
+import com.acme.model.Subject;
 import com.acme.model.gmail.SimpleDraft;
 import com.acme.model.gmail.SimpleMessage;
 import com.acme.model.gmail.SimpleThread;
@@ -40,19 +44,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.common.io.ByteStreams;
 import com.sun.mail.smtp.SMTPTransport;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -65,14 +56,30 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import static com.acme.email.oauth.OAuth2Authenticator.initialize;
-import static com.google.common.base.Optional.fromNullable;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 
@@ -399,7 +406,7 @@ public class EmailServiceImpl implements EmailService {
             /* перебираем товар */
             if(itemMap!=null && !itemMap.isEmpty()){
                 itemMap.keySet().forEach(itemId -> list.add(new ImmutableMap.Builder<String, String>()
-                        .put("imageName", contentMap.get(itemId).getId())
+                        .put("imageName", "https://grimmstory.ru/media/image/preview/" + contentMap.get(itemId).getId())
                         .put("itemName", itemMap.get(itemId).getName())
                         .put("itemCost", itemMap.get(itemId).getPrice()+ " руб")
                         .put("itemCount", orderItemMap.get(itemId).getCount() + " шт")
@@ -412,7 +419,7 @@ public class EmailServiceImpl implements EmailService {
                     .put("order_number", order.getUid())
                     .put("order_status", order.getStatus().getNotifyText())
                     .put("isAuth", order.getSubjectId() != null)
-                    .put("cabinet_link", Constants.CABINET_LINK)
+                    .put("cabinet_link", Constants.CABINET_LINK + order.getId())
 				    /* информация о заказе */
                     .put("orderDate", DATE_FORMAT.format(order.getDateAdd() == null ? new Date() : order.getDateAdd()))
                     .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
@@ -434,7 +441,7 @@ public class EmailServiceImpl implements EmailService {
             String emailContent = templateService.mergeTemplateIntoString(Constants.ORDER_EMAIL, data);
 
             MimeMessage message = builder.setMessage(convert(email))
-                    .setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
+                    //.setInlinePictures(collectPics(Lists.newArrayList(contentMap.values())))
                     .setEmailContent(emailContent)
                     .build();
 
@@ -596,10 +603,10 @@ public class EmailServiceImpl implements EmailService {
      * Преобразуем наш email в MimeMessage
      * @return
      */
-    private MimeMessage convert(Email email){
+    private MimeMessage convert(Email email) throws MessagingException {
         final MimeMessage mimeMessage = mailSender.createMimeMessage();
         final MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,
-                fromNullable(email.getEncoding()).or(Charset.forName("UTF-8")).displayName());
+               Optional.ofNullable(email.getEncoding()).orElse(Charset.forName("UTF-8")).displayName());
 
         try {
             messageHelper.setFrom(email.getFrom());

@@ -12,7 +12,7 @@
                                 <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)"><i class="material-icons" style="font-size: 30px;">menu</i></md-button>
                                 <md-menu-content width="4">
                                     <md-menu-item><md-button ng-click="vm.viewOrder(record.id)"><md-icon>search</md-icon><span>Просмотреть</span></md-button></md-menu-item>
-                                    <md-menu-item><md-button ng-click="vm.cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon>close</md-icon>Отменить</md-button></md-menu-item>
+                                    <md-menu-item><md-button ng-click="vm.cancelOrder(record)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon>close</md-icon>Отменить</md-button></md-menu-item>
                                 </md-menu-content>
                             </md-menu>
                         </span>

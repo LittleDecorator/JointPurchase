@@ -86,7 +86,7 @@ public class EmailBuilder {
             ByteArrayDataSource dataSource = new ByteArrayDataSource( inlinePicture.getContent(), inlinePicture.getImageType().getContentType() );
             imagePart.setDataHandler(new DataHandler(dataSource));
             imagePart.setContentID('<' + cid + '>');
-            imagePart.setDisposition(MimeBodyPart.INLINE);
+            //imagePart.setDisposition(MimeBodyPart.INLINE);
             imagePart.setHeader("Content-Type", inlinePicture.getImageType().getContentType());
             multipart.addBodyPart(imagePart);
         }

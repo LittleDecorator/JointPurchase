@@ -160,7 +160,7 @@ var route = {
       {
         name: 'cabinet.historyDetail', url: '/history/:id', parent: 'cabinet', views: {
         'main@': {
-          templateUrl: 'pages/history.html', controller: 'cabinetHistoryDetailController'
+          templateUrl: 'pages/history.html', controller: 'cabinetHistoryDetailController' , controllerAs: 'vm'
         }
       }, data: {
         requireLogin: true, displayName: 'Заказ #{{order.uid}}'

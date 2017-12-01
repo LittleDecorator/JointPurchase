@@ -11,7 +11,7 @@ public interface Constants {
 
     String ROBOT_NAME = "no-reply";
 
-    String CABINET_LINK = "http://192.168.1.27:7777/#/cabinet/history/0cfd5029-0f0d-47d1-b66b-09f4e853b09e";
+    String CABINET_LINK = "http://grimmstory.ru/cabinet/history/";
 //    String REGISTRATION_DONE = "Congrats with registration. Here will be link to your Private-Cabinet and link to Catalog";
 
     /* TEMPLATES */

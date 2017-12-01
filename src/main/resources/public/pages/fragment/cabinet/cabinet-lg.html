@@ -43,7 +43,7 @@
                         <td class="center-align">{{::record.payment|number}} руб</td>
                         <td>
                             <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.viewOrder(record.id)"><md-icon class="md-small">search</md-icon></a>
-                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.cancelOrder(record.id)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
+                            <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.cancelOrder(record)" ng-class="{'disabled':record.status.id=='canceled'||record.status.id=='done'}"><md-icon class="md-small">close</md-icon></a>
                         </td>
                     </tr>
                     </tbody>

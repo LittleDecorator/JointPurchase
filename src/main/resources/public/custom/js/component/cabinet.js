@@ -106,9 +106,9 @@
                     confirmedFilter = angular.copy(vm.filter);
                     localStorage.setItem($state.current.name, angular.toJson(vm.filter));
 
-                    if(confirmedFilter.dateTo!=null) confirmedFilter.dateTo = moment(confirmedFilter.dateTo).endOf('day').toDate();
-                    if(confirmedFilter.dateFrom!=null) confirmedFilter.dateFrom = moment(confirmedFilter.dateFrom).startOf('day').toDate();
-                    if(confirmedFilter.status!=null) confirmedFilter.status = confirmedFilter.status.id;
+                    if(confirmedFilter.dateTo) confirmedFilter.dateTo = moment(confirmedFilter.dateTo).endOf('day').toDate();
+                    if(confirmedFilter.dateFrom) confirmedFilter.dateFrom = moment(confirmedFilter.dateFrom).startOf('day').toDate();
+                    if(confirmedFilter.status) confirmedFilter.status = confirmedFilter.status.id;
 
                     vm.stopLoad = false;
                     loadData(true);
@@ -198,8 +198,8 @@
                     });
                     
                     dialog.closePromise.then(function(output) {
-                        if(output.value && output.value != '$escape'){
-                            $mdToast.show(mvm.toast.textContent('ваш пароль успешно изменён').theme('success'));
+                        if(output.value && output.value !== '$escape'){
+                            $mdToast.show($rootScope.toast.textContent('ваш пароль успешно изменён').theme('success'));
                         }
                     });
                 }
@@ -221,18 +221,18 @@
                 
                 /**
                  * отменяем заказ 
-                 * @param id
+                 * @param order
                  */
-                function cancelOrder(id){
-                    var order = helpers.findInArrayById(vm.history, id);
-                    if(order.status!='canceled' || order.status!='done'){
-                        dataResources.orderCancel.put({id: id}).$promise.then(function(data){
+                function cancelOrder(order){
+                    console.log(order);
+                    if(order.status!=='canceled' || order.status!=='done'){
+                        dataResources.orderCancel.put({id: order.id}).$promise.then(function(data){
                             if(data.status){
                                 order.status = data.status;
-                                $mdToast.show(mvm.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                                $mdToast.show($rootScope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
                             } else {
-                                if(data.status != null){
-                                    $mdToast.show(mvm.toast.textContent('Не удалось отменить заказ').theme('error'));
+                                if(data.status){
+                                    $mdToast.show($rootScope.toast.textContent('Не удалось отменить заказ').theme('error'));
                                 }
                             }
                         });
@@ -278,8 +278,8 @@
         }])
 
         /* Контроль заказа из истории пользователя */
-        .controller('cabinetHistoryDetailController',['$scope','order','items','deliveryMap', 'dataResources', '$mdToast',
-            function ($scope, order, items, deliveryMap, dataResources, $mdToast) {
+        .controller('cabinetHistoryDetailController',['$scope','$rootScope','order','items','deliveryMap', 'dataResources', '$mdToast',
+            function ($scope, $rootScope, order, items, deliveryMap, dataResources, $mdToast) {
 
                 var templatePath = "pages/fragment/cabinet/history/";
                 var mvm = $scope.$parent.mvm;
@@ -297,6 +297,7 @@
                     item.count = element.count;
                     return item
                 });
+                console.log(order)
 
                 /**
                  * получение шаблона страницы
@@ -318,15 +319,15 @@
                  * Отмена заказа
                  * @param id
                  */
-                function cancelOrder(id){
-                    if(vm.order.status!='canceled' || vm.order.status!='done'){
-                        dataResources.orderCancel.put({id: id}).$promise.then(function(data){
+                function cancelOrder(){
+                    if(vm.order.status!=='canceled' || vm.order.status!=='done'){
+                        dataResources.orderCancel.put({id: vm.order.id}).$promise.then(function(data){
                             if(data.status){
                                 vm.order.status = data.status;
-                                $mdToast.show(mvm.toast.textContent('Ваш заказ успешно отменён').theme('success'));
+                                $mdToast.show($rootScope.toast.textContent('Ваш заказ успешно отменён').theme('success'));
                             } else {
-                                if(data.status!= null){
-                                    $mdToast.show(mvm.toast.textContent('Не удалось отменить заказ').theme('error'));
+                                if(data.status){
+                                    $mdToast.show($rootScope.toast.textContent('Не удалось отменить заказ').theme('error'));
                                 }
                             }
                         });
