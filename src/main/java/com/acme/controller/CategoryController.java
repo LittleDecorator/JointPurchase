@@ -136,7 +136,7 @@ public class CategoryController {
     @RequestMapping(method = RequestMethod.GET, value = "/map/roots")
     public List<MapDto> getCategoryRootMap() {
         List<MapDto> result = Lists.newArrayList();
-        result.addAll(categoryService.getAll().stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> new MapDto(category.getId(), category.getName())).collect(Collectors.toList()));
+        result.addAll(categoryService.getAll().stream().filter(category -> Strings.isNullOrEmpty(category.getParentId())).map(category -> new MapDto(category.getId(), category.getName(),  category.getTransliteName())).collect(Collectors.toList()));
         return result;
     }
 

@@ -73,31 +73,37 @@ var route = {
       },
 
       /*=================================== ОФОРМЛЕНИЕ ЗАКАЗА ====================================*/
-      {
-        name: 'cart.confirm', url: '/private/confirm', parent: 'cart', views: {
-        'main@': {
-          templateUrl: 'pages/confirm.html', controller: 'confirmController', controllerAs: 'vm'
-        }
-      }, data: {
-        requireLogin: false, displayName: 'Оформление заказа'
-      }, resolve: {
-        deliveries: function (resolveService) {
-          return resolveService.getDeliveryMap()
-        }
-      }
-      }, {
-        name: 'cart.confirm.done', url: '/:id/status', parent: 'cart.confirm', views: {
-          'main@': {
-            templateUrl: 'pages/orderComplete.html', controller: 'confirmCompleteController', controllerAs: 'vm'
+       {
+          name: 'cart.confirm',
+          url: '/private/confirm',
+          parent: 'cart',
+          views: {
+            'main@': {
+                templateUrl: 'pages/confirm.html', controller: 'confirmController', controllerAs: 'vm'
+            }
+          },
+          data: {
+            requireLogin: false,
+            displayName: 'Оформление заказа'
+          },
+          resolve: {
+              deliveries: function (resolveService) {
+                  return resolveService.getDeliveryMap()
+              }
           }
-        }, data: {
-          displayName: "Результат", requireLogin: false
-        }, resolve: {
-          order: function ($stateParams, resolveService) {
-            return resolveService.getOrder($stateParams.id);
+       }, {
+          name: 'cart.confirm.done', url: '/:id/status', parent: 'cart.confirm', views: {
+             'main@': {
+                templateUrl: 'pages/orderComplete.html', controller: 'confirmCompleteController', controllerAs: 'vm'
+             }
+          }, data: {
+             displayName: "Результат", requireLogin: false
+          }, resolve: {
+             order: function ($stateParams, resolveService) {
+                return resolveService.getOrder($stateParams.id);
+             }
           }
-        }
-      },
+       },
 
       /*=================================== О НАС * ====================================*/
       {

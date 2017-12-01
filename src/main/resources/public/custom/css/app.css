@@ -600,12 +600,12 @@ md-toast .md-toast-content {
 
     /* переопределяем кнопку возврата на верх для мобильного */
     .md-fab.docs-scroll-fab.showBackToTop {
-        /*width: 45px;*/
-        /*height: 45px;*/
-        bottom: 25px;
+        width: 45px;
+        height: 45px;
+        bottom: 75px;
         line-height: 45px;
         font-size: 1.6rem;
-        /*opacity: .7;*/
+        opacity: .7;
     }
 
     .md-fab.docs-scroll-fab.showBackToTop md-icon {

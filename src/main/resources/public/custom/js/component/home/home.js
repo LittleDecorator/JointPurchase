@@ -180,7 +180,7 @@
            * Скроллирование до следующей секции
            */
           function scrollDown() {
-            $('#main').animate({scrollTop: $('#nature').offset().top - 50}, 500, 'linear');
+            $('#main').animate({scrollTop: $('#categories').offset().top - 50}, 500, 'linear');
           }
 
           /**

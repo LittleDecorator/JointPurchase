@@ -219,12 +219,12 @@
                 * Слушатель нажатия кнопки НАЗАД
                 */
                 $scope.$on('locBack', function () {
-                    mvm.showDetail = false;
+                    // mvm.showDetail = false;
                     vm.detailLock = false;
                 });
 
                 // выключаем view карточки
-                mvm.showDetail = false;
+                // mvm.showDetail = false;
         }])
 
         /* Карточка товара */
@@ -382,9 +382,9 @@
                     },50);
                 }
 
-                $scope.$on('locBack', function () {
-                    mvm.showDetail = true;
-                });
+                // $scope.$on('locBack', function () {
+                //     mvm.showDetail = true;
+                // });
         }])
 
 })();

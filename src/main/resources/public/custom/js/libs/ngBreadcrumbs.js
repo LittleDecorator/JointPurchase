@@ -13,7 +13,8 @@
             templateUrl:'pages/template/breadcrumbs.html',
             scope: {
                 displaynameProperty: '@',
-                abstractProxyProperty: '@?'
+                abstractProxyProperty: '@?',
+                showDetail: '='
             },
             link: function(scope) {
                 scope.breadcrumbs = [];
@@ -22,6 +23,10 @@
                 }
                 scope.$on('$stateChangeSuccess', function() {
                     updateBreadcrumbsArray();
+
+                    // тут мы меняем видимость списочной области области при навигации
+                    var stateName = $state.$current.name;
+                    scope.showDetail = !(!stateName.includes('detail') && !stateName.includes('card'));
                     scope.base = $state.$current.data.base;
                 });
 

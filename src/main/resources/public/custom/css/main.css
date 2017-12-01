@@ -414,7 +414,7 @@ nav .brand-logo-lpad {
     bottom: 0;
     overflow: auto;
     /*margin-top: 50px;*/
-    padding-top: 56px;
+    /*padding-top: 56px;*/
 }
 
 .slider.fullscreen {
@@ -424,7 +424,8 @@ nav .brand-logo-lpad {
 @media screen and (min-width: 1025px){
     .main-wrapper {
         /*top: 100px;*/
-        top: 56px;
+        /*top: 56px;*/
+        padding-top:56px
     }
 }
 

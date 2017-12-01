@@ -7,12 +7,12 @@
         </div>
     </div>
 
-    <div layout="column" class="card-panel" style="padding: 5px 10px;margin: 0;">
+    <div layout="column" class="card-panel" style="padding: 5px 10px;margin: 0; display: block">
         <md-input-container md-no-float class="md-block no-errors" style="margin-bottom: 0;margin-top: 5px;">
             <input placeholder="Название" ng-model="vm.filter.name" ng-keydown="vm.applyKeyPress($event)">
         </md-input-container>
 
-        <div style="margin-top: 10px; margin-bottom: 0">
+        <div style="margin-top: 10px; margin-bottom: 0;">
             <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()" style="height: 20px;line-height: 20px;min-height: 30px;">Найти</md-button>
             <md-button md-no-ink class="md-accent md-raised btn" aria-label="clear" ng-click="vm.clear()" style="height: 20px;line-height: 20px;min-height: 30px;">Сбросить</md-button>
         </div>
@@ -27,4 +27,5 @@
     </div>
     <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.select();" style="margin-top: auto">Выбрать</md-button>
     <md-button md-no-ink aria-label="clear" ng-click="closeThisDialog()">Отмена</md-button>
+
 </div>

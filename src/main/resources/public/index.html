@@ -120,11 +120,11 @@
         <div ui-view="base" class="main container template-wrapper" style="margin: 0 auto; width: 100%;"></div>
 
         <!-- контэйнер всех остальных страниц -->
-        <div class="main container" style="margin-top: 25px;padding-bottom: 0;">
+        <div class="main container" style="padding-top: 56px;padding-bottom: 0;">
             <!-- путь навигации -->
-            <breadcrumbs displayname-property="data.displayName" abstract-proxy-property="data.proxy"></breadcrumbs>
+            <breadcrumbs show-detail="mvm.showDetail" displayname-property="data.displayName" abstract-proxy-property="data.proxy" style="display: block;padding-top: 20px"></breadcrumbs>
 
-            <div ui-view="main" class="template-wrapper" ></div>
+            <div ui-view="main" class="template-wrapper" style="margin: auto"></div>
             <div ui-view="detail" class="template-wrapper"></div>
         </div>
     </main>

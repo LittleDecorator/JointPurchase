@@ -1,4 +1,4 @@
-<div id="catalog" class="section" style="margin-top: 20px;" ng-cloak ng-show="!mvm.showDetail && (!$state.includes('catalog.detail') || !$state.includes('catalog.type.detail'))">
+<div id="catalog" class="section" ng-cloak ng-show="!mvm.showDetail && (!$state.includes('catalog.detail') || !$state.includes('catalog.type.detail'))">
 
     <div class="row isotope" infinite-scroll="vm.loadData()" infinite-scroll-distance='3' infinite-scroll-disabled="vm.stopLoad">
         <div>

@@ -94,7 +94,6 @@
                  * @param branch
                  */
                 function treeHandler(branch) {
-                    console.log(branch)
                     vm.selected = branch;
                     vm.selectedCopy = angular.copy(branch);
                     if (!vm.selected.items || !vm.selected.items.length > 0) {
@@ -317,7 +316,7 @@
                 function showClss() {
                     var dialog = itemClssModal(vm.selectedCopy.items, 'wp-50');
                     dialog.closePromise.then(function (output) {
-                        if (output.value && output.value != '$escape') {
+                        if (output.value && output.value !== '$escape') {
                             angular.forEach(output.value, function (item) {
                                 vm.selectedCopy.items.push(item);
                             });
@@ -358,7 +357,7 @@
                 }
 
                 function openSection(section){
-                    $state.go("category.card", {id: section.id});
+                    $state.go("category.card", {name: section.transliteName});
                 }
 
                 function getSections(nodes){
@@ -370,7 +369,7 @@
                 }
 
                 function convertNodeToMenu(node) {
-                    var section = {name:node.title, type: node.nodes.length > 0 ? "toggle":"link", id: node.id};
+                    var section = {name:node.title, type: node.nodes.length > 0 ? "toggle":"link", id: node.id, transliteName: node.name};
                     if(node.nodes.length > 0){
                         section.pages = getSections(node.nodes)
                     }
@@ -402,13 +401,25 @@
 
                 init();
 
+               /**
+                * Слушатель нажатия кнопки НАЗАД
+                */
+               $scope.$on('locBack', function () {
+                  // mvm.showDetail = false;
+                  vm.detailLock = false;
+               });
+
+               // выключаем view карточки
+               // mvm.showDetail = false;
+
         }])
 
         .controller('categoryCardController', ['$scope', 'dataResources', 'modal', 'rootCategories', 'category', 'categoryItems', '$timeout', '$mdToast', '$mdDialog',
             function ($scope, dataResources, modal, rootCategories, category, categoryItems, $timeout, $mdToast, $mdDialog) {
                 /* for small only */
-                var toast = $mdToast.simple().position('top right').hideDelay(3000);
+                var toast = $mdToast.simple().position('top right').hideDelay(2500);
 
+                var mvm = $scope.$parent.mvm;
                 var vm = this;
 
                 vm.init = init;
@@ -418,6 +429,7 @@
                 vm.removeItem = removeItem;
 
                 vm.showHints = true;
+                mvm.showDetail = true;
                 vm.categoryList = rootCategories;
                 vm.categoryList.unshift({id: null, name: "Выберите категорию ..."});
                 vm.data = {parentCategory: null, selectedCategory: category, categoryItems: categoryItems};

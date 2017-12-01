@@ -43,7 +43,7 @@
                  */
                 function init(){
                     /* если в фильтре должен участвовать клиент */
-                    if($stateParams.customerId !== null){
+                    if($stateParams.customerId){
                         vm.filter.subjectId = $stateParams.customerId;
                         dataResources.customer.get({id:$stateParams.customerId}).$promise.then(function(data){
                             vm.filter.subject = data.fullName;

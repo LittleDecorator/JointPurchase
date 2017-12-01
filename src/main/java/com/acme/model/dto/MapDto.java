@@ -12,10 +12,17 @@ public class MapDto {
 
     private String id;
     private String name;
+    private String transliteName;
 
     public MapDto(String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public MapDto(String id, String name, String transliteName) {
+        this.id = id;
+        this.name = name;
+        this.transliteName = transliteName;
     }
 
     public String getId() {
@@ -32,6 +39,14 @@ public class MapDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTransliteName() {
+        return transliteName;
+    }
+
+    public void setTransliteName(String transliteName) {
+        this.transliteName = transliteName;
     }
 
     @Override
