@@ -382,6 +382,14 @@
                 });
                 return deferred.promise;
             };
+            
+            this.getSale = function(id){
+                var deferred = $q.defer();
+                dataResources.sale.get({id: id},function (data) {
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            };
 
             this.getNotification = function(id){
                 var deferred = $q.defer();

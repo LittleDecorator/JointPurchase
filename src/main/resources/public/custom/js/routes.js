@@ -212,17 +212,42 @@ var route = {
 
       /*=================================== АКЦИИ * ====================================*/
       {
-        name: 'stock', url: '/stock', views: {
-        'main@': {
-          templateUrl: 'pages/stock.html', controller: 'aboutController'
+        name: 'sale', 
+        url: '/sale', 
+        views: {
+          'main@': {
+            templateUrl: 'pages/stock.html', controller: 'saleController'
+          }
+        }, 
+        data: {
+          requireLogin: false
+        }, 
+        metaTags: {
+          title: 'Акции', 
+          description: 'Распродажа игрушек, конкурсы и сезонные скидки', 
+          keywords: 'акции', 
+          properties: {
+            'og:title': 'Акции'
+          }
         }
-      }, data: {
-        requireLogin: false
-      }, metaTags: {
-        title: 'Акции', description: 'Распродажа игрушек, конкурсы и сезонные скидки', keywords: 'акции', properties: {
-          'og:title': 'Акции'
+      },
+      {
+        name: 'sale.detail',
+        url: '/:id',
+        parent: 'sale',
+        views: {
+          'main@': {
+            templateUrl: 'pages/card/saleCard.html', controller: 'saleDetailController', controllerAs: 'vm'
+          }
+        },
+        data: {
+          requireLogin: true, displayName: '{{sale.title|nvl:"Создание"}}',
+        },
+        resolve: {
+          sale: function ($stateParams, resolveService) {
+            return resolveService.getSale($stateParams.id);
+          }
         }
-      }
       },
 
       /*=================================== КОНТАКТЫ ====================================*/
@@ -353,8 +378,6 @@ var route = {
         }
       },
 
-
-
       // список каталога отфильтрованный по категории или бренду
       {
         name: 'catalog.type',
@@ -382,7 +405,6 @@ var route = {
           }, keywords: '{{node.name}}', description: '{{node.description}}'
         }
       },
-
 
       // карточка товара из отфильтрованного списка товаров
       {

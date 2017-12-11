@@ -1,0 +1,23 @@
+<div class="table-result">
+
+    <table class="table table-bordered table-hover adm-table collection" style="border: medium none;">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th style="width: 55%">Описание</th>
+            <th>Скидка</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="sale in vm.sales track by sale.id" class="collection-item">
+            <td class="center-align" style="width: 20%">{{::sale.title}}</td>
+            <td class="center-align">{{::sale.description}}</td>
+            <td class="center-align" style="width: 30%">{{::sale.discount}}%</td>
+            <td class="right-align" style="width: 60%">
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.toCard(sale.id)"><md-icon>search</md-icon></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

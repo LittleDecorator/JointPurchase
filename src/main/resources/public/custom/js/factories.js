@@ -386,6 +386,13 @@
                     put:{method:'PUT',isArray:false},
                     post:{method:'POST',isArray:false},
                     delete:{method:'DELETE',isArray:false}
+                }),
+                sale: $resource('/api/sale/:id',{},{
+                    all:{method:'GET',isArray:true},
+                    get:{method:'GET',isArray:false},
+                    put:{method:'PUT',isArray:false},
+                    post:{method:'POST',isArray:false},
+                    delete:{method:'DELETE',isArray:false}
                 })
                 
             }

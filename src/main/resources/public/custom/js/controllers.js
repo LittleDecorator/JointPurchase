@@ -28,6 +28,7 @@
                 'crop',
                 'notification',
                 'wishlist',
-                'instagram'
+                'instagram',
+                'sale'
             ]);
 })();
