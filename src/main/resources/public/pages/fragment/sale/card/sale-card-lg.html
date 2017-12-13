@@ -1,42 +1,93 @@
-<div class="card">
-    <div class="card-content" layout="column">
+<div ng-form="vm.forms.saleCard">
+    <md-card class="md-padding">
 
-        <div layout="row">
+        <div layout="column">
 
-            <md-input-container class="no-errors" flex="25">
-                <label>Email</label>
-                <input ng-model="::vm.wishlist.email" disabled>
-            </md-input-container>
+            <div layout="row">
 
-            <md-input-container class="no-errors" flex="20" style="margin-left:2%">
-                <label>Клиент</label>
-                <input ng-model="::vm.wishlist.subjetcId" disabled>
+                <md-input-container class="no-errors" flex="">
+                    <label>Название</label>
+                    <input ng-model="vm.sale.title">
+                </md-input-container>
+
+                <md-input-container class="no-errors" flex="15" style="margin-left:2%">
+                    <label>Размер скидки</label>
+                    <input ng-model="vm.sale.discount" >
+                </md-input-container>
+
+                <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="startDate" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="vm.sale.startDate" style="margin-left: 1%"></mdp-date-picker>
+
+                <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="vm.sale.endDate" style="margin-left: 1%"></mdp-date-picker>
+
+            </div>
+
+            <md-input-container class="no-errors">
+                <label>Описание</label>
+                <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.sale.description"></textarea>
             </md-input-container>
 
         </div>
+    </md-card>
 
-        <md-card class="md-padding" ng-show="vm.wishlist.items && vm.wishlist.items.length > 0">
-            <div>
-                <h5>Товары:</h5>
-                <div class="table-result" style="margin-top: 5px;overflow: auto; max-height: 400px;">
-                    <table class="bordered table-result">
-                        <tbody>
-                        <tr ng-repeat="item in vm.wishlist.items track by item.id" class="row" ng-class="{'no-bottom-border':$last}">
-                            <td class="col s3 non-float">{{::item.article}}</td>
-                            <td class="col non-float">{{::item.name}}</td>
-                            <td class="col s1 non-float" style="text-align: right">
-                                <div style="cursor: pointer" ng-click="vm.removeItem(item.id)">
-                                    <i class="small mdi-content-clear" style="color: #ee6e73"></i>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <div ng-show="vm.sale.items && vm.sale.items.length > 0">
+        <h5>Товары:</h5>
+        <md-card class="md-padding">
 
+            <div class="table-result" style="margin-top: 5px;overflow: auto; max-height: 400px;">
+                <table class="bordered table-result">
+                    <tbody>
+                    <tr ng-repeat="item in vm.sale.items track by item.id" class="row" ng-class="{'no-bottom-border':$last}">
+                        <td class="col s3 non-float">{{::item.article}}</td>
+                        <td class="col non-float">{{::item.name}}</td>
+                        <td class="col s1 non-float" style="text-align: right">
+                            <div style="cursor: pointer" ng-click="vm.removeItem($index)">
+                                <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </md-card>
 
+            <div class="table-result" ng-if="(!vm.sale.items || vm.sale.items.length == 0)" style="margin-top: 5px;background-color: rgb(250,250,250); border: 1px solid;" >
+                <span >Ни одного товара не связано с выбранной акцией</span>
+            </div>
+
+        </md-card>
     </div>
+
+    <div ng-show="vm.sale.bannerId">
+        <h5>Баннер:</h5>
+        <md-card class="md-padding">
+            <div class="wrap">
+                <div class="box">
+                    <div class="boxInner">
+                        <a class="item" ng-href="media/image/view/{{::vm.sale.bannerId}}" title="Some Title">
+                            <img ng-src="media/image/view/{{::vm.sale.bannerId}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-result" ng-if="!vm.sale.bannerId">
+                <span style="margin-right: 2%">Не добавлено ни одного изображения</span>
+            </div>
+
+        </md-card>
+    </div>
+
+    <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple style="display: none"/>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-disabled="vm.sale.bannerId" ng-click="vm.addBanner()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}" style="bottom: 200px; right: 24px;">
+        <md-icon>photo</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.addItem()" style="bottom: 120px; right: 24px;">
+        <md-icon>add</md-icon>
+    </md-button>
+
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" style="bottom: 45px; right: 24px;" ng-class="{'disabled':!vm.forms.saleCard.$dirty}">
+        <md-icon>save</md-icon>
+    </md-button>
 
 </div>

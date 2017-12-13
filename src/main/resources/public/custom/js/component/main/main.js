@@ -271,6 +271,9 @@
            * @param node
            */
           function filterProduct(node) {
+             // if(node.name === $state.params.name){
+             //    return;
+             // }
              if ($mdSidenav('left').isOpen() && mvm.width < 1530) {
                 $mdSidenav('left').close();
              }
@@ -461,11 +464,11 @@
            * Закрываем подменю
            * @param event
            */
-          // function closeSubPanel(event) {
-          function closeSubPanel() {
-             // var current = $(event.currentTarget.closest('md-content'));
-             // current.toggleClass('isOpen');
-             mvm.currentSubMenu.toggleClass('isOpen');
+          function closeSubPanel(event) {
+          // function closeSubPanel() {
+             var current = $(event.currentTarget.closest('md-content'));
+             current.toggleClass('isOpen');
+             // mvm.currentSubMenu.toggleClass('isOpen');
           }
 
           function toggleSideFilter() {

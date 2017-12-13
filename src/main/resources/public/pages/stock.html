@@ -3,11 +3,15 @@
 
         <div><h4 class="example_head">Акции:</h4></div>
 
-        <div ng-if="vm.sales.length > 0">
-            <div ng-include="vm.getTemplateUrl()"></div>
+        <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.scrolling.stopLoad' infinite-scroll-distance='vm.scrolling.infiniteDistance' infinite-scroll-container="'.main-wrapper'">
+            <div ng-include="vm.getTemplateUrl()" ng-show="vm.sales.length > 0"></div>
         </div>
 
         <div class="table-result" ng-if="vm.sales.length == 0">В настоящий момент нет действующих акций</div>
+
+        <md-button class="md-fab blue lighten-3 fixed-action-btn" ng-click="vm.addSale()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+            <md-icon>add</md-icon>
+        </md-button>
 
     </div>
 </div>

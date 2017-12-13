@@ -1,212 +1,7 @@
+/********************************** COMMON ******************************/
 
-
-
-/********************************** OFFICIAL CHANGE (TABLET) ******************************/
-@media (min-width: 601px) {
-
-    div#catalog md-card._md > div.card-image {
-        min-height: 223px;
-    }
-
-    div#catalog md-card._md {
-        min-height: 273px;
-    }
-
-    div#catalog md-card._md > .card-image  > img{
-        max-height: 190px;
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-
-    md-card-actions {
-        height: auto;
-        /*min-height: 100px;*/
-    }
-
-    md-card-actions span.md-headline {
-        font-size: 1.2rem;
-        text-align: center;
-        /*padding-bottom: 5px;*/
-        width: 90%;
-        /*min-height: 70px;*/
-        display: flex;
-        align-items: center;
-        align-content: center;
-        justify-content: space-around;
-    }
-
-    div#catalog-card  div.box img {
-        max-height: 445px;
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-
-    div#catalog-card div#description {
-        padding: 0 0.2rem;
-    }
-
-    div#catalog-card div#description div.card-panel {
-        box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
-    }
-
-    .horizontal-repeater #horizontal-container {
-        height: 50px;
-        width: 100%;
-        max-width: 840px;
-    }
-
-    .horizontal-repeater .repeated-item {
-        /*border-right: 1px solid #ddd;*/
-        box-sizing: border-box;
-        display: inline-block;
-        /*height: 84px;*/
-        height: 100%;
-        /*padding-top: 35px;*/
-        text-align: center;
-        min-width: 100px;
-        width: auto;
-        max-width: 300px;
-        padding: 0 5px;
-        color: rgba(0,0,0,0.54);
-    }
-
-    .horizontal-repeater md-content {
-        margin: 16px;
-    }
-
-    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
-        bottom: 0;
-        height: 100%;
-        margin: auto;
-        line-height: 2.3;
-        position: relative;
-    }
-
-}
-
-/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
-@media (min-width: 993px) {
-
-    div#catalog md-card._md > .card-image  > img{
-        max-height: 223px;
-        position: absolute;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        max-width: 280px;
-    }
-
-    div#catalog md-card._md > div.card-image {
-        min-height: 223px;
-    }
-
-    md-card-actions {
-        height: auto;
-        /*min-height: 100px;*/
-    }
-
-    md-card-actions span.md-headline {
-        font-size: 1rem;
-        text-align: center;
-        /*padding-bottom: 5px;*/
-
-        width: 95%;
-        /*min-height: 70px;*/
-        display: flex;
-        align-items: center;
-        align-content: center;
-        justify-content: space-around;
-    }
-
-    .horizontal-repeater #horizontal-container {
-        height: 50px;
-        width: 100%;
-        max-width: 980px;
-    }
-
-    .horizontal-repeater .repeated-item {
-        /*border-right: 1px solid #ddd;*/
-        box-sizing: border-box;
-        display: inline-block;
-        /*height: 84px;*/
-        height: 100%;
-        /*padding-top: 35px;*/
-        text-align: center;
-        min-width: 100px;
-        width: auto;
-        max-width: 300px;
-        padding: 0 5px;
-        color: rgba(0,0,0,0.54);
-    }
-
-    .horizontal-repeater md-content {
-        margin: 16px;
-    }
-
-    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
-        bottom: 0;
-        height: 100%;
-        margin: auto;
-        line-height: 2.3;
-        position: relative;
-    }
-
-}
-
-/********************************** OFFICIAL CHANGE (HUGE DESKTOP) ******************************/
-@media (min-width: 1530px) {
-    md-sidenav.md-locked-open {
-        position: fixed!important;
-        top:56px
-    }
-
-    .horizontal-repeater #horizontal-container {
-        height: 50px;
-        width: 100%;
-        max-width: 1210px;
-    }
-
-    .horizontal-repeater .repeated-item {
-        /*border-right: 1px solid #ddd;*/
-        box-sizing: border-box;
-        display: inline-block;
-        /*height: 84px;*/
-        height: 100%;
-        /*padding-top: 35px;*/
-        text-align: center;
-        min-width: 100px;
-        width: auto;
-        max-width: 300px;
-        padding: 0 5px;
-        color: rgba(0,0,0,0.54);
-    }
-
-    .horizontal-repeater md-content {
-        margin: 16px;
-    }
-
-    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
-        bottom: 0;
-        height: 100%;
-        margin: auto;
-        line-height: 2.3;
-        position: relative;
-    }
-}
-
-
-/********************************** OFFICIAL CHANGE (MOBILE) ******************************/
-@media (max-width: 600px) {
+/********************************** XS ******************************/
+@media (max-width: 599px) {
 
     div#catalog md-card._md > div.card-image {
         min-height: 223px;
@@ -308,5 +103,263 @@
 
     .categoryGroup md-select-value span div {
         padding-left: 5px;
+    }
+
+}
+
+/********************************** GT-XS ******************************/
+@media (min-width: 600px) {
+
+    div#catalog md-card._md > div.card-image {
+        min-height: 223px;
+    }
+
+    div#catalog md-card._md {
+        min-height: 273px;
+    }
+
+    div#catalog md-card._md > .card-image  > img{
+        max-height: 190px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    md-card-actions {
+        height: auto;
+        /*min-height: 100px;*/
+    }
+
+    md-card-actions span.md-headline {
+        font-size: 1.2rem;
+        text-align: center;
+        /*padding-bottom: 5px;*/
+        width: 90%;
+        /*min-height: 70px;*/
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: space-around;
+    }
+
+    div#catalog-card  div.box img {
+        max-height: 445px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    div#catalog-card div#description {
+        padding: 0 0.2rem;
+    }
+
+    div#catalog-card div#description div.card-panel {
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+    }
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 840px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
+    }
+
+}
+
+/********************************** SM ******************************/
+@media (min-width: 600px) and (max-width: 959px) {
+
+}
+
+/********************************** GT-SM ******************************/
+@media (min-width: 960px) {
+    div#catalog md-card._md > .card-image  > img{
+        max-height: 223px;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: 280px;
+    }
+
+    div#catalog md-card._md > div.card-image {
+        min-height: 223px;
+    }
+
+    md-card-actions {
+        height: auto;
+        /*min-height: 100px;*/
+    }
+
+    md-card-actions span.md-headline {
+        font-size: 1rem;
+        text-align: center;
+        /*padding-bottom: 5px;*/
+
+        width: 95%;
+        /*min-height: 70px;*/
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: space-around;
+    }
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 980px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
+    }
+}
+
+/********************************** MD ******************************/
+@media (min-width: 960px) and (max-width: 1279px){
+
+}
+
+/********************************** GT-MD ******************************/
+@media (min-width: 1280px) {
+
+}
+
+/********************************** LG ******************************/
+@media (min-width: 1280px) and (max-width: 1919px) {
+    md-sidenav.md-locked-open {
+        position: fixed!important;
+        top:56px
+    }
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 1210px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
+    }
+}
+
+/********************************** GT-LG ******************************/
+@media (min-width: 1920px) {
+    md-sidenav.md-locked-open {
+        position: fixed!important;
+        top:56px
+    }
+
+    .horizontal-repeater #horizontal-container {
+        height: 50px;
+        width: 100%;
+        max-width: 1210px;
+    }
+
+    .horizontal-repeater .repeated-item {
+        /*border-right: 1px solid #ddd;*/
+        box-sizing: border-box;
+        display: inline-block;
+        /*height: 84px;*/
+        height: 100%;
+        /*padding-top: 35px;*/
+        text-align: center;
+        min-width: 100px;
+        width: auto;
+        max-width: 300px;
+        padding: 0 5px;
+        color: rgba(0,0,0,0.54);
+    }
+
+    .horizontal-repeater md-content {
+        margin: 16px;
+    }
+
+    .horizontal-repeater .md-virtual-repeat-container.md-orient-horizontal .md-virtual-repeat-offsetter{
+        bottom: 0;
+        height: 100%;
+        margin: auto;
+        line-height: 2.3;
+        position: relative;
     }
 }

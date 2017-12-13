@@ -1,31 +1,4 @@
-/********************************** OFFICIAL CHANGE (DESKTOP) ******************************/
-@media (min-width: 993px) {
-
-    div#itemCard md-content {
-        background-color: transparent;
-    }
-
-    /* ЕСЛИ МНОГОСТРОЧНЫЙ ПУНКТ */
-    md-sidenav#filter md-menu-item {
-        height: auto;
-    }
-
-    md-sidenav#filter md-menu-item .md-button span {
-        display: block;
-        white-space: normal;
-        line-height: 24px;
-    }
-}
-
-
-@media (min-width: 456px) {
-    md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
-        min-height: 40px;
-        height: 40px;
-    }
-}
-
-
+/********************************** COMMON ******************************/
 md-sidenav#menu .md-button span {
     font-size: 1.1rem;
     color: #676565!important;
@@ -71,16 +44,48 @@ md-sidenav {
     width: 240px;
 }
 
-/*@media screen and (max-width: 456px){*/
 
-    /*md-sidenav {*/
-        /*min-width: calc(100% - 90px);*/
-    /*}*/
+.cart {
+    padding: 0 15px;
+    font-size: 2rem;
+    display: block;
+    width: 55px;
+    position: relative;
+}
 
-/*}*/
+.cart > md-icon {
+    color: #aed581 !important;
+    position: absolute;
+    top: 1rem;
+    font-size: 2rem;
+}
 
-/********************************** SMALL SCREEN'S ******************************/
-@media (max-width: 456px) {
+.cart > .badge {
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    line-height: 0.4rem;
+    border-radius: 50%;
+    padding: 6px;
+    min-width: 18px;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: #fff!important;
+    background-color: #26a69a;
+}
+
+/********************************** LT-XS ******************************/
+@media (min-width: 456px) {
+
+}
+
+/********************************** XS ******************************/
+@media (max-width: 599px) {
+
+    md-sidenav#menu md-menu-item, md-sidenav#menu .md-button {
+        min-height: 40px;
+        height: 40px;
+    }
 
     /* Делаем во весь экран */
     md-sidenav#menu {
@@ -166,36 +171,56 @@ md-sidenav {
 }
 
 
-.cart {
-    padding: 0 15px;
-    font-size: 2rem;
-    display: block;
-    width: 55px;
-    position: relative;
+/********************************** GT-XS ******************************/
+@media (min-width: 600px) {
+
+    md-sidenav {
+        overflow-x: hidden;
+    }
 }
 
-.cart > md-icon {
-    color: #aed581 !important;
-    position: absolute;
-    top: 1rem;
-    font-size: 2rem;
+/********************************** SM ******************************/
+@media (min-width: 600px) and (max-width: 959px) {
+
 }
 
-.cart > .badge {
-    position: absolute;
-    top: 2rem;
-    right: 0;
-    line-height: 0.4rem;
-    border-radius: 50%;
-    padding: 6px;
-    min-width: 18px;
-    font-weight: 300;
-    font-size: 0.8rem;
-    color: #fff!important;
-    background-color: #26a69a;
+/********************************** GT-SM ******************************/
+@media (min-width: 960px) {
+    div#itemCard md-content {
+        background-color: transparent;
+    }
+
+    /* ЕСЛИ МНОГОСТРОЧНЫЙ ПУНКТ */
+    md-sidenav#filter md-menu-item {
+        height: auto;
+    }
+
+    md-sidenav#filter md-menu-item .md-button span {
+        display: block;
+        white-space: normal;
+        line-height: 24px;
+    }
 }
 
-/* side lg */
-/*md-sidenav md-menu-item:hover{*/
-    /*background-color: rgba(0, 0, 0, 0.04)*/
-/*}*/
+/********************************** MD ******************************/
+@media (min-width: 960px) and (max-width: 1279px){
+
+}
+
+/********************************** GT-MD ******************************/
+@media (min-width: 1280px) {
+
+}
+
+/********************************** LG ******************************/
+@media (min-width: 1280px) and (max-width: 1919px) {
+
+}
+
+/********************************** GT-LG ******************************/
+@media (min-width: 1920px) {
+
+}
+
+
+

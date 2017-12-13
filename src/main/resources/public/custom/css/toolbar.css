@@ -1,6 +1,15 @@
+/********************************** COMMON ******************************/
 md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar){
     /*background-color: rgba(248, 248, 248, 0)!important;*/
     background-color: #86A8A8!important;
+}
+
+md-toolbar.main-toolbar {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    top: 0;
+    z-index: 50;
+    position: fixed;
+    padding: 0 20px;
 }
 
 .md-toolbar-tools {
@@ -70,17 +79,52 @@ input[type=text].menu-search:active, input[type=text].menu-search:focus {
 }
 
 
-@media screen and (max-width: 456px){
+/********************************** LT-XS ******************************/
+@media (min-width: 456px) {
+
+}
+
+/********************************** XS ******************************/
+@media (max-width: 599px) {
     md-toolbar{
         padding: 0 20px;
     }
 }
 
-@media (max-width: 959px) and (min-width: 0) and (orientation: landscape){
+/********************************** GT-XS ******************************/
+@media (min-width: 600px) {
 
+}
+
+/********************************** SM ******************************/
+@media (min-width: 600px) and (max-width: 959px) {
     md-toolbar {
         min-height: 50px;
         padding: 0 20px;
     }
+}
+
+/********************************** GT-SM ******************************/
+@media (min-width: 960px) {
+
+}
+
+/********************************** MD ******************************/
+@media (min-width: 960px) and (max-width: 1279px){
+
+}
+
+/********************************** GT-MD ******************************/
+@media (min-width: 1280px) {
+
+}
+
+/********************************** LG ******************************/
+@media (min-width: 1280px) and (max-width: 1919px) {
+
+}
+
+/********************************** GT-LG ******************************/
+@media (min-width: 1920px) {
 
 }

@@ -3,6 +3,7 @@ package com.acme.model;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Created by nikolay on 11.12.17.
@@ -13,6 +14,8 @@ import java.util.List;
 public class Sale {
 
     @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
 
     @Column(name="title")
@@ -21,13 +24,19 @@ public class Sale {
     @Column(name="description")
     private String description;
 
-    @OneToOne
-    private Content banner_id;
+    @Column(name = "banner_id")
+    private String bannerId;
 
     @Column(name = "discount")
     private int discount;
 
-    @OneToMany
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Column(name = "end_date")
+    private Date endDate;
+
+    @OneToMany()
     @JoinTable(name="sale_item",
             joinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")},
             inverseJoinColumns={@JoinColumn(name="item_id", referencedColumnName="id")})
@@ -60,12 +69,28 @@ public class Sale {
         this.description = description;
     }
 
-    public Content getBanner_id() {
-        return banner_id;
+    public String getBannerId() {
+        return bannerId;
     }
 
-    public void setBanner_id(Content banner_id) {
-        this.banner_id = banner_id;
+    public void setBannerId(String bannerId) {
+        this.bannerId = bannerId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public int getDiscount() {

@@ -211,12 +211,31 @@ var route = {
       },
 
       /*=================================== АКЦИИ * ====================================*/
+       {
+          name: 'sale.detail',
+          url: '/:id',
+          parent: 'sale',
+          views: {
+             'main@': {
+                templateUrl: 'pages/card/saleCard.html', controller: 'saleDetailController', controllerAs: 'vm'
+             }
+          },
+          data: {
+             requireLogin: true, displayName: '{{sale.title|nvl:"Создание"}}'
+          },
+          resolve: {
+             sale: function ($stateParams, resolveService) {
+                return resolveService.getSale($stateParams.id);
+             }
+          }
+       },
+
       {
         name: 'sale', 
         url: '/sale', 
         views: {
           'main@': {
-            templateUrl: 'pages/stock.html', controller: 'saleController'
+            templateUrl: 'pages/stock.html', controller: 'saleController', controllerAs: 'vm'
           }
         }, 
         data: {
@@ -228,24 +247,6 @@ var route = {
           keywords: 'акции', 
           properties: {
             'og:title': 'Акции'
-          }
-        }
-      },
-      {
-        name: 'sale.detail',
-        url: '/:id',
-        parent: 'sale',
-        views: {
-          'main@': {
-            templateUrl: 'pages/card/saleCard.html', controller: 'saleDetailController', controllerAs: 'vm'
-          }
-        },
-        data: {
-          requireLogin: true, displayName: '{{sale.title|nvl:"Создание"}}',
-        },
-        resolve: {
-          sale: function ($stateParams, resolveService) {
-            return resolveService.getSale($stateParams.id);
           }
         }
       },

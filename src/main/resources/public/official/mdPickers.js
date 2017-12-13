@@ -71,6 +71,8 @@
         this.dateFilter = angular.isFunction(options.dateFilter) ? options.dateFilter : null;
         this.selectingYear = false;
 
+        console.log(self)
+
         // validate min and max date
         if (this.minDate && this.maxDate) {
             if (this.maxDate.isBefore(this.minDate)) {
@@ -223,6 +225,8 @@
 
     function CalendarCtrl($scope) {
         var self = this;
+
+        this.date = $scope.$parent.datepicker.date;
         this.dow = moment.localeData().firstDayOfWeek();
 
         this.weekDays = [].concat(
@@ -239,7 +243,7 @@
 
         this.getDaysInMonth = function() {
             var days = self.date.daysInMonth(),
-                    firstDay = moment(self.date).date(1).day() - this.dow;
+                firstDay = moment(self.date).date(1).day() - this.dow;
 
             if(firstDay < 0) firstDay = this.weekDays.length - 1;
 

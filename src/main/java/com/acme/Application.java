@@ -140,10 +140,10 @@ public class Application extends WebMvcConfigurerAdapter {
     /**
      * Очищаем все кэши через 10 мин
      */
-    @CacheEvict(allEntries = true, value = {"view", "gallery", "preview", "origin", "write", "decode", "read", "image"})
+    @CacheEvict(allEntries = true, value = {"decode","encode","image","write","read","view","gallery","preview","thumb","origin"})
     @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 500)
     public void reportCacheEvict() {
-        System.out.println("Flush Cache " + new Date());
+        System.out.println("Flush All Cache " + new Date());
     }
 
 

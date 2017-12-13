@@ -1,8 +1,9 @@
 <div class="repeated-item" ng-if="vm.currentNodeType == 'category'" flex>
+
     <div ng-show="vm.categories.length > 1">
         <span style="font-size: 1.8em;">Подкатегории</span>
         <hr style="margin-bottom: 10px;"/>
-        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.searchFilter.category == group.id">{{::group.name}}</md-button>
+        <md-button ng-repeat="group in vm.categories" class="md-raised btn primary md" style="margin: 5px" ng-click="vm.filterBySubcategory(group)" ng-disabled="vm.lockCategory(group.id)">{{::group.name}}</md-button>
     </div>
 
     <div style="margin-top: 20px" ng-show="vm.companies.length > 1">

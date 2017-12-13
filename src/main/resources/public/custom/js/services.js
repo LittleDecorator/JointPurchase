@@ -384,11 +384,17 @@
             };
             
             this.getSale = function(id){
-                var deferred = $q.defer();
-                dataResources.sale.get({id: id},function (data) {
-                    deferred.resolve(data);
-                });
-                return deferred.promise;
+                console.log(id)
+                if(id){
+                   var deferred = $q.defer();
+                   dataResources.sale.get({id: id},function (data) {
+                      deferred.resolve(data);
+                   });
+                   return deferred.promise;
+                } else {
+                    return null;
+                }
+
             };
 
             this.getNotification = function(id){

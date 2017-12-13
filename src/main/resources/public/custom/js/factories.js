@@ -93,6 +93,18 @@
                     query : {method:'GET', isArray:false,},
                     get:{method:'GET',isArray:false},
                 }),
+               saleImage: $resource('/api/content/sale/:id',{},{
+                  query : {method:'GET', isArray:false,},
+                  get:{method:'GET',isArray:false},
+               }),
+               saleContent: $resource('/api/content/upload/sale',{},{
+                  upload:{
+                     method:'POST',
+                     transformRequest: function(data) { return data; },
+                     headers : { 'Content-Type' : undefined },
+                     isArray : false
+                  }
+               }),
                 itemContent: $resource('/api/content/upload/item',{},{
                     upload:{
                         method:'POST',

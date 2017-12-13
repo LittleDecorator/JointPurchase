@@ -6,6 +6,7 @@ import com.acme.model.Content;
 import com.acme.model.InstagramPost;
 import com.acme.model.InstagramPostContent;
 import com.acme.model.ItemContent;
+import com.acme.model.Sale;
 import com.acme.model.dto.CompanyContentDto;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ContentRepository;
@@ -13,6 +14,7 @@ import com.acme.repository.InstagramPostContentRepository;
 import com.acme.repository.InstagramPostRepository;
 import com.acme.repository.ItemContentRepository;
 import com.acme.constant.Constants;
+import com.acme.repository.SaleRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
 import com.google.common.base.Strings;
@@ -46,6 +48,9 @@ public class ContentController{
 
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    SaleRepository saleRepository;
 
     @Autowired
     ResizeService resizeService;
@@ -173,6 +178,33 @@ public class ContentController{
         }
     }
 
+    @RequestMapping(value = "/upload/sale", method = RequestMethod.POST)
+    public void saleBannerUpload(MultipartHttpServletRequest request, @RequestParam(value = "saleId") String saleId) throws Exception {
+        //TODO: либо загружать одну, либо добавить таблицу связи
+        Content content;
+
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+
+        for(MultipartFile file : fileMap.values()){
+            if (!file.isEmpty()) {
+
+                String fileName = file.getOriginalFilename();
+                String type = fileName.substring(fileName.indexOf(".")+1);
+
+                content = new Content();
+                content.setFileName(file.getOriginalFilename());
+                content.setContent(Base64BytesSerializer.serialize(file.getBytes()));
+                content.setType(type);
+                content.setMime("image/" + type);
+                contentRepository.save(content);
+
+                Sale sale = saleRepository.findOne(saleId);
+                sale.setBannerId(content.getId());
+                saleRepository.save(sale);
+            }
+        }
+    }
+
     /**
      * Возвращает ID изображений инстаграмма
      * @return
@@ -220,6 +252,24 @@ public class ContentController{
             result = new CompanyContentDto();
             result.setContentId(company.getContentId());
             result.setUrl(Constants.GALLERY_URL + company.getContentId());
+        }
+        return result;
+    }
+
+    /**
+     * Получение баннера по конкретной акции.
+     * @param saleId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/sale/{id}", method = RequestMethod.GET)
+    public CompanyContentDto getSalePreviewImage(@PathVariable(value = "id") String saleId) throws Exception {
+        CompanyContentDto result = null;
+        Sale sale = saleRepository.findOne(saleId);
+        if(sale!=null && !Strings.isNullOrEmpty(sale.getBannerId())){
+            result = new CompanyContentDto();
+            result.setContentId(sale.getBannerId());
+            result.setUrl(Constants.GALLERY_URL + sale.getBannerId());
         }
         return result;
     }

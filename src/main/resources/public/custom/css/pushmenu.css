@@ -48,6 +48,7 @@
 
   .panel, .subPanel {
     top: 50px;
+    position: fixed;
   }
 
 }

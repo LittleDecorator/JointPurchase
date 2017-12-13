@@ -218,8 +218,10 @@
 
                 init();
 
-                // выключаем view карточки
-                mvm.showDetail = false;
+                $timeout(function () {
+                   // выключаем view карточки
+                   mvm.showDetail = false;
+                }, 30)
 
             }])
 })();
