@@ -55,11 +55,11 @@
                     <!-- заполнитель -->
                     <span flex="" class="flex"></span>
 
-                    <md-button ng-click="mvm.goto('catalog')"><span>Каталог</span></md-button>
-                    <md-button ng-click="mvm.goto('about')"><span>О нас</span></md-button>
-                    <md-button ng-click="mvm.goto('contact')"><span>Контакты</span></md-button>
-                    <md-button ng-click="mvm.goto('delivery')"><span>Доставка</span></md-button>
-                    <md-button ng-click="mvm.goto('sale')"><span>Акции</span></md-button>
+                    <md-button ui-sref="catalog" ng-click="mvm.goto('catalog')" style="line-height: 56px"><span>Каталог</span></md-button>
+                    <md-button ui-sref="about" ng-click="mvm.goto('about')" style="line-height: 56px"><span>О нас</span></md-button>
+                    <md-button ui-sref="contact" ng-click="mvm.goto('contact')" style="line-height: 56px"><span>Контакты</span></md-button>
+                    <md-button ui-sref="delivery" ng-click="mvm.goto('delivery')" style="line-height: 56px"><span>Доставка</span></md-button>
+                    <md-button ui-sref="sale" ng-click="mvm.goto('sale')" style="line-height: 56px"><span>Акции</span></md-button>
 
                     <!-- список желаемого -->
                     <a ui-sref="wishlist" style="min-width: 50px; cursor: pointer; font-size: 2rem; position: relative;" ng-if="mvm.auth.isAuth() && mvm.auth.isAdmin()">

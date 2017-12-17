@@ -93,14 +93,19 @@
                     query : {method:'GET', isArray:false,},
                     get:{method:'GET',isArray:false},
                 }),
+
                saleImage: $resource('/api/content/sale/:id',{},{
                   query : {method:'GET', isArray:false,},
                   get:{method:'GET',isArray:false},
+                  delete:{method:'DELETE',isArray:false}
                }),
                saleContent: $resource('/api/content/upload/sale',{},{
                   upload:{
                      method:'POST',
                      transformRequest: function(data) { return data; },
+                     transformResponse:function(data, headers){
+                        return {result:data}
+                     },
                      headers : { 'Content-Type' : undefined },
                      isArray : false
                   }
@@ -399,12 +404,13 @@
                     post:{method:'POST',isArray:false},
                     delete:{method:'DELETE',isArray:false}
                 }),
-                sale: $resource('/api/sale/:id',{},{
+                sale: $resource('/api/sale/:id',{id:'@id'},{
                     all:{method:'GET',isArray:true},
                     get:{method:'GET',isArray:false},
                     put:{method:'PUT',isArray:false},
                     post:{method:'POST',isArray:false},
-                    delete:{method:'DELETE',isArray:false}
+                    delete:{method:'DELETE',isArray:false},
+                    activate:{method:'PATCH',isArray:false}
                 })
                 
             }

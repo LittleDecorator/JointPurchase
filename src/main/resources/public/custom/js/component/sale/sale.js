@@ -12,12 +12,14 @@
           var portion = 0;
           var mvm = $scope.$parent.mvm;
           var vm = this;
+          var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
           vm.loadData = loadData;
           vm.clear = clear;
           vm.apply = apply;
           vm.getTemplateUrl = getTemplateUrl;
           vm.editSale = editSale;
+          vm.activateSale = activateSale;
           vm.addSale = addSale;
 
           vm.sales = [];
@@ -55,6 +57,29 @@
              }
           }
 
+          /**
+           *
+           * @param sale
+           */
+          function activateSale(sale) {
+             if(sale.active){
+                if(sale.endDate > new Date().getTime()){
+                   console.log(sale)
+                   dataResources.sale.activate({id: sale.id, activate: true},{}, function(data){
+                      $mdToast.show(toast.textContent('Акция "'+ sale.title +'" успешно активирована!').theme('success'));
+                   })
+                } else {
+                   $mdToast.show(toast.textContent('Нельзя активировать прошедшую акцию!').theme('error'));
+                   sale.active = false;
+                }
+             } else {
+                dataResources.sale.activate({id: sale.id, activate: false},{}, function(data){
+                   $mdToast.show(toast.textContent('Акция "'+sale.title+'" успешно выключена!').theme('success'));
+                })
+             }
+
+          }
+
           // очистка фильтра
           function clear() {
              portion = 0;
@@ -78,7 +103,7 @@
           }
 
           function editSale(id) {
-             $state.go("sale.detail", {id:id});
+             $state.go("sale.detail", {id: id});
           }
 
           // Добавление клиента
@@ -102,27 +127,48 @@
           }
        }])
 
-       .controller('saleDetailController', ['$scope', '$rootScope', '$state', '$stateParams', '$mdToast', 'dataResources', 'sale', 'FileUploader', 'itemClssModal', function ($scope, $rootScope, $state, $stateParams, $mdToast, dataResources, sale, FileUploader, itemClssModal) {
+       .controller('saleDetailController', ['$scope', '$rootScope', '$state', '$stateParams', '$mdToast', '$filter', 'dataResources', 'sale', 'FileUploader', 'itemClssModal', function ($scope, $rootScope, $state, $stateParams, $mdToast, $filter, dataResources, sale, FileUploader, itemClssModal) {
           var mvm = $scope.$parent.mvm;
           var vm = this;
           var uploader = $scope.uploader = new FileUploader();
+          var toast = $mdToast.simple().position('top right').hideDelay(3000);
 
           vm.init = init;
+          vm.activateSale = activateSale;
           vm.removeItem = removeItem;
           vm.addItem = addItem;
           vm.getTemplateUrl = getTemplateUrl;
           vm.addBanner = addBanner;
+          vm.deleteBanner = deleteBanner;
+          vm.deleteSale = deleteSale;
           vm.save = save;
 
           vm.forms = {saleCard: {}};
-          vm.sale = sale === null ? {startDate:null, endDate:null,items: []} : sale;
-          console.log(vm.sale)
+          vm.sale = sale === null ? {startDate: null, endDate: null, items: []} : sale;
+          if (vm.sale.startDate) {
+             vm.sale.startDate = new Date(vm.sale.startDate);
+          }
+          if (vm.sale.endDate) {
+             vm.sale.endDate = new Date(vm.sale.endDate);
+          }
+
           /**
            * Удаление товара из списка участвующих в акции
            * @param itemId
            */
           function removeItem(idx) {
              vm.sale.items.splice(idx, 1);
+
+             // проверяем валидность формы
+             var saleBlocked = false;
+             vm.sale.items.some(function(elem){
+                if(elem.blocked){
+                   return saleBlocked = true;
+                } else {
+                   return saleBlocked = false;
+                }
+             });
+             vm.forms.saleCard.$valid = !saleBlocked
           }
 
           /**
@@ -135,16 +181,63 @@
                 if (output.value && output.value !== '$escape') {
 
                    // если что-то было выбрано раньше, то очистим
-                   if(vm.sale.items.length !== 0) {
+                   if (vm.sale.items.length !== 0) {
                       vm.sale.items = [];
                    }
 
                    // добавим вновь выбраные
                    angular.forEach(output.value, function (item) {
+                      item.blocked = false;
+                      if(item.sale){
+                         if(
+                             item.sale.startDate > vm.sale.startDate && item.sale.startDate < vm.sale.endDate
+                             ||  item.sale.endDate > vm.sale.startDate && item.sale.endDate < vm.sale.endDate
+                             || item.sale.startDate < vm.sale.startDate && item.sale.endDate > vm.sale.endDate
+                         ) {
+                            item.blocked = true;
+                            // делаем не валидным
+                            vm.forms.saleCard.$valid = false;
+                         }
+                      }
                       vm.sale.items.push(item);
                    });
+
+                   // пометим форму как грязную
+                   vm.forms.saleCard.$setDirty(true);
                 }
              });
+          }
+
+          /**
+           *
+           * @param sale
+           */
+          function activateSale() {
+             // если активируем
+             if(vm.sale.active){
+                if(!vm.forms.saleCard.$dirty && vm.forms.saleCard.$valid){
+                   if(vm.sale.endDate > new Date().getTime()){
+                        dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                           $mdToast.show(toast.textContent('Акция успешно активирована!').theme('success'));
+                        })
+                   } else {
+                      $mdToast.show(toast.textContent('Нельзя активировать прошедшую акцию!').theme('error'));
+                      vm.sale.active = false;
+                   }
+                } else {
+                   $mdToast.show(toast.textContent('Необходимо сохранить изменения!').theme('error'));
+                   vm.sale.active = false;
+                }
+             } else {
+                dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                   $mdToast.show(toast.textContent('Акция успешно выключена!').theme('success'));
+                })
+             }
+
+          }
+
+          function deleteSale(saleId, idx) {
+             console.log('TODO:// add sale delete')
           }
 
           /**
@@ -179,8 +272,8 @@
              formData.append("saleId", $stateParams.id);
 
              // загружаем изображение
-             dataResources.saleContent.upload(formData, function(data){
-                vm.image = data;
+             dataResources.saleContent.upload(formData, function (data) {
+                vm.sale.bannerId = data.result;
                 uploader.clearQueue();
              });
           }
@@ -190,6 +283,18 @@
            */
           function addBanner() {
              $('#uploadBtn').click();
+          }
+
+          /**
+           * Удаление баннера
+           */
+          function deleteBanner() {
+             dataResources.saleImage.delete({id:vm.sale.id}, function(){
+                vm.sale.bannerId = null;
+             }, function () {
+                $mdToast.show(toast.textContent('Неудалось удалить баннер \n'+ error.message).theme('error'));
+             });
+
           }
 
           /**
@@ -204,24 +309,24 @@
            */
           function save() {
              var toast = $mdToast.simple().position('top right').hideDelay(3000);
-             if(vm.forms.saleCard.$dirty){
-                if(vm.forms.saleCard.$valid){
-                   if(vm.sale && vm.sale.id){
-                      dataResources.sale.put(vm.sale).$promise.then(function(data){
-                         $mdToast.show(toast.textContent('Акция '+ vm.sale.title +' успешно изменена').theme('success'));
-                      },function(error){
-                         $mdToast.show(toast.textContent('Не удалось изменить акцию '+ vm.sale.title).theme('error'));
+             if (vm.forms.saleCard.$dirty) {
+                if (vm.forms.saleCard.$valid) {
+                   if (vm.sale && vm.sale.id) {
+                      dataResources.sale.put(vm.sale).$promise.then(function (data) {
+                         $mdToast.show(toast.textContent('Акция ' + vm.sale.title + ' успешно изменена').theme('success'));
+                      }, function (error) {
+                         $mdToast.show(toast.textContent('Не удалось изменить акцию ' + vm.sale.title).theme('error'));
                       });
                    } else {
-                      dataResources.sale.post(vm.sale).$promise.then(function(data){
-                         $mdToast.show(toast.textContent('Акция '+ vm.sale.title +' успешно создана').theme('success'));
+                      dataResources.sale.post(vm.sale).$promise.then(function (data) {
+                         $mdToast.show(toast.textContent('Акция ' + vm.sale.title + ' успешно создана').theme('success'));
                          vm.forms.saleCard.$setPristine();
-                         $state.go($state.current,{id:data.result},{notify:false}).then(function(){
-                            $rootScope.$broadcast('$refreshBreadcrumbs',$state);
+                         $state.go($state.current, {id: data.result}, {notify: false}).then(function () {
+                            $rootScope.$broadcast('$refreshBreadcrumbs', $state);
                          });
-                      },function(error){
+                      }, function (error) {
                          console.log(error);
-                         $mdToast.show(toast.textContent('Не удалось создать акцию '+ vm.sale.title).theme('error'));
+                         $mdToast.show(toast.textContent('Не удалось создать акцию ' + vm.sale.title).theme('error'));
                       });
                    }
                    vm.showHints = true;
@@ -229,15 +334,6 @@
                    vm.showHints = false;
                 }
              }
-          }
-
-          /**
-           * Удаляем баннер
-           * @param image
-           */
-          function deleteImage(image) {
-             vm.image = null;
-             dataResources.saleImage.remove({id: $stateParams.id, contentId: image.contentId});
           }
 
           /**

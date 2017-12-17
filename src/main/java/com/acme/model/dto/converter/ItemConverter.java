@@ -2,12 +2,13 @@ package com.acme.model.dto.converter;
 
 import com.acme.model.Catalog;
 import com.acme.model.Item;
+import com.acme.repository.SaleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ItemConverter {
 
     public static Catalog itemToCatalog(Item item){
         Catalog catalog = new Catalog();
-
         catalog.setId(item.getId());
         catalog.setAge(item.getAge());
         catalog.setArticle(item.getArticle());
@@ -19,6 +20,10 @@ public class ItemConverter {
         catalog.setPrice(item.getPrice());
         catalog.setCategories(item.getCategories());
         catalog.setTransliteName(item.getTransliteName());
+        catalog.setUrl(item.getUrl());
+        catalog.setStatus(item.getStatus());
+        catalog.setSale(item.getSale());
+        catalog.setSalePrice(item.getSalePrice());
         return catalog;
     }
 

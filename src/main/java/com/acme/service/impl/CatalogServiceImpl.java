@@ -8,6 +8,7 @@ import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.Product;
+import com.acme.model.Sale;
 import com.acme.model.dto.converter.ItemConverter;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
@@ -19,6 +20,7 @@ import com.acme.service.WishlistService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.ibm.icu.text.Transliterator;
+import java.util.Date;
 import java.util.stream.Stream;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -87,7 +89,7 @@ public class CatalogServiceImpl implements CatalogService {
             }
         }
 
-        for (Product item : result) {
+        for (Catalog item : result) {
             itemService.fillItem(item, defContent);
         }
         return result;
@@ -181,6 +183,12 @@ public class CatalogServiceImpl implements CatalogService {
             }
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        // TODO: если время акции не настало, то мы не должны её вообще получать для товара
+        Sale sale = item.getSale();
+        Date now = new Date();
+        if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+        }
         return item;
     }
 

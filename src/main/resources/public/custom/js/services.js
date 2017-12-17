@@ -193,6 +193,7 @@
                 var deferred = $q.defer();
                 if(id){
                     dataResources.item.get({id:id},function(item){
+                        console.log(item)
                         deferred.resolve(item);
                     });
                 } else {

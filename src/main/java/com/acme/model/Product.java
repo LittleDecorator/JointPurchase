@@ -11,4 +11,10 @@ public interface Product extends BaseModel {
     void setCategories(List<Category> categories);
 
     void setInWishlist(boolean inWishlist);
+
+    void setSalePrice(Integer salePrice);
+
+    Integer getPrice();
+
+    Sale getSale();
 }

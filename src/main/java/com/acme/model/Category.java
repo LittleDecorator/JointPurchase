@@ -1,5 +1,6 @@
 package com.acme.model;
 
+import java.io.Serializable;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
-public class Category implements BaseModel{
+public class Category implements BaseModel {
 
     @Id
     @GeneratedValue(generator = "system-uuid")

@@ -7,6 +7,7 @@ import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.OrderItem;
 import com.acme.model.Product;
+import com.acme.model.Sale;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.CatalogFilter;
@@ -15,6 +16,7 @@ import com.acme.repository.specification.CatalogSpecifications;
 import com.acme.service.ItemService;
 import com.acme.constant.Constants;
 import com.google.common.collect.Lists;
+import java.util.Date;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -205,6 +207,13 @@ public class ItemServiceImpl implements ItemService {
             contentOptional.ifPresent(itemContent -> item.setUrl(Constants.PREVIEW_URL + itemContent.getContentId()));
         }
         item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+
+        // TODO: если время акции не настало, то мы не должны её вообще получать для товара
+        Sale sale = item.getSale();
+        Date now = new Date();
+        if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+        }
     }
 
     @Override

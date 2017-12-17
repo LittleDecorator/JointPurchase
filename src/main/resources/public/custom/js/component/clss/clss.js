@@ -110,10 +110,13 @@
             vm.init = init;
             vm.select = select;
             vm.findSelected = findSelected;
+            vm.toogleSelection = toogleSelection;
             vm.apply = apply;
             vm.clear = clear;
             
             vm.items = [];
+            // тут будем хранить выбранные
+            vm.selected = [];
             vm.filter = {name:null, article:null};
 
             /**
@@ -133,28 +136,46 @@
                     }
                 });
             }
-            
-            function select(){
-                var data = [];
-                angular.forEach(vm.items,function(elem){
-                    if(elem.selected){
-                        data.push(elem);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                $scope.closeThisDialog(data);
-            }
-            
+
+           /**
+            * Подтверждение выбора
+            */
+           function select(){
+              console.log(vm.selected)
+              var data = [], result;
+              angular.forEach(vm.items,function(elem){
+                 if(elem.selected){
+                    data.push(elem);
+                    return true;
+                 } else {
+                    return false;
+                 }
+              });
+               result = vm.selected.concat(data).unique('id');
+               console.log(result);
+                $scope.closeThisDialog(result);
+           }
+
+           /**
+            * Слушатель события выборв/снятия выбора товара
+            */
+           function toogleSelection(){
+
+           }
+
+            // поиск отмеченных
             function findSelected(array){
                 var selected = resolved.map(function(item){
                     return item['id'];
                 });
                 if(selected){
                     angular.forEach(array, function(item){
-                        if(selected.indexOf(item.id)!=-1){
+                        if(selected.indexOf(item.id) !== -1){
                             item.selected = true;
+                            // откладываем копию в список отмеченых
+                           if(!helpers.arrayContainById(vm.selected, item.id)){
+                              vm.selected.push(angular.copy(item))
+                           }
                         }
                     });
                 }

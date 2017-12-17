@@ -1,5 +1,8 @@
 package com.acme.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "sale")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Sale {
 
     @Id
@@ -40,7 +44,14 @@ public class Sale {
     @JoinTable(name="sale_item",
             joinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")},
             inverseJoinColumns={@JoinColumn(name="item_id", referencedColumnName="id")})
+    @JsonBackReference
+    @JsonIgnore
     private List<Item> items;
+
+    private boolean active;
+
+    @Column(name = "translite_name")
+    private String transliteName;
 
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
@@ -115,5 +126,21 @@ public class Sale {
 
     public void setDateAdd(Date dateAdd) {
         this.dateAdd = dateAdd;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getTransliteName() {
+        return transliteName;
+    }
+
+    public void setTransliteName(String transliteName) {
+        this.transliteName = transliteName;
     }
 }

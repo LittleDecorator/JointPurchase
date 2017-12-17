@@ -327,3 +327,21 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this; // for testing purposes
 };
+
+Array.prototype.unique = function(prop) {
+   var a = this.concat();
+   for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+          if(prop){
+             if(a[i][prop] === a[j][prop])
+                a.splice(j--, 1);
+          } else {
+             if(a[i] === a[j])
+                a.splice(j--, 1);
+          }
+
+      }
+   }
+
+   return a;
+};

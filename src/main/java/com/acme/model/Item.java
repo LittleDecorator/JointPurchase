@@ -2,7 +2,9 @@ package com.acme.model;
 
 import com.acme.enums.ItemStatus;
 import com.acme.enums.converters.ItemStatusConverter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
@@ -17,7 +19,7 @@ import java.util.List;
 @Document(indexName = "item-index",type = "item-type")
 @Setting(settingPath = "/elastic/item/settings.json")
 @Mapping(mappingPath = "/elastic/item/mappings.json")
-public class Item implements Product{
+public class Item implements Product, Serializable{
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -72,13 +74,27 @@ public class Item implements Product{
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "sale_item",
+        joinColumns={@JoinColumn(name="item_id", referencedColumnName="id")},
+        inverseJoinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")})
+    @JsonBackReference
+    private Sale sale;
+
     @Transient
+    private Integer salePrice;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="category_item",
+        joinColumns={@JoinColumn(name="item_id", referencedColumnName="id")},
+        inverseJoinColumns={@JoinColumn(name="category_id", referencedColumnName="id")})
     private List<Category> categories;
 
-    @Transient
     @JsonProperty("images")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
     private List<ItemContent> itemContents;
 
+    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
     @Transient
     private List<OrderItem> orderItems;
 
@@ -251,5 +267,21 @@ public class Item implements Product{
 
     public void setBestseller(boolean bestseller) {
         this.bestseller = bestseller;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
+
+    public Integer getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Integer salePrice) {
+        this.salePrice = salePrice;
     }
 }

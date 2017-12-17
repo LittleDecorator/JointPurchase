@@ -9,6 +9,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -38,6 +39,15 @@ public class Catalog implements Product {
 
     @Column(name = "price", updatable = false)
     private Integer price;
+
+    @OneToOne
+    @JoinTable(name = "sale_item",
+        joinColumns={@JoinColumn(name="item_id", referencedColumnName="id")},
+        inverseJoinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")})
+    private Sale sale;
+
+    @Transient
+    private Integer salePrice;
 
     @Column(name = "age")
     private String age;
@@ -202,5 +212,21 @@ public class Catalog implements Product {
 
     public void setInWishlist(boolean inWishlist) {
         this.inWishlist = inWishlist;
+    }
+
+    public Integer getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(Integer salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
     }
 }

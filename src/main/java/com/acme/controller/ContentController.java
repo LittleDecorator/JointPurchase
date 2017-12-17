@@ -21,6 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Collections;
+import java.util.Optional;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -179,9 +180,9 @@ public class ContentController{
     }
 
     @RequestMapping(value = "/upload/sale", method = RequestMethod.POST)
-    public void saleBannerUpload(MultipartHttpServletRequest request, @RequestParam(value = "saleId") String saleId) throws Exception {
+    public String saleBannerUpload(MultipartHttpServletRequest request, @RequestParam(value = "saleId") String saleId) throws Exception {
         //TODO: либо загружать одну, либо добавить таблицу связи
-        Content content;
+        Content content = null;
 
         Map<String, MultipartFile> fileMap = request.getFileMap();
 
@@ -203,6 +204,7 @@ public class ContentController{
                 saleRepository.save(sale);
             }
         }
+        return content == null ? null : content.getId();
     }
 
     /**
@@ -272,6 +274,16 @@ public class ContentController{
             result.setUrl(Constants.GALLERY_URL + sale.getBannerId());
         }
         return result;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/sale/{id}", method = RequestMethod.DELETE)
+    public void deleteSaleContent(@PathVariable(value = "id") String saleId){
+        Sale sale = saleRepository.findOne(saleId);
+        String contentId = sale.getBannerId();
+        sale.setBannerId(null);
+        saleRepository.save(sale);
+        contentRepository.delete(contentId);
     }
 
     @RequestMapping(value = "/company/{id}", method = RequestMethod.DELETE)

@@ -221,7 +221,8 @@ var route = {
              }
           },
           data: {
-             requireLogin: true, displayName: '{{sale.title|nvl:"Создание"}}'
+             requireLogin: true,
+             displayName: '{{sale.title|nvl:"Создание"}}'
           },
           resolve: {
              sale: function ($stateParams, resolveService) {
@@ -239,7 +240,8 @@ var route = {
           }
         }, 
         data: {
-          requireLogin: false
+           requireLogin: false,
+           displayName: 'Акции'
         }, 
         metaTags: {
           title: 'Акции', 

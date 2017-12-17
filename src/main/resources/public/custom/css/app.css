@@ -1,4 +1,8 @@
 
+md-tooltip {
+    font-size: .93em!important;
+}
+
 .layout-padding, .layout-padding-gt-sm, .layout-padding-gt-sm>*, .layout-padding-md, .layout-padding-md>*, .layout-padding>*, .layout-padding>.flex, .layout-padding>.flex-gt-sm, .layout-padding>.flex-md {
     padding: 0;
 }

@@ -1,5 +1,5 @@
-<div ng-form="vm.forms.saleCard">
-    <md-card class="md-padding">
+<div ng-form="vm.forms.saleCard" style="padding-bottom: 50px">
+    <md-card class="md-padding" style="margin-left: 0; margin-right: 0;">
 
         <div layout="column">
 
@@ -11,7 +11,7 @@
                 </md-input-container>
 
                 <md-input-container class="no-errors" flex="15" style="margin-left:2%">
-                    <label>Размер скидки</label>
+                    <label>Размер скидки,%</label>
                     <input ng-model="vm.sale.discount" >
                 </md-input-container>
 
@@ -26,17 +26,28 @@
                 <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.sale.description"></textarea>
             </md-input-container>
 
+            <md-checkbox ng-model="vm.sale.active" ng-change="activateSale()">
+                Акция активна
+            </md-checkbox>
+
         </div>
     </md-card>
 
     <div ng-show="vm.sale.items && vm.sale.items.length > 0">
         <h5>Товары:</h5>
-        <md-card class="md-padding">
+        <md-card class="md-padding" style="margin-left: 0; margin-right: 0;">
 
             <div class="table-result" style="margin-top: 5px;overflow: auto; max-height: 400px;">
                 <table class="bordered table-result">
                     <tbody>
-                    <tr ng-repeat="item in vm.sale.items track by item.id" class="row" ng-class="{'no-bottom-border':$last}">
+                    <tr ng-repeat="item in vm.sale.items track by item.id" class="row" ng-class="{'no-bottom-border':$last, 'blocked': item.blocked }">
+                        <td style="width: 40px">
+                            <div ng-show="item.blocked" style="max-width: 30px;">
+                                <md-tooltip md-direction="top right">Выбранный товар уже участвует в акции "{{item.sale.title}}" время проведения {{item.sale.startDate|date:'dd.MM.yyyy'}} - {{item.sale.endDate|date:'dd.MM.yyyy'}}</md-tooltip>
+                                <md-icon style="height: inherit; line-height: 1; font-size: 24px;">error_outline</md-icon>
+                            </div>
+
+                        </td>
                         <td class="col s3 non-float">{{::item.article}}</td>
                         <td class="col non-float">{{::item.name}}</td>
                         <td class="col s1 non-float" style="text-align: right">
@@ -56,17 +67,15 @@
         </md-card>
     </div>
 
-    <div ng-show="vm.sale.bannerId">
+    <div ng-if="vm.sale.bannerId">
         <h5>Баннер:</h5>
-        <md-card class="md-padding">
-            <div class="wrap">
-                <div class="box">
-                    <div class="boxInner">
-                        <a class="item" ng-href="media/image/view/{{::vm.sale.bannerId}}" title="Some Title">
-                            <img ng-src="media/image/view/{{::vm.sale.bannerId}}" style="max-width: 100%; height: auto;position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
-                        </a>
-                    </div>
-                </div>
+        <md-card class="md-padding" style="margin-left: 0; margin-right: 0;">
+
+            <div class="waves-effect waves-block waves-light md-card-image">
+                <img ng-src="media/image/ORIGINAL/{{::vm.sale.bannerId}}" class="responsive-img" style="display: block;width: 100%;"/>
+                <md-button style="position: fixed; top: 0; right: 0; min-width: 60px; background-color: rgba(33,33,33,0.75); min-height: 60px;" ng-click="vm.deleteBanner()">
+                    <md-icon style="font-size: 3em; height: 45px; width: 45px; color: whitesmoke;">delete</md-icon>
+                </md-button>
             </div>
 
             <div class="table-result" ng-if="!vm.sale.bannerId">
@@ -86,7 +95,7 @@
         <md-icon>add</md-icon>
     </md-button>
 
-    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" style="bottom: 45px; right: 24px;" ng-class="{'disabled':!vm.forms.saleCard.$dirty}">
+    <md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" style="bottom: 45px; right: 24px;" ng-class="{'disabled': !vm.forms.saleCard.$dirty || !vm.forms.saleCard.$valid}">
         <md-icon>save</md-icon>
     </md-button>
 

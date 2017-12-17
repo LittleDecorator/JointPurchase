@@ -29,7 +29,7 @@
           vm.init = init;
 
           // используется только под администратором
-          vm.searchFilter = {category: null, subcategory: null, company: null, criteria: null, offset: 0, limit: limit};
+          vm.searchFilter = {category: null, subcategory: null, sale: null, company: null, criteria: null, offset: 0, limit: limit};
           vm.items = [];
           vm.categories = [];
           vm.companies = [];

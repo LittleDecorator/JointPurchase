@@ -28,12 +28,12 @@
                 <h6><b>Возраст:</b> {{::vm.item.age}}</h6>
                 <h6><b>Артикул:</b> {{::vm.item.article}}</h6>
                 <br/>
-                <b>Цена: </b>{{::vm.item.price}} руб
-                <!--<a style="cursor: pointer" class=" modal-action modal-close waves-effect waves-green btn-flat" ng-click="mvm.addToCart(vm.item)">Купить</a>-->
+                <b>Цена: </b>
+                <span class="new-price" ng-show="vm.item.salePrice">{{::vm.item.salePrice}} руб</span>
+                <span ng-class="{'old-price':vm.item.salePrice}">{{::vm.item.price}} руб</span>
             </div>
             <md-button class="md-button btn primary" md-no-ink="true" ng-click="mvm.addToCart(vm.item)">В корзину</md-button>
         </div>
     </div>
 
-    <!--<md-button ng-click="vm.goBack()">Back</md-button>-->
 </div>

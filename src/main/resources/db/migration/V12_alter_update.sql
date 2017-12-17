@@ -20,3 +20,5 @@ update item set name='Переносной домик, розовый' where id=
 update item set name='Мелки-камушки 8 шт' where id='fe639000-57cd-4cc3-8368-94d47b8369c6'
 
 --https://serverfault.com/questions/496530/sudo-etc-init-d-postgresql-restart-how-to-chose-which-installation
+alter table sale add column translite_name varchar(128);
+alter table sale add column active boolean default false;

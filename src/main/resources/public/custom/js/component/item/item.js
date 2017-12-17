@@ -37,7 +37,7 @@
 
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, limit:60, offset:0};
+                vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
                 vm.confirmedFilter = angular.copy(vm.filter);
                 vm.stopLoad=false;
                 vm.detailLock=false;
@@ -229,12 +229,12 @@
 
         /* Карточка товара */
         .controller('itemDetailController',['$rootScope','$scope','$stateParams','$state','dataResources','modal','$timeout','item','companies','$mdToast','$filter','statuses','transliteratorService',
-            function ($rootScope,$scope, $stateParams, $state, dataResources,modal,$timeout,item,companies,$mdToast,$filter,statuses, transliteratorService){
+            function ($rootScope,$scope, $stateParams, $state, dataResources, modal, $timeout, item, companies, $mdToast, $filter, statuses, transliteratorService){
 
                 var mvm = $scope.$parent.mvm;
                 mvm.showDetail = true;
                 var vm = this;
-
+               console.log(item)
                 vm.validate = validate;
                 vm.showCategoryModal = showCategoryModal;
                 vm.save = save;

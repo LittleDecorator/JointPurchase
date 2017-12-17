@@ -3,6 +3,7 @@ package com.acme.controller;
 import com.acme.elasticsearch.repository.CatalogRepository;
 import com.acme.enums.OrderStatus;
 import com.acme.model.*;
+import com.acme.model.dto.ItemMapDto;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
@@ -142,9 +143,7 @@ public class ItemController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Item getItemDetail(@PathVariable("id") String id) {
-        Item item = itemRepository.findOne(id);
-        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
-        return item;
+        return itemRepository.findOne(id);
     }
 
     /**
@@ -183,8 +182,14 @@ public class ItemController {
      * Получение мапы товара для списков
      **/
     @RequestMapping(method = RequestMethod.GET, value = "/map")
-    public List<ItemMap> getItemMap(@RequestParam(name = "name", required = false) String name, @RequestParam(value = "article", required = false) String article) {
-        return itemRepository.findAll(ItemSpecifications.modalFilter(name, article)).stream().map(i -> new ItemMap(i.getId(), i.getName(), i.getPrice(), i.getArticle())).collect(Collectors.toList());
+    public List<ItemMapDto> getItemMap(@RequestParam(name = "name", required = false) String name, @RequestParam(value = "article", required = false) String article) {
+        List<Item> items = itemRepository.findAll(ItemSpecifications.modalFilter(name, article));
+        List<ItemMapDto> result = items.stream().map(i -> {
+            ItemMapDto itemMap = new ItemMapDto(i.getId(), i.getName(), i.getPrice(), i.getArticle());
+            itemMap.setSale(i.getSale());
+            return itemMap;
+        }).collect(Collectors.toList());
+        return result;
     }
 
     /**
@@ -207,52 +212,5 @@ public class ItemController {
         itemRepository.save(item);
     }
 
-    /*------ NESTED -------*/
-
-    private class ItemMap {
-        String id;
-        String name;
-        double price;
-        String article;
-
-        ItemMap(String id, String name, double price, String article) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-            this.article = article;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public String getArticle() {
-            return article;
-        }
-
-        public void setArticle(String article) {
-            this.article = article;
-        }
-    }
 }
 
