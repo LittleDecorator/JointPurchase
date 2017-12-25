@@ -240,7 +240,7 @@ var route = {
           }
         }, 
         data: {
-           requireLogin: false,
+           requireLogin: true,
            displayName: 'Акции'
         }, 
         metaTags: {
@@ -397,8 +397,10 @@ var route = {
           node: function ($stateParams, resolveService) {
             if ($stateParams.type === 'category') {
               return resolveService.getCategory($stateParams.name);
-            } else {
+            } else if($stateParams.type === 'company') {
               return resolveService.getCompanyByName($stateParams.name);
+            } else {
+               return resolveService.getSaleByName($stateParams.name);
             }
           }
         },

@@ -258,6 +258,19 @@
             return deferred.promise;
           };
 
+           this.getSaleByName = function(name){
+              var deferred = $q.defer();
+              if(name){
+                 dataResources.saleByName.get({name:name},function(data){
+                    deferred.resolve(data);
+                 });
+              } else {
+                 deferred.resolve({});
+              }
+              return deferred.promise;
+           };
+
+
             this.getCompanyMap = function(){
                 var deferred = $q.defer();
                 dataResources.companyMap.get(function(res){

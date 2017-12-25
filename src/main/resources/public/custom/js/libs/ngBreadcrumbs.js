@@ -26,9 +26,7 @@
 
                     // тут мы меняем видимость списочной области области при навигации
                     var stateName = $state.$current.name;
-                    console.log(stateName)
                     scope.showDetail = (stateName.includes('detail') || stateName.includes('card')) && !stateName.includes('gallery');
-                    console.log('showDetail', scope.showDetail)
                     scope.base = $state.$current.data.base;
                 });
 

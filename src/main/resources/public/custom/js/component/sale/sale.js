@@ -32,7 +32,6 @@
 
           /* Получение данных */
           function loadData(isClean) {
-             console.log("load sales")
              if (!vm.scrolling.stopLoad && !busy) {
                 busy = true;
 
@@ -127,7 +126,7 @@
           }
        }])
 
-       .controller('saleDetailController', ['$scope', '$rootScope', '$state', '$stateParams', '$mdToast', '$filter', 'dataResources', 'sale', 'FileUploader', 'itemClssModal', function ($scope, $rootScope, $state, $stateParams, $mdToast, $filter, dataResources, sale, FileUploader, itemClssModal) {
+       .controller('saleDetailController', ['$scope', '$rootScope', '$state', '$stateParams', '$mdToast', '$filter', 'dataResources', 'sale', 'FileUploader', 'itemClssModal','modal', function ($scope, $rootScope, $state, $stateParams, $mdToast, $filter, dataResources, sale, FileUploader, itemClssModal,modal) {
           var mvm = $scope.$parent.mvm;
           var vm = this;
           var uploader = $scope.uploader = new FileUploader();
@@ -175,8 +174,21 @@
            * Добавление товара в список участвующих в акции
            * @param itemId
            */
-          function addItem() {
-             var dialog = itemClssModal(vm.sale.items, 'wp-50');
+          function addItem(clazz) {
+             var dialog;
+             if(clazz){
+                dialog = modal({
+                   templateUrl: "pages/fragment/modal/itemModal.html",
+                   className: 'ngdialog-theme-default fullscreen' ,
+                   closeByEscape: true,
+                   controller: "itemClssController as vm",
+                   data: vm.sale.items
+                });
+             } else {
+                 dialog  = itemClssModal(vm.sale.items, 'wp-50');
+             }
+
+             // var dialog
              dialog.closePromise.then(function (output) {
                 if (output.value && output.value !== '$escape') {
 

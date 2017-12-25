@@ -1,39 +1,131 @@
+<div  ng-form="vm.forms.saleCard">
+
 <div class="card">
     <div class="card-content" layout="column">
 
         <md-input-container class="no-errors">
-            <label>Тип уведомления</label>
-            <input ng-model="::vm.notification.type.name" disabled>
+            <label>Название</label>
+            <input ng-model="vm.sale.title" >
         </md-input-container>
 
         <md-input-container class="no-errors">
-            <label>Дата создания</label>
-            <input ng-model="::vm.notification.dateAdd" disabled>
+            <label>Размер скидки,%</label>
+            <input ng-model="vm.sale.discount" >
         </md-input-container>
 
-        <md-input-container class="no-errors">
-            <label>Заголовок</label>
-            <input ng-model="::vm.notification.title" disabled>
-        </md-input-container>
+        <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="startDate" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="vm.sale.startDate" style="margin-left: 1%"></mdp-date-picker>
+
+        <mdp-date-picker flex="15" mdp-open-on-click class="no-errors" name="orderTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="vm.sale.endDate" style="margin-left: 1%"></mdp-date-picker>
 
         <md-input-container style="margin-bottom: 0">
-            <label>Текст уведомления</label>
-            <textarea ng-model="::vm.notification.text" disabled></textarea>
+            <label>Описание</label>
+            <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.sale.description" ></textarea>
         </md-input-container>
 
-        <md-input-container class="no-errors">
-            <label>Просмотрено</label>
-            <input ng-model="::vm.notification.viewedSubject.fullName" disabled>
-        </md-input-container>
+        <md-checkbox ng-model="vm.sale.active" ng-change="activateSale()">
+            Акция активна
+        </md-checkbox>
 
-        <md-input-container class="no-errors">
-            <label>Дата просмотра</label>
-            <input ng-model="::vm.notification.viewDate" disabled>
-        </md-input-container>
+    </div>
+</div>
 
-        <!-- Доделать формирование ссылки на причину уведомления -->
-        <!--<a ui-sref="">Ссылка на причину уведомления</a>-->
+    <div ng-show="vm.sale.items && vm.sale.items.length > 0">
+        <h5>Товары:</h5>
+        <md-card class="md-padding" style="margin-left: 0; margin-right: 0;">
 
+            <div class="table-result" style="margin-top: 5px;overflow: auto; max-height: 400px;">
+                <table class="bordered table-result">
+                    <tbody>
+                    <tr ng-repeat="item in vm.sale.items track by item.id" class="row" ng-class="{'no-bottom-border':$last, 'blocked': item.blocked }">
+                        <td style="width: 40px">
+                            <div ng-show="item.blocked" style="max-width: 30px;">
+                                <md-tooltip md-direction="top right">Выбранный товар уже участвует в акции "{{item.sale.title}}" время проведения {{item.sale.startDate|date:'dd.MM.yyyy'}} - {{item.sale.endDate|date:'dd.MM.yyyy'}}</md-tooltip>
+                                <md-icon style="height: inherit; line-height: 1; font-size: 24px;">error_outline</md-icon>
+                            </div>
+
+                        </td>
+                        <td class="col s3 non-float">{{::item.article}}</td>
+                        <td class="col non-float">{{::item.name}}</td>
+                        <td class="col s1 non-float" style="text-align: right">
+                            <div style="cursor: pointer" ng-click="vm.removeItem($index)">
+                                <i class="small mdi-content-clear" style="color: #ee6e73"></i>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-result" ng-if="(!vm.sale.items || vm.sale.items.length == 0)" style="margin-top: 5px;background-color: rgb(250,250,250); border: 1px solid;" >
+                <span >Ни одного товара не связано с выбранной акцией</span>
+            </div>
+
+        </md-card>
+    </div>
+
+    <div ng-if="vm.sale.bannerId">
+        <h5>Баннер:</h5>
+        <md-card class="md-padding" style="margin-left: 0; margin-right: 0;">
+
+            <div class="waves-effect waves-block waves-light md-card-image">
+                <img ng-src="media/image/ORIGINAL/{{::vm.sale.bannerId}}" class="responsive-img" style="display: block;width: 100%;"/>
+                <md-button style="position: fixed; top: 0; left: 0; min-width: 30px; background-color: rgba(33,33,33,0.75); min-height: 30px;" ng-click="vm.deleteBanner()">
+                    <md-icon style="font-size: 2em; height: 30px; width: 30px; color: whitesmoke;">delete</md-icon>
+                </md-button>
+            </div>
+
+            <div class="table-result" ng-if="!vm.sale.bannerId">
+                <span style="margin-right: 2%">Не добавлено ни одного изображения</span>
+            </div>
+
+        </md-card>
+    </div>
+
+    <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" multiple style="display: none"/>
+
+    <!--<md-button class="md-fab blue lighten-3 fixed-action-btn" ng-disabled="vm.sale.bannerId" ng-click="vm.addBanner()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}" style="bottom: 200px; right: 24px;">-->
+        <!--<md-icon>photo</md-icon>-->
+    <!--</md-button>-->
+
+    <!--<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.addItem()" style="bottom: 120px; right: 24px;">-->
+        <!--<md-icon>add</md-icon>-->
+    <!--</md-button>-->
+
+    <!--<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" style="bottom: 45px; right: 24px;" ng-class="{'disabled': !vm.forms.saleCard.$dirty || !vm.forms.saleCard.$valid}">-->
+        <!--<md-icon>save</md-icon>-->
+    <!--</md-button>-->
+
+    <div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; bottom: 22px; margin-bottom: 0;">
+        <md-fab-speed-dial md-open="false" md-direction="left" ng-class="'md-scale'">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab blue lighten-2 fixed-action-btn" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">
+                    <md-icon>more_vert</md-icon>
+                </md-button>
+            </md-fab-trigger>
+
+            <md-fab-actions>
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.save()" ng-class="{'disabled': !vm.forms.saleCard.$dirty || !vm.forms.saleCard.$valid}">
+                    <md-icon>save</md-icon>
+                </md-button>
+
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.addBanner()" ng-disabled="vm.sale.bannerId">
+                    <md-icon>photo</md-icon>
+                </md-button>
+
+                <!--<md-button class="md-fab green lighten-2 md-mini" ng-click="vm.addItem('fullscreen')">-->
+                    <!--<md-icon>open_in_new</md-icon>-->
+                <!--</md-button>-->
+
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.addItem('fullscreen')" ng-if="mvm.width < 601">
+                    <md-icon>open_in_new</md-icon>
+                </md-button>
+
+                <md-button class="md-fab green lighten-2 md-mini" ng-click="vm.addItem('w-50')" ng-if="600 < mvm.width && mvm.width < 992">
+                    <md-icon>add</md-icon>
+                </md-button>
+
+            </md-fab-actions>
+        </md-fab-speed-dial>
     </div>
 
 </div>

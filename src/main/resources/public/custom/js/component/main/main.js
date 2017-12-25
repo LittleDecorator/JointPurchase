@@ -209,6 +209,7 @@
              }
              mvm.cart.cou++;
              store.set("cart", mvm.cart);
+             console.log(mvm.cart)
 
              // Показываем тост и добавляем действие
              $mdToast.show(toast).then(function (response) {
@@ -225,6 +226,7 @@
            * Очистка корзины
            */
           function clearCart() {
+             console.log('clearCart')
              store.remove('cart');
              mvm.cart = {cou: 0, content: []};
              mvm.initCart();
@@ -249,7 +251,6 @@
            * явный logout через меню
            */
           function logout() {
-
              if ($mdSidenav('left').isOpen() && mvm.width < 1530) {
                 $mdSidenav('left').close();
              }
@@ -262,7 +263,9 @@
              store.remove('cart');
              store.remove('wishListEmail');
              mvm.cart = {cou: 0, content: []};
-             $state.go('home');
+             if($state.current.data && $state.current.data.requireLogin){
+                $state.go('home');
+             }
           }
 
           /**
@@ -628,7 +631,7 @@
            * Событие загрузки шаблона
            */
           function afterMenuInclude() {
-             console.log("afterMenuInclude");
+             // console.log("afterMenuInclude");
           }
 
           /* подтверждение аутентификации, получение token'а */

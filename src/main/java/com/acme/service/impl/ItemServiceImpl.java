@@ -211,7 +211,7 @@ public class ItemServiceImpl implements ItemService {
         // TODO: если время акции не настало, то мы не должны её вообще получать для товара
         Sale sale = item.getSale();
         Date now = new Date();
-        if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+        if(sale !=null && sale.isActive() && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
             item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
         }
     }

@@ -121,17 +121,18 @@
              //    $("#spinner").fadeTo(800, 1, function(){ $(this).show()});
              //},10);
 
-             if (localStorage.getItem('token') === undefined) {
+             var token = localStorage.getItem('token');
+             if (!token) {
                 localStorage.removeItem('menus');
                 localStorage.removeItem('subMenus');
                 $rootScope.currentUser = {};
                 $rootScope.menus = [];
-                if (toState.data.requireLogin) {
+                if (toState.data && toState.data.requireLogin) {
                    event.preventDefault();
-                   $state.go('login');
+                   $state.go('home');
                 }
              } else {
-                if (fromState.name !== toState.parent) {
+                if (fromState.name !== toState.parent && fromState.name !== 'cart') {
                    localStorage.removeItem(fromState.name);
                 }
              }

@@ -40,9 +40,8 @@
                 var sum = 0;
                 for (var i = data.length - 1; i >= 0; i--) {
                     var item = data[i];
-                    sum += parseInt(item.cou * item.price);
+                    sum += parseInt(item.cou * (item.salePrice ? item.salePrice : item.price));
                 }
-
                 return sum;
             };
         })

@@ -492,7 +492,7 @@
                     });
 
                     dialog.closePromise.then(function (output) {
-                        if (output.value && output.value != '$escape') {
+                        if (output.value && output.value !== '$escape') {
                             vm.data.categoryItems = output.value;
                         }
                     });

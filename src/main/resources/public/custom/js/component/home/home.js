@@ -130,9 +130,10 @@
              $state.go('catalog.type', {name: companyName, type: 'company'});
           }
 
-          function toCatalogBySale() {
-             var saleName = saleCarousel.find('.active').attr('id');
-             $state.go('catalog.type', {name: saleName, type: 'sale'});
+          function toCatalogBySale(sale) {
+             console.log(sale)
+             // var saleName = saleCarousel.find('.active').attr('id');
+             $state.go('catalog.type', {name: sale.transliteName, type: 'sale'});
           }
 
           function toItemDetail(itemName) {
@@ -358,7 +359,7 @@
              // проставим цвета плиткам категорий
              angular.forEach($('.categoryBlock'), function (elem) {
                 elem.style.backgroundColor = getRandomColor();
-             })
+             });
           }, 1000);
        }]);
 })();

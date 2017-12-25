@@ -212,5 +212,24 @@ public class ItemController {
         itemRepository.save(item);
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/refresh")
+    public Collection<Item> refreshCart(@RequestBody List<Item> items){
+        Map<String, Item> map = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
+        for(Item item : itemRepository.findAll(map.keySet())){
+            Sale sale = item.getSale();
+            Date now = new Date();
+            Item cartItem = map.get(item.getId());
+            if(sale !=null && sale.isActive() && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+                cartItem.setSale(sale);
+                cartItem.setPrice(item.getPrice());
+                cartItem.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+            } else {
+                cartItem.setSale(null);
+                cartItem.setSalePrice(null);
+            }
+        }
+        return map.values();
+    }
+
 }
 

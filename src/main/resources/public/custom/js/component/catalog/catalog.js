@@ -49,6 +49,7 @@
           function init() {
              // выбранный узел бокового меню
              if (node) {
+                console.log(node)
                 // promise получение подкатегорий
                 var categoryPromise = null;
                 var companyPromise = null;
@@ -72,11 +73,24 @@
                    categoryPromise = dataResources.categoryChildrenMap.get({id: node.id});
                    // получить всех производителей для подкатегорий
                    companyPromise = dataResources.categoryChildrenCompanyMap.get({id: node.id});
-                } else {
+                }
+                if ($stateParams.type === 'company') {
                    // если выбранный узел относится к Производителям
                    vm.searchFilter.company = node.id;
                    // получим все категории для данного производителя
                    categoryPromise = dataResources.companyCategories.get({id: node.id});
+                }
+                if($stateParams.type === 'sale'){
+                   vm.searchFilter.sale = node.id;
+                   vm.items = node.items;
+                   console.log(node)
+                   vm.currentNodeType = 'sale';
+                   vm.currentNode = {contentId:node.bannerId, description: node.description, title: node.title, startDate: node.startDate, endDate: node.endDate};
+                   vm.items.forEach(function (elem, idx) {
+                      elem.url = 'media/image/preview/'+ elem.images[0].contentId;
+                   });
+                   vm.stopLoad = true;
+                   vm.allDataLoaded = true;
                 }
 
                 vm.searchFilter.clientEmail = mvm.wishListEmail;
@@ -125,7 +139,7 @@
              }
 
              // инициируем первый запрос если просмотр с мобильника
-             if (vm.showLoadMore) {
+             if (vm.showLoadMore && $stateParams.type !== 'sale') {
                 loadData();
              }
 

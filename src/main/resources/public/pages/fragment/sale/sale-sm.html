@@ -1,16 +1,34 @@
-<md-list flex id="notification-list">
-    <div class="card-panel" ng-repeat="notification in vm.notifications track by notification.id" ng-class="{'md-accent': notification.type.id == 'error'}" style="padding: 5px 10px">
-        <md-list-item class="md-2-line" style="padding: 0">
+<div class="card" ng-repeat="sale in vm.sales track by sale.id">
+    <div class="card-content" style="padding: 15px!important;">
+            <span class="card-title text-darken-4" style="color: #846C63; font-size: 20px;" layout="row">
+                <span flex="80" style="font-size: 1.2rem">{{::sale.title}}</span>
+                <div flex></div>
+                <md-menu flex="nogrow" style="padding: 0; line-height: 2">
+                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                        <i class="material-icons" style="font-size: 30px;">menu</i>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item><md-button ng-click="vm.editSale(sale.id)"><md-icon>edit</md-icon><span>Редактировать</span></md-button></md-menu-item>
+                        <md-menu-item><md-button ng-click="vm.deleteSale(sale.id,$index)"><md-icon>clear</md-icon>Удалить</md-button></md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </span>
+        <div class="card-panel" style="margin: 0">
+            <div layout="column">
+                <div layout="row" layout-xs="column">
+                    <md-input-container flex="50" flex-xs="100">
+                        <label>Дата проведения</label>
+                        <input value="с {{::sale.startDate| date:'dd.MM.yyyy'}} по {{::sale.endDate| date:'dd.MM.yyyy'}}" disabled>
+                    </md-input-container>
+                    <md-input-container flex="50" flex-xs="100" style="margin-left: 1%">
+                        <label>Скидка</label>
+                        <input value="{{::sale.discount}}%" disabled>
+                    </md-input-container>
+                </div>
 
-            <div class="md-list-item-text" layout="column">
-                <p>{{::notification.dateAdd| date:'dd.MM.yyyy HH:mm:ss'}} <md-icon class="md-avatar-icon yellow-text text-darken-2" ng-if="!notification.viewed" style="background-color: transparent;font-size: 16px;min-height: 16px;height: 16px;min-width: 16px;width: 16px;padding-top: 0;margin: 0 0 auto auto;padding-bottom: 5px;padding-right: 0;">star</md-icon></p>
-                <span style="font-size: 1.3rem; line-height: 24px;">{{::notification.title}}</span>
+                <md-checkbox ng-model="sale.active" ng-disabled="true">Акция активна</md-checkbox>
             </div>
-
-
-            <md-button class="md-button btn" md-no-ink="true" ng-click="vm.checkNotification(notification)" style="margin: auto; min-height: 40px; min-width: 40px; width: 40px; padding: 0 5px 0 0;">
-                <md-icon style="font-size: 30px; color: white; height: 30px;">edit</md-icon>
-            </md-button>
-        </md-list-item>
+        </div>
     </div>
-</md-list>
+
+</div>

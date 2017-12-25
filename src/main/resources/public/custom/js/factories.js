@@ -46,7 +46,9 @@
         .factory('dataResources',['$resource','$filter',function($resource,$filter){
             var xlsxContentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
             return {
-
+               cart: $resource('/api/item/refresh',{},{
+                  refresh:{method:'PUT', isArray:true}
+               }),
                 catalog: {
                     list : $resource('/api/catalog',{},{
                         all:{method:'POST',isArray:true}
@@ -411,7 +413,14 @@
                     post:{method:'POST',isArray:false},
                     delete:{method:'DELETE',isArray:false},
                     activate:{method:'PATCH',isArray:false}
-                })
+                }),
+               saleByName: $resource("/api/sale/detail",{},{
+                  get: {method:'GET',isArray:false, transformResponse:function(data, headers){
+                     var result = angular.fromJson(data);
+                     result.name = result.title;
+                     return result;
+                  }},
+               }),
                 
             }
         }])

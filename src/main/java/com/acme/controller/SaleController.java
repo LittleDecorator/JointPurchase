@@ -1,10 +1,12 @@
 package com.acme.controller;
 
+import com.acme.model.Item;
 import com.acme.model.Sale;
 import com.acme.repository.SaleRepository;
 import com.acme.repository.specification.SaleSpecifications;
 import com.google.common.base.Strings;
 import com.ibm.icu.text.Transliterator;
+import java.util.Date;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,15 @@ public class SaleController {
         return saleRepository.findOne(id);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    @Transactional(readOnly = true)
+    public Sale getByName(@RequestParam(name = "name") String transliteName){
+        Sale sale = saleRepository.findOneByTransliteName(transliteName);
+        for(Item item : sale.getItems()){
+            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+        }
+        return sale;
+    }
 
     /**
      * Добавление новой акции
