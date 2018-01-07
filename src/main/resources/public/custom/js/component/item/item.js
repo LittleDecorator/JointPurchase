@@ -48,7 +48,7 @@
                 function loadData(isClean){
                     if(!vm.stopLoad && !vm.detailLock && !busy){
                         busy = true;
-
+                        // mvm.showLoader = true;
                         dataResources.item.all(vm.confirmedFilter).$promise.then(function(data){
 
                             if(data.length < vm.confirmedFilter.limit){
@@ -65,6 +65,7 @@
                             vm.confirmedFilter.offset = portion * vm.confirmedFilter.limit;
                             vm.allDataLoaded = true;
                             busy = false;
+                          // mvm.showLoader = false;
                         });
                     }
                 }

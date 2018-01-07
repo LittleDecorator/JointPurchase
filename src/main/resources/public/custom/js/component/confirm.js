@@ -150,7 +150,7 @@
                  */
                 function submitCurrentStep(stepData) {
                     var deferred = $q.defer();
-                    if((vm.data.maxStep == vm.data.stepProgress) && (vm.data.stepProgress == vm.data.selectedStep + 1)){
+                    if((vm.data.maxStep === vm.data.stepProgress) && (vm.data.stepProgress === vm.data.selectedStep + 1)){
                         //если достигли последнего шага
                         vm.data.showBusyText = true;
                         createOrder(deferred).then(function(data){

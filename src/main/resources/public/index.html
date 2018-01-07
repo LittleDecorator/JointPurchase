@@ -113,6 +113,11 @@
         <div ng-include="'pages/template/sideFilter.html'"></div>
     </header>
 
+    <!-- Перделка загрузки (пока выключена) -->
+    <div id="spinner" class="spinner-wrapper" ng-show="mvm.showLoader">
+        <div id="loader"></div>
+    </div>
+
     <!-- Основной контейнер -->
     <!--<main class="main-wrapper">-->
     <main class="main-wrapper">
@@ -128,6 +133,7 @@
             <div ui-view="main" class="template-wrapper" style="margin: auto"></div>
             <div ui-view="detail" class="template-wrapper"></div>
         </div>
+
     </main>
 
     <!-- Возврат на вверх -->

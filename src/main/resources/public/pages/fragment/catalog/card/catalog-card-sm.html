@@ -27,7 +27,10 @@
             <p style="margin: 0">{{::vm.item.description}}</p>
             <md-divider style="margin-top: 5px;margin-bottom: 10px"></md-divider>
             <div layout="row" style="margin-bottom: 10px; align-self: flex-end; font-size: 1.3rem;">
-                <b style="padding-right: 5px">Цена:</b>{{::vm.item.price}} руб
+                <b style="padding-right: 5px">Цена:</b>
+                <!--{{::vm.item.price}} руб-->
+                <span style="padding-right: 5px" ng-class="{'old-price':vm.item.salePrice}">{{::vm.item.price}} руб</span>
+                <span class="new-price" ng-show="vm.item.salePrice">{{::vm.item.salePrice}} руб</span>
             </div>
 
             <div layout="column" layout-align="center center">

@@ -231,8 +231,8 @@
                                 </div>
                                 <div class="col s1 non-float" style="text-align: center; width: 12%;font-size: 1.25em">
                                     <!--<span class="price">{{(item.price * item.cou)|number}} руб</span>-->
-                                    <span class="price" ng-class="{'old-price':item.salePrice}">{{(item.price * item.cou)|number}} руб</span>
-                                    <span style="padding-bottom: 10px;font-size: 1em; display: block" class="new-price" ng-show="item.salePrice">{{(item.salePrice * item.cou)|number}} руб</span>
+                                    <span class="price" ng-hide="item.salePrice">{{(item.price * item.cou)|number}} руб</span>
+                                    <span style="padding-bottom: 10px;font-size: 1em; display: block" class="price" ng-show="item.salePrice">{{(item.salePrice * item.cou)|number}} руб</span>
                                 </div>
                                 <div class="col s1 non-float" style="text-align: center">
                                     <div style="cursor: pointer" ng-click="mvm.removeFromCart($index)">

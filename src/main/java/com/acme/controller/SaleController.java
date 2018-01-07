@@ -2,7 +2,10 @@ package com.acme.controller;
 
 import com.acme.model.Item;
 import com.acme.model.Sale;
+import com.acme.model.dto.SaleRequestDto;
+import com.acme.repository.ItemRepository;
 import com.acme.repository.SaleRepository;
+import com.acme.repository.mapper.SaleMapper;
 import com.acme.repository.specification.SaleSpecifications;
 import com.google.common.base.Strings;
 import com.ibm.icu.text.Transliterator;
@@ -25,7 +28,9 @@ public class SaleController {
     private static String RUSSIAN_TO_LATIN_BGN = "Russian-Latin/BGN";
 
     @Autowired
-    SaleRepository saleRepository;
+    private SaleRepository saleRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     /**
      * Получение списка акций
@@ -70,6 +75,7 @@ public class SaleController {
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public Sale createSale(@RequestBody Sale sale) {
+        sale.setTransliteName(translite(sale.getTitle()));
         return saleRepository.save(sale);
     }
 
@@ -79,8 +85,9 @@ public class SaleController {
      * @param sale
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public void updateSale(@RequestBody Sale sale) {
+        sale.setTransliteName(translite(sale.getTitle()));
         saleRepository.save(sale);
     }
 

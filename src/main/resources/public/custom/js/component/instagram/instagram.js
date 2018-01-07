@@ -16,21 +16,39 @@
             vm.remove = remove;
             vm.save = save;
             vm.countShown = countShown;
+            vm.refresh = refresh;
 
             vm.posts = [];
             vm.toMainIsLocked = false;
 
             function init(){
+              mvm.showLoader = true;
               dataResources.instagram.posts.all({all:true}).$promise.then(function (result) {
                 angular.forEach(result, function(value, key){
                   countShown(value, true);
                   vm.posts.push(value);
                 });
+                vm.posts.sort(desc)
+                mvm.showLoader = false;
               });
             }
 
             function save(){
               dataResources.instagram.posts.put(vm.posts);
+            }
+
+            function refresh(){
+              mvm.showLoader = true;
+              console.log(mvm.showLoader)
+              dataResources.instagram.refresh.all().$promise.then(function (result){
+                vm.posts = [];
+                angular.forEach(result, function(value, key){
+                  countShown(value, true);
+                  vm.posts.push(value);
+                });
+                vm.posts.sort(desc);
+                mvm.showLoader = false;
+              });
             }
 
             function remove(id){
@@ -47,8 +65,13 @@
               } else if(!onlyNegativ){
                 showCount++;
               }
+              // console.log(showCount)
               vm.toMainIsLocked = showCount === 0;
             }
+
+          function desc(x, y){
+            return y.createdTime - x.createdTime
+          }
 
             init();
 

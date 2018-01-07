@@ -361,7 +361,10 @@
                     }),
                     fullPosts: $resource('/api/instagram/visible',{},{
                       all:{method:"GET", isArray:true}
-                    })
+                    }),
+                    refresh: $resource('/api/instagram/refresh',{},{
+                      all:{method:"GET", isArray:true}
+                    }),
                 },
                 report: {
                     items: $resource('/api/report/items/:fileName',{fileName:'@fileName'},{

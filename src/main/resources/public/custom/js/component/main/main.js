@@ -75,6 +75,7 @@
           mvm.lockSideFilter = false;
           // нужно ли отображать view карточки
           mvm.showDetail = false;
+          mvm.showLoader = false;
           mvm.currentSubMenu = null;
 
           /**

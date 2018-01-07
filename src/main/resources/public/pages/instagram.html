@@ -5,7 +5,7 @@
   <div flex-xs flex-gt-sm="33" flex-sm="50" layout="column" ng-repeat="post in vm.posts track by post.originId">
     <md-card>
       <!--<div class="box" style="width: auto; height: 400px;">-->
-      <div class="box" style="width: auto;">
+      <div class="box" style="width: auto; box-shadow: none; margin: 0">
         <div class="boxInner">
           <img ng-src="{{post.contentUrls[0]}}" class="md-card-image" alt="Washed Out" style="width: 100%">
         </div>
@@ -43,7 +43,12 @@
 </md-content>
 </div>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" ng-class="{'disabled':!vm.postsCard.$dirty}" style="bottom: 25px; right: 25px;">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.refresh()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}" style="bottom: 95px; right: 25px;">
+  <md-tooltip md-direction="left">Обновить</md-tooltip>
+  <md-icon>refresh</md-icon>
+</md-button>
+
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-click="vm.save()" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601, 'disabled':!vm.postsCard.$dirty}" style="bottom: 25px; right: 25px;">
   <md-tooltip md-direction="left">Сохранить</md-tooltip>
   <md-icon>save</md-icon>
 </md-button>

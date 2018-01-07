@@ -16,6 +16,11 @@
     background-color:#86A8A8!important;
 }
 
+button.btn-x-small > md-icon {
+  height: 28px!important;
+  width: 28px!important;
+}
+
 .btn:not([disabled]):hover,
 .btn:not(.btn-price):not([disabled]):hover,
 .btn-large:not(.btn-price):not([disabled]):hover {

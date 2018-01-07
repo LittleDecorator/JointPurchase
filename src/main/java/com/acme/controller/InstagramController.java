@@ -40,6 +40,12 @@ public class InstagramController {
         return instagramService.getFullPosts();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/refresh")
+    public List<InstagramPostDto> refreshPosts() throws IOException {
+        uploadMost();
+        return instagramService.getPosts(false);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<InstagramPostDto> getPosts(@RequestParam(value = "all", required = false, defaultValue = "false") boolean all) throws IOException {
         return instagramService.getPosts(all);

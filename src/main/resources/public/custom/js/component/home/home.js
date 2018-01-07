@@ -174,9 +174,21 @@
            *
            */
           function loadPosts() {
-             // TODO: Выключим, пока не придумаем легкий запрос для получения instagram изображений
-             vm.posts = dataResources.instagram.fullPosts.all();
+             dataResources.instagram.fullPosts.all().$promise.then(function(result){
+               vm.posts = result;
+               // сортируем по убыванию
+               vm.posts.sort(desc)
+             });
+
           }
+
+         function desc(x, y){
+           return y.post.createdTime - x.post.createdTime
+         }
+
+         function asc(x, y){
+           return x.post.createdTime - y.post.createdTime
+         }
 
           /**
            *

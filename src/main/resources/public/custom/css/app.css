@@ -606,6 +606,7 @@ md-toast .md-toast-content {
     .md-fab.docs-scroll-fab.showBackToTop {
         width: 45px;
         height: 45px;
+        right: 25px;
         bottom: 75px;
         line-height: 45px;
         font-size: 1.6rem;

@@ -97,7 +97,17 @@ public class InstagramServiceImpl implements InstagramService {
             boolean isNewPost = post == null;
 
             //если пост игнорируемый, то перейдем к следующему
-            if(!isNewPost && post.isWrongPost()) continue;
+            if(!isNewPost) {
+                // если пост ошибочный, то следующий
+                if (post.isWrongPost()) continue;
+                // если нет даты создания
+                if (post.getCreateTime() == null) {
+                    post.setCreateTime(dto.getTaken_at());
+                    // обновим
+                    postRepository.save(post);
+                    continue;
+                }
+            }
 
             // если новый, то создадим и наполним
             if(isNewPost){
