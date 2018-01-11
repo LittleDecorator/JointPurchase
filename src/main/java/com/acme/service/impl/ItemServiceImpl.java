@@ -206,7 +206,7 @@ public class ItemServiceImpl implements ItemService {
             Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findAny();
             contentOptional.ifPresent(itemContent -> item.setUrl(Constants.PREVIEW_URL + itemContent.getContentId()));
         }
-        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci -> ci.getId().getCategoryId()).collect(Collectors.toList())));
 
         // TODO: если время акции не настало, то мы не должны её вообще получать для товара
         Sale sale = item.getSale();

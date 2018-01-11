@@ -10,6 +10,7 @@ import com.acme.repository.*;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.google.common.collect.Lists;
+import javax.servlet.http.HttpServletRequest;
 import org.assertj.core.util.Strings;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -89,24 +90,9 @@ public class ItemController {
     public String addItem(@RequestBody Item item) throws ParseException, IOException {
         String itemId = null;
         if (item != null) {
-            TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-            try {
-                //добавим сам товар
-                itemId = itemRepository.save(item).getId();
-                List<String> categoryIdList = item.getCategories().stream().map(Category::getId).collect(Collectors.toList());
-                /* удаление не существующих связей */
-                categoryItemRepository.deleteByItemIdAndCategoryIdNotIn(item.getId(), categoryIdList);
-                /* актуализация списка сатегорий */
-                categoryIdList.removeAll(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList()));
-                /* добавление новых связей */
-                categoryItemRepository.save(categoryService.createCategoryItemList4Item(itemId, categoryIdList));
-                transactionManager.commit(status);
-                // поместим в индекс только после добавления товара
-                catalogRepository.save(item);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                transactionManager.rollback(status);
-            }
+            itemId = itemRepository.save(item).getId();
+            // поместим|обновим в индекс только после добавления товара
+            catalogRepository.save(item);
         }
         return itemId;
     }
@@ -125,7 +111,7 @@ public class ItemController {
             /* удалим записи товара в изображениях */
             itemContentRepository.deleteByItemId(id);
             /* удалим записи товара в категориях */
-            categoryItemRepository.deleteByItemId(id);
+            categoryItemRepository.deleteByIdItemId(id);
             /* удалим товар */
             itemRepository.delete(id);
             transactionManager.commit(status);
@@ -158,7 +144,7 @@ public class ItemController {
         List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
         List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
         for (Item item : items) {
-            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci->ci.getId().getCategoryId()).collect(Collectors.toList())));
         }
         return items;
     }
@@ -173,7 +159,7 @@ public class ItemController {
     public List<Item> getAllByCompanyId(@PathVariable("id") String companyId) {
         List<Item> items = itemRepository.findByCompanyId(companyId);
         for (Item item : items) {
-            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+            item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci->ci.getId().getCategoryId()).collect(Collectors.toList())));
         }
         return items;
     }

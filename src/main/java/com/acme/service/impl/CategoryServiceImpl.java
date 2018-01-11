@@ -4,6 +4,7 @@ import com.acme.exception.PersistException;
 import com.acme.model.*;
 import com.acme.model.dto.CategoryTransfer;
 import com.acme.model.dto.MapDto;
+import com.acme.model.embedded.CategoryItemId;
 import com.acme.repository.CategoryItemRepository;
 import com.acme.repository.CategoryRepository;
 import com.acme.repository.CompanyRepository;
@@ -77,23 +78,23 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Item> getCategoryItems(String categoryId) {
-        List<CategoryItem> categoryItems = categoryItemRepository.findAllByCategoryId(categoryId);
-        List<String> itemIds = categoryItems.stream().map(CategoryItem::getItemId).collect(Collectors.toList());
+        List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryId(categoryId);
+        List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
         return itemRepository.findByIdIn(itemIds);
     }
 
     @Override
     public List<Item> getCategoryItems(List<String> categoryIds) {
-        List<CategoryItem> categoryItems = categoryItemRepository.findAllByCategoryIdIn(categoryIds);
-        List<String> itemIds = categoryItems.stream().map(CategoryItem::getItemId).collect(Collectors.toList());
+        List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryIdIn(categoryIds);
+        List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
         return itemRepository.findByIdIn(itemIds);
     }
 
     @Override
     public List<Item> getCategoryItemsByName(String name) {
         Category category = categoryRepository.findOneByTransliteName(name);
-        List<CategoryItem> categoryItems = categoryItemRepository.findAllByCategoryId(category.getId());
-        List<String> itemIds = categoryItems.stream().map(CategoryItem::getItemId).collect(Collectors.toList());
+        List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryId(category.getId());
+        List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
         return itemRepository.findByIdIn(itemIds);
     }
 
@@ -126,7 +127,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(String categoryId) {
-        categoryItemRepository.deleteByCategoryId(categoryId);
+        categoryItemRepository.deleteByIdCategoryId(categoryId);
         categoryRepository.delete(categoryId);
     }
 
@@ -175,10 +176,10 @@ public class CategoryServiceImpl implements CategoryService {
                 Category category = createCategoryFromNode(node);
                 /* удаление старых связей и создание новых */
                 if(node.getItems() == null){
-                    categoryItemRepository.deleteByCategoryId(category.getId());
+                    categoryItemRepository.deleteByIdCategoryId(category.getId());
                 } else {
                     List<String> itemIds = node.getItems().stream().map(Item::getId).collect(Collectors.toList());
-                    categoryItemRepository.deleteByCategoryIdAndItemIdNotIn(category.getId(), itemIds);
+                    categoryItemRepository.deleteByIdCategoryIdAndIdItemIdNotIn(category.getId(), itemIds);
                     List<CategoryItem> categoryItemList = Lists.newArrayList();
                     categoryItemList.addAll(node.getItems().stream().map(item -> createCategoryItem(item.getId(), category.getId())).collect(Collectors.toList()));
                     categoryItemRepository.save(categoryItemList);
@@ -192,7 +193,7 @@ public class CategoryServiceImpl implements CategoryService {
             List<Node> deleteNodes = mapper.readValue(deleteArray.toJSONString(), new TypeReference<List<Node>>(){});
 
             for(Node node: deleteNodes){
-                categoryItemRepository.deleteByCategoryId(node.getId());
+                categoryItemRepository.deleteByIdCategoryId(node.getId());
                 deleteCategory(node.getId());
             }
         }
@@ -250,8 +251,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryItem createCategoryItem(String itemId, String categoryId){
         CategoryItem categoryItem = new CategoryItem();
-        categoryItem.setCategoryId(categoryId);
-        categoryItem.setItemId(itemId);
+        CategoryItemId id = new CategoryItemId(categoryId, itemId);
+        categoryItem.setId(id);
         categoryItem.setDateAdd(new Date());
         return categoryItem;
     }

@@ -182,7 +182,7 @@ public class CatalogServiceImpl implements CatalogService {
                 item.setUrl(Constants.VIEW_URL + defContent.getId());
             }
         }
-        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByItemId(item.getId()).stream().map(CategoryItem::getCategoryId).collect(Collectors.toList())));
+        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci-> ci.getId().getCategoryId()).collect(Collectors.toList())));
         // TODO: если время акции не настало, то мы не должны её вообще получать для товара
         Sale sale = item.getSale();
         Date now = new Date();
