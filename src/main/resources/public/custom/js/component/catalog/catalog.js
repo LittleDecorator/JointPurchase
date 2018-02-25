@@ -223,21 +223,20 @@
            * @param group
            */
           function filterBySubcategory(group) {
-             if (group === undefined) {
-                group = vm.selectedCategory;
-             } else {
-                if(group.id === vm.searchFilter.category){
-                   vm.searchFilter.subcategory = null;
-                } else {
-                   vm.searchFilter.subcategory = group.id;
-                }
-             }
-             vm.currentCategory = group.id;
-             vm.searchFilter.offset = 0;
-             vm.confirmedFilter = angular.copy(vm.searchFilter);
-             localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
-             vm.stopLoad = false;
-             loadData(true, group.isDefault);
+            if (group === undefined) {
+              group = vm.selectedCategory;
+            }
+            if (group.id === vm.searchFilter.category) {
+              vm.searchFilter.subcategory = null;
+            } else {
+              vm.searchFilter.subcategory = group.id;
+            }
+            vm.currentCategory = group.id;
+            vm.searchFilter.offset = 0;
+            vm.confirmedFilter = angular.copy(vm.searchFilter);
+            localStorage.setItem($state.current.name, angular.toJson(vm.searchFilter));
+            vm.stopLoad = false;
+            loadData(true, group.isDefault);
           }
 
           /**

@@ -4,7 +4,7 @@ import com.acme.enums.ItemStatus;
 import com.acme.model.Item;
 import com.acme.model.filter.ItemFilter;
 import com.acme.repository.ItemRepository;
-import com.acme.repository.specification.ItemSpecifications;
+import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.ReportService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -44,10 +44,10 @@ public class ReportController {
     @RequestMapping(path = "/items/{fileName}", method = RequestMethod.GET)
     public void getItemsReport(ItemFilter filter, HttpServletResponse response, @PathVariable("fileName") String fileName) {
 
-        List<Item> items = itemRepository.findAll(ItemSpecifications.filter(filter));
+        List<Item> items = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter));
 
-        Comparator<Item> byCompanyName = (e1, e2) -> e1.getCompany().getName().compareTo(e2.getCompany().getName());
-        Comparator<Item> byArticle = (e1, e2) -> e1.getArticle().compareTo(e2.getArticle());
+        Comparator<Item> byCompanyName = Comparator.comparing(e1 -> e1.getCompany().getName());
+        Comparator<Item> byArticle = Comparator.comparing(Item::getArticle);
         items = items.stream().sorted(byCompanyName.thenComparing(byArticle)).collect(Collectors.toList());
 
         HSSFWorkbook workbook = reportService.generateItemsReport(items);

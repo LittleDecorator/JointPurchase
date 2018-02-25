@@ -5,7 +5,7 @@
   height:100%;
   top: 56px;
   /*bottom: 0;*/
-  right: -355px;
+  right: -400px;
   -webkit-transition: ease 0.5s;
   -moz-transition: ease 0.5s;
   -o-transition: ease 0.5s;
@@ -20,11 +20,11 @@
 
 
 .panel.isOpen, .subPanel.isOpen {
-  -webkit-transform: translateX(-356px);
-  -moz-transform: translateX(-356px);
-  -ms-transform: translateX(-356px);
-  -o-transform: translateX(-356px);
-  transform: translateX(-356px);
+  -webkit-transform: translateX(-400px);
+  -moz-transform: translateX(-400px);
+  -ms-transform: translateX(-400px);
+  -o-transform: translateX(-400px);
+  transform: translateX(-400px);
   display: block;
 }
 

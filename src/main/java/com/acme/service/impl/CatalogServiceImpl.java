@@ -7,7 +7,7 @@ import com.acme.model.dto.CatalogDto;
 import com.acme.model.dto.mapper.ItemMapper;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
-import com.acme.repository.specification.CatalogSpecifications;
+import com.acme.repository.specification.ItemSpecifications;
 import com.acme.service.CatalogService;
 import com.acme.service.ElasticService;
 import com.acme.service.ItemService;
@@ -79,7 +79,7 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public List<CatalogDto> getBestsellers() {
-        List<Item> items = itemService.getAllBySpec(CatalogSpecifications.isPopular());
+        List<Item> items = itemService.getAllBySpec(ItemSpecifications.isPopular());
         return itemMapper.toCatalogDto(items);
     }
 
