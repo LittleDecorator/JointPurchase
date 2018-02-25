@@ -8,7 +8,6 @@ import com.acme.repository.OffsetBasePage;
 import com.acme.repository.OrderItemRepository;
 import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
-import com.acme.repository.specification.OrderViewSpecifications;
 import com.acme.repository.specification.SubjectSpecifications;
 import com.acme.service.AuthService;
 import com.google.common.collect.Lists;
@@ -17,9 +16,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -118,7 +114,7 @@ public class SubjectController{
         try {
             List<String> orderIds = purchaseOrderRepository.findAllBySubjectId(id).stream().map(Order::getId).collect(Collectors.toList());
             // удаляем связь товара с заказами
-            orderItemRepository.deleteByOrderIdIn(orderIds);
+            orderItemRepository.deleteByIdOrderIdIn(orderIds);
             // удаляем заказы
             purchaseOrderRepository.deleteBySubjectId(id);
         } catch (EmptyResultDataAccessException ex) {

@@ -10,11 +10,6 @@ import java.util.Date;
 @Table(name = "category_item")
 public class CategoryItem {
 
-    //@Id
-    //@GeneratedValue(generator = "system-uuid")
-    //@GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    //private String id;
-
     @EmbeddedId
     private CategoryItemId id;
 

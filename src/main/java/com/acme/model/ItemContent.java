@@ -1,5 +1,6 @@
 package com.acme.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,8 +18,11 @@ public class ItemContent implements BaseModel {
     @Column(name = "item_id")
     private String itemId;
 
-    @Column(name = "content_id")
-    private String contentId;
+    @OneToOne
+    //@Column(name = "content_id")
+    @JoinColumn(name = "content_id")
+    @JsonBackReference
+    private Content contentId;
 
     @Column(name = "crop_id")
     private String cropId;
@@ -49,11 +53,11 @@ public class ItemContent implements BaseModel {
         this.itemId = itemId;
     }
 
-    public String getContentId() {
+    public Content getContentId() {
         return contentId;
     }
 
-    public void setContentId(String contentId) {
+    public void setContentId(Content contentId) {
         this.contentId = contentId;
     }
 

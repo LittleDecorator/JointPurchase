@@ -26,4 +26,6 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
 
     @Query("SELECT coalesce(max(o.uid), 0) FROM Order o")
     Long getLastUid();
+
+    List<Order> findAllByOrderByDateAddDesc();
 }

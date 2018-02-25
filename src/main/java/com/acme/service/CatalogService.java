@@ -1,7 +1,7 @@
 package com.acme.service;
 
-import com.acme.model.Catalog;
-import com.acme.model.Item;
+import com.acme.model.dto.CatalogDetailDto;
+import com.acme.model.dto.CatalogDto;
 import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
@@ -16,17 +16,22 @@ public interface CatalogService {
      * @param filter
      * @return
      */
-    List<Catalog> getCatalog(CatalogFilter filter);
+    List<CatalogDto> getCatalog(CatalogFilter filter);
 
-    List<Item> getBestsellers();
+    List<CatalogDto> getBestsellers();
 
-    List<Item> searchItems(String criteria);
+    List<CatalogDto> searchItems(String criteria);
 
     void indexItems();
 
     void transliteItems(boolean all);
 
-    Item getItemDetailById(String itemId);
+    CatalogDetailDto getItemDetailById(String itemId);
 
-    Item getItemDetailByTransliteName(String name);
+    /**
+     *
+     * @param name
+     * @return
+     */
+    CatalogDetailDto getItemDetailByTransliteName(String name);
 }

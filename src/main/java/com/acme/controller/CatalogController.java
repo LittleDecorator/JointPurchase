@@ -1,7 +1,7 @@
 package com.acme.controller;
 
-import com.acme.model.Catalog;
-import com.acme.model.Item;
+import com.acme.model.dto.CatalogDetailDto;
+import com.acme.model.dto.CatalogDto;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.service.CatalogService;
 import com.pushtorefresh.javac_warning_annotation.Warning;
@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+/**
+ * Controller that response for item representation for client.
+ */
 @RestController
 @RequestMapping(value = "/api/catalog")
 public class CatalogController {
@@ -27,7 +29,7 @@ public class CatalogController {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST)
-    public List<Catalog> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
+    public List<CatalogDto> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
         return catalogService.getCatalog(filter);
     }
 
@@ -40,7 +42,7 @@ public class CatalogController {
     }
 
     /**
-     *
+     * Create translite for items
      * @param all
      */
     @RequestMapping(method = RequestMethod.PATCH, value = "translite")
@@ -60,24 +62,25 @@ public class CatalogController {
      */
     @Warning(value = "Not working temporary")
     @RequestMapping(method = RequestMethod.GET, value = "search")
-    public List<Item> searchItem(@RequestParam(value = "criteria") String criteria) {
+    public List<CatalogDto> searchItem(@RequestParam(value = "criteria") String criteria) {
         return catalogService.searchItems(criteria);
     }
 
     /**
      * Получение детальной информации по конкретному товару
+     * Like ItemCard, but accept by client
      *
      * @param name
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET, value = "{name}/detail")
-    public Item getItemDetail(@PathVariable("name") String name) throws Exception {
+    public CatalogDetailDto getItemDetail(@PathVariable("name") String name) throws Exception {
         return catalogService.getItemDetailByTransliteName(name);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "best")
-    public List<Item> getBestSellers() throws Exception {
+    public List<CatalogDto> getBestSellers() throws Exception {
         return catalogService.getBestsellers();
     }
 }

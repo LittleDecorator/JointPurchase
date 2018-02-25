@@ -1,6 +1,7 @@
 package com.acme.repository;
 
 import com.acme.model.OrderItem;
+import com.acme.model.embedded.OrderItemId;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,19 +13,19 @@ import java.util.List;
  *
  *
  */
-public interface OrderItemRepository extends CrudRepository<OrderItem, String> {
+public interface OrderItemRepository extends CrudRepository<OrderItem, OrderItemId> {
 
-	void deleteByOrderIdAndItemIdNotIn(String orderId, List<String> itemIdList);
+	void deleteByIdOrderIdAndIdItemIdNotIn(String orderId, List<String> itemIdList);
 
-	void deleteByOrderId(String orderId);
+	void deleteByIdOrderId(String orderId);
 
-	void deleteByItemId(String itemId);
+	void deleteByIdItemId(String itemId);
 
 	@Transactional(noRollbackFor = {Exception.class, EmptyResultDataAccessException.class})
-	List<String> deleteByOrderIdIn(List<String> orderIds);
+	List<String> deleteByIdOrderIdIn(List<String> orderIds);
 
-	List<OrderItem> findAllByOrderId(String orderId);
+	List<OrderItem> findAllByIdOrderId(String orderId);
 
-	List<OrderItem> findAllByOrderIdIn(List<String> orderIds);
+	List<OrderItem> findAllByIdOrderIdIn(List<String> orderIds);
 
 }

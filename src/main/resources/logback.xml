@@ -1,17 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="true" scan="true" scanPeriod="5 minutes">
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>utf-8</charset>
+      <Pattern>
+        %d{dd-MM HH:mm:ss:SSS} %yellow(grimmstory) %green([%X{contextType} : %X{contextId} %X{entryPoint}]) %highlight([%p]) %cyan(%c) - %m%n
+      </Pattern>
+    </encoder>
+  </appender>
 
-    <include resource="logback-base.xml"/>
+  <!--<logger name="ru.mdimension.wrs.taskmanual" level="DEBUG"/>-->
 
-    <root level="INFO">
-        <if condition='isDefined("logging.file")'>
-            <then>
-                <appender-ref ref="FILE"/>
-            </then>
-        </if>
-        <appender-ref ref="CONSOLE"/>
-    </root>
+  <logger name="javax.activation" level="WARN"/>
+  <logger name="javax.mail" level="WARN"/>
+  <logger name="javax.xml.bind" level="WARN"/>
+  <logger name="ch.qos.logback" level="INFO"/>
+  <logger name="com.zaxxer" level="WARN"/>
+  <logger name="org.apache" level="WARN"/>
+  <logger name="org.apache.catalina" level="WARN"/>
+  <logger name="org.hibernate.validator" level="WARN"/>
+  <logger name="org.hibernate" level="WARN"/>
+  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibersap" level="WARN"/>
+  <logger name="org.thymeleaf" level="WARN"/>
+  <logger name="org.springframework" level="WARN"/>
+  <logger name="org.springframework.web" level="WARN"/>
+  <logger name="org.springframework.security" level="WARN"/>
+  <logger name="org.springframework.cache" level="WARN"/>
+  <logger name="com.mangofactory.swagger" level="WARN"/>
+  <logger name="com.wordnik.swagger" level="WARN"/>
+  <logger name="springfox" level="WARN"/>
+  <logger name="liquibase" level="WARN"/>
+  <logger name="net.sf.ehcache" level="WARN"/>
 
-    <logger name="@project.final.name@" level="DEBUG"/>
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
 
+  <root level="${logback.loglevel}">
+    <appender-ref ref="CONSOLE"/>
+  </root>
 </configuration>

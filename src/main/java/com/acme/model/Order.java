@@ -2,9 +2,21 @@ package com.acme.model;
 
 import com.acme.enums.OrderStatus;
 import com.acme.enums.converters.OrderStatusConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -50,10 +62,15 @@ public class Order implements BaseModel{
     @Convert(converter = OrderStatusConverter.class)
     private OrderStatus status;
 
-    @Column(name = "delivery_id")
-    private String delivery;
+    @JoinColumn(name = "delivery_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Delivery delivery;
 
     private Integer payment;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private List<OrderItem> orderItems;
 
     public String getId() {
         return id;
@@ -179,15 +196,13 @@ public class Order implements BaseModel{
         this.status = status;
     }
 
-    public String getDelivery() {
+    public Delivery getDelivery() {
         return delivery;
     }
 
-
-    public void setDelivery(String delivery) {
-        this.delivery = delivery == null ? null : delivery.trim();
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
     }
-
 
     public Integer getPayment() {
         return payment;
@@ -197,4 +212,11 @@ public class Order implements BaseModel{
         this.payment = payment;
     }
 
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 }

@@ -4,6 +4,10 @@ import com.acme.model.*;
 import com.acme.model.Company_;
 import com.acme.model.Item_;
 import com.acme.model.filter.ItemFilter;
+import com.acme.util.SpecTools;
+import com.google.common.base.Strings;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Path;
@@ -16,46 +20,76 @@ import java.util.List;
  */
 public class ItemSpecifications {
 
-    public static Specification<Item> filter(ItemFilter filter) {
+    public static Specification<Item> likeArticle(String article) {
+        return (root, query, cb) -> cb.like(root.get(Item_.article), "%" + article + "%");
+    }
 
-        return (root, criteriaQuery, builder) -> {
-            System.out.println(filter);
-            Path<String> name = root.get(Item_.name);
-            Path<String> article = root.get(Item_.article);
-//            Path<List<Category>> categories = root.get(Item_.categories);
-            Path<String> company = root.join(Item_.company).get(Company_.id);
+    public static Specification<Item> likeName(String name) {
+        return (root, query, cb) -> cb.like(cb.lower(root.get(Item_.name)), "%" + name.toLowerCase() + "%");
+    }
+
+    public static Specification<Item> isAvailable() {
+        return (root, query, cb) -> cb.notEqual(root.get(Item_.notForSale), true);
+    }
+
+    /**
+     * Specification on item company
+     * @param companyId
+     * @return
+     */
+    public static Specification<Item> hasCompany(String companyId) {
+        return (root, query, cb) -> cb.equal(root.join(Item_.company).get(Company_.id), companyId);
+    }
+
+    /**
+     * specification by category
+     * @param categoryId
+     * @param subcategoryId
+     * @return
+     */
+    public static Specification<Item> hasCategories(String categoryId, String subcategoryId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
 
             final List<Predicate> predicates = new ArrayList<>();
+            ListJoin<Item, Category> categoryJoin = root.join(Item_.categories);
 
-            if (filter.getArticle() != null) {
-                predicates.add(builder.like(article, "%" + filter.getArticle() + "%"));
+            // если выбрана подкатегория
+            if (!Strings.isNullOrEmpty(subcategoryId)) {
+                predicates.add(cb.equal(categoryJoin.get(Category_.id), subcategoryId));
+            } else {
+                //  фильтр по категории и подкатегории
+                if (!Strings.isNullOrEmpty(categoryId)) {
+                    predicates.add(cb.or(cb.equal(categoryJoin.get(Category_.id), categoryId), cb.equal(categoryJoin.get(Category_.parentId), categoryId)));
+                }
             }
-            if (filter.getCompany() != null) {
-                predicates.add(builder.equal(company, filter.getCompany().getId()));
-            }
-            if (filter.getName() != null) {
-                predicates.add(builder.like(builder.lower(name), "%" + filter.getName().toLowerCase()+ "%"));
-            }
-            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+            return cb.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 
-    public static Specification<Item> modalFilter(String name, String article) {
+    /**
+     *
+     * @return
+     */
+    public static Specification<Item> isPopular() {
+        return (root, query, cb) -> cb.isTrue(root.get(Item_.bestseller));
+    }
 
-        return (root, criteriaQuery, builder) -> {
-            Path<String> pName = root.get(Item_.name);
-            Path<String> pArticle = root.get(Item_.article);
-
-            final List<Predicate> predicates = new ArrayList<>();
-
-            if (article != null) {
-                predicates.add(builder.like(pArticle, "%" + article + "%"));
+    /**
+     * Join периодических задач
+     *
+     * @param joinType
+     * @return
+     */
+    @SuppressWarnings("all")
+    public static Specification<Item> fetchCompany(final JoinType joinType) {
+        return (root, query, cb) -> {
+            if (!SpecTools.isCountQuery(query)) {
+                query.distinct(true);
+                root.fetch(Item_.company, joinType);
             }
-
-            if (name != null) {
-                predicates.add(builder.like(builder.lower(pName), "%" + name.toLowerCase()+ "%"));
-            }
-            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+            return null;
         };
     }
 }

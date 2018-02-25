@@ -1,7 +1,6 @@
 package com.acme.repository;
 
 import com.acme.model.Category;
-import com.acme.model.CategoryItem;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

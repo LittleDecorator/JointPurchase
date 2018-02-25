@@ -4,9 +4,10 @@ import com.acme.enums.OrderStatus;
 import com.acme.model.*;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
+import com.acme.model.embedded.OrderItemId;
 import com.acme.model.filter.OrderFilter;
 import com.acme.repository.*;
-import com.acme.repository.specification.OrderViewSpecifications;
+import com.acme.repository.specification.OrderSpecifications;
 import com.acme.service.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -38,17 +39,15 @@ public class OrderServiceImpl implements OrderService {
 	private AtomicInteger seq;
 
 	@Autowired
-	OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 	@Autowired
-	OrderViewRepository orderViewRepository;
+	private OrderItemRepository orderItemRepository;
 	@Autowired
-	OrderItemRepository orderItemRepository;
+	private ItemRepository itemRepository;
 	@Autowired
-	ItemRepository itemRepository;
+	private ItemContentRepository itemContentRepository;
 	@Autowired
-	ItemContentRepository itemContentRepository;
-	@Autowired
-	ContentRepository contentRepository;
+	private ContentRepository contentRepository;
 	@Autowired
 	private ItemService itemService;
 	@Autowired
@@ -65,21 +64,21 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<OrderView> getAllOrders(OrderFilter filter) {
+	public List<Order> getAllOrders(OrderFilter filter) {
 		/* Сортировка видимо будет идти по модели, и в запросе не участвует */
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "createDate");
-		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
+		return orderRepository.findAll(OrderSpecifications.filter(filter), pageable).getContent();
 	}
 
 	@Override
-	public List<OrderView> getHistory(OrderFilter filter) {
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "createDate");
-		return Lists.newArrayList(orderViewRepository.findAll(OrderViewSpecifications.filter(filter), pageable).iterator());
+	public List<Order> getHistory(OrderFilter filter) {
+		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
+		return orderRepository.findAll(OrderSpecifications.filter(filter), pageable).getContent();
 	}
 
 	@Override
-	public List<OrderView> getCustomerOrders(String id) {
-		return orderViewRepository.findAll(OrderViewSpecifications.customer(id));
+	public List<Order> getCustomerOrders(String id) {
+		return orderRepository.findAll(OrderSpecifications.customer(id));
 	}
 
 	@Override
@@ -91,10 +90,10 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderItemsList> getOrderItems(String orderId) {
 		List<OrderItemsList> result = Lists.newArrayList();
 		// получим заказ
-		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
-		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+		List<OrderItem> orderItems = orderItemRepository.findAllByIdOrderId(orderId);
+		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
 		Map<String, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
-		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getItemId()), orderItem.getCount())).collect(Collectors.toList()));
+		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getId().getItemId()), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
 	}
 
@@ -108,11 +107,11 @@ public class OrderServiceImpl implements OrderService {
 		// получение информации о получателе и заказе
 		Order order = orderRepository.findOne(orderId);
 		result.put("order",order);
-		List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
-		Map<String, OrderItem> orderItemsMap = orderItems.stream().collect(Collectors.toMap(OrderItem::getItemId, Function.identity()));
+		//List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+		Map<String, OrderItem> orderItemsMap = order.getOrderItems().stream().collect(Collectors.toMap(oi -> oi.getId().getItemId(), Function.identity()));
 		// информация о количествах товара в заказе
 		result.put("orderItems",orderItemsMap);
-		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(OrderItem::getItemId).collect(Collectors.toList()));
+		List<Item> items = itemRepository.findByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
 		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
 		// товары заказа
 		result.put("items", itemsMap);
@@ -120,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
 		for(String itemId : itemsMap.keySet()){
 			ItemContent itemContent = itemContentRepository.findAllByItemId(itemId).stream().filter(ItemContent::isMain).findFirst().orElse(null);
 			if(itemContent != null){
-				contentMap.put(itemId, contentRepository.findOne(itemContent.getContentId()));
+				contentMap.put(itemId, contentRepository.findOne(itemContent.getContentId().getId()));
 			} else {
 				contentMap.put(itemId, contentRepository.findOneByIsDefault(true));
 			}
@@ -152,8 +151,8 @@ public class OrderServiceImpl implements OrderService {
 			for (OrderItemsList itemsList : request.getItems()) {
 				// собираем товар для дальнейшей обработки
 				OrderItem orderItem = new OrderItem();
-				orderItem.setItemId(itemsList.getItem().getId());
-				orderItem.setOrderId(order.getId());
+				OrderItemId id = new OrderItemId(itemsList.getItem().getId(), order.getId());
+				orderItem.setId(id);
 				orderItem.setCount(itemsList.getCount());
 				orderItemRepository.save(orderItem);
 				// изменить кол-во товара в наличие
@@ -164,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 			//удаляем записи, где заказ совпадает, а товар нет.
 			List<String> itemIdList = request.getItems().stream().map(OrderItemsList::getItem).map(Item::getId).collect(Collectors.toList());
-			orderItemRepository.deleteByOrderIdAndItemIdNotIn(order.getId(), itemIdList);
+			orderItemRepository.deleteByIdOrderIdAndIdItemIdNotIn(order.getId(), itemIdList);
 			transactionManager.commit(status);
 			// отправка оведомлений
 			jmsService.orderConfirm(order);
@@ -215,7 +214,7 @@ public class OrderServiceImpl implements OrderService {
 				itemService.increaseCountByOrder(id);
 			}
 			// удаляем выбранные товары заказа
-			orderItemRepository.deleteByOrderId(id);
+			orderItemRepository.deleteByIdOrderId(id);
 			// удаляем заказ
 			orderRepository.delete(id);
 			transactionManager.commit(status);

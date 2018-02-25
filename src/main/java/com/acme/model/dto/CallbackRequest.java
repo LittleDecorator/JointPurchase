@@ -1,34 +1,16 @@
 package com.acme.model.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by kobzev on 18.05.17.
  */
+@Getter
+@Setter
 public class CallbackRequest {
 
 	private String phone;
 	private String message;
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	@Override
-	public String toString() {
-		return "CallbackRequest{" +
-			   "phone='" + phone + '\'' +
-			   ", message='" + message + '\'' +
-			   '}';
-	}
 }

@@ -13,8 +13,8 @@ public class OrderFilter {
     private String delivery;
     private String status;
     private String subjectId;
-    private Integer limit;
-    private Integer offset;
+    private Integer limit = 15;
+    private Integer offset = 0;
 
     public LocalDateTime getDateFrom() {
         return dateFrom;

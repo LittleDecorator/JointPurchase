@@ -18,8 +18,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.ibm.icu.text.Transliterator;
-import java.util.stream.Stream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -33,8 +31,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-
-    private static String RUSSIAN_TO_LATIN_BGN = "Russian-Latin/BGN";
 
     @Autowired
     TreeService treeService;
@@ -222,31 +218,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.getChildCategories(categoryId).stream()
                 .map(category -> new MapDto(category.getId(), category.getName()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void transliteCategories(boolean all) {
-        Stream<Category> categories = getAll().stream();
-        if(!all){
-            // фильтруем если нужно
-            categories = categories.filter(category -> Strings.isNullOrEmpty(category.getTransliteName()));
-
-        }
-        // обновляем
-        categories.forEach(category -> {
-            category.setTransliteName(translite(category.getName()));
-            categoryRepository.save(category);
-        });
-    }
-
-    /**
-     *
-     * @param input
-     * @return
-     */
-    private String translite(String input){
-        Transliterator russianToLatinNoAccentsTrans = Transliterator.getInstance(RUSSIAN_TO_LATIN_BGN);
-        return russianToLatinNoAccentsTrans.transliterate(input).replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "").replaceAll("\\*|\\s+","-").toLowerCase();
     }
 
     private CategoryItem createCategoryItem(String itemId, String categoryId){

@@ -1,7 +1,6 @@
 package com.acme.service;
 
 import com.acme.model.Order;
-import com.acme.model.OrderView;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
 import com.acme.model.filter.OrderFilter;
@@ -16,11 +15,11 @@ public interface OrderService {
 
 	long genOrderNum();
 
-	List<OrderView> getAllOrders(OrderFilter filter);
+	List<Order> getAllOrders(OrderFilter filter);
 
-	List<OrderView> getHistory(OrderFilter filter);
+	List<Order> getHistory(OrderFilter filter);
 
-	List<OrderView> getCustomerOrders(String id);
+	List<Order> getCustomerOrders(String id);
 
 	Order getOrder(String orderId);
 

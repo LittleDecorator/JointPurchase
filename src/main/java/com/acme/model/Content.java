@@ -1,5 +1,6 @@
 package com.acme.model;
 
+import com.acme.enums.ImageOrientation;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -29,6 +30,10 @@ public class Content implements BaseModel{
 
     @Column(name = "is_profile")
     private boolean isProfile;
+
+    @Column(name = "orientation")
+    @Enumerated(EnumType.STRING)
+    private ImageOrientation orientation;
 
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
@@ -113,5 +118,13 @@ public class Content implements BaseModel{
 
     public void setProfile(boolean profile) {
         isProfile = profile;
+    }
+
+    public ImageOrientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(ImageOrientation orientation) {
+        this.orientation = orientation;
     }
 }

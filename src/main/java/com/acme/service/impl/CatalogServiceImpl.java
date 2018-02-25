@@ -1,15 +1,10 @@
 package com.acme.service.impl;
 
-import com.acme.constant.Constants;
 import com.acme.elasticsearch.repository.CatalogRepository;
-import com.acme.model.Catalog;
-import com.acme.model.CategoryItem;
-import com.acme.model.Content;
 import com.acme.model.Item;
-import com.acme.model.ItemContent;
-import com.acme.model.Product;
-import com.acme.model.Sale;
-import com.acme.model.dto.converter.ItemConverter;
+import com.acme.model.dto.CatalogDetailDto;
+import com.acme.model.dto.CatalogDto;
+import com.acme.model.dto.mapper.ItemMapper;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
 import com.acme.repository.specification.CatalogSpecifications;
@@ -20,7 +15,6 @@ import com.acme.service.WishlistService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.ibm.icu.text.Transliterator;
-import java.util.Date;
 import java.util.stream.Stream;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -30,7 +24,6 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
@@ -68,19 +61,12 @@ public class CatalogServiceImpl implements CatalogService {
     @Autowired
     WishlistService wishlistService;
 
-    @Override
-    public List<Catalog> getCatalog(CatalogFilter filter) {
-        // получение изображения используемого по-умолчанию
-        Content defContent = contentRepository.findOneByIsDefault(true);
+    @Autowired
+    ItemMapper itemMapper;
 
-        // если в фильтре отсутствует категория, то используем спецификацию
-        List<Catalog> result;
-        if(Strings.isNullOrEmpty(filter.getCategory())){
-            result = itemService.getAll(filter).stream().map(ItemConverter::itemToCatalog).collect(Collectors.toList());
-        } else {
-            // если категория задана, то нужно использовать view
-            result = itemService.getAllCatalog(filter);
-        }
+    @Override
+    public List<CatalogDto> getCatalog(CatalogFilter filter) {
+        List<Item> result = itemService.getAll(filter);
 
         if(!Strings.isNullOrEmpty(filter.getClientEmail())){
             List<String> wishedItems = wishlistService.getWishedItems(filter.getClientEmail());
@@ -88,23 +74,13 @@ public class CatalogServiceImpl implements CatalogService {
                 result = result.stream().peek(item -> item.setInWishlist(wishedItems.contains(item.getId()))).collect(Collectors.toList());
             }
         }
-
-        for (Catalog item : result) {
-            itemService.fillItem(item, defContent);
-        }
-        return result;
+        return itemMapper.toCatalogDto(result);
     }
 
     @Override
-    public List<Item> getBestsellers() {
-        // получение изображения используемого по-умолчанию
-        Content defContent = contentRepository.findOneByIsDefault(true);
-
-        List<Item> result = itemService.getAllBySpec(CatalogSpecifications.filterPopular());
-        for (Item item : result) {
-            itemService.fillItem(item, defContent);
-        }
-        return result;
+    public List<CatalogDto> getBestsellers() {
+        List<Item> items = itemService.getAllBySpec(CatalogSpecifications.isPopular());
+        return itemMapper.toCatalogDto(items);
     }
 
     @Override
@@ -128,8 +104,8 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public List<Item> searchItems(String criteria) {
-        Content defContent = contentRepository.findOneByIsDefault(true);
+    public List<CatalogDto> searchItems(String criteria) {
+        //Content defContent = contentRepository.findOneByIsDefault(true);
 
         /* формируем запрос */
         SearchQuery searchQuery = new NativeSearchQueryBuilder()
@@ -145,22 +121,18 @@ public class CatalogServiceImpl implements CatalogService {
                 .build();
 
         /* ищем документы */
-        List<Item> result = Lists.newArrayList(catalogRepository.search(searchQuery));
-        for (Item item : result) {
-            itemService.fillItem(item, defContent);
-        }
-        return result;
+        List<Item> items = Lists.newArrayList(catalogRepository.search(searchQuery));
+        return itemMapper.toCatalogDto(items);
     }
 
     @Override
-    public Item getItemDetailById(String itemId) {
-        Item item = itemService.getItem(itemId);
-        return fillItem(item);
+    public CatalogDetailDto getItemDetailById(String itemId) {
+        return itemMapper.toDetailDto(itemService.getItem(itemId));
     }
 
     @Override
-    public Item getItemDetailByTransliteName(String name) {
-        return fillItem(itemService.getItemByLatinName(name));
+    public CatalogDetailDto getItemDetailByTransliteName(String name) {
+        return itemMapper.toDetailDto(itemService.getItemByLatinName(name));
     }
 
     /**
@@ -168,29 +140,29 @@ public class CatalogServiceImpl implements CatalogService {
      * @param item
      * @return
      */
-    private Item fillItem(Item item){
-        Content defContent = contentRepository.findOneByIsDefault(true);
-        List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
-        if (itemContents.isEmpty()) {
-            item.setUrl(Constants.VIEW_URL + defContent.getId());
-        } else {
-            item.setItemContents(itemContents);
-            Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findFirst();
-            if (contentOptional.isPresent()){
-                item.setUrl(Constants.VIEW_URL + contentOptional.get().getContentId());
-            } else {
-                item.setUrl(Constants.VIEW_URL + defContent.getId());
-            }
-        }
-        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci-> ci.getId().getCategoryId()).collect(Collectors.toList())));
-        // TODO: если время акции не настало, то мы не должны её вообще получать для товара
-        Sale sale = item.getSale();
-        Date now = new Date();
-        if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
-            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
-        }
-        return item;
-    }
+    //private Item fillItem(Item item){
+    //    Content defContent = contentRepository.findOneByIsDefault(true);
+    //    List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
+    //    if (itemContents.isEmpty()) {
+    //        item.setUrl(Constants.VIEW_URL + defContent.getId());
+    //    } else {
+    //        item.setItemContents(itemContents);
+    //        Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findFirst();
+    //        if (contentOptional.isPresent()){
+    //            item.setUrl(Constants.VIEW_URL + contentOptional.get().getContentId());
+    //        } else {
+    //            item.setUrl(Constants.VIEW_URL + defContent.getId());
+    //        }
+    //    }
+    //    item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci-> ci.getId().getCategoryId()).collect(Collectors.toList())));
+    //    // TODO: если время акции не настало, то мы не должны её вообще получать для товара
+    //    Sale sale = item.getSale();
+    //    Date now = new Date();
+    //    if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+    //        item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+    //    }
+    //    return item;
+    //}
 
     /**
      *

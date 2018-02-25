@@ -29,7 +29,7 @@
           vm.init = init;
 
           // используется только под администратором
-          vm.searchFilter = {category: null, subcategory: null, sale: null, company: null, criteria: null, offset: 0, limit: limit};
+          vm.searchFilter = {category: null, subcategory: null, sale: null, company: null, offset: 0, limit: limit};
           vm.items = [];
           vm.categories = [];
           vm.companies = [];
@@ -81,9 +81,9 @@
                    categoryPromise = dataResources.companyCategories.get({id: node.id});
                 }
                 if($stateParams.type === 'sale'){
+                   console.log(vm.items);
                    vm.searchFilter.sale = node.id;
                    vm.items = node.items;
-                   console.log(node)
                    vm.currentNodeType = 'sale';
                    vm.currentNode = {contentId:node.bannerId, description: node.description, title: node.title, startDate: node.startDate, endDate: node.endDate};
                    vm.items.forEach(function (elem, idx) {

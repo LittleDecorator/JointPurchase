@@ -1,5 +1,6 @@
 package com.acme.model;
 
+import com.acme.model.embedded.OrderItemId;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -7,46 +8,22 @@ import java.util.Date;
 
 @Entity
 @Table(name = "order_item")
-public class OrderItem implements BaseModel{
+public class OrderItem {
 
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String id;
-
-    @Column(name = "order_id")
-    private String orderId;
-
-    @Column(name = "item_id")
-    private String itemId;
+    @EmbeddedId
+    private OrderItemId id;
 
     private Integer count;
 
     @Column(name = "date_add", nullable = false, updatable = false)
     private Date dateAdd = new Date();
 
-    public String getId() {
+    public OrderItemId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(OrderItemId id) {
         this.id = id;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
     }
 
     public Integer getCount() {

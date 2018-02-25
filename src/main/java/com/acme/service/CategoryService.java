@@ -51,5 +51,4 @@ public interface CategoryService {
 
     List<MapDto> getChildren(String categoryId);
 
-    void transliteCategories(boolean all);
 }

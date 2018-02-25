@@ -6,6 +6,7 @@ import com.acme.model.dto.CategoryTransfer;
 import com.acme.model.dto.MapDto;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
+import com.acme.service.TransliteService;
 import com.acme.service.TreeService;
 
 import com.google.common.base.Strings;
@@ -39,6 +40,9 @@ public class CategoryController {
 
     @Autowired
     ItemService itemService;
+
+    @Autowired
+    TransliteService transliteService;
 
     /**
      * Добавление/Обновление новой категории
@@ -191,7 +195,7 @@ public class CategoryController {
     @Transactional
     @RequestMapping(method = RequestMethod.PATCH, value = "translite")
     public void transliteItems(@RequestParam(name = "all", required = false, defaultValue = "true") Boolean all){
-        categoryService.transliteCategories(all);
+        transliteService.transliteCategories(all);
     }
 
     /**

@@ -32,7 +32,10 @@
           }
 
           function refreshCart(){
-             dataResources.cart.refresh(mvm.cart.content).$promise.then(function(data){
+            var ids = mvm.cart.content.map(function(element){
+              return element.id;
+            });
+             dataResources.cart.refresh(ids).$promise.then(function(data){
                 var stash;
                 data.forEach(function (category) {
                    stash = helpers.findInArrayById(mvm.cart.content, category.id);

@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import com.acme.enums.ImageOrientation;
 import com.acme.handlers.Base64BytesSerializer;
 import com.acme.model.Company;
 import com.acme.model.Content;
@@ -17,11 +18,24 @@ import com.acme.constant.Constants;
 import com.acme.repository.SaleRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
+import com.drew.imaging.FileType;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.MetadataException;
+import com.drew.metadata.exif.ExifIFD0Directory;
+import com.drew.metadata.jpeg.JpegDirectory;
+import com.drew.metadata.png.PngDirectory;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -135,7 +149,7 @@ public class ContentController{
 
                 itemContent = new ItemContent();
                 itemContent.setItemId(itemId);
-                itemContent.setContentId(content.getId());
+                itemContent.setContentId(content);
                 itemContent.setShow(true);
                 if(i==0){
                     itemContent.setMain(true);
@@ -315,7 +329,7 @@ public class ContentController{
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
     public void setAsMain(@RequestBody ItemContent input) throws ParseException {
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(input.getItemId())){
-            itemContent.setMain(itemContent.getContentId().contentEquals(input.getContentId()));
+            itemContent.setMain(itemContent.getContentId().getId().contentEquals(input.getContentId().getContent()));
             itemContentRepository.save(itemContent);
         }
     }
@@ -328,5 +342,30 @@ public class ContentController{
     @RequestMapping(value = "/set/show",method = RequestMethod.PUT)
     public void setAsShown(@RequestBody ItemContent input) throws ParseException {
         itemContentRepository.save(input);
+    }
+
+    @RequestMapping(value = "/set/orientation", method = RequestMethod.PATCH)
+    public void setOrientations(){
+        Lists.newArrayList(contentRepository.findAll()).forEach(content ->{
+            try {
+                Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(Base64BytesSerializer.deserialize(content.getContent())));
+                JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
+                PngDirectory pngDirectory = metadata.getFirstDirectoryOfType(PngDirectory.class);
+
+                int width;
+                int height;
+                if(jpegDirectory != null){
+                    width = jpegDirectory.getImageWidth();
+                    height = jpegDirectory.getImageHeight();
+                } else {
+                    width = pngDirectory.getInt(1);
+                    height = pngDirectory.getInt(2);
+                }
+                content.setOrientation(width > height ? ImageOrientation.HORIZONTAL: ImageOrientation.VERTICAL);
+                contentRepository.save(content);
+            } catch (IOException | ImageProcessingException | MetadataException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 }

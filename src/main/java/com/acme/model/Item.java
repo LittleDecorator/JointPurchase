@@ -14,12 +14,16 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Entity represent Item
+ */
+
 @Entity
 @Table(name = "item")
-@Document(indexName = "item-index",type = "item-type")
+@Document(indexName = "item-index", type = "item-type")
 @Setting(settingPath = "/elastic/item/settings.json")
 @Mapping(mappingPath = "/elastic/item/mappings.json")
-public class Item implements Product, Serializable{
+public class Item implements Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -33,7 +37,7 @@ public class Item implements Product, Serializable{
     private String transliteName;
 
     @OneToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name = "company_id")
     private Company company;
 
     @Column(name = "article")
@@ -75,31 +79,18 @@ public class Item implements Product, Serializable{
     private ItemStatus status = ItemStatus.AVAILABLE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "sale_item",
-        joinColumns={@JoinColumn(name="item_id", referencedColumnName="id")},
-        inverseJoinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")})
+    @JoinTable(name = "sale_item", joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id")})
     @JsonBackReference
     private Sale sale;
 
-    @Transient
-    private Integer salePrice;
-
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="category_item",
-        joinColumns={@JoinColumn(name="item_id", referencedColumnName="id")},
-        inverseJoinColumns={@JoinColumn(name="category_id", referencedColumnName="id")})
+    @JoinTable(name = "category_item", joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "category_id", referencedColumnName = "id")})
     private List<Category> categories;
 
     @JsonProperty("images")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
     private List<ItemContent> itemContents;
-
-    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
-    @Transient
-    private List<OrderItem> orderItems;
-
-    @Transient
-    private String url;
 
     public String getId() {
         return id;
@@ -197,22 +188,6 @@ public class Item implements Product, Serializable{
         this.itemContents = itemContents;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Integer getInOrder() {
         return inOrder;
     }
@@ -275,13 +250,5 @@ public class Item implements Product, Serializable{
 
     public void setSale(Sale sale) {
         this.sale = sale;
-    }
-
-    public Integer getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(Integer salePrice) {
-        this.salePrice = salePrice;
     }
 }

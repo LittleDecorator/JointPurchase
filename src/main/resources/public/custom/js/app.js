@@ -51,7 +51,8 @@
               .icon('facebook', 'custom/icons/facebook-box.svg', 24)
               .icon('bug', 'custom/icons/bug.svg', 24)
               .icon('instagram', 'custom/icons/instagram.svg', 24)
-              .icon('xls', 'custom/icons/file-excel.svg', 24);
+              .icon('xls', 'custom/icons/file-excel.svg', 24)
+              .icon('sdek', 'custom/icons/sdek.svg', 24);
        }])
 
        .run(['$state', '$rootScope', '$location', '$templateRequest', 'ngDialog', '$mdDialog', 'eventService', 'MetaTags', function ($state, $rootScope, $location, $templateRequest, ngDialog, $mdDialog, eventService, MetaTags) {

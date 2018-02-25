@@ -1,9 +1,11 @@
 package com.acme.repository.specification;
 
 import com.acme.enums.OrderStatus;
-import com.acme.model.OrderView;
-import com.acme.model.OrderView_;
+import com.acme.model.Delivery_;
+import com.acme.model.Order;
+import com.acme.model.Order_;
 import com.acme.model.filter.OrderFilter;
+import java.util.Date;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Path;
@@ -17,14 +19,14 @@ import java.util.List;
  * Created by kobzev on 16.02.17.
  *
  */
-public class OrderViewSpecifications {
+public class OrderSpecifications {
 
-	public static Specification<OrderView> filter(OrderFilter filter) {
+	public static Specification<Order> filter(OrderFilter filter) {
 		return (root, criteriaQuery, builder) -> {
-			Path<Timestamp> createDate = root.get(OrderView_.createDate);
-			Path<OrderStatus> status = root.get(OrderView_.status);
-			Path<String> recipient = root.get(OrderView_.recipientId);
-			Path<String> delivery = root.get(OrderView_.delivery);
+			Path<Date> createDate = root.get(Order_.dateAdd);
+			Path<OrderStatus> status = root.get(Order_.status);
+			Path<String> recipient = root.get(Order_.subjectId);
+			Path<String> delivery = root.get(Order_.delivery).get(Delivery_.name);
 
 			final List<Predicate> predicates = new ArrayList<>();
 			if (filter.getDateFrom() != null) {
@@ -46,7 +48,7 @@ public class OrderViewSpecifications {
 		};
 	}
 
-	public static Specification<OrderView> customer(String subjectId) {
-		return (root, criteriaQuery, builder) -> builder.equal(root.get(OrderView_.recipientId), subjectId);
+	public static Specification<Order> customer(String subjectId) {
+		return (root, criteriaQuery, builder) -> builder.equal(root.get(Order_.subjectId), subjectId);
 	}
 }

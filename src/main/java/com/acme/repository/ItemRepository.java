@@ -28,8 +28,6 @@ public interface ItemRepository extends JpaRepository<Item, String>, JpaSpecific
 
     Item findOneByTransliteName(String name);
 
-//    List<Item> findByOrderItems(List<OrderItem> orderItems);
-
     @Query(value = "select distinct t.* from get_limited_category_items(:categoryId, :offset, :limit) t", nativeQuery = true)
     List<Item> findAllByCategoryId(@Param("categoryId") String categoryId, @Param("offset") int offset, @Param("limit") int limit);
 

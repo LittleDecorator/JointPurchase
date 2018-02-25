@@ -2,15 +2,18 @@ package com.acme.controller;
 
 import com.acme.exception.TemplateException;
 import com.acme.model.Order;
-import com.acme.model.OrderView;
+import com.acme.model.dto.OrderDto;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
+import com.acme.model.dto.OrderViewDto;
 import com.acme.model.filter.OrderFilter;
+import com.acme.model.dto.mapper.OrderMapper;
 import com.acme.service.*;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -21,17 +24,26 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Контроллер заказов
+ */
 @RestController
 @RequestMapping(value = "/api/order")
+@Transactional
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
-    @Autowired
-    AuthService authService;
+    private AuthService authService;
+    private OrderService orderService;
+    private OrderMapper orderMapper;
 
     @Autowired
-    OrderService orderService;
+    public OrderController(AuthService authService, OrderService orderService, OrderMapper orderMapper) {
+        this.authService = authService;
+        this.orderService = orderService;
+        this.orderMapper = orderMapper;
+    }
 
     /**
      * Получение всех заказов по фильтру
@@ -39,9 +51,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<OrderView> getOrders(OrderFilter filter) {
-        log.info("Получение заказов по фильтру: {0}", filter);
-        return orderService.getAllOrders(filter);
+    public List<OrderViewDto> getOrders(OrderFilter filter) {
+        List<Order> orders = orderService.getAllOrders(filter);
+        return orderMapper.toViewDtoList(orders);
     }
 
     /**
@@ -51,8 +63,8 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public Order getOrder(@PathVariable("id") String id) {
-        return orderService.getOrder(id);
+    public OrderDto getOrder(@PathVariable("id") String id) {
+        return orderMapper.toDto(orderService.getOrder(id));
     }
 
     /**
@@ -62,8 +74,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/customer/{id}")
-    public List<OrderView> getCustomerOrders(@PathVariable("id") String id) {
-        return orderService.getCustomerOrders(id);
+    public List<OrderViewDto> getCustomerOrders(@PathVariable("id") String id) {
+        List<Order> orders = orderService.getCustomerOrders(id);
+        return orderMapper.toViewDtoList(orders);
     }
 
     /**
@@ -78,7 +91,7 @@ public class OrderController {
      * @throws TemplateException
      */
     @RequestMapping(method = RequestMethod.POST, value = "/personal")
-    public Order privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
+    public OrderDto privateOrderProcess(@RequestBody OrderRequest request) throws ParseException, IOException, MessagingException, TemplateException {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         request.getOrder().setSubjectId(authService.getClaims(servletRequest).getId());
@@ -91,11 +104,12 @@ public class OrderController {
      * @return
      */
     @RequestMapping(value = "/history", method = RequestMethod.GET)
-    public List<OrderView> getOrderHistory(OrderFilter filter) {
+    public List<OrderViewDto> getOrderHistory(OrderFilter filter) {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         filter.setSubjectId(authService.getClaims(servletRequest).getId());
-        return orderService.getHistory(filter);
+        List<Order> history = orderService.getHistory(filter);
+        return orderMapper.toViewDtoList(history);
     }
 
     /**
@@ -105,8 +119,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Order createOrder(@RequestBody OrderRequest request) {
-        return orderService.createOrder(request);
+    public OrderDto createOrder(@RequestBody OrderRequest request) {
+        Order order = orderService.createOrder(request);
+        return orderMapper.toDto(order);
     }
 
     /**
@@ -116,8 +131,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/cancel")
-    public Order cancelOrder(@PathVariable("id") String id) {
-        return orderService.cancelOrder(id);
+    public OrderDto cancelOrder(@PathVariable("id") String id) {
+        Order order = orderService.cancelOrder(id);
+        return orderMapper.toDto(order);
     }
 
     /**

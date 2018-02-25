@@ -21,25 +21,25 @@ import java.util.stream.Collectors;
 public class ClssController {
 
     @Autowired
-	DeliveryRepository deliveryRepository;
+    DeliveryRepository deliveryRepository;
 
-    @RequestMapping(method = RequestMethod.GET,value = "/order/status/map")
-    public Map<String,String> getOrderStatus(){
-        return Arrays.stream(OrderStatus.values()).collect(Collectors.toMap(e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),OrderStatus::getText));
+    @RequestMapping(method = RequestMethod.GET, value = "/order/status/map")
+    public Map<String, String> getOrderStatus() {
+        return Arrays.stream(OrderStatus.values()).collect(Collectors.toMap(e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()), OrderStatus::getText));
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/item/status/map")
-    public Map<String,String> getItemStatus(){
-        return Arrays.stream(ItemStatus.values()).collect(Collectors.toMap( e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()),ItemStatus::getText));
+    @RequestMapping(method = RequestMethod.GET, value = "/item/status/map")
+    public Map<String, String> getItemStatus() {
+        return Arrays.stream(ItemStatus.values()).collect(Collectors.toMap(e -> CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, e.name()), ItemStatus::getText));
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/order/delivery")
-    public List<Delivery> getDelivery(){
+    @RequestMapping(method = RequestMethod.GET, value = "/order/delivery")
+    public List<Delivery> getDelivery() {
         return Lists.newArrayList(deliveryRepository.findAll());
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/order/delivery/map")
-    public Map<String,String> getDeliveryMap(){
+    @RequestMapping(method = RequestMethod.GET, value = "/order/delivery/map")
+    public Map<String, String> getDeliveryMap() {
         return Lists.newArrayList(deliveryRepository.findAll()).stream().collect(Collectors.toMap(Delivery::getId, Delivery::getName));
     }
 }

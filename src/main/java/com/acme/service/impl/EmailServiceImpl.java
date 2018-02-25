@@ -422,7 +422,7 @@ public class EmailServiceImpl implements EmailService {
                     .put("cabinet_link", Constants.CABINET_LINK + order.getId())
 				    /* информация о заказе */
                     .put("orderDate", DATE_FORMAT.format(order.getDateAdd() == null ? new Date() : order.getDateAdd()))
-                    .put("orderDelivery", deliveryRepository.findOne(order.getDelivery()).getName())
+                    .put("orderDelivery", order.getDelivery().getName())
                     .put("orderPayment", order.getPayment()+ " руб")
 				    /* данные о товаре */
                     .put("item", list)

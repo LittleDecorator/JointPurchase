@@ -27,6 +27,14 @@ public class OrderItemId implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public String getItemId() {
+		return itemId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

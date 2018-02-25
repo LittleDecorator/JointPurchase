@@ -12,6 +12,8 @@ public class CatalogFilter {
 	private String clientEmail;
 	private int limit;
 	private int offset;
+	// ЗАЧЕМ????
+	private String sale;
 
 	public String getCompany() {
 		return company;
@@ -59,6 +61,14 @@ public class CatalogFilter {
 
 	public void setSubcategory(String subcategory) {
 		this.subcategory = subcategory;
+	}
+
+	public String getSale() {
+		return sale;
+	}
+
+	public void setSale(String sale) {
+		this.sale = sale;
 	}
 
 	@Override

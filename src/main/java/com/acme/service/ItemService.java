@@ -1,7 +1,6 @@
 package com.acme.service;
 
 
-import com.acme.model.Catalog;
 import com.acme.model.Content;
 import com.acme.model.Item;
 import com.acme.model.Product;
@@ -14,11 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface ItemService {
 
-    List<Catalog> getAllCatalog(CatalogFilter filter);
-
     List<Item> getAll(CatalogFilter filter);
-
-    List<Item> getAllNative(CatalogFilter filter);
 
     List<Item> getAll();
 

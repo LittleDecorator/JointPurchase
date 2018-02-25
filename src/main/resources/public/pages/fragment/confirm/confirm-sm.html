@@ -88,10 +88,11 @@
                                 <md-input-container>
                                     <label>Телефон</label>
                                     <input name="phoneNumber" ng-model="vm.data.stepData[1].data.recipientPhone"
-                                           mask="(999) 999-99-99" mask-restrict="reject">
-                                    <div class="hint">Пример: (915) 343-43-45</div>
+                                           mask="(999) 999-99-99" mask-restrict="reject" required>
+                                    <div class="hint" ng-show="vm.showHints">Пример: (915) 343-43-45</div>
                                     <div ng-messages="vm.forms.step2.phoneNumber.$error" ng-if="!vm.showHints">
                                         <div ng-message-exp="['mask']">Не корректный номер телефона</div>
+                                        <div ng-message="required">Необходимо указать номер получателя</div>
                                     </div>
                                 </md-input-container>
 

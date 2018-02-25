@@ -1,32 +1,28 @@
 package com.acme.service.impl;
 
-import com.acme.model.Catalog;
-import com.acme.model.CategoryItem;
 import com.acme.model.Content;
 import com.acme.model.Item;
-import com.acme.model.ItemContent;
 import com.acme.model.OrderItem;
 import com.acme.model.Product;
-import com.acme.model.Sale;
 import com.acme.model.dto.ItemMediaTransfer;
 import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.repository.*;
 import com.acme.repository.specification.CatalogSpecifications;
+import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.ItemService;
-import com.acme.constant.Constants;
+import com.acme.util.PageTools;
 import com.google.common.collect.Lists;
-import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -47,16 +43,7 @@ public class ItemServiceImpl implements ItemService {
     ItemRepository itemRepository;
 
     @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
     OrderItemRepository orderItemRepository;
-
-    @Autowired
-    private CategoryItemRepository categoryItemRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Autowired
     PlatformTransactionManager transactionManager;
@@ -64,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getPortion(int offset, int limit) {
         Pageable portion = new OffsetBasePage(offset, limit);
-        return Lists.newArrayList(itemRepository.findAll(portion));
+        return itemRepository.findAll(portion).getContent();
     }
 
     @Override
@@ -80,24 +67,10 @@ public class ItemServiceImpl implements ItemService {
             new Sort.Order(Sort.Direction.ASC, "id")
         );
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), sort);
-        return Lists.newArrayList(itemRepository.findAll(CatalogSpecifications.filter(filter), pageable));
-    }
-
-    @Override
-    public List<Catalog> getAllCatalog(CatalogFilter filter) {
-        Sort sort = new Sort(
-            new Sort.Order(Sort.Direction.ASC, "category_id"),
-            new Sort.Order(Sort.Direction.ASC, "status"),
-            new Sort.Order(Sort.Direction.DESC, "bestseller"),
-            new Sort.Order(Sort.Direction.ASC, "id")
-        );
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), sort);
-        return Lists.newArrayList(productRepository.findAll(CatalogSpecifications.filterCatalog(filter), pageable));
-    }
-
-    @Override
-    public List<Item> getAllNative(CatalogFilter filter) {
-        return null;
+        Page<Item> page = itemRepository.findAll(SpecificationBuilder.applyCatalogFilter(filter), pageable);
+        // заполняем заголовки
+        PageTools.setPageHeaders(page);
+        return page.getContent();
     }
 
     @Override
@@ -188,9 +161,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void increaseCountByOrder(String orderId) {
         // обновим кол-во товара в наличие
-        List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
+        List<OrderItem> orderItems = orderItemRepository.findAllByIdOrderId(orderId);
         for (OrderItem orderItem : orderItems) {
-            Item item = itemRepository.findOne(orderItem.getItemId());
+            Item item = itemRepository.findOne(orderItem.getId().getItemId());
             item.setInStock(item.getInStock() + orderItem.getCount());
             item.setInOrder(item.getInOrder() - orderItem.getCount());
             itemRepository.save(item);
@@ -198,22 +171,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public void fillItem(Product item, Content defContent) {
-        List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
-        if (itemContents.isEmpty()) {
-            item.setUrl(Constants.PREVIEW_URL + defContent.getId());
-        } else {
-            item.setItemContents(itemContents);
-            Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findAny();
-            contentOptional.ifPresent(itemContent -> item.setUrl(Constants.PREVIEW_URL + itemContent.getContentId()));
-        }
-        item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci -> ci.getId().getCategoryId()).collect(Collectors.toList())));
-
-        // TODO: если время акции не настало, то мы не должны её вообще получать для товара
-        Sale sale = item.getSale();
-        Date now = new Date();
-        if(sale !=null && sale.isActive() && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
-            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
-        }
+    //    List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
+    //    if (itemContents.isEmpty()) {
+    //        item.setUrl(Constants.PREVIEW_URL + defContent.getId());
+    //    } else {
+    //        item.setItemContents(itemContents);
+    //        Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findAny();
+    //        contentOptional.ifPresent(itemContent -> item.setUrl(Constants.PREVIEW_URL + itemContent.getContentId().getId()));
+    //    }
+    //    item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci -> ci.getId().getCategoryId()).collect(Collectors.toList())));
+    //
+    //    // TODO: если время акции не настало, то мы не должны её вообще получать для товара
+    //    Sale sale = item.getSale();
+    //    Date now = new Date();
+    //    if(sale !=null && sale.isActive() && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
+    //        item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
+    //    }
     }
 
     @Override

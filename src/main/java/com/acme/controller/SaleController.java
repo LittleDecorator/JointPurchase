@@ -1,15 +1,12 @@
 package com.acme.controller;
 
-import com.acme.model.Item;
 import com.acme.model.Sale;
-import com.acme.model.dto.SaleRequestDto;
-import com.acme.repository.ItemRepository;
+import com.acme.model.dto.SaleDto;
+import com.acme.model.dto.mapper.SaleMapper;
 import com.acme.repository.SaleRepository;
-import com.acme.repository.mapper.SaleMapper;
 import com.acme.repository.specification.SaleSpecifications;
 import com.google.common.base.Strings;
 import com.ibm.icu.text.Transliterator;
-import java.util.Date;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +26,9 @@ public class SaleController {
 
     @Autowired
     private SaleRepository saleRepository;
+
     @Autowired
-    private ItemRepository itemRepository;
+    private SaleMapper saleMapper;
 
     /**
      * Получение списка акций
@@ -58,12 +56,9 @@ public class SaleController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     @Transactional(readOnly = true)
-    public Sale getByName(@RequestParam(name = "name") String transliteName){
+    public SaleDto getByName(@RequestParam(name = "name") String transliteName){
         Sale sale = saleRepository.findOneByTransliteName(transliteName);
-        for(Item item : sale.getItems()){
-            item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
-        }
-        return sale;
+        return saleMapper.toSaleDto(sale);
     }
 
     /**
