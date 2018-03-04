@@ -4,6 +4,7 @@ import com.acme.enums.OrderStatus;
 import com.acme.model.*;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
+import com.acme.model.dto.mapper.OrderMapper;
 import com.acme.model.embedded.OrderItemId;
 import com.acme.model.filter.OrderFilter;
 import com.acme.repository.*;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.PostConstruct;
@@ -56,6 +58,10 @@ public class OrderServiceImpl implements OrderService {
 	JmsService jmsService;
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+	@Autowired
+	private OrderMapper orderMapper;
+	@Autowired
+	private DeliveryRepository deliveryRepository;
 
 	@Override
 	public long genOrderNum() {
@@ -102,12 +108,12 @@ public class OrderServiceImpl implements OrderService {
 	 * @param orderId
 	 * @return
      */
+	@Transactional
 	public Map<String, Object> getOrderInfo(String orderId) {
 		Map<String, Object> result = Maps.newHashMap();
 		// получение информации о получателе и заказе
 		Order order = orderRepository.findOne(orderId);
 		result.put("order",order);
-		//List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(orderId);
 		Map<String, OrderItem> orderItemsMap = order.getOrderItems().stream().collect(Collectors.toMap(oi -> oi.getId().getItemId(), Function.identity()));
 		// информация о количествах товара в заказе
 		result.put("orderItems",orderItemsMap);
@@ -133,16 +139,19 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order createOrder(OrderRequest request) {
 		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+		Order order = orderMapper.requestDtoToEntity(request.getOrder());
 		try {
+			order.setOrderItems(Lists.newArrayList());
+			order.setDelivery(deliveryRepository.findOne(request.getOrder().getDelivery()));
 			/* сохраним заказ из запроса. */
-			request.getOrder().setStatus(OrderStatus.NEW);
+			order.setStatus(OrderStatus.NEW);
 			// TODO: fix temporary hook
 			if(Strings.isNullOrEmpty(request.getOrder().getRecipientAddress())){
-				request.getOrder().setRecipientAddress("Здесь должен быть адрес пункта самовывоза при типе доставки - САМОВЫВОЗ");
+				order.setRecipientAddress("Здесь должен быть адрес пункта самовывоза при типе доставки - САМОВЫВОЗ");
 			}
 			// TODO: override order uid
-			request.getOrder().setUid(genOrderNum());
-			Order order = orderRepository.save(request.getOrder());
+			order.setUid(genOrderNum());
+			order = orderRepository.save(order);
 
 			/* добавим записи в таблицу связи заказ-товар */
 			if(request.getItems() == null || request.getItems().isEmpty()){
@@ -154,7 +163,8 @@ public class OrderServiceImpl implements OrderService {
 				OrderItemId id = new OrderItemId(itemsList.getItem().getId(), order.getId());
 				orderItem.setId(id);
 				orderItem.setCount(itemsList.getCount());
-				orderItemRepository.save(orderItem);
+				orderItem = orderItemRepository.save(orderItem);
+				order.getOrderItems().add(orderItem);
 				// изменить кол-во товара в наличие
 				Item item = itemRepository.findOne(itemsList.getItem().getId());
 				item.setInStock(item.getInStock() - itemsList.getCount());
@@ -171,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
 		} catch (Exception ex) {
 			log.error("Ошибка создания заказа = {0}", request.getOrder(), ex);
 			transactionManager.rollback(status);
-			notificationService.sendErrorNotification(request.getOrder());
+			notificationService.sendErrorNotification(order);
 			return null;
 		}
 	}

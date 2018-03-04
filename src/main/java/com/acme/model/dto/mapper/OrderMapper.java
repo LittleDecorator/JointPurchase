@@ -4,6 +4,7 @@ import com.acme.model.Delivery;
 import com.acme.model.Order;
 import com.acme.model.OrderItem;
 import com.acme.model.dto.OrderDto;
+import com.acme.model.dto.OrderRequestDto;
 import com.acme.model.dto.OrderViewDto;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,9 @@ public abstract class OrderMapper extends BaseMapper{
 		@Mapping(target = "delivery", expression = "java(initDelivery(entity))")
 	})
 	public abstract OrderDto toDto(Order entity);
+
+	@Mapping(target = "delivery", ignore = true)
+	public abstract Order requestDtoToEntity(OrderRequestDto requestDto);
 
 	public List<OrderViewDto> toViewDtoList(Collection<Order> orders){
 		List<OrderViewDto> result = new ArrayList<>();

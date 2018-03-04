@@ -140,6 +140,13 @@
             <version>0.6.0</version>
         </dependency>
 
+        <!--SEARCH-->
+        <dependency>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.5</version>
+        </dependency>
+
         <!-- TEMPLATE ENGINE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -169,6 +176,7 @@
             <groupId>org.brunocvcunha.instagram4j</groupId>
             <artifactId>instagram4j</artifactId>
             <version>1.5</version>
+            <!--<version>1.6</version>-->
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

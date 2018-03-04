@@ -1,30 +1,17 @@
 package com.acme.model.dto;
 
-import com.acme.model.Order;
-
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Класс представляет собой содержимое заказа.
  */
+@Getter
+@Setter
 public class OrderRequest {
 
-	private Order order;
+	private OrderRequestDto order;
 	private List<OrderItemsList> items;
 
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public List<OrderItemsList> getItems() {
-		return items;
-	}
-
-	public void setItems(List<OrderItemsList> items) {
-		this.items = items;
-	}
 }

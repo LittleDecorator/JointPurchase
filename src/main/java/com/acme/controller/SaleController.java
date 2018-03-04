@@ -1,8 +1,11 @@
 package com.acme.controller;
 
+import com.acme.model.Item;
 import com.acme.model.Sale;
 import com.acme.model.dto.SaleDto;
+import com.acme.model.dto.SaleRequestDto;
 import com.acme.model.dto.mapper.SaleMapper;
+import com.acme.repository.ItemRepository;
 import com.acme.repository.SaleRepository;
 import com.acme.repository.specification.SaleSpecifications;
 import com.google.common.base.Strings;
@@ -26,6 +29,9 @@ public class SaleController {
 
     @Autowired
     private SaleRepository saleRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     @Autowired
     private SaleMapper saleMapper;
@@ -77,12 +83,15 @@ public class SaleController {
     /**
      * Обновление существующей акции
      *
-     * @param sale
+     * @param dto
      */
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public void updateSale(@RequestBody Sale sale) {
-        sale.setTransliteName(translite(sale.getTitle()));
+    public void updateSale(@RequestBody SaleRequestDto dto) {
+        List<Item> items = itemRepository.findByIdIn(dto.getItems());
+        Sale sale = saleMapper.requestToSale(dto);
+        sale.setTransliteName(translite(dto.getTitle()));
+        sale.setItems(items);
         saleRepository.save(sale);
     }
 

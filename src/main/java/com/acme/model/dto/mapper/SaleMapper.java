@@ -5,6 +5,7 @@ import com.acme.model.Item;
 import com.acme.model.Sale;
 import com.acme.model.dto.CatalogDetailDto;
 import com.acme.model.dto.SaleDto;
+import com.acme.model.dto.SaleRequestDto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,12 @@ public abstract class SaleMapper extends BaseMapper {
 
     @Mapping(target = "items", expression = "java(convertItems(entity))")
     public abstract SaleDto toSaleDto(Sale entity);
+
+    @Mapping(target = "items", ignore = true)
+    public abstract Sale toSale(SaleDto dto);
+
+    @Mapping(target = "items", ignore = true)
+    public abstract Sale requestToSale(SaleRequestDto dto);
 
     /**
      *

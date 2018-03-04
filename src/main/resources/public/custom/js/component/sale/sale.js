@@ -326,19 +326,18 @@
                    if (vm.sale && vm.sale.id) {
 
                       // // map items to ID array
-                      // var items = [];
-                      // if (vm.sale.items) {
-                      //    items = vm.sale.items.map(function (item) {
-                      //       return item['id'];
-                      //    })
-                      // }
+                      var items = [];
+                      if (vm.sale.items) {
+                         items = vm.sale.items.map(function (item) {
+                            return item['id'];
+                         })
+                      }
                       //
-                      // // make copy of vm.sale
-                      // var dto = angular.copy(vm.sale);
-                      // dto.items = items;
+                      // make copy of vm.sale
+                      var dto = angular.copy(vm.sale);
+                      dto.items = items;
 
-                      // dataResources.sale.put(dto).$promise.then(function (data) {
-                      dataResources.sale.put(vm.sale).$promise.then(function (data) {
+                      dataResources.sale.put(dto).$promise.then(function (data) {
                          $mdToast.show(toast.textContent('Акция ' + vm.sale.title + ' успешно изменена').theme('success'));
                       }, function (error) {
                          $mdToast.show(toast.textContent('Не удалось изменить акцию ' + vm.sale.title).theme('error'));

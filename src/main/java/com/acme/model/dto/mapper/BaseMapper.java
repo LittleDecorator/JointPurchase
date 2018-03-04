@@ -15,7 +15,7 @@ public abstract class BaseMapper {
      * @return
      * @throws ClassCastException
      */
-    protected <T> T deproxy(Object entity, Class<T> baseClass) throws ClassCastException {
+    public <T> T deproxy(Object entity, Class<T> baseClass) throws ClassCastException {
         if (entity == null) {
             throw new NullPointerException("Entity passed for initialization is null");
         }
