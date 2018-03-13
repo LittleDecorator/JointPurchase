@@ -45,6 +45,7 @@
 
         .factory('dataResources',['$resource','$filter',function($resource,$filter){
             var xlsxContentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+            var imgContentType = 'image/jpg';
             return {
                cart: $resource('/api/item/refresh',{},{
                   refresh:{method:'PUT', isArray:true}
@@ -386,6 +387,21 @@
                             headers : { 'Content-Type' : undefined },
                             isArray : false
                         }
+                    }),
+                },
+                media: {
+                  download: $resource('/media/image/raw/:id',{id:'@id'},{
+                    get:{
+                      method: 'GET',
+                      isArray:false,
+                      headers: { 'Content-Type': imgContentType },
+                      responseType: 'arraybuffer',
+                      cache: false,
+                      transformResponse: function (data) {
+                        return {
+                          response: new Blob([data], {type: imgContentType})
+                        };
+                      }}
                     }),
                 },
                 wishlist: {

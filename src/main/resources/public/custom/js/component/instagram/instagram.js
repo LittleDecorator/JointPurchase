@@ -6,8 +6,10 @@
     'use strict';
 
     angular.module('instagram')
-        .controller('instagramController',['$scope','$state','$stateParams','dataResources','$timeout', function ($scope, $state, $stateParams, dataResources, $timeout){
+        .controller('instagramController',['$scope','$state','$stateParams','dataResources','$timeout', '$mdToast',
+          function ($scope, $state, $stateParams, dataResources, $timeout, $mdToast){
 
+            var toast = $mdToast.simple().position('top right').hideDelay(3000);
             var mvm = $scope.$parent.mvm;
             var vm = this;
             var showCount = 15;
@@ -47,6 +49,9 @@
                   vm.posts.push(value);
                 });
                 vm.posts.sort(desc);
+                mvm.showLoader = false;
+              }, function(error){
+                $mdToast.show(toast.textContent('Неудалось обновить список постов инстаграм\n'+ error.message).theme('error'));
                 mvm.showLoader = false;
               });
             }

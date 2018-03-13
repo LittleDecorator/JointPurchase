@@ -76,6 +76,8 @@ public class InstagramServiceImpl implements InstagramService {
         List<InstagramFeedItem> items = tagFeed.getItems();
         items.addAll(tagFeed.getRanked_items());
 
+        if(items.isEmpty()) return;
+
         // отсортируем по популярности
         List<InstagramFeedItem> result = items.stream().sorted(Comparator.comparingInt(InstagramFeedItem::getLike_count)).collect(Collectors.toList());
 

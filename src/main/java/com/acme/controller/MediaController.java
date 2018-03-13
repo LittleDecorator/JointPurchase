@@ -6,6 +6,9 @@ import com.acme.model.Content;
 import com.acme.repository.ContentRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
+import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * Контроллер предназначен для получения подходящего изображения
@@ -34,6 +38,8 @@ public class MediaController {
 	@Autowired
 	ImageService imageService;
 
+	private static final ExecutorService ex = Executors.newFixedThreadPool(100);
+
 	@RequestMapping(method = RequestMethod.GET, value = "/image/{contentId}")
 	public void getImageForGallery(@PathVariable(value = "contentId") String contentId,
 								   @RequestParam(name = "asWebp", required = false) Boolean asWebp,
@@ -42,17 +48,70 @@ public class MediaController {
 		writeResponse(ImageSize.ORIGINAL, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
+//	@RequestMapping(method = RequestMethod.GET, value = "/image/{size}/{contentId}")
+//	public void getImage(@PathVariable(value = "size") String size,
+//						 @PathVariable(value = "contentId") String contentId,
+//						 @RequestParam(name = "asWebp", required = false) Boolean asWebp,
+//						 HttpServletResponse response) throws Exception {
+//		ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
+//		writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
+//	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/image/{size}/{contentId}")
-	public void getImage(@PathVariable(value = "size") String size,
-						 @PathVariable(value = "contentId") String contentId,
-						 @RequestParam(name = "asWebp", required = false) Boolean asWebp,
-						 HttpServletResponse response) throws Exception {
-		ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
-		writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
+	public DeferredResult<byte[]> getImage(@PathVariable(value = "size") String size, @PathVariable(value = "contentId") String contentId, @RequestParam(name = "asWebp", required = false) Boolean asWebp, HttpServletResponse response) throws Exception {
+		DeferredResult<byte[]> result = new DeferredResult<>();//TODO add timeout
+		CompletableFuture.supplyAsync(() -> {
+			ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
+			byte[] c = new byte[]{};
+			try {
+				c = writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return c;
+		}, ex).thenAccept(result::setResult);
+		return result;
+		//ImageSize imageSize = ImageSize.valueOf(size.toUpperCase());
+		//writeResponse(imageSize, contentId, Boolean.TRUE.equals(asWebp), response);
 	}
 
-	private void writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
-		long start = System.currentTimeMillis();
+//	private void writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
+//		//long start = System.currentTimeMillis();
+//		BufferedImage image;
+//		//System.out.println("Request: " + size.name());
+//		Content content = contentRepository.findOne(contentId);
+//		//System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
+//		String type = asWebp ? "webp" : content.getType();
+//		byte[] data = Base64BytesSerializer.deserialize(content.getContent());
+//		switch (size) {
+//			case GALLERY:
+//				image = resizeService.forGallery(data);
+//				break;
+//			case VIEW:
+//				image = resizeService.forView(data);
+//				break;
+//			case PREVIEW:
+//				image = resizeService.forPreview(data);
+//				break;
+//			case THUMB:
+//				image = resizeService.forThumb(data);
+//				break;
+//			case ORIGINAL:
+//				image = resizeService.forOrign(data);
+//				break;
+//			default:
+//				image = imageService.getImage(data);
+//		}
+//		//System.out.println("Size : w - " + image.getWidth() + " h - " + image.getHeight());
+//		byte[] result = imageService.toBytes(image, type);
+//		//System.out.println("After convert: " + (System.currentTimeMillis() - start) + "ms");
+//		response.setContentType(type);
+//		response.getOutputStream().write(result);
+//		//System.out.println("After write: " + (System.currentTimeMillis() - start) + "ms");
+//	}
+
+	private byte[] writeResponse(ImageSize size, String contentId, boolean asWebp, HttpServletResponse response) throws Exception {
+		//long start = System.currentTimeMillis();
 		BufferedImage image;
 		//System.out.println("Request: " + size.name());
 		Content content = contentRepository.findOne(contentId);
@@ -82,7 +141,10 @@ public class MediaController {
 		byte[] result = imageService.toBytes(image, type);
 		//System.out.println("After convert: " + (System.currentTimeMillis() - start) + "ms");
 		response.setContentType(type);
-		response.getOutputStream().write(result);
+		//response.getOutputStream().write(result);
 		//System.out.println("After write: " + (System.currentTimeMillis() - start) + "ms");
+		return result;
 	}
+
+
 }

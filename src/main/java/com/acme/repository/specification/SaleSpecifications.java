@@ -11,13 +11,8 @@ public class SaleSpecifications {
 
     public static Specification<Sale> active() {
         return (root, criteriaQuery, builder) -> {
-
-            //Path endDate = root.get(Sale_.endDate);
-
             final List<Predicate> predicates = Lists.newArrayList();
-            //predicates.add(builder.greaterThan(endDate, System.currentTimeMillis()));
             predicates.add(builder.isTrue(root.get(Sale_.active)));
-
             return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
 

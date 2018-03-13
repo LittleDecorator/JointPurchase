@@ -38,7 +38,7 @@ public class OrientationTest {
 
         int width = jpegDirectory.getImageWidth();
         int height = jpegDirectory.getImageHeight();
-
+        logger.info(" width -> {}, height -> {}", width, height);
         logger.info("Image is {}", width > height ? "HORIZONTAL":"VERTICAL");
 
         AffineTransform affineTransform = new AffineTransform();

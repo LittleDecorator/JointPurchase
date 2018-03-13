@@ -5,10 +5,10 @@ import com.acme.model.Order;
 import com.acme.model.dto.OrderDto;
 import com.acme.model.dto.OrderItemsList;
 import com.acme.model.dto.OrderRequest;
-import com.acme.model.dto.OrderViewDto;
 import com.acme.model.filter.OrderFilter;
 import com.acme.model.dto.mapper.OrderMapper;
 import com.acme.service.*;
+import java.util.Set;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +51,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<OrderViewDto> getOrders(OrderFilter filter) {
+    public Set<OrderDto> getOrders(OrderFilter filter) {
         List<Order> orders = orderService.getAllOrders(filter);
-        return orderMapper.toViewDtoList(orders);
+        return orderMapper.toSimpleDto(orders);
     }
 
     /**
@@ -64,7 +64,8 @@ public class OrderController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public OrderDto getOrder(@PathVariable("id") String id) {
-        return orderMapper.toDto(orderService.getOrder(id));
+        Order order = orderService.getOrder(id);
+        return orderMapper.toDto(order);
     }
 
     /**
@@ -74,9 +75,9 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/customer/{id}")
-    public List<OrderViewDto> getCustomerOrders(@PathVariable("id") String id) {
+    public Set<OrderDto> getCustomerOrders(@PathVariable("id") String id) {
         List<Order> orders = orderService.getCustomerOrders(id);
-        return orderMapper.toViewDtoList(orders);
+        return orderMapper.toSimpleDto(orders);
     }
 
     /**
@@ -104,12 +105,12 @@ public class OrderController {
      * @return
      */
     @RequestMapping(value = "/history", method = RequestMethod.GET)
-    public List<OrderViewDto> getOrderHistory(OrderFilter filter) {
+    public Set<OrderDto> getOrderHistory(OrderFilter filter) {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         filter.setSubjectId(authService.getClaims(servletRequest).getId());
         List<Order> history = orderService.getHistory(filter);
-        return orderMapper.toViewDtoList(history);
+        return orderMapper.toSimpleDto(history);
     }
 
     /**

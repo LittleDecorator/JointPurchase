@@ -110,7 +110,7 @@ public class CategoryController {
     public List<MapDto> getChildrenCompanies(@PathVariable(value = "id") String id) {
         List<MapDto> result = Lists.newArrayList(new MapDto(null, "Все бренды"));
         List<String> categoryIds = categoryService.getChildren(id).stream().map(MapDto::getId).collect(Collectors.toList());
-        List<Item> items = categoryService.getCategoryItems(categoryIds);
+        Set<Item> items = categoryService.getCategoryItems(categoryIds);
         //List<Item> items = itemService.getAllByCategoryIdList(categoryIds);
 
         result.addAll(items.stream().map(item -> {
@@ -188,7 +188,7 @@ public class CategoryController {
      * @return List<Item>
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{name}/items")
-    public List<Item> getCategoryItems(@PathVariable("name") String name) {
+    public Set<Item> getCategoryItems(@PathVariable("name") String name) {
         return categoryService.getCategoryItemsByName(name);
     }
 

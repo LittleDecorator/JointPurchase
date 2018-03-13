@@ -4,10 +4,8 @@ import com.acme.elasticsearch.repository.CatalogRepository;
 import com.acme.model.*;
 import com.acme.model.dto.CatalogDto;
 import com.acme.model.dto.ItemDto;
-import com.acme.model.dto.ItemMapDto;
 import com.acme.model.dto.mapper.ItemMapper;
 import com.acme.model.filter.ItemFilter;
-import com.acme.repository.specification.ItemSpecifications;
 import com.acme.repository.*;
 import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.CategoryService;
@@ -79,7 +77,7 @@ public class ItemController {
     public List<ItemDto> getItems(ItemFilter filter) {
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd", "name");
         List<Item> itemList = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter), pageable).getContent();
-        return itemMapper.toDto(itemList);
+        return itemMapper.toSimpleDto(itemList);
     }
 
     /**
@@ -130,8 +128,8 @@ public class ItemController {
      * @return Item info with Categories
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public Item getItemDetail(@PathVariable("id") String id) {
-        return itemRepository.findOne(id);
+    public ItemDto getItemDetail(@PathVariable("id") String id) {
+        return itemMapper.toDto(itemRepository.findOne(id));
     }
 
     /**
@@ -141,9 +139,9 @@ public class ItemController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/order/{id}")
-    public List<Item> getAllByOrderId(@PathVariable("id") String orderId) {
+    public Set<Item> getAllByOrderId(@PathVariable("id") String orderId) {
         Order order = orderRepository.findOne(orderId);
-        return itemRepository.findByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
+        return itemRepository.findAllByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
     }
 
     /**
@@ -153,18 +151,18 @@ public class ItemController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/company/{id}")
-    public List<Item> getAllByCompanyId(@PathVariable("id") String companyId) {
-        return itemRepository.findByCompanyId(companyId);
+    public Set<Item> getAllByCompanyId(@PathVariable("id") String companyId) {
+        return itemRepository.findAllByCompanyId(companyId);
     }
 
     /**
      * Получение мапы товара для списков
      **/
     @RequestMapping(method = RequestMethod.GET, value = "/map")
-    public List<ItemMapDto> getItemMap(ItemFilter filter) {
+    public List<ItemDto> getItemMap(ItemFilter filter) {
         List<Item> items = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter));
         return items.stream().map(i -> {
-            ItemMapDto itemMap = new ItemMapDto(i.getId(), i.getName(), i.getPrice(), i.getArticle());
+            ItemDto itemMap = new ItemDto(i.getId(), i.getName(), i.getPrice(), i.getArticle());
             itemMap.setSale(i.getSale());
             return itemMap;
         }).collect(Collectors.toList());

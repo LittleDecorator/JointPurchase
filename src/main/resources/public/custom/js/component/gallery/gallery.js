@@ -7,11 +7,10 @@
 
     angular.module('gallery')
         /* Контроллер галереи */
-        .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','$timeout','fileUploadModal','FileUploader',
-            function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal,FileUploader){
+        .controller('galleryController',['$scope','$location','$state','$stateParams','dataResources','$timeout','fileUploadModal','FileUploader', '$mdToast',
+            function($scope, $location, $state, $stateParams, dataResources, $timeout, fileUploadModal, FileUploader, $mdToast){
 
-                // console.log($stateParams)
-                // console.log($location)
+                var toast = $mdToast.simple().position('top right').hideDelay(3000);
                 var uploader = $scope.uploader = new FileUploader();
                 var mCou=0;
 
@@ -22,6 +21,7 @@
                 vm.add = add;
                 vm.init = init;
                 vm.deleteImage = deleteImage;
+                vm.download = download;
                 vm.toggleMain = toggleMain;
                 vm.toggleShow = toggleShow;
 
@@ -138,6 +138,16 @@
                     } else {
                         vm.images = imageResource.get();
                     }
+                }
+
+                function download(image){
+                    var name = image.id + '.jpg';
+                    var contentId = image.url.substring(image.url.lastIndexOf('/')+1);
+                    dataResources.media.download.get({id:contentId}).$promise.then(function (data) {
+                      saveAs(data.response, name);
+                    }, function(error){
+                      $mdToast.show(toast.textContent('Неудалось выгрузить список\n'+ error.message).theme('error'));
+                    });
                 }
 
                 function deleteImage(image){

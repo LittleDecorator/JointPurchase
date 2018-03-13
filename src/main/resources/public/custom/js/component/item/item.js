@@ -235,7 +235,7 @@
                 var mvm = $scope.$parent.mvm;
                 mvm.showDetail = true;
                 var vm = this;
-               console.log(item)
+
                 vm.validate = validate;
                 vm.showCategoryModal = showCategoryModal;
                 vm.save = save;
@@ -247,6 +247,10 @@
                 vm.companyNames = companies;
                 vm.statuses = statuses;
                 vm.showHints = true;
+
+                vm.item.company = companies.find(function(el,idx, companies){
+                  return vm.item.companyId === el.id
+                });
 
                 //парсим стоимость в денежный формат
                 if(vm.item.price){
@@ -270,7 +274,7 @@
 
                 /* Валидация категории из товара */
                 function validate(){
-                    if(vm.item.categories.length == 0){
+                    if(vm.item.categories.length === 0){
                         vm.showHints = false;
                         vm.itemCard.categories.$error.required = true;
                         vm.itemCard.categories.$setValidity("min-items", false);

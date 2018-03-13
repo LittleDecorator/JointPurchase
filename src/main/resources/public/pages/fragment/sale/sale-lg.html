@@ -22,7 +22,7 @@
             <td class="center-align" > с {{::sale.startDate| date:'dd.MM.yyyy'}} по {{::sale.endDate| date:'dd.MM.yyyy'}} </td>
             <td class="right-align" >
                 <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.editSale(sale.id)"><md-icon>search</md-icon></a>
-                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.deleteSale(sale.id,$index)"><md-icon>close</md-icon></a>
+                <a class="btn btn-floating btn-sm waves-effect waves-light" ng-click="vm.deleteSale(sale, $index)"><md-icon>close</md-icon></a>
             </td>
         </tr>
         </tbody>

@@ -10,6 +10,7 @@ import com.acme.repository.SaleRepository;
 import com.acme.repository.specification.SaleSpecifications;
 import com.google.common.base.Strings;
 import com.ibm.icu.text.Transliterator;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +43,9 @@ public class SaleController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<Sale> getSales(@RequestParam(name = "active_only", required = false) boolean activeOnly) {
-        if(activeOnly){
-            return saleRepository.findAll(SaleSpecifications.active());
-        }
-        return saleRepository.findAll();
+    public List<SaleDto> getSales(@RequestParam(name = "active_only", required = false) boolean activeOnly) {
+        List<Sale> sales = activeOnly ? saleRepository.findAll(SaleSpecifications.active()) : saleRepository.findAll();
+        return saleMapper.toSimpleDto(sales);
     }
 
     /**
@@ -56,43 +55,36 @@ public class SaleController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public Sale getSale(@PathVariable("id") String id) {
-        return saleRepository.findOne(id);
+    public SaleDto getSale(@PathVariable("id") String id) {
+        return saleMapper.toDto(saleRepository.findOne(id));
     }
 
+    /**
+     *
+     * @param transliteName
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail")
     @Transactional(readOnly = true)
     public SaleDto getByName(@RequestParam(name = "name") String transliteName){
         Sale sale = saleRepository.findOneByTransliteName(transliteName);
-        return saleMapper.toSaleDto(sale);
+        return saleMapper.toDto(sale);
     }
 
     /**
-     * Добавление новой акции
-     *
-     * @param sale
-     * @return
-     */
-    @Transactional
-    @RequestMapping(method = RequestMethod.POST)
-    public Sale createSale(@RequestBody Sale sale) {
-        sale.setTransliteName(translite(sale.getTitle()));
-        return saleRepository.save(sale);
-    }
-
-    /**
-     * Обновление существующей акции
+     * Добавление новой акции | Обновление существующей акции
      *
      * @param dto
      */
     @Transactional
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public void updateSale(@RequestBody SaleRequestDto dto) {
-        List<Item> items = itemRepository.findByIdIn(dto.getItems());
-        Sale sale = saleMapper.requestToSale(dto);
+    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST}, value = {"/","/{id}"})
+    public SaleDto updateSale(@RequestBody SaleRequestDto dto) {
+        Set<Item> items = itemRepository.findAllByIdIn(dto.getItems());
+        Sale sale = saleMapper.requestToEntity(dto);
         sale.setTransliteName(translite(dto.getTitle()));
         sale.setItems(items);
         saleRepository.save(sale);
+        return saleMapper.toDto(sale);
     }
 
     /**

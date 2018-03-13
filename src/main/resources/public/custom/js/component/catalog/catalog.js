@@ -379,9 +379,28 @@
           vm.getTemplateUrl = getTemplateUrl;
           vm.afterInclude = afterInclude;
           vm.openSlider = openSlider;
+          vm.init = init;
 
           vm.item = angular.extend({}, product);
           vm.mainImage = vm.item.url;
+          vm.item.images = [];
+
+          function init() {
+
+            vm.item.images = $.map(vm.item.contentIds, function(value, index) {
+              var obj = {contentId:index, meta:{orientation:''}};
+              if(value){
+                obj.meta= angular.fromJson(value);
+              }
+              return obj;
+            });
+
+            var mainId = vm.item.url.substring(vm.item.url.lastIndexOf('/')+1);
+            var selected = vm.item.images.find(function(obj, idx){
+              return obj.contentId === mainId;
+            });
+            vm.orientationClass = selected.meta.orientation;
+          }
 
           /**
            * Установка изображения активным на просмотр
@@ -390,16 +409,13 @@
            */
           function show(id) {
              // поиск выбранного в списке
-             sliderNum = vm.item.images.map(function (obj, index) {
-                if (obj.contentId === id) {
-                   return index;
-                } else {
-                   return null
-                }
-             }).filter(function (idx) {
-                return idx !== null;
-             })[0];
+            var selected = vm.item.images.find(function(obj, idx){
+              sliderNum = idx;
+              return obj.contentId === id;
+            });
+
              vm.mainImage = (mvm.width < 601 ? mvm.PREVIEW_URL : mvm.VIEW_URL) + id;
+             vm.orientationClass = selected.meta.orientation;
           }
 
           /**
@@ -461,5 +477,15 @@
           function afterInclude() {
           }
 
+          // function getMeta(url){
+          //     var img = new Image();
+          //     img.onload = function(){
+          //       vm.orientationClass = this.naturalHeight > 445 ? 'vertical' : 'horizontal';
+          //     };
+          //     img.src = url;
+          //
+          // }
+
+          init();
        }]);
 })();

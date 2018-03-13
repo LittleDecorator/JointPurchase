@@ -3,8 +3,14 @@ package com.acme.model.embedded;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Embeddable
+@Setter
+@Getter
+@EqualsAndHashCode
 public class CategoryItemId implements Serializable {
 
     @Column(name = "category_id")
@@ -21,19 +27,5 @@ public class CategoryItemId implements Serializable {
         this.itemId = itemId;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
 }

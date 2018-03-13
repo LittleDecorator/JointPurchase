@@ -2,13 +2,38 @@
 
 .old-price {
     text-decoration: line-through;
+    color: rgb(243, 51, 3);
     padding-bottom: 0!important;
 }
 
-.new-price {
-    color: rgb(243, 51, 3);
-    /*font-weight: bold;*/
+.currency {
+    min-height: 18px;
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    color: inherit;
 }
+
+sup {
+    padding-left: 5px;
+}
+
+sup > .old-price {
+    font-size: 1.5em;
+    vertical-align: super;
+}
+
+.old-price > .currency {
+    min-height: 12px;
+    min-width: 12px;
+    width: 12px;
+    height: 12px;
+}
+
+/*.new-price {*/
+    /*color: rgb(243, 51, 3);*/
+    /*!*font-weight: bold;*!*/
+/*}*/
 
 .fancy span:before, .fancy span:after {
     /*content: "";*/
@@ -37,6 +62,16 @@
     border-top: 1px solid #421d1d;
     margin-top: 0.8em;
     right: 70%;
+}
+
+div#catalog-card div.box img.vertical {
+    height: 100%;
+    width: auto;
+}
+
+div#catalog-card div.box img.horizontal {
+    width: 100%;
+    height: auto;
 }
 
 /********************************** XS ******************************/

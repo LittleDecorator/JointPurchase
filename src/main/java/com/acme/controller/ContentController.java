@@ -18,6 +18,7 @@ import com.acme.constant.Constants;
 import com.acme.repository.SaleRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
+import com.acme.util.ApiUtil;
 import com.drew.imaging.FileType;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -26,6 +27,9 @@ import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -33,14 +37,18 @@ import com.google.common.collect.Maps;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -248,7 +256,7 @@ public class ContentController{
     public List<ItemContent> getPreviewImages(@RequestParam(value = "itemId") String itemId) throws Exception {
         List<ItemContent> result = Lists.newArrayList();
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(itemId)){
-            itemContent.setUrl(Constants.GALLERY_URL+ (itemContent.getCropId()== null ? itemContent.getContentId() : itemContent.getCropId()));
+            itemContent.setUrl(Constants.GALLERY_URL+ (itemContent.getCropId()== null ? itemContent.getContentId().getId() : itemContent.getCropId()));
             result.add(itemContent);
         }
         return result;
@@ -344,9 +352,15 @@ public class ContentController{
         itemContentRepository.save(input);
     }
 
-    @RequestMapping(value = "/set/orientation", method = RequestMethod.PATCH)
-    public void setOrientations(){
-        Lists.newArrayList(contentRepository.findAll()).forEach(content ->{
+    @RequestMapping(value = "/set/meta", method = RequestMethod.PATCH)
+    public void setOrientations(@RequestParam(required = false) Set<String> contentIds){
+        List<Content> contents;
+        if(contentIds==null || contentIds.isEmpty()){
+            contents = Lists.newArrayList(contentRepository.findAll());
+        } else {
+            contents = contentRepository.findAllByIdIn(contentIds);
+        }
+        contents.forEach(content ->{
             try {
                 Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(Base64BytesSerializer.deserialize(content.getContent())));
                 JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
@@ -361,8 +375,18 @@ public class ContentController{
                     width = pngDirectory.getInt(1);
                     height = pngDirectory.getInt(2);
                 }
-                content.setOrientation(width > height ? ImageOrientation.HORIZONTAL: ImageOrientation.VERTICAL);
-                contentRepository.save(content);
+
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode meta = mapper.createObjectNode();
+                meta.put("width",width);
+                meta.put("height",height);
+                float ratio = ApiUtil.formatGrade((float)height/width, 2, RoundingMode.HALF_UP);
+                ImageOrientation orientation = ratio < 0.7f ? ImageOrientation.HORIZONTAL: ImageOrientation.VERTICAL;
+                meta.put("orientation", orientation.name().toLowerCase());
+
+                contentRepository.updateContentMeta(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(meta), content.getId());
+                //content.setMetaInfo(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(meta));
+                //contentRepository.save(content);
             } catch (IOException | ImageProcessingException | MetadataException ex) {
                 ex.printStackTrace();
             }

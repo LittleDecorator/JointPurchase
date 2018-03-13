@@ -3,9 +3,12 @@ package com.acme.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Set;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -15,6 +18,8 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "sale")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 public class Sale {
 
     @Id
@@ -46,7 +51,7 @@ public class Sale {
             inverseJoinColumns={@JoinColumn(name="item_id", referencedColumnName="id")})
     @JsonBackReference
     @JsonIgnore
-    private List<Item> items;
+    private Set<Item> items;
 
     private boolean active;
 
@@ -54,93 +59,10 @@ public class Sale {
     private String transliteName;
 
     @Column(name = "date_add", nullable = false, updatable = false)
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getBannerId() {
-        return bannerId;
-    }
-
-    public void setBannerId(String bannerId) {
-        this.bannerId = bannerId;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
-    public Date getDateAdd() {
-        return dateAdd;
-    }
-
-    public void setDateAdd(Date dateAdd) {
-        this.dateAdd = dateAdd;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getTransliteName() {
-        return transliteName;
-    }
-
-    public void setTransliteName(String transliteName) {
-        this.transliteName = transliteName;
+    @PrePersist
+    public void prepare(){
+        this.setDateAdd(new Date());
     }
 }

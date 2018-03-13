@@ -9,6 +9,7 @@ import com.acme.model.dto.ItemUrlTransfer;
 import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface ItemService {
@@ -21,11 +22,11 @@ public interface ItemService {
 
     List<Item> getAllBySpec(Specification<Item> specification);
 
-    List<Item> getAllByCategory(CatalogFilter filter);
+    Set<Item> getAllByCategory(CatalogFilter filter);
 
-    List<Item> getAllByCompanyId(String companyId);
+    Set<Item> getAllByCompanyId(String companyId);
 
-    List<Item> getAllByIdList(List<String> ids);
+    Set<Item> getAllByIdList(List<String> ids);
 
     Item getItem(String itemId);
 

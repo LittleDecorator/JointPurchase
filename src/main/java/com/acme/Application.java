@@ -1,8 +1,10 @@
 package com.acme;
 
+import com.acme.repository.SaleRepository;
 import com.acme.service.InstagramService;
 import com.acme.util.CustomResolver;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,13 +51,14 @@ import java.util.*;
 @EnableJpaRepositories(basePackages = "com.acme.repository")
 @EnableElasticsearchRepositories(basePackages = "com.acme.elasticsearch")
 @PropertySource(value = "file:${properties.location}", ignoreResourceNotFound = true)
+@Slf4j
 public class Application extends WebMvcConfigurerAdapter {
 
     @Value("${sms.api_id}")
     private String apiId;
 
     @Autowired
-    InstagramService instagramService;
+    SaleRepository saleRepository;
 
     /**
      * Фильтр jwt
@@ -138,10 +141,10 @@ public class Application extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Очищаем все кэши через 10 мин
+     * Очищаем все кэши через 1 час
      */
     @CacheEvict(allEntries = true, value = {"decode","encode","image","write","read","view","gallery","preview","thumb","origin"})
-    @Scheduled(fixedDelay = 10 * 60 * 1000, initialDelay = 500)
+    @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 500)
     public void reportCacheEvict() {
         System.out.println("Flush All Cache " + new Date());
     }
@@ -155,6 +158,13 @@ public class Application extends WebMvcConfigurerAdapter {
     //        e.printStackTrace();
     //    }
     //}
+
+    @Scheduled(cron = "0 0 * * 1 ?")
+    public void refreshSales(){
+        log.info("Deactivate old sales!");
+        saleRepository.deactiveteSales();
+        log.info("Sale deactivation complete!");
+    }
 
     public static void main(String[] args) {
         Locale american = new Locale("en", "US");

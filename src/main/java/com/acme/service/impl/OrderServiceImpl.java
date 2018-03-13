@@ -12,6 +12,7 @@ import com.acme.repository.specification.OrderSpecifications;
 import com.acme.service.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 		List<OrderItemsList> result = Lists.newArrayList();
 		// получим заказ
 		List<OrderItem> orderItems = orderItemRepository.findAllByIdOrderId(orderId);
-		List<Item> items = itemRepository.findByIdIn(orderItems.stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
+		Set<Item> items = itemRepository.findAllByIdIn(orderItems.stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
 		Map<String, Item> itemMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
 		result.addAll(orderItems.stream().map(orderItem -> new OrderItemsList(itemMap.get(orderItem.getId().getItemId()), orderItem.getCount())).collect(Collectors.toList()));
 		return result;
@@ -117,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 		Map<String, OrderItem> orderItemsMap = order.getOrderItems().stream().collect(Collectors.toMap(oi -> oi.getId().getItemId(), Function.identity()));
 		// информация о количествах товара в заказе
 		result.put("orderItems",orderItemsMap);
-		List<Item> items = itemRepository.findByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
+		Set<Item> items = itemRepository.findAllByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
 		Map<String, Item> itemsMap = items.stream().collect(Collectors.toMap(Item::getId, Function.identity()));
 		// товары заказа
 		result.put("items", itemsMap);

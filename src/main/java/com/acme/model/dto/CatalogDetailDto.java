@@ -4,6 +4,7 @@ import com.acme.enums.ItemStatus;
 import com.acme.model.Category;
 import com.acme.model.ItemContent;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,8 @@ public class CatalogDetailDto {
 
     private List<Category> categories;
     private List<ItemContent> itemContents;
+    // only on catalog detail page
+    private Map<String, String> contentIds;
     // main image
     private String url;
 

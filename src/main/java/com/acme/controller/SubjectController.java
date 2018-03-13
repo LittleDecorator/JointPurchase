@@ -2,6 +2,9 @@ package com.acme.controller;
 
 import com.acme.model.Order;
 import com.acme.model.Subject;
+import com.acme.model.dto.SubjectDto;
+import com.acme.model.dto.SubjectMapDto;
+import com.acme.model.dto.mapper.SubjectMapper;
 import com.acme.model.filter.SubjectFilter;
 import com.acme.repository.CredentialRepository;
 import com.acme.repository.OffsetBasePage;
@@ -10,9 +13,10 @@ import com.acme.repository.OrderRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.repository.specification.SubjectSpecifications;
 import com.acme.service.AuthService;
-import com.google.common.collect.Lists;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -47,16 +51,20 @@ public class SubjectController{
     @Autowired
     PlatformTransactionManager transactionManager;
 
+    @Autowired
+    SubjectMapper subjectMapper;
+
     /**
      * Получение списка клиентов (без фильтра)
      *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<Subject> getSubjects(SubjectFilter filter) {
+    public List<SubjectDto> getSubjects(SubjectFilter filter) {
         /* Сортировка видимо будет идти по модели, и в запросе не участвует */
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
-        return Lists.newArrayList(subjectRepository.findAll(SubjectSpecifications.filter(filter), pageable).iterator());
+        Page<Subject> page = subjectRepository.findAll(SubjectSpecifications.filter(filter), pageable);
+        return subjectMapper.toSimpleDto(page.getContent());
     }
 
     /**
@@ -66,8 +74,8 @@ public class SubjectController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET,value = "/{id}")
-    public Subject getSubject(@PathVariable("id") String id) {
-        return subjectRepository.findOne(id);
+    public SubjectDto getSubject(@PathVariable("id") String id) {
+        return subjectMapper.toDto(subjectRepository.findOne(id));
     }
 
     /**
@@ -76,30 +84,34 @@ public class SubjectController{
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/private")
-    public Subject getCurrentSubject() {
+    public SubjectDto getCurrentSubject() {
         RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
-        return subjectRepository.findOne(authService.getClaims(servletRequest).getId());
+        Subject subject = subjectRepository.findOne(authService.getClaims(servletRequest).getId());
+        return subjectMapper.toDto(subject);
     }
 
     /**
      * Добавление нового клиента
      *
-     * @param subject
+     * @param dto
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Subject createSubject(@RequestBody Subject subject) {
-        return subjectRepository.save(subject);
+    public SubjectDto createSubject(@RequestBody SubjectDto dto) {
+        Subject subject = subjectMapper.toEntity(dto);
+        subject = subjectRepository.save(subject);
+        return subjectMapper.toDto(subject);
     }
 
     /**
      * Обновление существующего клиента
      *
-     * @param subject
+     * @param dto
      */
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateSubject(@RequestBody Subject subject) {
+    public void updateSubject(@RequestBody SubjectDto dto) {
+        Subject subject = subjectMapper.toEntity(dto);
         subjectRepository.save(subject);
     }
 
@@ -132,44 +144,8 @@ public class SubjectController{
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/map")
-    public List<SubjectMap> getSubjectMap() {
-        List<SubjectMap> list = Lists.newArrayList();
-        for(Subject subject : subjectRepository.findAll()){
-            list.add(new SubjectMap(subject.getId(), subject.getFirstName()+ " "+ subject.getLastName() + " "+ subject.getMiddleName()));
-        }
-        return list;
+    public Set<SubjectMapDto> getSubjectMap() {
+        return subjectMapper.toMapDto(subjectRepository.findAll());
     }
 
-
-    /*---------- NESTED ----------*/
-
-    /**
-     * Класс предоставляющий данные для списка слиентов
-     */
-    private class SubjectMap {
-
-        String id;
-        String name;
-
-        SubjectMap(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }

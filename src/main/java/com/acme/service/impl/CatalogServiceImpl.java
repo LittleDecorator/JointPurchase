@@ -132,37 +132,9 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public CatalogDetailDto getItemDetailByTransliteName(String name) {
-        return itemMapper.toDetailDto(itemService.getItemByLatinName(name));
+        Item item = itemService.getItemByLatinName(name);
+        return itemMapper.toSimpleCatalogDetailDto(item);
     }
-
-    /**
-     *
-     * @param item
-     * @return
-     */
-    //private Item fillItem(Item item){
-    //    Content defContent = contentRepository.findOneByIsDefault(true);
-    //    List<ItemContent> itemContents = itemContentRepository.findAllByItemId(item.getId());
-    //    if (itemContents.isEmpty()) {
-    //        item.setUrl(Constants.VIEW_URL + defContent.getId());
-    //    } else {
-    //        item.setItemContents(itemContents);
-    //        Optional<ItemContent> contentOptional = itemContents.stream().filter(ItemContent::isMain).findFirst();
-    //        if (contentOptional.isPresent()){
-    //            item.setUrl(Constants.VIEW_URL + contentOptional.get().getContentId());
-    //        } else {
-    //            item.setUrl(Constants.VIEW_URL + defContent.getId());
-    //        }
-    //    }
-    //    item.setCategories(categoryRepository.findByIdIn(categoryItemRepository.findAllByIdItemId(item.getId()).stream().map(ci-> ci.getId().getCategoryId()).collect(Collectors.toList())));
-    //    // TODO: если время акции не настало, то мы не должны её вообще получать для товара
-    //    Sale sale = item.getSale();
-    //    Date now = new Date();
-    //    if(sale !=null && sale.getStartDate().before(now) && sale.getEndDate().after(now)){
-    //        item.setSalePrice(((Float)(item.getPrice() - (item.getSale().getDiscount() / 100f * item.getPrice()))).intValue());
-    //    }
-    //    return item;
-    //}
 
     /**
      *

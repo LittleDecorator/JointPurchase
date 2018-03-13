@@ -7,6 +7,18 @@
 
     angular.module('purchase.directives')
 
+        .directive('ignoreDirty', [function() {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function(scope, elm, attrs, ctrl) {
+                    ctrl.$setPristine = function() {};
+                    ctrl.$pristine = false;
+                    ctrl.$dirty = false;
+                }
+            }
+        }])
+
         .directive('ngThumb', ['$window', function($window) {
             var helper = {
                 support: !!($window.FileReader && $window.CanvasRenderingContext2D),

@@ -52,7 +52,11 @@
               .icon('bug', 'custom/icons/bug.svg', 24)
               .icon('instagram', 'custom/icons/instagram.svg', 24)
               .icon('xls', 'custom/icons/file-excel.svg', 24)
-              .icon('sdek', 'custom/icons/sdek.svg', 24);
+              .icon('sdek', 'custom/icons/sdek.svg', 24)
+              .icon('courier', 'custom/icons/courier.svg', 24)
+              .icon('pickup', 'custom/icons/pickup.svg', 24)
+              .icon('package', 'custom/icons/package.svg', 24)
+              .icon('ruble', 'custom/icons/ruble-sign.svg', 24);
        }])
 
        .run(['$state', '$rootScope', '$location', '$templateRequest', 'ngDialog', '$mdDialog', 'eventService', 'MetaTags', function ($state, $rootScope, $location, $templateRequest, ngDialog, $mdDialog, eventService, MetaTags) {

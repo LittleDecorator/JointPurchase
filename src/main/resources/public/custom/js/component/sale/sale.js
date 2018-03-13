@@ -21,7 +21,9 @@
           vm.editSale = editSale;
           vm.activateSale = activateSale;
           vm.addSale = addSale;
+          vm.deleteSale = deleteSale;
 
+          mvm.showLoader = true;
           vm.sales = [];
           vm.filter = {limit: 30, offset: 0};
           vm.showHints = true;
@@ -51,7 +53,7 @@
                    confirmedFilter.offset = portion * confirmedFilter.limit;
                    vm.scrolling.allDataLoaded = true;
                    busy = false;
-
+                   mvm.showLoader = false;
                 });
              }
           }
@@ -103,6 +105,15 @@
 
           function editSale(id) {
              $state.go("sale.detail", {id: id});
+          }
+
+          function deleteSale(sale, idx){
+             dataResources.sale.delete({id:sale.id},{}, function(data){
+               //find item in array
+               vm.sales.splice(idx, 1);
+               // notify
+               $mdToast.show(toast.textContent('Акция "'+sale.title+'" успешно удалена!').theme('success'));
+             })
           }
 
           // Добавление клиента
@@ -167,7 +178,16 @@
                    return saleBlocked = false;
                 }
              });
+             vm.forms.saleCard.$dirty = true;
              vm.forms.saleCard.$valid = !saleBlocked
+
+            // if no item left -> deactivate
+            if(vm.sale.items.length === 0){
+              vm.sale.active = false;
+              dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                $mdToast.show(toast.textContent('Акция выключена! Нельзя активировать акцию без товара!').theme('warn'));
+              })
+            }
           }
 
           /**
@@ -227,7 +247,18 @@
           function activateSale() {
              // если активируем
              if(vm.sale.active){
+                console.log(vm.forms.saleCard);
                 if(!vm.forms.saleCard.$dirty && vm.forms.saleCard.$valid){
+                   if(vm.sale.items.length === 0){
+                     $mdToast.show(toast.textContent('Нельзя активировать акцию без товара!').theme('error'));
+                     vm.sale.active = false;
+                     return;
+                   }
+                   if(!vm.sale.bannerId){
+                     $mdToast.show(toast.textContent('Нельзя активировать акцию без баннера!').theme('error'));
+                     vm.sale.active = false;
+                     return;
+                   }
                    if(vm.sale.endDate > new Date().getTime()){
                         dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
                            $mdToast.show(toast.textContent('Акция успешно активирована!').theme('success'));
@@ -247,6 +278,7 @@
              }
 
           }
+
 
           function deleteSale(saleId, idx) {
              console.log('TODO:// add sale delete')
@@ -303,6 +335,12 @@
           function deleteBanner() {
              dataResources.saleImage.delete({id:vm.sale.id}, function(){
                 vm.sale.bannerId = null;
+
+                // force deactivate
+                vm.sale.active = false;
+                dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                   $mdToast.show(toast.textContent('Акция выключена! Нельзя активировать акцию без баннера').theme('warn'));
+                })
              }, function () {
                 $mdToast.show(toast.textContent('Неудалось удалить баннер \n'+ error.message).theme('error'));
              });
@@ -314,6 +352,29 @@
            */
           function init() {
              vm.images = dataResources.saleImage.get({id: $stateParams.id});
+
+            if(!vm.sale.bannerId && vm.sale.active){
+              // force deactivate
+              vm.sale.active = false;
+              dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                $mdToast.show(toast.textContent('Акция выключена! Нельзя активировать акцию без баннера').theme('warn'));
+              })
+            }
+
+            // if no item left -> deactivate
+            if(vm.sale.items.length === 0 && vm.sale.active){
+              vm.sale.active = false;
+              dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                $mdToast.show(toast.textContent('Акция выключена! Нельзя активировать акцию без товара!').theme('warn'));
+              })
+            }
+
+            if(vm.sale.endDate < new Date().getTime()){
+              vm.sale.active = false;
+              dataResources.sale.activate({id: vm.sale.id, activate: vm.sale.active},{}, function(data){
+                $mdToast.show(toast.textContent('Акция выключена! Время проведения акции законченно!').theme('warn'));
+              })
+            }
           }
 
           /**
@@ -323,34 +384,38 @@
              var toast = $mdToast.simple().position('top right').hideDelay(3000);
              if (vm.forms.saleCard.$dirty) {
                 if (vm.forms.saleCard.$valid) {
+
+                   // // map items to ID array
+                   var items = [];
+                   if (vm.sale.items) {
+                      items = vm.sale.items.map(function (item) {
+                         return item.id;
+                      })
+                   }
+
+                   // make copy of vm.sale
+                   var dto = angular.copy(vm.sale);
+                   dto.items = items;
+
                    if (vm.sale && vm.sale.id) {
-
-                      // // map items to ID array
-                      var items = [];
-                      if (vm.sale.items) {
-                         items = vm.sale.items.map(function (item) {
-                            return item['id'];
-                         })
-                      }
-                      //
-                      // make copy of vm.sale
-                      var dto = angular.copy(vm.sale);
-                      dto.items = items;
-
+                      // update sale
                       dataResources.sale.put(dto).$promise.then(function (data) {
                          $mdToast.show(toast.textContent('Акция ' + vm.sale.title + ' успешно изменена').theme('success'));
+                         vm.forms.saleCard.$setPristine();
                       }, function (error) {
                          $mdToast.show(toast.textContent('Не удалось изменить акцию ' + vm.sale.title).theme('error'));
                       });
                    } else {
-                      dataResources.sale.post(vm.sale).$promise.then(function (data) {
+                      // create sale
+                      dataResources.sale.post(dto).$promise.then(function (data) {
                          $mdToast.show(toast.textContent('Акция ' + vm.sale.title + ' успешно создана').theme('success'));
                          vm.forms.saleCard.$setPristine();
-                         $state.go($state.current, {id: data.result}, {notify: false}).then(function () {
+                         vm.sale.id = data.id;
+                         $stateParams.id = data.id;
+                         $state.go($state.current, {id: data.id}, {notify: false}).then(function () {
                             $rootScope.$broadcast('$refreshBreadcrumbs', $state);
                          });
                       }, function (error) {
-                         console.log(error);
                          $mdToast.show(toast.textContent('Не удалось создать акцию ' + vm.sale.title).theme('error'));
                       });
                    }

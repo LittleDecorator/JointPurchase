@@ -6,6 +6,10 @@ md-toast.md-success-theme .md-toast-content {
     background-color: #4CAF50;
 }
 
+md-toast.md-warn-theme .md-toast-content {
+    background-color: #e29917;
+}
+
 md-toast.md-error-theme .md-toast-content{
     /*background-color: #FF4844;*/
     background-color: rgba(255,72,68,.7);

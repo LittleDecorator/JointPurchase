@@ -51,7 +51,7 @@ public class RepositoryTest {
         // fetch items by companyId
         log.info("Customer found with findByCompanyId('40636ca3-6c19-4ecb-83a2-9027dcd5b22f'):");
         log.info("--------------------------------------------");
-        for (Item grimms : repository.findByCompanyId("40636ca3-6c19-4ecb-83a2-9027dcd5b22f")) {
+        for (Item grimms : repository.findAllByCompanyId("40636ca3-6c19-4ecb-83a2-9027dcd5b22f")) {
             log.info(grimms.toString());
         }
         log.info("");
@@ -59,7 +59,7 @@ public class RepositoryTest {
         // fetch items by id list
         log.info("Items found with findByIdIn():");
         log.info("-------------------------------");
-        for (Item byIn : repository.findByIdIn(Lists.newArrayList("b172e14f-33fd-4819-9831-09c54541feb4","5e24b8ea-8a81-4984-ae92-fed630d5b859"))) {
+        for (Item byIn : repository.findAllByIdIn(Lists.newArrayList("b172e14f-33fd-4819-9831-09c54541feb4","5e24b8ea-8a81-4984-ae92-fed630d5b859"))) {
             log.info(byIn.toString());
         }
         log.info("");

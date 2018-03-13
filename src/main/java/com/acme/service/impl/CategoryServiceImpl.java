@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -73,25 +74,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Item> getCategoryItems(String categoryId) {
+    public Set<Item> getCategoryItems(String categoryId) {
         List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryId(categoryId);
         List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
-        return itemRepository.findByIdIn(itemIds);
+        return itemRepository.findAllByIdIn(itemIds);
     }
 
     @Override
-    public List<Item> getCategoryItems(List<String> categoryIds) {
+    public Set<Item> getCategoryItems(List<String> categoryIds) {
         List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryIdIn(categoryIds);
         List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
-        return itemRepository.findByIdIn(itemIds);
+        return itemRepository.findAllByIdIn(itemIds);
     }
 
     @Override
-    public List<Item> getCategoryItemsByName(String name) {
+    public Set<Item> getCategoryItemsByName(String name) {
         Category category = categoryRepository.findOneByTransliteName(name);
         List<CategoryItem> categoryItems = categoryItemRepository.findAllByIdCategoryId(category.getId());
         List<String> itemIds = categoryItems.stream().map(ci-> ci.getId().getItemId()).collect(Collectors.toList());
-        return itemRepository.findByIdIn(itemIds);
+        return itemRepository.findAllByIdIn(itemIds);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setName(transfer.getName());
         category.setParentId(transfer.getParentId());
-        category.setItems(itemRepository.findByIdIn(transfer.getItems()));
+        category.setItems(itemRepository.findAllByIdIn(transfer.getItems()));
         categoryRepository.save(category);
     }
 

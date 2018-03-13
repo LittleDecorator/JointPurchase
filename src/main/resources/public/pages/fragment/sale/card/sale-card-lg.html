@@ -26,9 +26,9 @@
                 <textarea md-maxlength="1000" maxlength="1000" ng-model="vm.sale.description"></textarea>
             </md-input-container>
 
-            <md-checkbox ng-model="vm.sale.active" ng-change="activateSale()">
+            <md-switch ng-model="vm.sale.active" ng-change="vm.activateSale()" ignore-dirty >
                 Акция активна
-            </md-checkbox>
+            </md-switch>
 
         </div>
     </md-card>

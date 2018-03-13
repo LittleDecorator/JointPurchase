@@ -1,6 +1,7 @@
 package com.acme.model;
 
 import java.io.Serializable;
+import java.util.Set;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class Category implements BaseModel {
     private Date dateAdd = new Date();
 
     @Transient
-    private List<Item> items;
+    private Set<Item> items;
 
     public String getId() {
         return id;
@@ -68,11 +69,11 @@ public class Category implements BaseModel {
         this.dateAdd = dateAdd;
     }
 
-    public List<Item> getItems() {
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 

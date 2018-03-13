@@ -216,7 +216,7 @@
                  */
                 function init(){
                     // перебираем товар заказа если открыт на редактирование
-                    if(items != null ){
+                    if(items !== null ){
                         vm.items = items.map(function(element){
                             var item = element.item;
                             item.count = element.count;
@@ -227,9 +227,13 @@
                     /* Если создаем новый заказ, то проставим время */
                     if(!vm.order) {
                         var time = new Date().getTime();
-                        vm.order = { status:null, payment:0, uid:time, dateAdd:time, delivery:null};
+                        vm.order = { status:null, payment:0, uid:time, dateAdd:time, delivery:null };
                     } else {
-                        vm.order.delivery = helpers.findInArrayById(deliveryMap, vm.order.delivery);
+                        vm.order.delivery = vm.deliveries.find(function(el, idx, companies){
+                            return vm.order.deliveryId === el.id
+                        });
+                        // delete deliveryId from object
+                      delete vm.order.deliveryId;
                     }
                 }
 

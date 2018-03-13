@@ -7,6 +7,7 @@ import com.acme.model.Item;
 import com.acme.model.Node;
 import com.acme.model.dto.CategoryTransfer;
 import com.acme.model.dto.MapDto;
+import java.util.Set;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -25,11 +26,11 @@ public interface CategoryService {
 
     Category getCategoryByName(String name);
 
-    List<Item> getCategoryItems(String categoryId);
+    Set<Item> getCategoryItems(String categoryId);
 
-    List<Item> getCategoryItems(List<String> categoryIds);
+    Set<Item> getCategoryItems(List<String> categoryIds);
 
-    List<Item> getCategoryItemsByName(String name);
+    Set<Item> getCategoryItemsByName(String name);
 
     List<Category> getRootCategories(String companyId);
 

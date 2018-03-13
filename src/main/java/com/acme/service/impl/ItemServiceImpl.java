@@ -12,6 +12,7 @@ import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.ItemService;
 import com.acme.util.PageTools;
 import com.google.common.collect.Lists;
+import java.util.Set;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -77,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllByCategory(CatalogFilter filter) {
+    public Set<Item> getAllByCategory(CatalogFilter filter) {
         //TODO: УБРАТЬ ЭТОТ УЖАСНЕЙШИЙ КОСТЫЛЬ
         if(Strings.isNullOrEmpty(filter.getCompany())){
             return itemRepository.findAllByCategoryId(filter.getCategory(), filter.getOffset(), filter.getLimit());
@@ -86,7 +87,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllByCompanyId(String companyId) {
+    public Set<Item> getAllByCompanyId(String companyId) {
         return itemRepository.findAllByCompanyId(companyId);
     }
 
@@ -202,7 +203,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllByIdList(List<String> ids) {
-        return itemRepository.findByIdIn(ids);
+    public Set<Item> getAllByIdList(List<String> ids) {
+        return itemRepository.findAllByIdIn(ids);
     }
 }

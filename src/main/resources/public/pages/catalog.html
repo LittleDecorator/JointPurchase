@@ -15,9 +15,12 @@
 
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
-                            <div style="min-height: 55px" layout="column">
-                                <span style="padding-bottom: 10px;font-size: 1em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>
-                                <span style="padding-bottom: 10px;font-size: 1em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>
+                            <div style="min-height: 55px" layout="row" layout-xs="column">
+                                <span ng-if="!item.salePrice" style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                <div ng-if="item.salePrice">
+                                    <sup><span ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span></sup>
+                                    <span style="padding-bottom: 10px;font-size: 2em">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                </div>
                             </div>
 
                             <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
