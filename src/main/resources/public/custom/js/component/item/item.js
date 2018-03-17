@@ -338,18 +338,21 @@
                     if(vm.itemCard.$dirty){
                         if(vm.itemCard.$valid){
                             vm.item = addTranslite(vm.item);
-                            if(vm.item.id){
+                            var dto = angular.copy(vm.item);
+                            delete dto.company;
+
+                            if(dto.id){
                                 // если товар был на редактирование
-                                dataResources.item.put(vm.item).$promise.then(function(data){
-                                    $mdToast.show(toast.textContent('Товар ['+ vm.item.name +'] успешно изменён').theme('success'));
+                                dataResources.item.put(dto).$promise.then(function(data){
+                                    $mdToast.show(toast.textContent('Товар ['+ dto.name +'] успешно изменён').theme('success'));
                                     //нужно сбросить состояние, т.к может измениться имя товара
-                                    refreshState({result:vm.item.id});
+                                    refreshState({result:dto.id});
                                 }, function(error){
                                     $mdToast.show(toast.textContent('Неудалось сохранить изменения').theme('error'));
                                 })
                             } else {
-                                dataResources.item.post(vm.item).$promise.then(function(data){
-                                    $mdToast.show(toast.textContent('Товар ['+ vm.item.name +'] успешно создан').theme('success'));
+                                dataResources.item.post(dto).$promise.then(function(data){
+                                    $mdToast.show(toast.textContent('Товар ['+ dto.name +'] успешно создан').theme('success'));
                                     // изменилось состояние.
                                     refreshState(data);
                                 }, function(error){

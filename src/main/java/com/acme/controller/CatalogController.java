@@ -5,6 +5,7 @@ import com.acme.model.dto.CatalogDto;
 import com.acme.model.filter.CatalogFilter;
 import com.acme.service.CatalogService;
 import com.pushtorefresh.javac_warning_annotation.Warning;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class CatalogController {
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST)
-    public List<CatalogDto> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
+    public Set<CatalogDto> getCategoriesPreviewItems(@RequestBody CatalogFilter filter) throws Exception {
         return catalogService.getCatalog(filter);
     }
 
@@ -62,7 +63,7 @@ public class CatalogController {
      */
     @Warning(value = "Not working temporary")
     @RequestMapping(method = RequestMethod.GET, value = "search")
-    public List<CatalogDto> searchItem(@RequestParam(value = "criteria") String criteria) {
+    public Set<CatalogDto> searchItem(@RequestParam(value = "criteria") String criteria) {
         return catalogService.searchItems(criteria);
     }
 
@@ -80,7 +81,7 @@ public class CatalogController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "best")
-    public List<CatalogDto> getBestSellers() throws Exception {
+    public Set<CatalogDto> getBestSellers() throws Exception {
         return catalogService.getBestsellers();
     }
 }

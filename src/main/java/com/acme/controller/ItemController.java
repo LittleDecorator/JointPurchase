@@ -11,6 +11,7 @@ import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import javax.validation.constraints.NotNull;
+import org.assertj.core.util.Strings;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -83,14 +84,37 @@ public class ItemController {
     /**
      * Создание нового | обновление существующего товара
      *
-     * @param item
+     * @param dto
      * @return - ID of new item
      * @throws ParseException
      * @throws IOException
      */
     @Transactional
     @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST})
-    public String addItem(@NotNull @RequestBody Item item) throws ParseException, IOException {
+    public String addItem(@NotNull @RequestBody ItemDto dto) throws ParseException, IOException {
+        Item item;
+        if(Strings.isNullOrEmpty(dto.getId())){
+            item = itemMapper.toEntity(dto);
+        } else {
+            item = itemRepository.findOne(dto.getId());
+            //TODO: думаю это все же излишне
+            item.setAge(dto.getAge());
+            item.setArticle(dto.getArticle());
+            item.setBestseller(dto.isBestseller());
+            item.setDescription(dto.getDescription());
+            item.setInOrder(dto.getInOrder());
+            item.setInStock(dto.getInStock());
+            item.setCategories(dto.getCategories());
+            item.setMaterial(dto.getMaterial());
+            item.setName(dto.getName());
+            item.setNotForSale(dto.isNotForSale());
+            item.setPrice(dto.getPrice());
+            item.setSize(dto.getSize());
+            item.setStatus(dto.getStatus());
+            item.setTransliteName(dto.getTransliteName());
+        }
+        item.setCompany(companyRepository.findOneById(dto.getCompanyId()));
+
         itemRepository.save(item);
         // поместим|обновим в индекс только после добавления товара
         catalogRepository.save(item);

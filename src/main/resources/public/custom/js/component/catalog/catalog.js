@@ -87,7 +87,7 @@
                    vm.currentNodeType = 'sale';
                    vm.currentNode = {contentId:node.bannerId, description: node.description, title: node.title, startDate: node.startDate, endDate: node.endDate};
                    vm.items.forEach(function (elem, idx) {
-                      elem.url = 'media/image/preview/'+ elem.images[0].contentId;
+                      elem.url = 'media/image/preview/'+ elem.image;
                    });
                    vm.stopLoad = true;
                    vm.allDataLoaded = true;
@@ -183,6 +183,7 @@
 
              // если загрузка разрешена и не заняты
              if (!vm.detailLock && (!vm.stopLoad || mvm.width < 601) && !busy) {
+                mvm.showLoader = true;
                 busy = true;
 
                 dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
@@ -214,6 +215,7 @@
                    //говорим что можно отображать
                    vm.allDataLoaded = true;
                    busy = false;
+                   mvm.showLoader = false;
                 });
              }
           }

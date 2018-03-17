@@ -14,7 +14,8 @@
     <div ng-if="vm.currentNode.contentId && vm.currentNodeType === 'sale' " style="padding-bottom: 30px">
         <div layout="row" style="justify-content:center; margin-bottom: 1%">
             <p class="fancy">
-                <span style="font-size: 3.5em; line-height: 1;">{{::vm.currentNode.title}}</span>
+                <!--<span style="font-size: 3.5em; line-height: 1;">{{::vm.currentNode.title}}</span>-->
+                <span>{{::vm.currentNode.title}}</span>
             </p>
         </div>
         <p style="padding-bottom: 5px; font-size: 1.2em; text-align: center"> Акция действует с {{::vm.currentNode.startDate | date:'dd.MM.yyyy'}} по {{::vm.currentNode.endDate | date:'dd.MM.yyyy'}}</p>
@@ -49,8 +50,18 @@
                             <md-card-actions layout="column" layout-align="center center">
                                 <span class="md-headline">{{::item.name}}</span>
                                 <!--<span style="padding-bottom: 5px;">{{::item.price|number}}руб</span>-->
-                                <span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>
-                                <span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>
+
+                                <!--<span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>-->
+                                <!--<span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>-->
+
+                                <div style="min-height: 55px" layout="row" layout-xs="column">
+                                    <span ng-if="!item.salePrice" style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                    <div ng-if="item.salePrice">
+                                        <sup><span ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span></sup>
+                                        <span style="padding-bottom: 10px;font-size: 2em">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                    </div>
+                                </div>
+
                                 <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
@@ -75,8 +86,18 @@
                             <md-card-actions layout="column" layout-align="center center">
                                 <span class="md-headline">{{::item.name}}</span>
                                 <!--<span style="padding-bottom: 5px;">{{::item.price|number}}руб</span>-->
-                                <span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>
-                                <span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>
+
+                                <!--<span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>-->
+                                <!--<span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>-->
+
+                                <div style="min-height: 55px" layout="row" layout-xs="column">
+                                    <span ng-if="!item.salePrice" style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                    <div ng-if="item.salePrice">
+                                        <sup><span ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span></sup>
+                                        <span style="padding-bottom: 10px;font-size: 2em">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                    </div>
+                                </div>
+
                                 <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.requestToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn blue lighten-1" md-no-ink="true" ng-if="item.status.id == 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.preorderToList(item)">{{mvm.getAddToWishListButtonLabel(item)}}</md-button>
                                 <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder' && item.status.id != 'await'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
@@ -101,8 +122,18 @@
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
                             <!--<span style="padding-bottom: 5px;">{{::item.price|number}}руб</span>-->
-                            <span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>
-                            <span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>
+
+                            <!--<span style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>-->
+                            <!--<span style="padding-bottom: 10px;font-size: 2em" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>-->
+
+                            <div style="min-height: 55px" layout="row" layout-xs="column">
+                                <span ng-if="!item.salePrice" style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                <div ng-if="item.salePrice">
+                                    <sup><span ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span></sup>
+                                    <span style="padding-bottom: 10px;font-size: 2em">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                                </div>
+                            </div>
+
                             <md-button class="md-button btn yellow darken-3" md-no-ink="true" ng-if="item.status.id == 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">Заказать</md-button>
                             <md-button class="md-button btn primary" md-no-ink="true" ng-if="item.status.id != 'preorder'" ng-class="{'md':mvm.width>600}" ng-click="mvm.addToCart(item)">В корзину</md-button>
                         </md-card-actions>

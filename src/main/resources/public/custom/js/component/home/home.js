@@ -46,7 +46,7 @@
              // { icon: 'message' },
              {icon: 'facebook', url: ''}, {icon: 'vk', url: 'https://vk.com/club68247236'}, {icon: 'instagram', url: 'http://www.instagram.com/grimmstory'}];
 
-          vm.menus = [{name: 'Каталог', ref: 'catalog'}, {name: 'О нас', ref: 'about'}, {name: 'Контакты', ref: 'contact'}, {name: 'Доставка', ref: 'delivery'}, {name: 'Акции', ref: 'stock'}];
+          vm.menus = [{name: 'Каталог', ref: 'catalog'}, {name: 'О нас', ref: 'about'}, {name: 'Контакты', ref: 'contact'}, {name: 'Доставка', ref: 'delivery'}, {name: 'Акции', ref: 'sale'}];
           vm.subscriber = {id: null, email: null, subjectId: null, active: true, dateAdd: null};
           vm.forms = {};
           vm.posts = [];
@@ -74,6 +74,8 @@
                    sellersCarousel.carousel(sellersOps);
                 }, 100);
 
+                console.log(vm.topSellers);
+
              })
           }
 
@@ -85,7 +87,7 @@
                       vm.sales.push(item);
                    }
                 });
-
+                console.log(vm.sales)
                 $timeout(function () {
                    // инициализация карусели акций
                    saleCarousel = $('#sales .carousel.carousel-slider');

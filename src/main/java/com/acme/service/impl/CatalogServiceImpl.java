@@ -15,6 +15,7 @@ import com.acme.service.WishlistService;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.ibm.icu.text.Transliterator;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.MatchQueryBuilder;
@@ -65,7 +66,7 @@ public class CatalogServiceImpl implements CatalogService {
     ItemMapper itemMapper;
 
     @Override
-    public List<CatalogDto> getCatalog(CatalogFilter filter) {
+    public Set<CatalogDto> getCatalog(CatalogFilter filter) {
         List<Item> result = itemService.getAll(filter);
 
         if(!Strings.isNullOrEmpty(filter.getClientEmail())){
@@ -78,7 +79,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public List<CatalogDto> getBestsellers() {
+    public Set<CatalogDto> getBestsellers() {
         List<Item> items = itemService.getAllBySpec(ItemSpecifications.isPopular());
         return itemMapper.toCatalogDto(items);
     }
@@ -104,7 +105,7 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public List<CatalogDto> searchItems(String criteria) {
+    public Set<CatalogDto> searchItems(String criteria) {
         //Content defContent = contentRepository.findOneByIsDefault(true);
 
         /* формируем запрос */

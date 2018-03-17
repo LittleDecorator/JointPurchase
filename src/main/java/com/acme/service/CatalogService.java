@@ -5,6 +5,7 @@ import com.acme.model.dto.CatalogDto;
 import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nikolay on 13.08.17.
@@ -16,11 +17,11 @@ public interface CatalogService {
      * @param filter
      * @return
      */
-    List<CatalogDto> getCatalog(CatalogFilter filter);
+    Set<CatalogDto> getCatalog(CatalogFilter filter);
 
-    List<CatalogDto> getBestsellers();
+    Set<CatalogDto> getBestsellers();
 
-    List<CatalogDto> searchItems(String criteria);
+    Set<CatalogDto> searchItems(String criteria);
 
     void indexItems();
 

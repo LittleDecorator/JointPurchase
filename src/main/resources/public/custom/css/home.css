@@ -732,7 +732,7 @@ section::after {
         min-height: 280px;
     }
 
-    #bestsalers.section h2 {
+    #bestsalers.section h2, #sales.section h2 {
         /*font-size: 3em;*/
         /*margin: 5px 0;*/
         font-size: 2.5rem;

@@ -56,7 +56,7 @@ public class Item implements Serializable {
     private Integer price;
 
     @Column(name = "date_add", nullable = false, updatable = false)
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
     @Column(name = "not_for_sale")
     private boolean notForSale;
@@ -85,17 +85,27 @@ public class Item implements Serializable {
     private ItemStatus status = ItemStatus.AVAILABLE;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "sale_item", joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id")})
+    @JoinTable(name = "sale_item",
+        joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id",updatable = false)},
+        inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id", updatable = false)})
     @JsonBackReference
     private Sale sale;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "category_item", joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")}, inverseJoinColumns = {
-        @JoinColumn(name = "category_id", referencedColumnName = "id")})
+    @JoinTable(name = "category_item",
+        joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
     private List<Category> categories;
 
     @JsonProperty("images")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
     private List<ItemContent> itemContents;
+
+    @PrePersist
+    public void prePersist(){
+        if(this.dateAdd == null){
+            this.dateAdd = new Date();
+        }
+    }
 
 }

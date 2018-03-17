@@ -27,7 +27,6 @@ public abstract class SaleMapper extends BaseMapper {
 
     @SimpleMapper
     @Mappings({
-        @Mapping(target = "bannerId", ignore = true),
         @Mapping(target = "items", ignore = true),
         //@Mapping(target = "transliteName", ignore = true),
     })

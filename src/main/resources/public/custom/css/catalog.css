@@ -4,6 +4,7 @@
     text-decoration: line-through;
     color: rgb(243, 51, 3);
     padding-bottom: 0!important;
+    padding-left: 5px;
 }
 
 .currency {
@@ -34,6 +35,11 @@ sup > .old-price {
     /*color: rgb(243, 51, 3);*/
     /*!*font-weight: bold;*!*/
 /*}*/
+
+.fancy > span {
+    font-size: 3.5em;
+    line-height: 1;
+}
 
 .fancy span:before, .fancy span:after {
     /*content: "";*/
@@ -76,6 +82,37 @@ div#catalog-card div.box img.horizontal {
 
 /********************************** XS ******************************/
 @media (max-width: 599px) {
+
+    .fancy > span {
+        font-size: 2em;
+    }
+
+    .fancy span:before {
+        position: absolute;
+        width: 15%;
+        content: '';
+        border-top: 1px solid #421d1d;
+        margin-top: 1.1em;
+        right: 72%;
+    }
+
+    .fancy span:after {
+        left: 72%;
+        /* margin-left: 15px; */
+        position: absolute;
+        width: 15%;
+        content: '';
+        border-top: 1px solid #421d1d;
+        margin-top: 1.1em;
+    }
+
+    .currency {
+        min-height: 12px;
+        min-width: 12px;
+        width: 12px;
+        height: 12px;
+        color: inherit;
+    }
 
     div#catalog md-card._md > div.card-image {
         min-height: 223px;
@@ -184,6 +221,14 @@ div#catalog-card div.box img.horizontal {
 /********************************** GT-XS ******************************/
 @media (min-width: 600px) {
 
+    .currency {
+        min-height: 12px;
+        min-width: 12px;
+        width: 12px;
+        height: 12px;
+        color: inherit;
+    }
+
     div#catalog md-card._md > div.card-image {
         min-height: 223px;
     }
@@ -274,11 +319,26 @@ div#catalog-card div.box img.horizontal {
 
 /********************************** SM ******************************/
 @media (min-width: 600px) and (max-width: 959px) {
-
+    .currency {
+        min-height: 12px;
+        min-width: 12px;
+        width: 12px;
+        height: 12px;
+        color: inherit;
+    }
 }
 
 /********************************** GT-SM ******************************/
 @media (min-width: 960px) {
+
+    .currency {
+        min-height: 12px;
+        min-width: 12px;
+        width: 12px;
+        height: 12px;
+        color: inherit;
+    }
+
     div#catalog md-card._md > .card-image  > img{
         max-height: 223px;
         position: absolute;

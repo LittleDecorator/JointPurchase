@@ -15,6 +15,7 @@
 
                         <md-card-actions layout="column" layout-align="center center">
                             <span class="md-headline">{{::item.name}}</span>
+                            <span class="md-headline">{{::item.companyName}}</span>
                             <div style="min-height: 55px" layout="row" layout-xs="column">
                                 <span ng-if="!item.salePrice" style="padding-bottom: 10px;font-size: 2em;" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
                                 <div ng-if="item.salePrice">

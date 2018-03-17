@@ -4,6 +4,7 @@ import com.acme.annotation.SimpleMapper;
 import com.acme.config.CentralConfig;
 import com.acme.constant.Constants;
 import com.acme.model.Category;
+import com.acme.model.Company;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.Sale;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.assertj.core.util.Sets;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -38,6 +40,11 @@ public abstract class ItemMapper extends BaseMapper {
 		@Mapping(target = "companyName", expression = "java(bindCompanyName(entity))")
 	})
 	public abstract ItemDto toDto(Item entity);
+
+	@Mappings({
+		@Mapping(target = "company", ignore = true),
+	})
+	public abstract Item toEntity(ItemDto dto);
 
 	@Mappings({
 		@Mapping(target = "status", ignore = true),
@@ -81,7 +88,8 @@ public abstract class ItemMapper extends BaseMapper {
 	 */
 	@Mappings({
 		@Mapping(target = "url", expression = "java(buildUrl(entity))"),
-		@Mapping(target = "salePrice", expression = "java(buildSalePrice(entity))")
+		@Mapping(target = "salePrice", expression = "java(buildSalePrice(entity))"),
+		@Mapping(target = "companyName", expression = "java(bindCompanyName(entity))"),
 	})
 	public abstract CatalogDto toCatalogDto(Item entity);
 
@@ -90,13 +98,19 @@ public abstract class ItemMapper extends BaseMapper {
 	 * @param entities
 	 * @return List of catalog dto
 	 */
-	public List<CatalogDto> toCatalogDto(Collection<Item> entities){
-		List<CatalogDto> result = new ArrayList<>();
+	public Set<CatalogDto> toCatalogDto(Collection<Item> entities){
+		Set<CatalogDto> result = Sets.newHashSet();
 		for (Item entity : entities) {
 			result.add(toCatalogDto(entity));
 		}
 		return result;
 	}
+
+	@Mappings({
+		@Mapping(target = "image", expression = "java(getMainImageId(entity))"),
+		@Mapping(target = "salePrice", expression = "java(buildSalePrice(entity))"),
+	})
+	public abstract ItemMapDto toMapDto(Item entity);
 
 	@IterableMapping(elementTargetType = ItemMapDto.class)
 	public abstract Set<ItemMapDto> toMapDto(Collection<Item> entities);
@@ -166,6 +180,13 @@ public abstract class ItemMapper extends BaseMapper {
 		return result[0];
 	}
 
+	protected String getMainImageId(Item entity){
+		final String[] result = new String[1];
+		Optional<ItemContent> contentOptional = entity.getItemContents().stream().filter(ItemContent::isMain).findAny();
+		contentOptional.ifPresent(itemContent -> result[0] = itemContent.getContentId().getId());
+		return result[0];
+	}
+
 	// FIXME: если время акции не настало, то мы не должны её вообще получать для товара
 	protected Integer buildSalePrice(Item entity){
 		Integer result = null;
@@ -176,4 +197,5 @@ public abstract class ItemMapper extends BaseMapper {
 		}
 		return result;
 	}
+
 }

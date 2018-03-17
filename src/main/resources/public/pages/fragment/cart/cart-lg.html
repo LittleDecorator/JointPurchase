@@ -26,8 +26,8 @@
             </td>
             <td class="col s1 non-float" style="text-align: center; width: 12%;">
                 <!--<span class="price">{{::item.price|number}} руб</span>-->
-                <span style="padding-bottom: 10px;font-size: 1em;" class="price" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} руб</span>
-                <span style="padding-bottom: 10px;font-size: 1em; display: block" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} руб</span>
+                <span style="padding-bottom: 10px;font-size: 1.2em;" class="price" ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                <span style="padding-bottom: 10px;font-size: 1.2em; display: block" class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
             </td>
             <td class="col s2 non-float" style="text-align: center;">
                 <div>
@@ -38,8 +38,8 @@
             </td>
             <td class="col s1 non-float" style="text-align: center; width: 12%;">
                 <!--<span class="price">{{(item.price * item.cou)|number}} руб</span>-->
-                <span class="price" ng-hide="item.salePrice">{{(item.price * item.cou)|number}} руб</span>
-                <span style="padding-bottom: 10px;font-size: 1em; display: block" class="price" ng-show="item.salePrice">{{(item.salePrice * item.cou)|number}} руб</span>
+                <span class="price" style="padding-bottom: 10px;font-size: 1.2em;" ng-hide="item.salePrice">{{(item.price * item.cou)|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                <span style="padding-bottom: 10px;font-size: 1.2em; display: block" class="price" ng-show="item.salePrice">{{(item.salePrice * item.cou)|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
             </td>
             <td class="col s2 non-float" style="text-align: center">
                 <div style="cursor: pointer" ng-click="mvm.removeFromCart($index)">
@@ -54,7 +54,7 @@
 
 <div class="gray-row card" style="margin-top:20px">
     <div class="col s6 offset-s6 table-total" style="margin: 10px 15px">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey| number}} руб</span>
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey| number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
     </div>
 </div>
 

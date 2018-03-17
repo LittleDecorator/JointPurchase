@@ -11,4 +11,6 @@ public interface CompanyRepository extends CrudRepository<Company, String> {
 
     Company findOneByTransliteName(String name);
 
+    Company findOneById(String id);
+
 }

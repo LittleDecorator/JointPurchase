@@ -26,13 +26,15 @@
                     <div layout="row" style="margin: 3px 0;margin-right: 5px">
                         <span style="font-size: 14px;">Цена:</span>
                         <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
-                        <span>{{::item.price| number}} руб</span>
+                        <span class="new-price" ng-show="item.salePrice">{{::item.salePrice|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                        <span ng-class="{'old-price':item.salePrice}">{{::item.price|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
                     </div>
 
                     <div layout="row" style="margin-bottom: 5px;margin-right: 5px">
                         <span style="font-size: 14px;">Сумма:</span>
                         <hr flex style="margin: 0 3px; height: 15px; border: 0; border-bottom: 1px dotted;"/>
-                        <span>{{(item.price * item.cou) | number}} руб</span>
+                        <span class="price" ng-hide="item.salePrice">{{(item.price * item.cou) | number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
+                        <span style="padding-bottom: 10px;font-size: 1em; display: block" class="price" ng-show="item.salePrice">{{(item.salePrice * item.cou)|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
                     </div>
                 </div>
 
@@ -43,7 +45,7 @@
 
 <div class="gray-row card" >
     <div class="table-total" style="margin: 10px 15px">
-        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey|number}} руб</span>
+        <span class="price" style="font-size:16px; margin-right: 3%"><strong style="font-weight: 700">Итого: </strong>{{mvm.cart.content|sumByKey|number}} <md-icon md-svg-src="ruble" class="currency"></md-icon></span>
     </div>
 </div>
 
