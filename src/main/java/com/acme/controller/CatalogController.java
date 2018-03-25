@@ -9,8 +9,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Controller that response for item representation for client.
  */
@@ -37,7 +35,7 @@ public class CatalogController {
     /**
      * индексация документов
      */
-    @RequestMapping(method = RequestMethod.POST, value = "index")
+    @RequestMapping(method = RequestMethod.PATCH, value = "index")
     public void indexItem() {
         catalogService.indexItems();
     }

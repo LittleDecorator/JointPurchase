@@ -1,16 +1,29 @@
 package com.acme.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
+import org.springframework.cache.annotation.CacheConfig;
 
 @Entity
 @Table(name = "content")
+//@CacheConfig(cacheNames = "content")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Content implements BaseModel{
 
     @Id
@@ -39,8 +52,16 @@ public class Content implements BaseModel{
     private String metaInfo;
 
     @Column(name = "date_add", nullable = false, updatable = false)
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
+    @Transient
     private String content;
+
+    @PrePersist
+    public void prePersist(){
+        if(this.dateAdd == null){
+            this.dateAdd = new Date();
+        }
+    }
 
 }

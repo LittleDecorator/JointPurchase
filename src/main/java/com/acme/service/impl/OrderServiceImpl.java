@@ -126,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
 		for(String itemId : itemsMap.keySet()){
 			ItemContent itemContent = itemContentRepository.findAllByItemId(itemId).stream().filter(ItemContent::isMain).findFirst().orElse(null);
 			if(itemContent != null){
-				contentMap.put(itemId, contentRepository.findOne(itemContent.getContentId().getId()));
+				contentMap.put(itemId, contentRepository.findOne(itemContent.getContent().getId()));
 			} else {
 				contentMap.put(itemId, contentRepository.findOneByIsDefault(true));
 			}

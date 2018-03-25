@@ -1,13 +1,33 @@
 package com.acme.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
+import org.springframework.cache.annotation.CacheConfig;
 
 @Entity
 @Table(name = "item_content")
+//@CacheConfig(cacheNames = "item_content")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ItemContent implements BaseModel {
 
     @Id
@@ -19,10 +39,9 @@ public class ItemContent implements BaseModel {
     private String itemId;
 
     @OneToOne
-    //@Column(name = "content_id")
     @JoinColumn(name = "content_id")
-    @JsonBackReference
-    private Content contentId;
+    @JsonIgnore
+    private Content content;
 
     @Column(name = "crop_id")
     private String cropId;
@@ -32,72 +51,15 @@ public class ItemContent implements BaseModel {
     private boolean main;
 
     @Column(name = "date_add", nullable = false, updatable = false)
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
     @Transient
     private String url;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
-    public Content getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(Content contentId) {
-        this.contentId = contentId;
-    }
-
-    public String getCropId() {
-        return cropId;
-    }
-
-    public void setCropId(String cropId) {
-        this.cropId = cropId;
-    }
-
-    public boolean isShow() {
-        return show;
-    }
-
-    public void setShow(boolean show) {
-        this.show = show;
-    }
-
-    public boolean isMain() {
-        return main;
-    }
-
-    public void setMain(boolean main) {
-        this.main = main;
-    }
-
-    public Date getDateAdd() {
-        return dateAdd;
-    }
-
-    public void setDateAdd(Date dateAdd) {
-        this.dateAdd = dateAdd;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    @PrePersist
+    public void prePersist(){
+        if(this.dateAdd == null){
+            this.dateAdd = new Date();
+        }
     }
 }

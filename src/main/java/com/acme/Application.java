@@ -1,22 +1,23 @@
 package com.acme;
 
 import com.acme.repository.SaleRepository;
-import com.acme.service.InstagramService;
 import com.acme.util.CustomResolver;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.hazelcast.HazelcastAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.annotation.EnableJms;
@@ -30,6 +31,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import ru.dezhik.sms.sender.SenderService;
@@ -46,7 +48,7 @@ import java.util.*;
 @EnableScheduling
 @EnableAsync
 @EnableJms
-@SpringBootApplication
+@SpringBootApplication(exclude = HazelcastAutoConfiguration.class)
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "com.acme.repository")
 @EnableElasticsearchRepositories(basePackages = "com.acme.elasticsearch")
@@ -143,7 +145,8 @@ public class Application extends WebMvcConfigurerAdapter {
     /**
      * Очищаем все кэши через 1 час
      */
-    @CacheEvict(allEntries = true, value = {"decode","encode","image","write","read","view","gallery","preview","thumb","origin"})
+    //@CacheEvict(allEntries = true, value = {"decode","encode","image","write","read","view","gallery","preview","thumb","origin"})
+    @CacheEvict(allEntries = true, value = {"base64","encode"})
     @Scheduled(fixedDelay = 60 * 60 * 1000, initialDelay = 500)
     public void reportCacheEvict() {
         System.out.println("Flush All Cache " + new Date());
@@ -164,6 +167,13 @@ public class Application extends WebMvcConfigurerAdapter {
         log.info("Deactivate old sales!");
         saleRepository.deactiveteSales();
         log.info("Sale deactivation complete!");
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void doSomethingAfterStartup() {
+        System.out.println("Application started!");
+        // refresh sales
+        refreshSales();
     }
 
     public static void main(String[] args) {

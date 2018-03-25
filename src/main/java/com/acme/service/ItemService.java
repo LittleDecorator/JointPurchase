@@ -10,10 +10,12 @@ import com.acme.model.filter.CatalogFilter;
 
 import java.util.List;
 import java.util.Set;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface ItemService {
 
+    //@Cacheable(value = "item")
     List<Item> getAll(CatalogFilter filter);
 
     List<Item> getAll();
@@ -28,8 +30,10 @@ public interface ItemService {
 
     Set<Item> getAllByIdList(List<String> ids);
 
+    @Cacheable(value = "base64")
     Item getItem(String itemId);
 
+    //@Cacheable(value = "item")
     Item getItemByLatinName(String name);
 
     List<ItemUrlTransfer> getItemUrlTransfers(List<Item> items);

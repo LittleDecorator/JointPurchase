@@ -19,18 +19,14 @@ import com.acme.repository.SaleRepository;
 import com.acme.service.ImageService;
 import com.acme.service.ResizeService;
 import com.acme.util.ApiUtil;
-import com.drew.imaging.FileType;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -157,7 +153,7 @@ public class ContentController{
 
                 itemContent = new ItemContent();
                 itemContent.setItemId(itemId);
-                itemContent.setContentId(content);
+                itemContent.setContent(content);
                 itemContent.setShow(true);
                 if(i==0){
                     itemContent.setMain(true);
@@ -165,6 +161,8 @@ public class ContentController{
                     itemContent.setMain(false);
                 }
                 itemContent = itemContentRepository.save(itemContent);
+                // update content data itself
+                contentRepository.updateContentData(content.getContent(), content.getId());
                 itemContent.setUrl(Constants.PREVIEW_URL + content.getId());
                 result.add(itemContent);
 
@@ -256,7 +254,7 @@ public class ContentController{
     public List<ItemContent> getPreviewImages(@RequestParam(value = "itemId") String itemId) throws Exception {
         List<ItemContent> result = Lists.newArrayList();
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(itemId)){
-            itemContent.setUrl(Constants.GALLERY_URL+ (itemContent.getCropId()== null ? itemContent.getContentId().getId() : itemContent.getCropId()));
+            itemContent.setUrl(Constants.GALLERY_URL+ (itemContent.getCropId()== null ? itemContent.getContent().getId() : itemContent.getCropId()));
             result.add(itemContent);
         }
         return result;
@@ -326,7 +324,7 @@ public class ContentController{
         ItemContent itemContent = itemContentRepository.findOne(id);
         itemContentRepository.delete(id);
         //delete content
-        contentRepository.delete(itemContent.getContentId());
+        contentRepository.delete(itemContent.getContent());
     }
 
     /**
@@ -337,7 +335,7 @@ public class ContentController{
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
     public void setAsMain(@RequestBody ItemContent input) throws ParseException {
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(input.getItemId())){
-            itemContent.setMain(itemContent.getContentId().getId().contentEquals(input.getContentId().getContent()));
+            itemContent.setMain(itemContent.getContent().getId().contentEquals(input.getContent().getId()));
             itemContentRepository.save(itemContent);
         }
     }

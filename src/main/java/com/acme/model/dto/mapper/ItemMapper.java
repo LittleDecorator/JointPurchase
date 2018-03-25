@@ -158,13 +158,13 @@ public abstract class ItemMapper extends BaseMapper {
 	protected Map<String, String> collectContentIds(Item entity){
 		return entity.getItemContents()
 			.stream()
-			.collect(Collectors.toMap(o -> o.getContentId().getId(), o-> Strings.nullToEmpty(o.getContentId().getMetaInfo())));
+			.collect(Collectors.toMap(o -> o.getContent().getId(), o-> Strings.nullToEmpty(o.getContent().getMetaInfo())));
 	}
 
 	protected String buildViewUrl(Item entity){
 		final String[] result = new String[1];
 		Optional<ItemContent> contentOptional = entity.getItemContents().stream().filter(ItemContent::isMain).findAny();
-		contentOptional.ifPresent(itemContent -> result[0] = Constants.VIEW_URL + itemContent.getContentId().getId());
+		contentOptional.ifPresent(itemContent -> result[0] = Constants.VIEW_URL + itemContent.getContent().getId());
 		return result[0];
 	}
 
@@ -176,14 +176,14 @@ public abstract class ItemMapper extends BaseMapper {
 	protected String buildUrl(Item entity){
 		final String[] result = new String[1];
 		Optional<ItemContent> contentOptional = entity.getItemContents().stream().filter(ItemContent::isMain).findAny();
-		contentOptional.ifPresent(itemContent -> result[0] = Constants.PREVIEW_URL + itemContent.getContentId().getId());
+		contentOptional.ifPresent(itemContent -> result[0] = Constants.PREVIEW_URL + itemContent.getContent().getId());
 		return result[0];
 	}
 
 	protected String getMainImageId(Item entity){
 		final String[] result = new String[1];
 		Optional<ItemContent> contentOptional = entity.getItemContents().stream().filter(ItemContent::isMain).findAny();
-		contentOptional.ifPresent(itemContent -> result[0] = itemContent.getContentId().getId());
+		contentOptional.ifPresent(itemContent -> result[0] = itemContent.getContent().getId());
 		return result[0];
 	}
 

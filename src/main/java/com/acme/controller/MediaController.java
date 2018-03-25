@@ -114,10 +114,12 @@ public class MediaController {
 		//long start = System.currentTimeMillis();
 		BufferedImage image;
 		//System.out.println("Request: " + size.name());
-		Content content = contentRepository.findOne(contentId);
+		Content entity = contentRepository.findOne(contentId);
+		String content = contentRepository.getContentData(contentId);
 		//System.out.println("After get content: " + (System.currentTimeMillis() - start) + "ms");
-		String type = asWebp ? "webp" : content.getType();
-		byte[] data = Base64BytesSerializer.deserialize(content.getContent());
+		String type = asWebp ? "webp" : entity.getType();
+		//byte[] data = Base64BytesSerializer.deserialize(content.getContent());
+		byte[] data = Base64BytesSerializer.deserialize(content);
 		switch (size) {
 			case GALLERY:
 				image = resizeService.forGallery(data);

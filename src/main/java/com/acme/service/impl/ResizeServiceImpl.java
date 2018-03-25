@@ -22,27 +22,27 @@ public class ResizeServiceImpl implements ResizeService {
     @Autowired
     ImageService imageService;
 
-    @Cacheable(value = "view")
+    //@Cacheable(value = "view")
     public BufferedImage forView(byte[] data) throws Exception {
         return resizeImage(imageService.getImage(data), ImageSize.VIEW);
     }
 
-    @Cacheable(value = "gallery")
+    //@Cacheable(value = "gallery")
     public BufferedImage forGallery(byte[] data) throws Exception {
         return resizeImage(imageService.getImage(data), ImageSize.GALLERY);
     }
 
-    @Cacheable(value = "preview")
+    //@Cacheable(value = "preview")
     public BufferedImage forPreview(byte[] data) throws Exception {
         return resizeImage(imageService.getImage(data), ImageSize.PREVIEW);
     }
 
-    @Cacheable(value = "thumb")
+    //@Cacheable(value = "thumb")
     public BufferedImage forThumb(byte[] data) throws Exception {
         return resizeImage(imageService.getImage(data), ImageSize.THUMB);
     }
 
-    @Cacheable(value = "origin")
+    //@Cacheable(value = "origin")
     public BufferedImage forOrign(byte[] data) throws Exception {
         return resizeImage(imageService.getImage(data), ImageSize.ORIGINAL);
     }

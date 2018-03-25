@@ -3,6 +3,7 @@ package com.acme.repository;
 import com.acme.model.Content;
 import java.util.Collection;
 import java.util.Set;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -24,8 +25,16 @@ public interface ContentRepository extends CrudRepository<Content, String> {
 
     void deleteAllByIdIn(List<String> ids);
 
-    @Query(value = "update Content c set c.metaInfo=:meta where c.id=:id")
     @Modifying
+    @Query(value = "update Content c set c.metaInfo=:meta where c.id=:id")
     int updateContentMeta(@Param("meta") String meta, @Param("id") String id);
+
+    @Modifying
+    @Query(value = "update content c set c.content=?1 where c.id=?2", nativeQuery = true)
+    void updateContentData(String data, String id);
+
+    @Cacheable(value = "base64")
+    @Query(value = "select content from Content c where c.id=?1", nativeQuery = true)
+    String getContentData(String id);
 
 }

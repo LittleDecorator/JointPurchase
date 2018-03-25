@@ -34,13 +34,13 @@ public class ImageServiceImpl implements ImageService {
         return baos.toByteArray();
     }
 
-    @Cacheable(value = "decode")
+    //@Cacheable(value = "decode")
     public BufferedImage decodeToImage(String imageString) throws IOException {
         byte[] imageByte = Base64.decodeBase64(imageString);
         return ImageIO.read(new ByteArrayInputStream(imageByte));
     }
 
-    @Cacheable(value = "image")
+    //@Cacheable(value = "image")
     public BufferedImage getImage(byte[] binary) throws IOException {
         //TODO: переписать с учетом https://github.com/haraldk/TwelveMonkeys/issues/281
         ByteArrayInputStream bis = new ByteArrayInputStream(binary);
@@ -49,13 +49,13 @@ public class ImageServiceImpl implements ImageService {
         return image;
     }
 
-    @Cacheable(value = "image")
+    //@Cacheable(value = "image")
     public BufferedImage getImage(String path) throws IOException {
         byte[] binary = Files.readAllBytes(Paths.get(path));
         return getImage(binary);
     }
 
-    @Cacheable(value = "write")
+    //@Cacheable(value = "write")
     public BufferedImage writeToStream (byte[] binary, String type, OutputStream stream) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(binary);
         BufferedImage image = ImageIO.read(bis);
@@ -65,14 +65,14 @@ public class ImageServiceImpl implements ImageService {
         return getImage(binary);
     }
 
-    @Cacheable(value = "write")
+    //@Cacheable(value = "write")
     public BufferedImage writeToStream (String path, OutputStream stream) throws IOException {
         byte[] binary = Files.readAllBytes(Paths.get(path));
         String type = path.substring(path.lastIndexOf(".")+1);
         return writeToStream(binary,type,stream);
     }
 
-    @Cacheable(value = "write")
+    //@Cacheable(value = "write")
     public void writeToStream (BufferedImage image, String type, OutputStream stream) throws IOException {
         ImageIO.write(image, type, stream);
         stream.close();
@@ -88,7 +88,7 @@ public class ImageServiceImpl implements ImageService {
         return imageString;
     }
 
-    @Cacheable(value = "read")
+    //@Cacheable(value = "read")
     public byte[] toBytes(BufferedImage image, String type) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(1000);
         ImageIO.write(image, type, bos);

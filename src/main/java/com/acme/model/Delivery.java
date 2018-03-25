@@ -1,5 +1,11 @@
 package com.acme.model;
 
+import javax.persistence.PrePersist;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -8,9 +14,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
+import org.springframework.cache.annotation.CacheConfig;
 
 @Entity
 @Table(name = "delivery")
+//@CacheConfig(cacheNames = "delivery")
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Delivery implements BaseModel{
 
     @Id
@@ -23,38 +35,13 @@ public class Delivery implements BaseModel{
     private String hint;
 
     @Column(name = "date_add", nullable = false, updatable = false)
-    private Date dateAdd = new Date();
+    private Date dateAdd;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
-    public Date getDateAdd() {
-        return dateAdd;
-    }
-
-    public void setDateAdd(Date dateAdd) {
-        this.dateAdd = dateAdd;
+    @PrePersist
+    public void prePersist(){
+        if(this.dateAdd == null){
+            this.dateAdd = new Date();
+        }
     }
 
 }
