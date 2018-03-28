@@ -4,12 +4,12 @@ import com.acme.annotation.SimpleMapper;
 import com.acme.config.CentralConfig;
 import com.acme.constant.Constants;
 import com.acme.model.Category;
-import com.acme.model.Company;
 import com.acme.model.Item;
 import com.acme.model.ItemContent;
 import com.acme.model.Sale;
 import com.acme.model.dto.CatalogDetailDto;
 import com.acme.model.dto.CatalogDto;
+import com.acme.model.dto.ItemContentDto;
 import com.acme.model.dto.ItemDto;
 import com.acme.model.dto.ItemMapDto;
 import com.google.common.base.Strings;
@@ -111,6 +111,14 @@ public abstract class ItemMapper extends BaseMapper {
 		@Mapping(target = "salePrice", expression = "java(buildSalePrice(entity))"),
 	})
 	public abstract ItemMapDto toMapDto(Item entity);
+
+	@Mappings({
+		@Mapping(target = "contentId", source = "content.id"),
+	})
+	public abstract ItemContentDto toContentDto(ItemContent entity);
+
+	@IterableMapping(elementTargetType = ItemContentDto.class)
+	public abstract Set<ItemContentDto> toContentDto(Collection<ItemContent> entities);
 
 	@IterableMapping(elementTargetType = ItemMapDto.class)
 	public abstract Set<ItemMapDto> toMapDto(Collection<Item> entities);

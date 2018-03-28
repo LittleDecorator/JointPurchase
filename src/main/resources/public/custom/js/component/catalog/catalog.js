@@ -186,13 +186,16 @@
                 mvm.showLoader = true;
                 busy = true;
 
-                dataResources.catalog.list.all(vm.confirmedFilter).$promise.then(function (data) {
-                   // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
-                   if (data.length < vm.confirmedFilter.limit) {
-                      vm.stopLoad = true;
-                      vm.showLoadMore = false;
-                   }
-
+                //FIXME: every load change from $promise
+                dataResources.catalog.list.all(vm.confirmedFilter, function(d,h){
+                  var headers = h();
+                  // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
+                  // if (data.length < vm.confirmedFilter.limit) {
+                  if (headers['x-page-number'] === headers['x-total-pages']) {
+                    vm.stopLoad = true;
+                    vm.showLoadMore = false;
+                  }
+                }).$promise.then(function (data) {
                    // очистим данные если требуется
                    if (isClean) {
                       vm.items = [];

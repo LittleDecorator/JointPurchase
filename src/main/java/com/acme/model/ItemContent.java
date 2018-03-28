@@ -1,7 +1,5 @@
 package com.acme.model;
 
-//import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +17,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
-import org.springframework.cache.annotation.CacheConfig;
 
 @Entity
 @Table(name = "item_content")
@@ -40,7 +37,6 @@ public class ItemContent implements BaseModel {
 
     @OneToOne
     @JoinColumn(name = "content_id")
-    @JsonIgnore
     private Content content;
 
     @Column(name = "crop_id")

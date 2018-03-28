@@ -9,6 +9,8 @@ import com.acme.model.InstagramPostContent;
 import com.acme.model.ItemContent;
 import com.acme.model.Sale;
 import com.acme.model.dto.CompanyContentDto;
+import com.acme.model.dto.ItemContentDto;
+import com.acme.model.dto.mapper.ItemMapper;
 import com.acme.repository.CompanyRepository;
 import com.acme.repository.ContentRepository;
 import com.acme.repository.InstagramPostContentRepository;
@@ -82,6 +84,9 @@ public class ContentController{
 
     @Autowired
     InstagramPostContentRepository postContentRepository;
+
+    @Autowired
+    ItemMapper itemMapper;
 
 //    /**
 //     * Кропирование уже загруженного изображения
@@ -251,13 +256,14 @@ public class ContentController{
      * @throws Exception
      */
     @RequestMapping(value = "/items", method = RequestMethod.GET)
-    public List<ItemContent> getPreviewImages(@RequestParam(value = "itemId") String itemId) throws Exception {
+    public Set<ItemContentDto> getPreviewImages(@RequestParam(value = "itemId") String itemId) throws Exception {
         List<ItemContent> result = Lists.newArrayList();
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(itemId)){
             itemContent.setUrl(Constants.GALLERY_URL+ (itemContent.getCropId()== null ? itemContent.getContent().getId() : itemContent.getCropId()));
             result.add(itemContent);
         }
-        return result;
+        //FIXME: rewrite with PageTools
+        return itemMapper.toContentDto(result);
     }
 
     /**
@@ -333,9 +339,10 @@ public class ContentController{
      * @throws ParseException
      */
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
-    public void setAsMain(@RequestBody ItemContent input) throws ParseException {
+    public void setAsMain(@RequestBody ItemContentDto input) throws ParseException {
+        //FIXME: replace with update Query
         for(ItemContent itemContent : itemContentRepository.findAllByItemId(input.getItemId())){
-            itemContent.setMain(itemContent.getContent().getId().contentEquals(input.getContent().getId()));
+            itemContent.setMain(itemContent.getContent().getId().contentEquals(input.getContentId()));
             itemContentRepository.save(itemContent);
         }
     }
@@ -347,6 +354,7 @@ public class ContentController{
      */
     @RequestMapping(value = "/set/show",method = RequestMethod.PUT)
     public void setAsShown(@RequestBody ItemContent input) throws ParseException {
+        //FIXME: replace with update Query
         itemContentRepository.save(input);
     }
 
