@@ -22,7 +22,7 @@ public interface ItemService {
 
     List<Item> getPortion(int offset, int limit);
 
-    List<Item> getAllBySpec(Specification<Item> specification);
+    Set<Item> getAllBySpec(Specification<Item> specification);
 
     Set<Item> getAllByCategory(CatalogFilter filter);
 

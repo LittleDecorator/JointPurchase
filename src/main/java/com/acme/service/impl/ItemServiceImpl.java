@@ -12,6 +12,7 @@ import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.ItemService;
 import com.acme.util.PageTools;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.Set;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +55,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllBySpec(Specification<Item> specification) {
-        return Lists.newArrayList(itemRepository.findAll(specification));
+    public Set<Item> getAllBySpec(Specification<Item> specification) {
+        return Sets.newHashSet(itemRepository.findAll(specification));
     }
 
     @Override

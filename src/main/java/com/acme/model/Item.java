@@ -5,6 +5,7 @@ import com.acme.enums.converters.ItemStatusConverter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -18,13 +19,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
@@ -46,6 +46,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Item implements Serializable {
 
     @Id
@@ -101,21 +102,23 @@ public class Item implements Serializable {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sale_item",
         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id",updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id", updatable = false)})
     @JsonBackReference
     private Sale sale;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "category_item",
         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
+    @BatchSize(size = 30)
     private List<Category> categories;
 
     @JsonProperty("images")
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemId",cascade = CascadeType.ALL)
+    @BatchSize(size = 30)
     private List<ItemContent> itemContents;
 
     @PrePersist

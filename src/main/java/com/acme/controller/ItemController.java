@@ -10,12 +10,14 @@ import com.acme.repository.*;
 import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
+import com.acme.util.PageTools;
 import javax.validation.constraints.NotNull;
 import org.assertj.core.util.Strings;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -75,10 +77,11 @@ public class ItemController {
      * Получение всех товаров по фильтру
      **/
     @RequestMapping(method = RequestMethod.GET)
-    public List<ItemDto> getItems(ItemFilter filter) {
+    public Set<ItemDto> getItems(ItemFilter filter) {
         Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd", "name");
-        List<Item> itemList = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter), pageable).getContent();
-        return itemMapper.toSimpleDto(itemList);
+        Page<Item> page = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter), pageable);
+        PageTools.setPageHeaders(page);
+        return itemMapper.toSimpleDto(page.getContent());
     }
 
     /**
@@ -97,24 +100,8 @@ public class ItemController {
             item = itemMapper.toEntity(dto);
         } else {
             item = itemRepository.findOne(dto.getId());
-            //TODO: думаю это все же излишне
-            item.setAge(dto.getAge());
-            item.setArticle(dto.getArticle());
-            item.setBestseller(dto.isBestseller());
-            item.setDescription(dto.getDescription());
-            item.setInOrder(dto.getInOrder());
-            item.setInStock(dto.getInStock());
-            item.setCategories(dto.getCategories());
-            item.setMaterial(dto.getMaterial());
-            item.setName(dto.getName());
-            item.setNotForSale(dto.isNotForSale());
-            item.setPrice(dto.getPrice());
-            item.setSize(dto.getSize());
-            item.setStatus(dto.getStatus());
-            item.setTransliteName(dto.getTransliteName());
+            itemMapper.toExistingEntity(dto, item);
         }
-        item.setCompany(companyRepository.findOneById(dto.getCompanyId()));
-
         itemRepository.save(item);
         // поместим|обновим в индекс только после добавления товара
         catalogRepository.save(item);
@@ -163,9 +150,11 @@ public class ItemController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/order/{id}")
-    public Set<Item> getAllByOrderId(@PathVariable("id") String orderId) {
+    public Set<ItemDto> getAllByOrderId(@PathVariable("id") String orderId) {
         Order order = orderRepository.findOne(orderId);
-        return itemRepository.findAllByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
+        Set<Item> result = itemRepository.findAllByIdIn(order.getOrderItems().stream().map(oi -> oi.getId().getItemId()).collect(Collectors.toList()));
+        PageTools.setPageHeaders(result);
+        return itemMapper.toSimpleDto(result);
     }
 
     /**

@@ -13,7 +13,6 @@ import com.acme.model.dto.ItemContentDto;
 import com.acme.model.dto.ItemDto;
 import com.acme.model.dto.ItemMapDto;
 import com.google.common.base.Strings;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +24,7 @@ import org.assertj.core.util.Sets;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring", config = CentralConfig.class)
@@ -45,6 +45,8 @@ public abstract class ItemMapper extends BaseMapper {
 		@Mapping(target = "company", ignore = true),
 	})
 	public abstract Item toEntity(ItemDto dto);
+
+	public abstract void toExistingEntity(ItemDto updateRequest, @MappingTarget Item entity);
 
 	@Mappings({
 		@Mapping(target = "status", ignore = true),
@@ -137,8 +139,8 @@ public abstract class ItemMapper extends BaseMapper {
 	 * @return List of item dto
 	 */
 	@SimpleMapper
-	public List<ItemDto> toSimpleDto(List<Item> entities){
-		List<ItemDto> result = new ArrayList<>();
+	public Set<ItemDto> toSimpleDto(Collection<Item> entities){
+		Set<ItemDto> result = Sets.newHashSet();
 		for (Item entity : entities) {
 			result.add(toSimpleDto(entity));
 		}

@@ -74,6 +74,12 @@ public abstract class PageTools {
 											 String.valueOf(page.getSize()));
 		}
 
+	public static void setPageHeaders(Collection<?> collection){
+		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+		HttpServletResponse servletResponse = ((ServletRequestAttributes) attributes).getResponse();
+		setPageHeaders(collection, servletResponse);
+	}
+
 		/**
 		 * Creates http headers for collection
 		 *

@@ -73,7 +73,10 @@ public class ItemSpecifications {
      * @return
      */
     public static Specification<Item> isPopular() {
-        return (root, query, cb) -> cb.isTrue(root.get(Item_.bestseller));
+        return (root, query, cb) -> {
+            query.distinct(true);
+            return cb.isTrue(root.get(Item_.bestseller));
+        };
     }
 
     /**

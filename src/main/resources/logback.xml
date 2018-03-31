@@ -20,7 +20,7 @@
   <logger name="org.apache.catalina" level="WARN"/>
   <logger name="org.hibernate.validator" level="WARN"/>
   <logger name="org.hibernate" level="WARN"/>
-  <logger name="org.hibernate.SQL" level="DEBUG"/>
+  <logger name="org.hibernate.SQL" level="INFO"/>
   <logger name="org.hibersap" level="WARN"/>
   <logger name="org.thymeleaf" level="WARN"/>
   <logger name="org.springframework" level="WARN"/>
@@ -37,7 +37,7 @@
     <resetJUL>true</resetJUL>
   </contextListener>
 
-  <root level="${logback.loglevel}">
+  <root level="INFO">
     <appender-ref ref="CONSOLE"/>
   </root>
 </configuration>

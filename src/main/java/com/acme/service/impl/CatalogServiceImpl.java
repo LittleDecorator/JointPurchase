@@ -67,20 +67,20 @@ public class CatalogServiceImpl implements CatalogService {
 
     @Override
     public Set<CatalogDto> getCatalog(CatalogFilter filter) {
-        List<Item> result = itemService.getAll(filter);
+        List<Item> items = itemService.getAll(filter);
 
         if(!Strings.isNullOrEmpty(filter.getClientEmail())){
             List<String> wishedItems = wishlistService.getWishedItems(filter.getClientEmail());
             if(!wishedItems.isEmpty()){
-                result = result.stream().peek(item -> item.setInWishlist(wishedItems.contains(item.getId()))).collect(Collectors.toList());
+                items = items.stream().peek(item -> item.setInWishlist(wishedItems.contains(item.getId()))).collect(Collectors.toList());
             }
         }
-        return itemMapper.toCatalogDto(result);
+        return itemMapper.toCatalogDto(items);
     }
 
     @Override
     public Set<CatalogDto> getBestsellers() {
-        List<Item> items = itemService.getAllBySpec(ItemSpecifications.isPopular());
+        Set<Item> items = itemService.getAllBySpec(ItemSpecifications.isPopular());
         return itemMapper.toCatalogDto(items);
     }
 
