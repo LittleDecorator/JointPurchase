@@ -6,10 +6,17 @@ import com.acme.repository.CredentialRepository;
 import com.acme.repository.SubjectRepository;
 import com.acme.service.SubjectService;
 import com.google.api.client.util.Lists;
+import com.google.common.base.Joiner;
+import java.util.Set;
+import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +25,8 @@ import java.util.stream.Collectors;
  * Created by kobzev on 20.12.16.
  */
 @Service
-public class SubjectServiceImpl implements SubjectService {
+@Slf4j
+public class SubjectServiceImpl implements SubjectService, UserDetailsService {
 
 	@Autowired
 	private SubjectRepository subjectRepository;
@@ -59,7 +67,31 @@ public class SubjectServiceImpl implements SubjectService {
 	@Override
 	public Subject enableSubject(Subject subject) {
 		subject.setEnabled(true);
-		subject.setMiddleName("BLSADKSFD");
 		return subjectRepository.save(subject);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.debug("Authenticating '{}'", username);
+		Subject subject = getSubjectByEmail(username);
+
+		if (subject == null) {
+			log.error("User '{}' was not found in the database", username);
+			throw new UsernameNotFoundException("User '" + username + "' was not found in the database");
+		}
+		//if(!subject.isActive()) {
+		//	log.error("User {} is not active", username);
+		//	throw new UsernameNotFoundException("User " + username + " is not active");
+		//}
+		//log.debug("User [" + username + "] found in local database with ROLES: {}", Joiner.on(",").join(subject.getAuthorities()));
+
+		Credential credential = credentialRepository.findOne(subject.getId());
+
+		//Get roles from user
+		Set<GrantedAuthority> grantedAuthorities = Stream.of(credential.getRoleId()).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+
+		log.debug("User [" + username + "] has ROLES inherited: {}", Joiner.on(",").join(grantedAuthorities));
+
+		return new UserDetails(subject, grantedAuthorities);
 	}
 }
