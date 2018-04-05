@@ -187,38 +187,39 @@
                 busy = true;
 
                 //FIXME: every load change from $promise
-                dataResources.catalog.list.all(vm.confirmedFilter, function(d,h){
+                dataResources.catalog.list.all(vm.confirmedFilter, function(data,h){
                   var headers = h();
+                  console.log(headers)
+                  // очистим данные если требуется
+                  if (isClean) {
+                    vm.items = [];
+                  }
+                  if ($stateParams.type === 'category') {
+                    if (data.length === 1) {
+                      addItem(data[0], helpers.findInArrayById(vm.categories, vm.confirmedFilter.category));
+                    } else {
+                      data.forEach(function (e, i) {
+                        var category = helpers.findInArrayById(vm.categories, vm.confirmedFilter.category);
+                        addItem(e, category);
+                      });
+                    }
+                  } else {
+                    vm.items = vm.items.concat(data);
+                  }
+
                   // если размер полученных данных меньше запрошенных, то запрещаем дальнейшую подгрузку
-                  // if (data.length < vm.confirmedFilter.limit) {
-                  if (headers['x-page-number'] === headers['x-total-pages']) {
+                  if (headers['x-page-number'] === headers['x-total-pages'] || headers['x-total-pages'] <= 1) {
                     vm.stopLoad = true;
                     vm.showLoadMore = false;
+                  } else {
+                    portion++;
+                    vm.confirmedFilter.offset = portion * vm.confirmedFilter.limit;
                   }
-                }).$promise.then(function (data) {
-                   // очистим данные если требуется
-                   if (isClean) {
-                      vm.items = [];
-                   }
-                   if ($stateParams.type === 'category') {
-                      if (data.length === 1) {
-                         addItem(data[0], helpers.findInArrayById(vm.categories, vm.confirmedFilter.category));
-                      } else {
-                         data.forEach(function (e, i) {
-                            var category = helpers.findInArrayById(vm.categories, vm.confirmedFilter.category);
-                            addItem(e, category);
-                         });
-                      }
-                   } else {
-                      vm.items = vm.items.concat(data);
-                   }
 
-                   portion++;
-                   vm.confirmedFilter.offset = portion * vm.confirmedFilter.limit;
-                   //говорим что можно отображать
-                   vm.allDataLoaded = true;
-                   busy = false;
-                   mvm.showLoader = false;
+                  //говорим что можно отображать
+                  vm.allDataLoaded = true;
+                  busy = false;
+                  mvm.showLoader = false;
                 });
              }
           }

@@ -164,3 +164,5 @@ insert into delivery(id,name,hint)
 --sms account
 -- insert into email(id,username,password) values('d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
 -- insert into sms(id,service_name,email_id,credential_login,credential_password) values('1f3eb80b-8357-4f64-955e-15d4f7fba30a','sms24x7.ru','d7651309-e8f4-47d5-a5a7-e4930456eae9','alskdjf.lsdkjf@mail.ru','Bfp6Gkd');
+
+insert into settings values ('send_sms', 'Boolean', 'true', 'Признак необходимости отпраылять sms-уведомление о заказе')

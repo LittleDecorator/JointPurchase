@@ -184,61 +184,71 @@ create table sms (
 );
 
 --global settings
+-- create table settings (
+-- 	id integer,
+--
+-- 	--параметры html clipper
+-- 	clipper_id varchar(37), -- ссылка на бинарник javascript скрипта для грабления шаблона html страницы
+-- 	clipper_jquery_url text, --ссылка на jquery (используется скриптом грабления)
+-- 	clipper_xpath_wait varchar(255), -- xpath string for wait page render
+--
+-- 	--параметры генерации сертификата для первого захода в систему
+-- 	certificate_gen boolean not null default false,
+--
+-- 	--параметры для билдера
+-- 	builder_host varchar(255),   --ip for host builder
+-- 	builder_ssh_port integer default 22,   --ssh port for host builder
+-- 	builder_ssh_login varchar(255),   --ssh login for host builder
+-- 	builder_ssh_password varchar(255),   --ssh password for host builder
+-- 	builder_cmd_run text,   --command builder run
+-- 	builder_exe text,   --exe file (full path) of builder (result of build)
+-- -- 	builder_bat text,   --batch file content
+-- 	builder_build_command varchar(255),     --builder create command
+-- 	builder_encrypt_command varchar(255),    --encrypting command
+-- 	builder_sign_command varchar(255),    --singing command
+-- 	builder_app_host varchar(255),      --server app url
+-- 	builder_upload_path text,         -- remote path for batch file
+-- 	builder_wait_timeout integer,
+--
+-- 	--параметры для обложки
+-- 	cover_url_local text, --локальный url обложки (всегда постоянный - не менять - для информации)
+-- 	cover_url text, --внешний/реальный/проксированный url обложки
+--
+-- 	--email account for smtp server
+-- 	smtp_id varchar(37),
+--
+-- 	--активный sms аккаунт
+-- 	sms_id varchar(37),
+--
+-- 	--цепочка активных серверов для анонимизатора
+-- 	vps1_id varchar(37),
+-- 	vps2_id varchar(37),
+-- 	vps3_id varchar(37),
+-- 	vps4_id varchar(37),
+-- 	resources_domain varchar(255) not null default 'localhost',
+-- 	resources_template_context_external varchar(255) not null default 'http://{{domain}}:8080/pub',
+-- 	resources_template_context_internal varchar(255) not null default 'http://{{domain}}:8080/pub',
+-- 	auto_check_blacklist integer default 30,--интервал автопроверки по blacklist-ам
+-- 	blacklist_check_on boolean not null default false,
+--   auto_check_search integer default 30, --интервал автопроверки поисковыми системами
+-- 	search_check_on boolean not null default false,
+--   search_pattern varchar(255) default 'xer_takoe_naidesh',
+--   auto_check_antivirus integer default 30,--интервал автопроверки по антивирусам
+-- 	virus_check_on boolean not null default false,
+--   auto_check_getlog integer default 30,--интервал автопроверки по антивирусам
+-- 	getlog_check_on boolean not null default false,
+-- 	primary key (id),
+--     foreign key (clipper_id) references content,
+--     foreign key (sms_id) references sms,
+--     foreign key (smtp_id) references email
+-- );
+
 create table settings (
-	id integer,
-
-	--параметры html clipper
-	clipper_id varchar(37), -- ссылка на бинарник javascript скрипта для грабления шаблона html страницы
-	clipper_jquery_url text, --ссылка на jquery (используется скриптом грабления)
-	clipper_xpath_wait varchar(255), -- xpath string for wait page render
-
-	--параметры генерации сертификата для первого захода в систему
-	certificate_gen boolean not null default false,
-
-	--параметры для билдера
-	builder_host varchar(255),   --ip for host builder
-	builder_ssh_port integer default 22,   --ssh port for host builder
-	builder_ssh_login varchar(255),   --ssh login for host builder
-	builder_ssh_password varchar(255),   --ssh password for host builder
-	builder_cmd_run text,   --command builder run
-	builder_exe text,   --exe file (full path) of builder (result of build)
--- 	builder_bat text,   --batch file content
-	builder_build_command varchar(255),     --builder create command
-	builder_encrypt_command varchar(255),    --encrypting command
-	builder_sign_command varchar(255),    --singing command
-	builder_app_host varchar(255),      --server app url
-	builder_upload_path text,         -- remote path for batch file
-	builder_wait_timeout integer,
-
-	--параметры для обложки
-	cover_url_local text, --локальный url обложки (всегда постоянный - не менять - для информации)
-	cover_url text, --внешний/реальный/проксированный url обложки
-
-	--email account for smtp server
-	smtp_id varchar(37),
-
-	--активный sms аккаунт
-	sms_id varchar(37),
-
-	--цепочка активных серверов для анонимизатора
-	vps1_id varchar(37),
-	vps2_id varchar(37),
-	vps3_id varchar(37),
-	vps4_id varchar(37),
-	resources_domain varchar(255) not null default 'localhost',
-	resources_template_context_external varchar(255) not null default 'http://{{domain}}:8080/pub',
-	resources_template_context_internal varchar(255) not null default 'http://{{domain}}:8080/pub',
-	auto_check_blacklist integer default 30,--интервал автопроверки по blacklist-ам
-	blacklist_check_on boolean not null default false,
-  auto_check_search integer default 30, --интервал автопроверки поисковыми системами
-	search_check_on boolean not null default false,
-  search_pattern varchar(255) default 'xer_takoe_naidesh',
-  auto_check_antivirus integer default 30,--интервал автопроверки по антивирусам
-	virus_check_on boolean not null default false,
-  auto_check_getlog integer default 30,--интервал автопроверки по антивирусам
-	getlog_check_on boolean not null default false,
-	primary key (id),
-    foreign key (clipper_id) references content,
-    foreign key (sms_id) references sms,
-    foreign key (smtp_id) references email
-);
+  key varchar(128) not null,
+  type varchar(30) not null,
+  value varchar(30),
+  description varchar(255),
+  is_active boolean default true not null,
+  date_add timestamp default current_timestamp,
+  primary key(key)
+)

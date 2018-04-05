@@ -35,7 +35,7 @@
 
         </div>
 
-        <div style="width: 100%; display: flex;" ng-if="vm.showLoadMore">
+        <div style="width: 100%; display: flex;" ng-if="vm.showLoadMore && vm.items.length > 0">
             <md-button class="btn md-plain md-raised" ng-click="vm.loadData();" style="width: 91%; margin: 10px auto auto; margin-top:0; line-height: 45px; height: 45px">Показать ещё</md-button>
         </div>
 

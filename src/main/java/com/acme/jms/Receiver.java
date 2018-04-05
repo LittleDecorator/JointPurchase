@@ -5,11 +5,15 @@ import com.acme.model.Order;
 import com.acme.model.Subject;
 import com.acme.service.EmailService;
 import com.acme.service.NotificationService;
+import com.acme.service.SettingsService;
 import com.acme.service.SmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.support.JmsMessageHeaderAccessor;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -23,14 +27,18 @@ public class Receiver {
 
     private static final Logger log = LoggerFactory.getLogger(Receiver.class);
 
-    @Autowired
-    EmailService emailService;
+    private EmailService emailService;
+    private NotificationService notificationService;
+    private SmsService smsService;
+    private SettingsService settingsService;
 
     @Autowired
-    NotificationService notificationService;
-
-    @Autowired
-    SmsService smsService;
+    public Receiver(EmailService emailService, NotificationService notificationService, SmsService smsService, SettingsService settingsService) {
+        this.emailService = emailService;
+        this.notificationService = notificationService;
+        this.smsService = smsService;
+        this.settingsService = settingsService;
+    }
 
     /**
      * Отправка toke'а регистрации по email.
@@ -79,12 +87,16 @@ public class Receiver {
     }
 
     @JmsListener(destination = "order_confirm", containerFactory = "defaultFactory")
-    public void receiveOrderConfirm(Order order) {
+    public void receiveOrderConfirm(Order order, MessageHeaders messageHeaders) {
         log.info("Получено jms сообщение: Запрос на отправку подтверждения заказа = {0} по email ", order);
         /* отправляем на почту писмо с подтверждением заказа */
         if(emailService.sendOrderStatus(order)){
+            // если отправка разрешена
+            boolean needNotify = settingsService.getBoolean("ORDER_NOTIFICATION.SMS.SEND");
             /* отправляем уведомление администраторам о новом заказе */
-            notificationService.sendOrderNotification(order);
+            if(needNotify){
+                notificationService.sendOrderNotification(order);
+            }
         } else {
             //TODO: отправляем мне уведомление, что ничего не работает
             notificationService.sendErrorNotification(order);

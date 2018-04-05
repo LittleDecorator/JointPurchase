@@ -30,7 +30,7 @@ public interface ContentRepository extends CrudRepository<Content, String> {
     int updateContentMeta(@Param("meta") String meta, @Param("id") String id);
 
     @Modifying
-    @Query(value = "update content c set c.content=?1 where c.id=?2", nativeQuery = true)
+    @Query(value = "update content set content = ?1 where id = ?2", nativeQuery = true)
     void updateContentData(String data, String id);
 
     @Cacheable(value = "base64")
