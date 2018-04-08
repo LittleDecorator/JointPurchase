@@ -338,8 +338,12 @@
                     if(vm.itemCard.$dirty){
                         if(vm.itemCard.$valid){
                             vm.item = addTranslite(vm.item);
+                            console.log(vm.item)
                             var dto = angular.copy(vm.item);
+
                             delete dto.company;
+                            dto.companyId=vm.item.company.id;
+                            dto.companyName=vm.item.company.name;
 
                             if(dto.id){
                                 // если товар был на редактирование

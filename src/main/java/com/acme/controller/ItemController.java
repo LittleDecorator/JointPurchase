@@ -97,7 +97,9 @@ public class ItemController {
     public String addItem(@NotNull @RequestBody ItemDto dto) throws ParseException, IOException {
         Item item;
         if(Strings.isNullOrEmpty(dto.getId())){
+            Company company = companyRepository.findOneById(dto.getCompanyId());
             item = itemMapper.toEntity(dto);
+            item.setCompany(company);
         } else {
             item = itemRepository.findOne(dto.getId());
             itemMapper.toExistingEntity(dto, item);
@@ -113,23 +115,17 @@ public class ItemController {
      *
      * @param id
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteItem(@PathVariable("id") String id) {
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try {
-            /* удалим записи товара в заказах */
-            orderItemRepository.deleteByIdItemId(id);
-            /* удалим записи товара в изображениях */
-            itemContentRepository.deleteByItemId(id);
-            /* удалим записи товара в категориях */
-            categoryItemRepository.deleteByIdItemId(id);
-            /* удалим товар */
-            itemRepository.delete(id);
-            transactionManager.commit(status);
-        } catch (Exception ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
-            transactionManager.rollback(status);
-        }
+        /* удалим записи товара в заказах */
+        orderItemRepository.deleteByIdItemId(id);
+        /* удалим записи товара в изображениях */
+        //itemContentRepository.deleteByItemId(id);
+        /* удалим записи товара в категориях */
+        //categoryItemRepository.deleteByIdItemId(id);
+        /* удалим товар */
+        itemRepository.delete(id);
     }
 
     /**

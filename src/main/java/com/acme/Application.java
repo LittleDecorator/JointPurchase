@@ -145,6 +145,9 @@ public class Application extends WebMvcConfigurerAdapter {
         System.out.println("Application started!");
         // refresh sales
         refreshSales();
+        // remove unused content
+        //TODO: add clear
+        //refreshContent();
     }
 
     public static void main(String[] args) {

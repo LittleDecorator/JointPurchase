@@ -13,10 +13,10 @@ import java.io.Serializable;
 @Embeddable
 public class OrderItemId implements Serializable {
 
-	@Column(name = "order_id")
+	@Column(name = "order_id", nullable = false)
 	private String orderId;
 
-	@Column(name = "item_id")
+	@Column(name = "item_id", nullable = false)
 	private String itemId;
 
 	public OrderItemId() {

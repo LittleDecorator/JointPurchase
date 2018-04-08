@@ -4,6 +4,7 @@ import com.acme.enums.OrderStatus;
 import com.acme.enums.converters.OrderStatusConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -68,7 +69,7 @@ public class Order implements BaseModel{
 
     private Integer payment;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private List<OrderItem> orderItems;
 

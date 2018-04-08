@@ -43,6 +43,12 @@
           vm.currentNodeType = $stateParams.type;
           vm.currentNode = node;
 
+          // listen lock event
+         $scope.$on("detailLock", function() {
+           vm.detailLock = true;
+           console.log('detailLock happen!')
+         });
+
           /**
            * Инициализация страницы
            */
@@ -481,6 +487,8 @@
 
           // callback загрузки шаблона страницы
           function afterInclude() {
+            console.log(vm,'vm');
+            console.log('scope',$scope);
           }
 
           // function getMeta(url){

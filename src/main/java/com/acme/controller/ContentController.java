@@ -56,7 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Transactional
 @RestController
 @RequestMapping(value = "/api/content")
 public class ContentController{
@@ -132,6 +131,7 @@ public class ContentController{
      * @return
      * @throws Exception
      */
+    //@Transactional
     @RequestMapping(value = "/upload/item", method = RequestMethod.POST)
     public List<ItemContent> itemImageUpload(MultipartHttpServletRequest request, @RequestParam(value = "itemId") String itemId) throws Exception {
         Content content;
@@ -177,6 +177,7 @@ public class ContentController{
         return result;
     }
 
+    //@Transactional
     @RequestMapping(value = "/upload/company", method = RequestMethod.POST)
     public void companyImageUpload(MultipartHttpServletRequest request, @RequestParam(value = "companyId") String companyId) throws Exception {
         //TODO: либо загружать одну, либо добавить таблицу связи
@@ -197,6 +198,9 @@ public class ContentController{
                 content.setMime("image/" + type);
                 contentRepository.save(content);
 
+                // update content data itself
+                contentRepository.updateContentData(content.getContent(), content.getId());
+
                 Company company = companyRepository.findOne(companyId);
                 company.setContentId(content.getId());
                 companyRepository.save(company);
@@ -204,6 +208,7 @@ public class ContentController{
         }
     }
 
+    //@Transactional
     @RequestMapping(value = "/upload/sale", method = RequestMethod.POST)
     public String saleBannerUpload(MultipartHttpServletRequest request, @RequestParam(value = "saleId") String saleId) throws Exception {
         //TODO: либо загружать одну, либо добавить таблицу связи
@@ -224,6 +229,9 @@ public class ContentController{
                 content.setMime("image/" + type);
                 contentRepository.save(content);
 
+                // update content data itself
+                contentRepository.updateContentData(content.getContent(), content.getId());
+
                 Sale sale = saleRepository.findOne(saleId);
                 sale.setBannerId(content.getId());
                 saleRepository.save(sale);
@@ -237,6 +245,7 @@ public class ContentController{
      * @return
      * @throws Exception
      */
+    @Transactional
     @RequestMapping(value = "/instagram", method = RequestMethod.GET)
     public List<String> getInstgaramImages() throws Exception {
         List<String> postIds = postRepository.findAllByWrongPostFalse().stream().filter(InstagramPost::isShowOnMain).map(InstagramPost::getId).collect(Collectors.toList());
@@ -312,6 +321,7 @@ public class ContentController{
         contentRepository.delete(contentId);
     }
 
+    @Transactional
     @RequestMapping(value = "/company/{id}", method = RequestMethod.DELETE)
     public void deleteCompanyImage(@PathVariable(value = "id") String companyId, @RequestParam(value = "contentId") String contentId) throws Exception {
         Company company = companyRepository.findOne(companyId);
@@ -325,6 +335,7 @@ public class ContentController{
      * Удаление изображения по ID
      * @param id
      */
+    @Transactional
     @RequestMapping(value = "/remove/{id}",method = RequestMethod.DELETE)
     public void contentDelete(@PathVariable(value = "id") String id){
         ItemContent itemContent = itemContentRepository.findOne(id);
@@ -338,6 +349,7 @@ public class ContentController{
      * @param input
      * @throws ParseException
      */
+    @Transactional
     @RequestMapping(value = "/set/main",method = RequestMethod.PUT)
     public void setAsMain(@RequestBody ItemContentDto input) throws ParseException {
         //FIXME: replace with update Query
@@ -358,6 +370,7 @@ public class ContentController{
         itemContentRepository.save(input);
     }
 
+    @Transactional
     @RequestMapping(value = "/set/meta", method = RequestMethod.PATCH)
     public void setOrientations(@RequestParam(required = false) Set<String> contentIds){
         List<Content> contents;

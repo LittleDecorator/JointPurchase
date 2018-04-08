@@ -42,7 +42,7 @@
             $scope.searchItem = function(){
                 if($scope.searchText){
                     /* refresh state because name can be changed */
-                    if($state.current == 'search'){
+                    if($state.current === 'search'){
                         $state.go('search', {criteria: $scope.searchText},{notify:false}).then(function(){
                             // $scope.item.id = data.result;
                             $stateParams.criteria = $scope.searchText;
@@ -56,7 +56,7 @@
             
             /* переход на результат поиска */
             $scope.keyPress = function(keyCode) {
-                if (keyCode == 13) {
+                if (keyCode === 13) {
                     $scope.closeThisDialog();
                     $scope.searchItem();
                 }
@@ -67,6 +67,8 @@
              * @param id
              */
             $scope.itemView = function(name){
+                // try lock sibling scopes
+                // $rootScope.$broadcast('detailLock');
                 $state.go("catalog.detail", {itemName: name});
             };
 

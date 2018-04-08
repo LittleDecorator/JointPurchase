@@ -3,7 +3,10 @@ package com.acme.repository;
 import com.acme.model.OrderItem;
 import com.acme.model.embedded.OrderItemId;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,15 +20,18 @@ public interface OrderItemRepository extends CrudRepository<OrderItem, OrderItem
 
 	void deleteByIdOrderIdAndIdItemIdNotIn(String orderId, List<String> itemIdList);
 
-	void deleteByIdOrderId(String orderId);
+	@Modifying
+	@Query("delete from OrderItem  where id.orderId = :orderId")
+	void deleteByIdOrderId(@Param("orderId") String orderId);
 
-	void deleteByIdItemId(String itemId);
+	@Modifying
+	@Query("delete from OrderItem  where id.itemId = :itemId")
+	void deleteByIdItemId(@Param("itemId") String itemId);
 
 	@Transactional(noRollbackFor = {Exception.class, EmptyResultDataAccessException.class})
-	List<String> deleteByIdOrderIdIn(List<String> orderIds);
+	void deleteByIdOrderIdIn(List<String> orderIds);
 
 	List<OrderItem> findAllByIdOrderId(String orderId);
 
-	List<OrderItem> findAllByIdOrderIdIn(List<String> orderIds);
 
 }

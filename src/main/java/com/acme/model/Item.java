@@ -104,12 +104,12 @@ public class Item implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "sale_item",
-        joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id",updatable = false)},
-        inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id", updatable = false)})
+        joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id",updatable = false, insertable = false)},
+        inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id", updatable = false, insertable = false)})
     @JsonBackReference
     private Sale sale;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "category_item",
         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})

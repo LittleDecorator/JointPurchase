@@ -386,6 +386,7 @@
           function itemView(name) {
              if (name) {
                 clearSearch();
+                $rootScope.$broadcast('detailLock');
                 $state.go("catalog.detail", {itemName: name});
              }
           }
