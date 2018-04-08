@@ -67,13 +67,13 @@ public class Application extends WebMvcConfigurerAdapter {
      *
      * @return
      */
-    @Bean
-    public FilterRegistrationBean jwtFilter() {
-        final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.setFilter(new JwtFilter());
-        registrationBean.addUrlPatterns("/private/*");
-        return registrationBean;
-    }
+    //@Bean
+    //public FilterRegistrationBean jwtFilter() {
+    //    final FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    //    registrationBean.setFilter(new JwtFilter());
+    //    registrationBean.addUrlPatterns("/private/*");
+    //    return registrationBean;
+    //}
 
     /**
      * Конфигуратор сервиса sms.ru

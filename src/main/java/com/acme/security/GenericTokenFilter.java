@@ -1,39 +1,33 @@
 package com.acme.security;
 
 import com.acme.security.xauth.TokenProvider;
+import com.acme.service.SubjectService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
- * @author Y. Tyurin <tyurin23@gmail.com> 23.07.15
+ * Filter for token validation
  */
 public abstract class GenericTokenFilter extends GenericFilterBean {
 
-    protected UserDetailsService detailsService;
+    protected SubjectService detailsService;
 
     protected TokenProvider tokenProvider;
 
-    public GenericTokenFilter(UserDetailsService detailsService, TokenProvider tokenProvider) {
+    public GenericTokenFilter(SubjectService detailsService, TokenProvider tokenProvider) {
         this.detailsService = detailsService;
         this.tokenProvider = tokenProvider;
     }
 
     protected UsernamePasswordAuthenticationToken authenticate(String authToken){
-        String username = this.tokenProvider.getUserIdFromToken(authToken);
-        UserDetails details = this.detailsService.loadUserByUsername(username);
-        if (this.tokenProvider.validateToken(authToken, details)) {
+        if (this.tokenProvider.validateToken(authToken)) {
+            String userId = this.tokenProvider.getUserIdFromToken(authToken);
+            UserDetails details = this.detailsService.loadUserByUsername(userId);
             return new UsernamePasswordAuthenticationToken(details, details.getPassword(), details.getAuthorities());
         }
         return null;
     }
 
-    protected boolean isMatched(String uri, String[] matchedUri){
-        for(String match : matchedUri){
-            if(uri.contains(match))
-                return true;
-        }
-        return false;
-    }
 }

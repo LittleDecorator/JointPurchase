@@ -2,7 +2,7 @@ package com.acme.config;
 
 import com.acme.security.AuthProvider;
 import com.acme.security.Http401UnauthorizedEntryPoint;
-import com.acme.security.SaltPasswordEncoder;
+//import com.acme.security.SaltPasswordEncoder;
 import com.acme.security.xauth.TokenProvider;
 import com.acme.security.xauth.XAuthTokenConfigurer;
 import com.acme.service.SubjectService;
@@ -27,8 +27,8 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Value("${authentication.xauth.secret}")
-    private String secretKey;
+    //@Value("${authentication.xauth.secret}")
+    //private String secretKey;
 
     @Autowired
     private Http401UnauthorizedEntryPoint unauthorizedEntryPoint;
@@ -47,10 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public SaltPasswordEncoder saltPasswordEncoder() {
-        return new SaltPasswordEncoder(secretKey);
-    }
+    //@Bean
+    //public SaltPasswordEncoder saltPasswordEncoder() {
+    //    return new SaltPasswordEncoder(secretKey);
+    //}
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationProvider customAuthenticationProvider(PasswordEncoder passwordEncoder) {
-        return new AuthProvider(userDetailsService, passwordEncoder);
+        return new AuthProvider(subjectService, passwordEncoder);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private XAuthTokenConfigurer securityConfigurerAdapter() {
-        return new XAuthTokenConfigurer(userDetailsService, tokenProvider);
+        return new XAuthTokenConfigurer(subjectService, tokenProvider);
     }
 
     @Bean

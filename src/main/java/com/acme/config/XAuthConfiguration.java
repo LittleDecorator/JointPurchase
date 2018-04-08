@@ -19,9 +19,10 @@ public class XAuthConfiguration implements EnvironmentAware {
 
     @Bean
     public TokenProvider tokenProvider() {
-        String secret = propertyResolver.getProperty("secret", String.class, "superSecretKey");
-        int validityInSeconds = propertyResolver.getProperty("tokenValidityInSeconds", Integer.class, 86400);
-        return new TokenProvider(secret, validityInSeconds);
+        //String secret = propertyResolver.getProperty("secret", String.class, "superSecretKey");
+        //int validityInSeconds = propertyResolver.getProperty("tokenValidityInSeconds", Integer.class, 86400);
+        //return new TokenProvider(secret, validityInSeconds);
+        return new TokenProvider();
     }
 
 }

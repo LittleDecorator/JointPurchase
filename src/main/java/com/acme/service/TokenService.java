@@ -16,4 +16,8 @@ public interface TokenService {
 
     Key getKey();
 
+    boolean validate(String token);
+
+    //String getUserIdFromToken(String authToken);
+
 }

@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenProvider {
 
-    @Value("${authentication.xauth.secret}")
-    private String secretKey;
-    @Value("${authentication.xauth.tokenValidityInSeconds}")
-    private int tokenValidity;
+    //@Value("${authentication.xauth.secret}")
+    //private String secretKey;
+    //@Value("${authentication.xauth.tokenValidityInSeconds}")
+    //private int tokenValidity;
 
     @Autowired
     TokenService tokenService;
@@ -42,16 +42,16 @@ public class TokenProvider {
     //    return new Token(token, expires);
     //}
 
-    private String computeSignature(UserDetails userDetails, long expires) {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-        } catch(NoSuchAlgorithmException nsae) {
-            throw new IllegalStateException("No MD5 algorithm available!");
-        }
-        return new String(Hex.encode(digest.digest((userDetails.getUsername() + ":" + expires + ":" +
-            userDetails.getPassword() + ":" + secretKey).getBytes())));
-    }
+    //private String computeSignature(UserDetails userDetails, long expires) {
+    //    MessageDigest digest;
+    //    try {
+    //        digest = MessageDigest.getInstance("MD5");
+    //    } catch(NoSuchAlgorithmException nsae) {
+    //        throw new IllegalStateException("No MD5 algorithm available!");
+    //    }
+    //    return new String(Hex.encode(digest.digest((userDetails.getUsername() + ":" + expires + ":" +
+    //        userDetails.getPassword() + ":" + secretKey).getBytes())));
+    //}
 
     public String getUserIdFromToken(String authToken) {
         if (null == authToken) {
@@ -62,13 +62,18 @@ public class TokenProvider {
         return claims.getId();
     }
 
-    public boolean validateToken(String authToken, UserDetails userDetails) {
-        List<String> parts = Lists.newArrayList(Splitter.on(":").split(authToken));
-    if (parts.size() < 3)
-    return false;
-        long expires = Long.parseLong(parts.get(1));
-        String signature = parts.get(2);
-        String signatureToMatch = computeSignature(userDetails, expires);
-        return expires >= System.currentTimeMillis() && signature.equals(signatureToMatch);
+    public boolean validateToken(String authToken) {
+
+        return tokenService.validate(authToken);
+
     }
+    //public boolean validateToken(String authToken, UserDetails userDetails) {
+    //    List<String> parts = Lists.newArrayList(Splitter.on(":").split(authToken));
+    //if (parts.size() < 3)
+    //return false;
+    //    long expires = Long.parseLong(parts.get(1));
+    //    String signature = parts.get(2);
+    //    String signatureToMatch = computeSignature(userDetails, expires);
+    //    return expires >= System.currentTimeMillis() && signature.equals(signatureToMatch);
+    //}
 }

@@ -7,12 +7,14 @@ import com.acme.repository.SubjectRepository;
 import com.acme.service.SubjectService;
 import com.google.api.client.util.Lists;
 import com.google.common.base.Joiner;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -70,14 +72,20 @@ public class SubjectServiceImpl implements SubjectService, UserDetailsService {
 		return subjectRepository.save(subject);
 	}
 
+	/**
+	 * Return security User by name
+	 * @param userId
+	 * @return
+	 * @throws UsernameNotFoundException
+	 */
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.debug("Authenticating '{}'", username);
-		Subject subject = getSubjectByEmail(username);
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+		//log.debug("Authenticating '{}'", username);
+		Subject subject = getSubject(userId);
 
 		if (subject == null) {
-			log.error("User '{}' was not found in the database", username);
-			throw new UsernameNotFoundException("User '" + username + "' was not found in the database");
+			log.error("User '{}' was not found in the database", userId);
+			throw new UsernameNotFoundException("User '" + userId + "' was not found in the database");
 		}
 		//if(!subject.isActive()) {
 		//	log.error("User {} is not active", username);
@@ -90,8 +98,9 @@ public class SubjectServiceImpl implements SubjectService, UserDetailsService {
 		//Get roles from user
 		Set<GrantedAuthority> grantedAuthorities = Stream.of(credential.getRoleId()).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
 
-		log.debug("User [" + username + "] has ROLES inherited: {}", Joiner.on(",").join(grantedAuthorities));
+		log.debug("User [" + userId + "] has ROLES inherited: {}", Joiner.on(",").join(grantedAuthorities));
 
-		return new UserDetails(subject, grantedAuthorities);
+		//return new User(subject, grantedAuthorities);
+		return new User(subject.getEmail(), Objects.toString(credential.getPassword(), ""), grantedAuthorities);
 	}
 }

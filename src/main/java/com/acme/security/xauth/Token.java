@@ -1,6 +1,8 @@
 package com.acme.security.xauth;
 
-
+/**
+ * Stupid token
+ */
 public class Token {
 
     String token;

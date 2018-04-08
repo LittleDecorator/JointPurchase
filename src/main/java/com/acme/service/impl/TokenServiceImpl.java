@@ -3,7 +3,9 @@ package com.acme.service.impl;
 import com.acme.model.Credential;
 import com.acme.service.TokenService;
 import com.google.common.collect.Maps;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
@@ -105,5 +107,34 @@ public class TokenServiceImpl implements TokenService {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         return signingKey;
     }
+
+    /**
+     * Tries to parse specified String as a JWT token. If successful, returns User object with username, id and role prefilled (extracted from token).
+     * If unsuccessful (token is invalid or not containing all required user properties), simply returns null.
+     *
+     * @param token the JWT token to parse
+     * @return the User object extracted from specified token or null if a token is invalid.
+     */
+    public boolean validate(String token) {
+        boolean result = false;
+        try {
+            Claims body = Jwts.parser()
+                .setSigningKey(getKey())
+                .parseClaimsJws(token)
+                .getBody();
+
+            if (body!=null){
+                Date exp = body.getExpiration();
+                if(exp == null || new Date().before(exp)){
+                    result = true;
+                }
+            }
+        } catch (JwtException e) {
+            // Simply print the exception and null will be returned for the userDto
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
 }
