@@ -35,6 +35,9 @@ public class Company implements BaseModel{
     @Column(name = "translite_name")
     private String transliteName;
 
+    @Column(name = "short_description")
+    private String shortDescription;
+
     private String description;
 
     private String address;
@@ -56,13 +59,6 @@ public class Company implements BaseModel{
     @Column(name = "content_id")
     private String contentId;
 
-    @Column(name = "date_add", nullable = false, updatable = false)
+    @Column(name = "date_add", insertable = false, updatable = false)
     private Date dateAdd;
-
-    @PrePersist
-    public void prePersist(){
-        if(this.dateAdd == null){
-            this.dateAdd = new Date();
-        }
-    }
 }

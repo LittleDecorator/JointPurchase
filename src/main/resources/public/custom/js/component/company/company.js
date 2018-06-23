@@ -18,8 +18,12 @@
                 vm.deleteCompany = deleteCompany;
                 vm.showGallery = showGallery;
                 vm.getTemplateUrl = getTemplateUrl;
-            
-                vm.companies = dataResources.company.query();
+
+                // size = 100 - типа все
+                vm.filter = { page:1, size:100, sort:'dateAdd,desc'};
+                dataResources.company.all(vm.filter).$promise.then(function(data){
+                   vm.companies = data.data;
+                });
             
                 /**
                 * Создать новую компанию

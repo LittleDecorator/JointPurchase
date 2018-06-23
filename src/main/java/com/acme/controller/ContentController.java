@@ -147,7 +147,7 @@ public class ContentController{
             if (!file.isEmpty()) {
 
                 String fileName = file.getOriginalFilename();
-                String type = fileName.substring(fileName.indexOf(".")+1);
+                String type = fileName.substring(fileName.lastIndexOf(".")+1);
 
                 content = new Content();
                 content.setFileName(file.getOriginalFilename());

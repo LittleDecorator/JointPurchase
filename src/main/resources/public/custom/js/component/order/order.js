@@ -16,11 +16,11 @@
                 var templatePath = "pages/fragment/order/";
                 var confirmedFilter = {};
                 var busy = false;
-                var portion = 0;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
                 
                 vm.init = init;
+                vm.loadPage = loadPage;
                 vm.loadData = loadData;
                 vm.clear = clear;
                 vm.apply = apply;
@@ -34,8 +34,8 @@
                 vm.orders = [];
                 vm.statuses = statusMap;
                 vm.deliveries = deliveryMap;
-                vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0 };
-                vm.scrolling = { stopLoad:false, allDataLoaded:false, infiniteDistance: 2 };
+                vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, size:10, page:1, sort:'dateAdd,desc'};
+                vm.paging = { total: 1, size:10, current: 1, onPageChanged: vm.loadPage };
                 vm.filterInUse = false;
 
                 /**
@@ -50,6 +50,13 @@
                         })
                     }
                     confirmedFilter = angular.copy(vm.filter);
+
+                  if(mvm.width < 961){
+                    vm.paging.size = 5;
+                  }
+                  if(mvm.width < 601){
+                    vm.paging.size = 3;
+                  }
                 }
 
                 function applyKeyPress(event) {
@@ -57,30 +64,40 @@
                         apply();
                     }
                 }
+
+              function loadPage(isClean) {
+                // set filter page
+                vm.filter.page = vm.paging.current;
+                vm.filter.size = vm.paging.size;
+
+                confirmedFilter = angular.copy(vm.filter);
+
+                localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
+
+                // load data
+                vm.loadData(isClean);
+              }
                 
                 /**
                  * Получение данных
                  * @param isClean
                  */
                 function loadData(isClean){
-                    if(!vm.scrolling.stopLoad && !busy){
+                    if(!busy){
                         busy = true;
 
                         dataResources.order.all(confirmedFilter).$promise.then(function(data){
 
-                            if(data.length < confirmedFilter.limit){
-                                vm.scrolling.stopLoad = true;
-                            }
+                          if(vm.paging.total !== data.headers.totalPages){
+                            vm.paging.total = data.headers.totalPages
+                          }
 
                             if(isClean){
                                 vm.orders = [];
                             }
 
-                            vm.orders = vm.orders.concat(data);
+                            vm.orders = data.data;
 
-                            portion++;
-                            confirmedFilter.offset = portion * confirmedFilter.limit;
-                            vm.scrolling.allDataLoaded = true;
                             busy = false;
                         });
                     }
@@ -90,35 +107,27 @@
                  * очистка фильтра 
                  */
                 function clear(){
-                    portion = 0;
+                    vm.paging.current = 1;
                     vm.filterInUse = false;
-                    vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, limit:30, offset:0 };
+                    vm.filter = { subjectId:null, delivery:null, status:null, dateFrom:null, dateTo:null, size:10, page:1 ,sort:'dateAdd,desc'};
                     /* если в фильтре должен участвовать клиент */
                     if($stateParams.customerId !== null){
                         vm.filter.subjectId = $stateParams.customerId;
                     }
-                    confirmedFilter = angular.copy(vm.filter);
                     // удалим старый фильтр
                     localStorage.removeItem($state.current.name);
-                    vm.scrolling.stopLoad = false;
-                    loadData(true);
+                  loadPage(true);
                 }
                 
                 /**
                  * подтверждение фильтра 
                  */
                 function apply(){
-                    portion = 0;
+                  vm.paging.current = 1;
                     vm.filterInUse = true;
-                    vm.filter.offset = portion * vm.filter.limit;
-                    confirmedFilter = angular.copy(vm.filter);
-                    // запомним фильтр
-                    localStorage.setItem($state.current.name, angular.toJson(confirmedFilter));
-                    //
-                    confirmedFilter.delivery = confirmedFilter.delivery!= null ? confirmedFilter.delivery.value : null;
-                    confirmedFilter.status = confirmedFilter.status != null ? confirmedFilter.status.id : null;
-                    vm.scrolling.stopLoad = false;
-                    loadData(true);
+                    confirmedFilter.delivery = confirmedFilter.delivery!== null ? confirmedFilter.delivery.value : null;
+                    confirmedFilter.status = confirmedFilter.status !== null ? confirmedFilter.status.id : null;
+                  loadPage(true);
                 }
                 
                 /**

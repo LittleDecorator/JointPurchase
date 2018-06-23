@@ -19,8 +19,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,53 +33,46 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/item")
 public class ItemController {
 
-    @Autowired
-    ItemRepository itemRepository;
-
-    @Autowired
+    private ItemRepository itemRepository;
     private CatalogRepository catalogRepository;
-
-    @Autowired
-    OrderItemRepository orderItemRepository;
-
-    @Autowired
-    CompanyRepository companyRepository;
-
-    @Autowired
-    ContentRepository contentRepository;
-
-    @Autowired
-    ItemContentRepository itemContentRepository;
-
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    OrderRepository orderRepository;
-
-    @Autowired
-    CategoryItemRepository categoryItemRepository;
-
-    @Autowired
-    PlatformTransactionManager transactionManager;
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    ItemService itemService;
-
-    @Autowired
+    private OrderItemRepository orderItemRepository;
+    private CompanyRepository companyRepository;
+    private ContentRepository contentRepository;
+    private ItemContentRepository itemContentRepository;
+    private CategoryRepository categoryRepository;
+    private OrderRepository orderRepository;
+    private CategoryItemRepository categoryItemRepository;
+    private PlatformTransactionManager transactionManager;
+    private CategoryService categoryService;
+    private ItemService itemService;
     private ItemMapper itemMapper;
+
+    @Autowired
+    public ItemController(ItemRepository itemRepository, CatalogRepository catalogRepository, OrderItemRepository orderItemRepository, CompanyRepository companyRepository,
+      ContentRepository contentRepository, ItemContentRepository itemContentRepository, CategoryRepository categoryRepository, OrderRepository orderRepository,
+      CategoryItemRepository categoryItemRepository, PlatformTransactionManager transactionManager, CategoryService categoryService, ItemService itemService, ItemMapper itemMapper) {
+        this.itemRepository = itemRepository;
+        this.catalogRepository = catalogRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.companyRepository = companyRepository;
+        this.contentRepository = contentRepository;
+        this.itemContentRepository = itemContentRepository;
+        this.categoryRepository = categoryRepository;
+        this.orderRepository = orderRepository;
+        this.categoryItemRepository = categoryItemRepository;
+        this.transactionManager = transactionManager;
+        this.categoryService = categoryService;
+        this.itemService = itemService;
+        this.itemMapper = itemMapper;
+    }
 
     /**
      * Получение всех товаров по фильтру
      **/
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET)
-    public Set<ItemDto> getItems(ItemFilter filter) {
-        Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd", "name");
-        Page<Item> page = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter), pageable);
+    public Set<ItemDto> getItems(ItemFilter filter, Pageable pageable) {
+        Page<Item> page = itemRepository.findAll(SpecificationBuilder.applyItemFilter(filter), PageTools.getPageable(pageable));
         PageTools.setPageHeaders(page);
         return itemMapper.toSimpleDto(page.getContent());
     }

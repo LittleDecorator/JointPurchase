@@ -3,7 +3,6 @@ package com.acme.model.dto.mapper;
 import com.acme.annotation.SimpleMapper;
 import com.acme.config.CentralConfig;
 import com.acme.model.Sale;
-import com.acme.model.dto.ItemDto;
 import com.acme.model.dto.ItemMapDto;
 import com.acme.model.dto.SaleDto;
 import com.acme.model.dto.SaleRequestDto;
@@ -17,10 +16,10 @@ import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", config = CentralConfig.class)
-public abstract class SaleMapper extends BaseMapper {
+public abstract class SaleMapper implements BaseMapper {
 
     @Autowired
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     @Mapping(target = "items", expression = "java(convertItems(entity))")
     public abstract SaleDto toDto(Sale entity);

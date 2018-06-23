@@ -607,7 +607,8 @@ md-toast .md-toast-content {
         width: 45px;
         height: 45px;
         right: 25px;
-        bottom: 75px;
+        /*bottom: 75px;*/
+        bottom: 125px;
         line-height: 45px;
         font-size: 1.6rem;
         opacity: .7;

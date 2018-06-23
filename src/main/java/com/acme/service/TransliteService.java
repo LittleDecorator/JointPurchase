@@ -6,4 +6,6 @@ public interface TransliteService {
 
     void transliteCategories(boolean all);
 
+  String translite(String input);
+
 }

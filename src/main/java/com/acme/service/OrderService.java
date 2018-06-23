@@ -7,6 +7,8 @@ import com.acme.model.filter.OrderFilter;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Created by kobzev on 20.12.16.
@@ -15,7 +17,7 @@ public interface OrderService {
 
 	long genOrderNum();
 
-	List<Order> getAllOrders(OrderFilter filter);
+	Page<Order> getAllOrders(OrderFilter filter, Pageable pageable);
 
 	List<Order> getHistory(OrderFilter filter);
 

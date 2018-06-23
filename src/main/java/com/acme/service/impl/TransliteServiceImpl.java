@@ -58,7 +58,7 @@ public class TransliteServiceImpl implements TransliteService {
      * @param input
      * @return
      */
-    private String translite(String input){
+    public String translite(String input){
         Transliterator russianToLatinNoAccentsTrans = Transliterator.getInstance(RUSSIAN_TO_LATIN_BGN);
         return russianToLatinNoAccentsTrans.transliterate(input).replaceAll("·|ʹ|\\.|\"|,|\\(|\\)", "").replaceAll("\\*|\\s+","-").toLowerCase();
     }

@@ -43,7 +43,7 @@
 
         <md-input-container style="margin-bottom: 0">
             <label class="required">Артикул</label>
-            <input ng-model="vm.item.article" required only-number>
+            <input ng-model="vm.item.article" required >
             <div ng-messages="vm.itemCard.article.$error" ng-if="!vm.showHints">
                 <div ng-message="required">Поле не может быть пустым</div>
             </div>

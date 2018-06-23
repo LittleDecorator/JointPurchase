@@ -7,12 +7,14 @@ import com.acme.repository.CompanyRepository;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.acme.service.TransliteService;
+import com.acme.util.PageTools;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.ibm.icu.text.Transliterator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,33 +25,36 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/company")
+@Slf4j
 public class CompanyController {
 
-    @Autowired
     CompanyRepository companyRepository;
-
-    @Autowired
     ItemService itemService;
-
-    @Autowired
     CategoryItemRepository categoryItemRepository;
-
-    @Autowired
     CategoryService categoryService;
-
-    @Autowired
     PlatformTransactionManager transactionManager;
-
-    @Autowired
     TransliteService transliteService;
 
-    /**
+    @Autowired
+  public CompanyController(CompanyRepository companyRepository, ItemService itemService, CategoryItemRepository categoryItemRepository, CategoryService categoryService,
+    PlatformTransactionManager transactionManager, TransliteService transliteService) {
+    this.companyRepository = companyRepository;
+    this.itemService = itemService;
+    this.categoryItemRepository = categoryItemRepository;
+    this.categoryService = categoryService;
+    this.transactionManager = transactionManager;
+    this.transliteService = transliteService;
+  }
+
+  /**
      * Получение списка компаний
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<Company> getCompanies() {
-        return Lists.newArrayList(companyRepository.findAll());
+    public List<Company> getCompanies(Pageable pageable) {
+      Page<Company> page = companyRepository.findAll(PageTools.getPageable(pageable));
+      PageTools.setPageHeaders(page);
+      return page.getContent();
     }
 
     //TODO: ПЕРЕДЕЛАТЬ
@@ -97,6 +102,10 @@ public class CompanyController {
     public String createCompany(@RequestBody Company company) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         try{
+
+          if(Strings.isNullOrEmpty(company.getTransliteName())){
+            company.setTransliteName(transliteService.translite(company.getName()));
+          }
             company = companyRepository.save(company);
             transactionManager.commit(status);
             return company.getId();

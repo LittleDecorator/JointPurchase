@@ -4,18 +4,14 @@ import com.acme.constant.Headers;
 import com.google.common.base.Function;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.Supplier;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -70,7 +66,7 @@ public abstract class PageTools {
 				setPageHeaders(response,
 											 String.valueOf(page.getTotalElements()),
 											 String.valueOf(page.getTotalPages()),
-											 String.valueOf(page.getNumber()),
+											 String.valueOf(page.getNumber()+1),
 											 String.valueOf(page.getSize()));
 		}
 
@@ -103,54 +99,32 @@ public abstract class PageTools {
 				response.setHeader(Headers.Paging.PAGE_SIZE, pageSize);
 		}
 
-		/**
-		 * Simplifies calls to methods with optional paging. Depending on page info existence calls paged or collection
-		 * method version and sets page headers for response.
-		 *
-		 * @param response http response
-		 * @param pageable optional page request (may be <code>null</code>)
-		 * @param collectionCall call to method without paging support
-		 * @param pageCall call to method with paging support
-		 * @param <T> collection/page item type
-		 * @return collection
-		 */
-		//public static <T> List<T> optionalPageRequest(HttpServletResponse response, @Nullable Pageable pageable,
-		//		Supplier<List<T>> collectionCall,
-		//		Supplier<Page<T>> pageCall) {
-    //
-		//		if (pageable == null) {
-		//				List<T> list = collectionCall.get();
-		//				setPageHeaders(list, response);
-		//				return list;
-		//		}
-		//		Page<T> page = pageCall.get();
-		//		setPageHeaders(page, response);
-		//		return page.getContent();
-		//}
+  public static Pageable getPageable(Pageable pageable) {
+		  return getPageable(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+  }
 
-		/**
-		 * Simplifies calls to methods with optional paging. Depending on page info existence calls paged or collection
-		 * method version and sets page headers for response.
-		 *
-		 * @param response http response
-		 * @param pageable optional page request (may be <code>null</code>)
-		 * @param collectionCall call to method without paging support
-		 * @param pageCall call to method with paging support
-		 * @param <T> collection/page item type
-		 * @return collection
-		 */
-		//public static <T> Set<T> optionalPageSetRequest(HttpServletResponse response, @Nullable Pageable pageable,
-		//		Supplier<Set<T>> collectionCall,
-		//		Supplier<Page<T>> pageCall) {
-    //
-		//		if (pageable == null) {
-		//				Set<T> list = collectionCall.get();
-		//				setPageHeaders(list, response);
-		//				return list;
-		//		}
-		//		Page<T> page = pageCall.get();
-		//		setPageHeaders(page, response);
-		//		return new HashSet<>(page.getContent());
-		//}
+  public static Pageable getPageable(Integer page, Integer size, Sort sort) {
+    if (page != null && size != null) {
+      if (page < 1) {
+        throw new RuntimeException("Page index must not be less than one");
+      }
+      //запросим порцию данных
+      int newPage = (page - 1);
+
+      Sort idSort = new Sort(Sort.Direction.ASC,"id");
+      if(sort != null){
+        sort.and(idSort);
+      } else{
+        sort = idSort;
+      }
+
+      return new PageRequest(newPage, size, sort);
+    }
+    return null;
+  }
+
+  //public static Pageable getPageable(PageFilter filter) {
+  //  return getPageable(filter.getPage(), filter.getSize(), filter.getSort());
+  //}
 
 }

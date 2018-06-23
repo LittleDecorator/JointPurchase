@@ -5,7 +5,7 @@ import org.hibernate.proxy.HibernateProxy;
 /**
  * Some lazy elements need explicit deproxy
  */
-public abstract class BaseMapper {
+public interface BaseMapper {
 
     /**
      * Получение реального объекта из ленивой загрузки
@@ -15,7 +15,7 @@ public abstract class BaseMapper {
      * @return
      * @throws ClassCastException
      */
-    public <T> T deproxy(Object entity, Class<T> baseClass) throws ClassCastException {
+    default <T> T deproxy(Object entity, Class<T> baseClass) throws ClassCastException {
         if (entity == null) {
             throw new NullPointerException("Entity passed for initialization is null");
         }

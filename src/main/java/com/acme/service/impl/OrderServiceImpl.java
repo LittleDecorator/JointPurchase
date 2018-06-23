@@ -10,14 +10,15 @@ import com.acme.model.filter.OrderFilter;
 import com.acme.repository.*;
 import com.acme.repository.specification.OrderSpecifications;
 import com.acme.service.*;
+import com.acme.util.PageTools;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -71,16 +72,16 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<Order> getAllOrders(OrderFilter filter) {
-		/* Сортировка видимо будет идти по модели, и в запросе не участвует */
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
-		return orderRepository.findAll(OrderSpecifications.filter(filter), pageable).getContent();
+	public Page<Order> getAllOrders(OrderFilter filter,  Pageable pageable) {
+		return orderRepository.findAll(OrderSpecifications.filter(filter), PageTools.getPageable(pageable));
 	}
 
 	@Override
 	public List<Order> getHistory(OrderFilter filter) {
-		Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
-		return orderRepository.findAll(OrderSpecifications.filter(filter), pageable).getContent();
+	  //FIXME: переделвть
+		//Pageable pageable = new OffsetBasePage(filter.getOffset(), filter.getLimit(), Sort.Direction.DESC, "dateAdd");
+		//return orderRepository.findAll(OrderSpecifications.filter(filter), PageTools.getPageable(filter)).getContent();
+		return orderRepository.findAll(OrderSpecifications.filter(filter));
 	}
 
 	@Override

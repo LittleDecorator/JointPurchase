@@ -22,7 +22,8 @@
 	/*right:25px;*/
 	right:95px;
 	/*bottom: 95px;*/
-	bottom: 25px;
+	bottom: 75px;
+	/*bottom: 25px;*/
 	margin-bottom: 0;
 	background-color: #ff5252;
 	transition: transform .2s, -webkit-transform .2s

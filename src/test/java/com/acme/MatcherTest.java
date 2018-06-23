@@ -1,5 +1,6 @@
 package com.acme;
 
+import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,15 @@ import org.assertj.core.util.Lists;
 public class MatcherTest {
 
     public static void main(String[] args){
+        System.out.println(String.valueOf(check(null)));
+        System.out.println(String.valueOf(check("")));
+        System.out.println(String.valueOf(check("blandroid")));
+        System.out.println(String.valueOf(check("ios-45")));
+        System.out.println(String.valueOf(check("_androiid")));
+        System.out.println(String.valueOf(check("6|android5")));
+    }
 
+    public void old(){
         List<String> names = Lists.newArrayList("test.jpg", "test.jpg", "bla.png", "bla(1).png", "bla(1).png","bla (2).png", "fla.svg");
 
         Pattern p = Pattern.compile("(.*?)(\\..*)?");
@@ -44,7 +53,14 @@ public class MatcherTest {
                 System.out.println(result);
             }
         }
-
     }
+
+    public static boolean check(String input){
+        String platform = Strings.nullToEmpty(input);
+        Pattern p = Pattern.compile("(?i)android|ios");
+        Matcher m = p.matcher(platform);
+        return m.find();
+    }
+
 
 }

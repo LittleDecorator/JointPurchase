@@ -7,7 +7,6 @@ import com.acme.model.OrderItem;
 import com.acme.model.dto.OrderDto;
 import com.acme.model.dto.OrderRequestDto;
 import com.google.common.base.Strings;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,7 @@ import org.mapstruct.Mappings;
 import static java.util.stream.Collectors.joining;
 
 @Mapper(componentModel = "spring")
-public abstract class OrderMapper extends BaseMapper{
+public interface OrderMapper extends BaseMapper{
 
 	@Mappings({
 		@Mapping(target = "itemIds", expression = "java(collectItemIds(entity))"),
@@ -30,7 +29,7 @@ public abstract class OrderMapper extends BaseMapper{
 		@Mapping(target = "deliveryId", expression = "java(findDeliveryId(entity))"),
 		@Mapping(target = "recipientFullName", ignore = true),
 	})
-	public abstract OrderDto toDto(Order entity);
+	OrderDto toDto(Order entity);
 
 	@SimpleMapper
 	@Mappings({
@@ -46,12 +45,12 @@ public abstract class OrderMapper extends BaseMapper{
 		@Mapping(target = "deliveryName", expression = "java(findDeliveryName(entity))"),
 		@Mapping(target = "recipientFullName", expression = "java(buildFullName(entity))"),
 	})
-	public abstract OrderDto toSimpleDto(Order entity);
+	OrderDto toSimpleDto(Order entity);
 
 	@Mapping(target = "delivery", ignore = true)
-	public abstract Order requestDtoToEntity(OrderRequestDto requestDto);
+	Order requestDtoToEntity(OrderRequestDto requestDto);
 
-	public Set<OrderDto> toSimpleDto(Collection<Order> orders){
+	default Set<OrderDto> toSimpleDto(Collection<Order> orders){
 		Set<OrderDto> result = Sets.newHashSet();
 		for (Order order : orders) {
 			result.add(toSimpleDto(order));
@@ -64,7 +63,7 @@ public abstract class OrderMapper extends BaseMapper{
 	 * @param order
 	 * @return
 	 */
-	protected String buildFullName(Order order) {
+	default String buildFullName(Order order) {
 		return Stream.of(order.getRecipientLname(), order.getRecipientFname(), order.getRecipientMname())
 			.filter(s -> !Strings.isNullOrEmpty(s))
 			.collect(joining(" "));
@@ -75,11 +74,11 @@ public abstract class OrderMapper extends BaseMapper{
 	 * @param order
 	 * @return
 	 */
-	protected String findDeliveryName(Order order){
+	default String findDeliveryName(Order order){
 		return initDelivery(order).getName();
 	}
 
-	protected String findDeliveryId(Order order){
+	default String findDeliveryId(Order order){
 		return initDelivery(order).getId();
 	}
 
@@ -88,7 +87,7 @@ public abstract class OrderMapper extends BaseMapper{
 	 * @param order
 	 * @return
 	 */
-	protected Delivery initDelivery(Order order){
+	default Delivery initDelivery(Order order){
 		Hibernate.initialize(order.getDelivery());
 		return deproxy(order.getDelivery(), Delivery.class);
 	}
@@ -98,13 +97,13 @@ public abstract class OrderMapper extends BaseMapper{
 	 * @param order
 	 * @return
 	 */
-	protected List<OrderItem> initOrderItems(Order order){
+	default List<OrderItem> initOrderItems(Order order){
 		Hibernate.initialize(order.getOrderItems());
 		return order.getOrderItems();
 	}
 
 
-	public Set<String> collectItemIds(Order entity){
+	default Set<String> collectItemIds(Order entity){
 		return initOrderItems(entity).stream().map(o -> o.getId().getItemId()).collect(Collectors.toSet());
 	}
 

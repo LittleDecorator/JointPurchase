@@ -74,14 +74,20 @@ button.btn-x-small > md-icon {
 .fixed-action-btn {
     position: fixed;
     right: 25px;
-    bottom: 25px;
+    /*bottom: 25px;*/
+    bottom: 75px;
     /*padding-top: 15px;*/
     margin-bottom: 0;
     /*z-index: 998*/
 }
 
+.lock-size {
+  bottom: 72px;
+}
+
 .fixed-action-btn.btn-x-small {
-    bottom: 25px;
+    /*bottom: 25px;*/
+    bottom: 75px;
     right: 25px;
 }
 

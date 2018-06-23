@@ -13,12 +13,12 @@
 
                 var toast = $mdToast.simple().position('top right').hideDelay(3000);
                 var busy = false;
-                var portion = 0;
                 var filterDialog = null;
                 var mvm = $scope.$parent.mvm;
                 var vm = this;
                 var uploader = $scope.uploader = new FileUploader();
 
+                vm.loadPage = loadPage;
                 vm.loadData = loadData;
                 vm.addItem = addItem;
                 vm.editItem = editItem;
@@ -37,32 +37,49 @@
 
                 vm.items = [];
                 vm.companyNames = companies;
-                vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
+                vm.filter = { name:null, article:null, company:null, size:10, page:1, sort:'name,desc'};
+                vm.paging = { total: 1, size:10, current: 1, onPageChanged: vm.loadPage };
                 vm.confirmedFilter = angular.copy(vm.filter);
-                vm.stopLoad=false;
                 vm.detailLock=false;
                 vm.allDataLoaded = false;
-                vm.infiniteDistance = 1;
+
+              if(mvm.width < 961){
+                vm.paging.size = 5;
+              }
+              if(mvm.width < 601){
+                vm.paging.size = 3;
+              }
+
+              function loadPage(isClean) {
+                // set filter page
+                vm.filter.page = vm.paging.current;
+                vm.filter.size = vm.paging.size;
+
+                vm.confirmedFilter = angular.copy(vm.filter);
+                /* берем только id, т.к spring с jpa сможет найти Entity сам. Но как? */
+                if(vm.confirmedFilter.company){
+                  vm.confirmedFilter.company = vm.confirmedFilter.company.id;
+                }
+
+                localStorage.setItem($state.current.name,angular.toJson(vm.confirmedFilter));
+
+                // load data
+                vm.loadData(isClean);
+              }
 
                 /* получение данных с сервера */
                 function loadData(isClean){
-                    if(!vm.stopLoad && !vm.detailLock && !busy){
+                    if(!vm.detailLock && !busy){
                         busy = true;
                         // mvm.showLoader = true;
                         dataResources.item.all(vm.confirmedFilter).$promise.then(function(data){
-
-                            if(data.length < vm.confirmedFilter.limit){
-                                vm.stopLoad = true;
+                            if(vm.paging.total !== data.headers.totalPages){
+                              vm.paging.total = data.headers.totalPages
                             }
-
                             if(isClean){
                                 vm.items = [];
                             }
-
-                            vm.items = vm.items.concat(data);
-
-                            portion++;
-                            vm.confirmedFilter.offset = portion * vm.confirmedFilter.limit;
+                            vm.items = data.data;
                             vm.allDataLoaded = true;
                             busy = false;
                           // mvm.showLoader = false;
@@ -93,17 +110,15 @@
 
                 /* сброс фильтра */
                 function clear() {
-                    portion = 0;
-                    vm.filter = {name:null, article:null, company:null, limit:30, offset:0};
-                    vm.confirmedFilter = angular.copy(vm.filter);
+                    vm.paging.current = 1;
                     localStorage.removeItem($state.current.name);
-                    vm.stopLoad = false;
-                    loadData(true);
+                    vm.filter = {name:null, article:null, company:null, size:10, page:1, sort:'name,desc'};
+                    loadPage(true);
                 }
 
                 function applyKeyPress(event) {
-                    if (event.keyCode == 13) {
-                        if(filterDialog !=null && ngDialog.isOpen(filterDialog.id)){
+                    if (event.keyCode === 13) {
+                        if(filterDialog !== null && ngDialog.isOpen(filterDialog.id)){
                             filterDialog.close();
                             event.preventDefault();
                         }
@@ -113,16 +128,8 @@
 
                 /* применение фильтра */
                 function apply() {
-                    portion = 0;
-                    vm.filter.offset = portion * vm.filter.limit;
-                    vm.confirmedFilter = angular.copy(vm.filter);
-                    /* берем только id, т.к spring с jpa сможет найти Entity сам. Но как? */
-                    if(vm.confirmedFilter.company){
-                        vm.confirmedFilter.company = vm.confirmedFilter.company.id;
-                    }
-                    localStorage.setItem($state.current.name,angular.toJson(vm.confirmedFilter));
-                    vm.stopLoad = false;
-                    loadData(true);
+                  vm.paging.current = 1;
+                    loadPage(true);
                 }
 
                 /* переход в галерею */

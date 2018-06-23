@@ -8,11 +8,14 @@ import com.acme.model.dto.OrderRequest;
 import com.acme.model.filter.OrderFilter;
 import com.acme.model.dto.mapper.OrderMapper;
 import com.acme.service.*;
+import com.acme.util.PageTools;
 import java.util.Set;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestAttributes;
@@ -51,9 +54,10 @@ public class OrderController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET)
-    public Set<OrderDto> getOrders(OrderFilter filter) {
-        List<Order> orders = orderService.getAllOrders(filter);
-        return orderMapper.toSimpleDto(orders);
+    public Set<OrderDto> getOrders(OrderFilter filter, Pageable pageable) {
+        Page<Order> page = orderService.getAllOrders(filter, pageable);
+        PageTools.setPageHeaders(page);
+        return orderMapper.toSimpleDto(page.getContent());
     }
 
     /**

@@ -18,7 +18,7 @@ import org.mapstruct.Mappings;
 import static java.util.stream.Collectors.joining;
 
 @Mapper(componentModel = "spring", config = CentralConfig.class)
-public abstract class SubjectMapper {
+public interface SubjectMapper {
 
     /**
      * Mapping Item to simple item list dto. This dto admin see in list of items
@@ -28,14 +28,14 @@ public abstract class SubjectMapper {
     @Mappings({
         @Mapping(target = "fullName", expression = "java(buildFullName(entity))")
     })
-    public abstract SubjectDto toDto(Subject entity);
+    SubjectDto toDto(Subject entity);
 
-    public abstract Subject toEntity(SubjectDto dto);
+    Subject toEntity(SubjectDto dto);
 
     @Mappings({
         @Mapping(target = "name", expression = "java(buildFullName(entity))")
     })
-    public abstract SubjectMapDto toMapDto(Subject entity);
+    SubjectMapDto toMapDto(Subject entity);
 
     @Mappings({
         @Mapping(target = "fullName", expression = "java(buildFullName(entity))"),
@@ -43,10 +43,10 @@ public abstract class SubjectMapper {
         @Mapping(target = "lastName", ignore = true)
     })
     @SimpleMapper
-    public abstract SubjectDto toSimpleDto(Subject entity);
+    SubjectDto toSimpleDto(Subject entity);
 
     @SimpleMapper
-    public List<SubjectDto> toSimpleDto(List<Subject> entities){
+    default List<SubjectDto> toSimpleDto(List<Subject> entities){
         List<SubjectDto> result = new ArrayList<>();
         for (Subject entity : entities) {
             result.add(toSimpleDto(entity));
@@ -54,7 +54,7 @@ public abstract class SubjectMapper {
         return result;
     }
 
-    public Set<SubjectMapDto> toMapDto(List<Subject> entities){
+    default Set<SubjectMapDto> toMapDto(List<Subject> entities){
         Set<SubjectMapDto> result = Sets.newHashSet();
         for (Subject entity : entities) {
             result.add(toMapDto(entity));
@@ -67,7 +67,7 @@ public abstract class SubjectMapper {
      * @param entity
      * @return
      */
-    protected String buildFullName(Subject entity) {
+    default String buildFullName(Subject entity) {
         return Stream.of(entity.getLastName(), entity.getFirstName(), entity.getMiddleName())
             .filter(s -> !Strings.isNullOrEmpty(s))
             .collect(joining(" "));

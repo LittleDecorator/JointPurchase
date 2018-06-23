@@ -1,5 +1,5 @@
 (function () {
-   angular.module('purchase', ['ui.router', 'ngDialog', 'ngMaterial', 'ngMessages', 'ngSanitize', 'angularBootstrapNavTree', 'ngResource', 'mdPickers', 'ngMask', 'ui.router.metatags', 'angularFileUpload', 'angular-jwt', 'md-steppers', 'backToTop', 'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators', 'ct.ui.router.extras']);
+   angular.module('purchase', ['ui.router', 'ngDialog', 'ngMaterial', 'ngMessages', 'ngSanitize', 'angularBootstrapNavTree', 'ngResource', 'mdPickers', 'ngMask', 'ui.router.metatags', 'angularFileUpload', 'angular-jwt', 'md-steppers', 'backToTop', 'purchase.controllers', 'purchase.directives', 'purchase.factories', 'purchase.filters', 'purchase.services', 'ngBreadcrumbs', 'infinite-scroll', 'purchase.validators', 'ct.ui.router.extras', 'cl.paging']);
 })();
 
 (function () {

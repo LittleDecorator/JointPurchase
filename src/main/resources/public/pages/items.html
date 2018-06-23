@@ -34,15 +34,15 @@
         <h4 class="example_head">Товары:</h4>
     </div>
 
-    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.stopLoad' infinite-scroll-distance='1' keep-scroll-pos>
-        <div ng-include="vm.getTemplate()" include-callback="vm.afterInclude()"></div>
-    </div>
+    <div ng-include="vm.getTemplate()" include-callback="vm.afterInclude()"></div>
+
+    <cl-paging ng-hide="vm.paging.total == 1" flex cl-pages="vm.paging.total" cl-steps="vm.paging.size" cl-page-changed="vm.paging.onPageChanged()" cl-align="center center" cl-current-page="vm.paging.current"></cl-paging>
 
 </div>
 
 <input id="uploadBtn" type="file" class="upload" nv-file-select uploader="uploader" style="display: none"/>
 
-<div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; bottom: 22px; margin-bottom: 0;">
+<div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; margin-bottom: 0;">
     <md-fab-speed-dial md-open="false" md-direction="left" ng-class="'md-scale'">
         <md-fab-trigger>
             <md-button aria-label="menu" class="md-fab blue lighten-2 fixed-action-btn" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">

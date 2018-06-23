@@ -1,39 +1,42 @@
 <div ng-cloak>
 
-    <div class="filter-item">
+    <div class="filter-item" ng-if="mvm.width > 992" >
 
         <!-- переделать на модальное окно с кнопкой вызова -->
-        <div layout="row" style="margin: 10px 0" ng-if="mvm.width > 992">
+        <div layout="row" style="margin: 10px 0;">
 
-            <md-input-container class="md-block no-errors" flex="15">
+            <!--<md-input-container class="md-block no-errors" flex="15">-->
+            <md-input-container class=" no-errors" flex="25">
                 <label>Клиент</label>
                 <input ng-model="::vm.filter.subject" disabled>
             </md-input-container>
 
-            <md-input-container class="md-block" style="margin-left: 1%" flex="15">
+            <!--<md-input-container class="md-block" style="margin-left: 1%" flex="15">-->
+            <md-input-container style="margin-left: 2%" flex="25">
                 <label>Статус заказа</label>
-                <md-select ng-model="vm.filter.status" placeholder="Статус ..." ng-model-options="{trackBy: '$value.id'}" >
+                <md-select ng-model="vm.filter.status" placeholder="Статус" ng-model-options="{trackBy: '$value.id'}" >
                     <md-option ng-repeat="status in vm.statuses" ng-value="status">{{::status.value}}</md-option>
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" style="margin-left: 1%" flex="15">
+            <!--<md-input-container class="md-block" style="margin-left: 1%" flex="15">-->
+            <md-input-container style="margin-left: 2%" flex="25">
                 <label>Тип доставки</label>
-                <md-select ng-model="vm.filter.delivery" placeholder="Тип доставки ..." ng-model-options="{trackBy: '$value.id'}">
+                <md-select ng-model="vm.filter.delivery" placeholder="Тип доставки" ng-model-options="{trackBy: '$value.id'}">
                     <md-option ng-repeat="delivery in vm.deliveries" ng-value="delivery">{{::delivery.value}}</md-option>
                 </md-select>
             </md-input-container>
 
-            <mdp-date-picker flex="15" class="fill no-errors" mdp-open-on-click name="dateFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateFrom" mdp-tooltip="Дата начала временного интервала" style="margin-left: 1%"></mdp-date-picker>
+            <mdp-date-picker flex="20" class="fill no-errors" mdp-open-on-click name="dateFrom" mdp-placeholder="Дата с" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateFrom" mdp-tooltip="Дата начала временного интервала" style="margin-left: 1%"></mdp-date-picker>
 
-            <mdp-date-picker flex="15" class="fill no-errors" mdp-open-on-click name="dateTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateTo" mdp-tooltip="Дата окончания временного интервала" style="margin-left: 1%"></mdp-date-picker>
-
-            <div style="margin: auto 0 auto 25px;" flex>
-                <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
-                <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
-            </div>
+            <mdp-date-picker flex="20" class="fill no-errors" mdp-open-on-click name="dateTo" mdp-placeholder="Дата по" mdp-format="DD.MM.YYYY" ng-model="vm.filter.dateTo" mdp-tooltip="Дата окончания временного интервала" style="margin-left: 1%"></mdp-date-picker>
 
         </div>
+
+      <div layout="row" layout-align="end center" style="margin: auto 0 auto 25px;">
+          <md-button md-no-ink class="md-raised btn" aria-label="apply" ng-click="vm.apply()">Найти</md-button>
+          <md-button md-no-ink class="md-raised btn" aria-label="clear" ng-click="vm.clear()">Сбросить</md-button>
+      </div>
 
     </div>
 
@@ -41,9 +44,11 @@
         <h4 class="example_head">Заказы:</h4>
     </div>
 
-    <div class="list" infinite-scroll='vm.loadData()' infinite-scroll-disabled='vm.scrolling.stopLoad' infinite-scroll-distance='vm.scrolling.infiniteDistance'>
+    <div class="list">
         <div ng-include="vm.getTemplateUrl()" ng-if="vm.orders.length != 0"></div>
     </div>
+
+    <cl-paging ng-hide="vm.paging.total == 1" flex cl-pages="vm.paging.total" cl-steps="vm.paging.size" cl-page-changed="vm.paging.onPageChanged()" cl-align="center center" cl-current-page="vm.paging.current"></cl-paging>
 
     <div class="table-result" ng-if="vm.orders.length == 0 && !vm.filterInUse">
         <span style="margin-right: 2%">Не создано ни одного заказа</span>
@@ -54,7 +59,7 @@
     </div>
 
 
-    <div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; bottom: 22px; margin-bottom: 0;">
+    <div class="lock-size" layout="row" layout-align="center center" style="position: fixed; right: 90px; margin-bottom: 0;">
         <md-fab-speed-dial md-open="false" md-direction="left" ng-class="'md-scale'">
             <md-fab-trigger>
                 <md-button aria-label="menu" class="md-fab blue lighten-2 fixed-action-btn" ng-class="{'btn-large':mvm.width>600, 'btn-x-small': mvm.width < 601}">

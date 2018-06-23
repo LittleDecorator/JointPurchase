@@ -39,7 +39,7 @@
 
                 <md-input-container flex="25" style="margin-left:1%">
                     <label class="required">Артикул</label>
-                    <input name="article" ng-model="vm.item.article" required only-number>
+                    <input name="article" ng-model="vm.item.article" required >
                     <div ng-messages="vm.itemCard.article.$error" ng-if="!vm.showHints">
                         <div ng-message="required">Поле не может быть пустым</div>
                     </div>
@@ -117,7 +117,7 @@
     <md-icon>open_in_new</md-icon>
 </md-button>
 
-<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-disabled="vm.itemCard.$dirty" ng-click="vm.showGallery()" style="bottom: 90px; right: 25px;">
+<md-button class="md-fab blue lighten-3 fixed-action-btn btn-large" ng-disabled="vm.itemCard.$dirty || !vm.item.id" ng-click="vm.showGallery()" style="bottom: 90px; right: 25px;">
     <md-tooltip md-direction="left">Перейти в галерею</md-tooltip>
     <md-icon>photo</md-icon>
 </md-button>

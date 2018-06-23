@@ -1,5 +1,7 @@
 package com.acme.math;
 
+import java.util.Locale;
+
 /**
  * Created by kobzev on 06.07.17.
  */
@@ -7,11 +9,14 @@ public class MathTest {
 
 	public static void main(String[] args){
 		MathTest test = new MathTest();
-		test.getDigits(-12345);
-		test.getDigits(1022);
-		test.getDigits(-534);
-		test.getDigits(20);
-		test.getDigits(3);
+
+		test.divideTest();
+
+		//test.getDigits(-12345);
+		//test.getDigits(1022);
+		//test.getDigits(-534);
+		//test.getDigits(20);
+		//test.getDigits(3);
 	}
 
 //	private void getDigits(Integer input){
@@ -31,5 +36,14 @@ public class MathTest {
 		int digit = String.valueOf(Math.abs((long)input)).charAt(0) - '0';
 		System.out.println(input < 0 ? 0 - digit: digit);
 		System.out.println(input);
+	}
+
+	private void divideTest(){
+		Float grade = 2F/ 0;
+		if (grade != null) {
+			System.out.println(Float.valueOf(String.format(Locale.US, "%.2f", grade)));
+		} else {
+			System.out.println("NULL");
+		}
 	}
 }

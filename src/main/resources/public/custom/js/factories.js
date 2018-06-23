@@ -46,6 +46,16 @@
         .factory('dataResources',['$resource','$filter',function($resource,$filter){
             var xlsxContentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
             var imgContentType = 'image/jpg';
+
+            function getHeaders(headers){
+              return {
+                totalCount: headers("x-total-count"),
+                current: headers("x-page-number"),
+                size: headers("x-page-size"),
+                totalPages: headers("x-total-pages")
+              }
+            }
+
             return {
                cart: $resource('/api/item/refresh',{},{
                   refresh:{method:'PUT', isArray:true}
@@ -66,7 +76,10 @@
                 },
 
                 company: $resource("/api/company/:id",{},{
-                    all: {method:'GET',isArray:true},
+                    all: {method:'GET',isArray:false,
+                      transformResponse:function(data, headers){
+                        return {data:JSON.parse(data), headers: getHeaders(headers)}
+                      }},
                     get: {method:'GET',isArray:false},
                     delete: {method:'DELETE',isArray:false},
                     put: {method:'PUT',isArray:false,transformResponse:function(data, headers){
@@ -131,7 +144,10 @@
                 }),
 
                 item: $resource('/api/item/:id',{},{
-                    all:{method:'GET',isArray:true},
+                    all:{method:'GET',isArray:false,
+                      transformResponse:function(data, headers){
+                        return {data:JSON.parse(data), headers: getHeaders(headers)}
+                      }},
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false,
                         transformRequest:function(data, headers) {
@@ -254,7 +270,10 @@
                 itemMap: $resource('/api/item/map',{},{get:{method:'GET',isArray:true}}),
                 image: $resource('/api/content/remove/:id',{},{remove:{method:'DELETE'}}),
                 order:$resource('/api/order/:id',{},{
-                    all:{method:'GET',isArray:true},
+                    all:{method:'GET',isArray:false,
+                      transformResponse:function(data, headers){
+                        return {data:JSON.parse(data), headers: getHeaders(headers)}
+                      }},
                     get:{method:'GET',isArray:false},
                     post:{method:'POST',isArray:false, transformRequest:function(data){
                         if(data.order.recipientPhone){
