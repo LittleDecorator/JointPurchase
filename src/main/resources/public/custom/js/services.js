@@ -398,7 +398,6 @@
             };
             
             this.getSale = function(id){
-                console.log(id)
                 if(id){
                    var deferred = $q.defer();
                    dataResources.sale.get({id: id},function (data) {

@@ -40,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
         sheet.setColumnWidth(1, 256*30);
         sheet.setColumnWidth(2, 256*20);
         sheet.setColumnWidth(3, 256*50);
-        sheet.setColumnWidth(6, 256*10);
+        sheet.setColumnWidth(9, 256*10);
 
         /* стили для ячеек заголовка */
         CellStyle headerStyle = workbook.createCellStyle();//Create style
@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
 
         int rowNum = 0, colNum = 1;
 
-        String[] headers = {"ID","Компания", "Название", "Артикул", "кол-во", "Цена (руб)"};
+        String[] headers = {"ID","Компания", "Название","Описание","Размер","Материал", "Артикул", "кол-во", "Цена (руб)"};
 
         /* Заголовки */
         Row title = sheet.createRow(rowNum++);
@@ -76,18 +76,33 @@ public class ReportServiceImpl implements ReportService {
             Cell rowNumber = row.createCell(colNum++);
             rowNumber.setCellValue(rowNum++);
             rowNumber.setCellStyle(style);
+
             Cell id = row.createCell(colNum++);
             id.setCellValue(item.getId());
+
             Cell company = row.createCell(colNum++);
             company.setCellValue(item.getCompany().getName());
+
             Cell name = row.createCell(colNum++);
             name.setCellValue(item.getName());
+
+            Cell description = row.createCell(colNum++);
+            description.setCellValue(item.getDescription());
+
+            Cell size = row.createCell(colNum++);
+            size.setCellValue(item.getSize());
+
+            Cell material = row.createCell(colNum++);
+            material.setCellValue(item.getMaterial());
+
             Cell article = row.createCell(colNum++);
             article.setCellValue(item.getArticle());
             article.setCellStyle(style);
+
             Cell count = row.createCell(colNum++);
             count.setCellValue(item.getInStock());
             count.setCellStyle(style);
+
             Cell price = row.createCell(colNum);
             price.setCellValue(item.getPrice());
             price.setCellStyle(style);
