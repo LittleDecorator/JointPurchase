@@ -77,7 +77,7 @@ public class SaleController {
      * @param dto
      */
     @Transactional
-    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST}, value = {"/","/{id}"})
+    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.POST}, value = {"","/{id}"})
     public SaleDto updateSale(@RequestBody SaleRequestDto dto) {
         Set<Item> items = itemRepository.findAllByIdIn(dto.getItems());
         Sale sale = saleMapper.requestToEntity(dto);
