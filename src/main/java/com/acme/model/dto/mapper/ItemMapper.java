@@ -36,10 +36,14 @@ public interface ItemMapper extends BaseMapper {
    * @param entity
    * @return
    */
-  @Mappings({@Mapping(target = "companyId", expression = "java(bindCompanyId(entity))"), @Mapping(target = "companyName", expression = "java(bindCompanyName(entity))")})
+  @Mappings({
+    @Mapping(target = "companyId", expression = "java(bindCompanyId(entity))"),
+    @Mapping(target = "companyName", expression = "java(bindCompanyName(entity))")
+  })
   ItemDto toDto(Item entity);
 
-  @Mappings({@Mapping(target = "company", ignore = true),})
+  @Mappings({
+  })
   Item toEntity(ItemDto dto);
 
   void toExistingEntity(ItemDto updateRequest, @MappingTarget Item entity);

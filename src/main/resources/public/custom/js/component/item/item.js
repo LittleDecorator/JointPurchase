@@ -346,7 +346,9 @@
                         if(vm.itemCard.$valid){
                             vm.item = addTranslite(vm.item);
                             var dto = angular.copy(vm.item);
+                            dto.companyId = dto.company.id;
                             delete dto.company;
+                            console.log(dto);
 
                             if(dto.id){
                                 // если товар был на редактирование

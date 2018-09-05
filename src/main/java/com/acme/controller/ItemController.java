@@ -11,6 +11,7 @@ import com.acme.repository.specification.SpecificationBuilder;
 import com.acme.service.CategoryService;
 import com.acme.service.ItemService;
 import com.acme.util.PageTools;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import org.assertj.core.util.Strings;
 import org.json.simple.JSONObject;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,6 +91,7 @@ public class ItemController {
         Item item;
         if(Strings.isNullOrEmpty(dto.getId())){
             item = itemMapper.toEntity(dto);
+            item.setCompany(companyRepository.findOneById(dto.getCompanyId()));
         } else {
             item = itemRepository.findOne(dto.getId());
             itemMapper.toExistingEntity(dto, item);
@@ -106,23 +107,17 @@ public class ItemController {
      *
      * @param id
      */
+    @Transactional
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public void deleteItem(@PathVariable("id") String id) {
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try {
-            /* удалим записи товара в заказах */
-            orderItemRepository.deleteByIdItemId(id);
-            /* удалим записи товара в изображениях */
-            itemContentRepository.deleteByItemId(id);
-            /* удалим записи товара в категориях */
-            categoryItemRepository.deleteByIdItemId(id);
-            /* удалим товар */
-            itemRepository.delete(id);
-            transactionManager.commit(status);
-        } catch (Exception ex) {
-            System.out.println(Arrays.toString(ex.getStackTrace()));
-            transactionManager.rollback(status);
-        }
+      /* удалим записи товара в заказах */
+      orderItemRepository.deleteByIdItemId(id);
+      /* удалим записи товара в изображениях */
+      itemContentRepository.deleteByItemId(id);
+      /* удалим записи товара в категориях */
+      //categoryItemRepository.deleteByIdItemId(id);
+      /* удалим товар */
+      itemRepository.delete(id);
     }
 
     /**

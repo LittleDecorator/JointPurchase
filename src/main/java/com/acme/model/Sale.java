@@ -58,10 +58,10 @@ public class Sale {
     @Column(name = "end_date")
     private Date endDate;
 
-    @OneToMany()
-    @JoinTable(name="sale_item",
-            joinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")},
-            inverseJoinColumns={@JoinColumn(name="item_id", referencedColumnName="id")})
+    @OneToMany(mappedBy = "sale")
+    //@JoinTable(name="sale_item",
+    //        joinColumns={@JoinColumn(name="sale_id", referencedColumnName="id")},
+    //        inverseJoinColumns={@JoinColumn(name="item_id", referencedColumnName="id")})
     @JsonBackReference
     @JsonIgnore
     private Set<Item> items;

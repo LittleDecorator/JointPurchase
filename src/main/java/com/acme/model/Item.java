@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -102,14 +103,14 @@ public class Item implements Serializable {
     @Convert(converter = ItemStatusConverter.class)
     private ItemStatus status = ItemStatus.AVAILABLE;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "sale_item",
         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id",updatable = false)},
         inverseJoinColumns = {@JoinColumn(name = "sale_id", referencedColumnName = "id", updatable = false)})
     @JsonBackReference
     private Sale sale;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "category_item",
         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "id")})
